@@ -124,4 +124,42 @@ public class QualityAnalyzerTests
         Assert.IsTrue(m.FocusTile > 0);
         Assert.IsTrue(m.HfShare is >= 0 and <= 1);
     }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public void Analyze_TransposedImageWithOddSides_GivesTheSameSpectrumShare()
+    {
+        const int w = 100, h = 60;
+        var gray = new byte[w * h];
+        var transposed = new byte[w * h];
+        for (var y = 0; y < h; y++)
+        {
+            for (var x = 0; x < w; x++)
+            {
+                var v = (byte)(((x * 37) + (y * 91) + (x * y)) % 251);
+                gray[(y * w) + x] = v;
+                transposed[(x * h) + y] = v;
+            }
+        }
+
+        var a = QualityAnalyzer.Analyze(gray, w, h);
+        var b = QualityAnalyzer.Analyze(transposed, h, w);
+
+        TestContext.WriteLine("hf {0:F6} vs transposed {1:F6}", a.HfShare, b.HfShare);
+        Assert.AreEqual(a.HfShare, b.HfShare, 1e-9, "rows and columns go through different transform lengths (neither a power of two)");
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public void Analyze_SingleFrequencyStripes_PutsTheEnergyAtThatFrequency()
+    {
+        const int w = 96, h = 48;
+        var gray = new byte[w * h];
+        for (var y = 0; y < h; y++)
+            for (var x = 0; x < w; x++)
+                gray[(y * w) + x] = (byte)(128 + (100 * Math.Cos(2 * Math.PI * 24 * x / w)));
+
+        var m = QualityAnalyzer.Analyze(gray, w, h);
+
+        TestContext.WriteLine("hf {0:F4}", m.HfShare);
+        Assert.IsGreaterThan(0.99, m.HfShare, "24 cycles over 96 pixels is half of Nyquist, above the 0.25 cut");
+    }
 }

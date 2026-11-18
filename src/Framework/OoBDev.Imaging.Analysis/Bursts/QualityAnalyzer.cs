@@ -6,8 +6,9 @@ namespace OoBDev.Imaging.Analysis.Bursts;
 /// <summary>
 /// Computes the eight <see cref="QualityMeasures"/> from an 8-bit gray buffer (the catalog's Python recipe <c>q1</c> ported to the BCL).
 /// The caller supplies the image at the size to measure (the catalog uses a thumbnail with a 1024 long side).
-/// Differences from the Python code: borders are left out of the Laplacian and Sobel sums instead of reflected, and the high-frequency
-/// share is taken from the largest centred power-of-two square (at most 512) because the FFT here is radix 2.
+/// The Laplacian is OpenCV's 3x3 one (<c>[[2,0,2],[0,-8,0],[2,0,2]]</c>), not the 4-neighbour kernel: that one reads about ten times lower.
+/// The high-frequency share uses the whole image (sides that are not powers of two go through Bluestein's algorithm).
+/// Difference from the Python code: borders are left out of the Laplacian and Sobel sums instead of reflected.
 /// </summary>
 public static class QualityAnalyzer
 {
@@ -36,7 +37,7 @@ public static class QualityAnalyzer
                 var i = (y * width) + x;
                 double c = gray[i], n = gray[i - width], s = gray[i + width], w = gray[i - 1], e = gray[i + 1];
                 double nw = gray[i - width - 1], ne = gray[i - width + 1], sw = gray[i + width - 1], se = gray[i + width + 1];
-                lap[i] = n + s + w + e - (4 * c);
+                lap[i] = (2 * (nw + ne + sw + se)) - (8 * c);
                 var gx = (ne + (2 * e) + se) - (nw + (2 * w) + sw);
                 var gy = (sw + (2 * s) + se) - (nw + (2 * n) + ne);
                 sxx += gx * gx;
@@ -141,47 +142,43 @@ public static class QualityAnalyzer
 
     private static double HighFrequencyShare(ReadOnlySpan<byte> gray, int width, int height)
     {
-        var size = 1;
-        while (size * 2 <= Math.Min(Math.Min(width, height), 512))
-            size *= 2;
-
-        int x0 = (width - size) / 2, y0 = (height - size) / 2;
-        var data = new Complex[size * size];
         double mean = 0;
-        for (var y = 0; y < size; y++)
-            for (var x = 0; x < size; x++)
-                mean += gray[((y0 + y) * width) + x0 + x];
-        mean /= size * size;
-        for (var y = 0; y < size; y++)
-            for (var x = 0; x < size; x++)
-                data[(y * size) + x] = gray[((y0 + y) * width) + x0 + x] - mean;
+        foreach (var v in gray)
+            mean += v;
+        mean /= gray.Length;
+        var data = new Complex[width * height];
+        for (var i = 0; i < data.Length; i++)
+            data[i] = gray[i] - mean;
 
-        var line = new Complex[size];
-        for (var y = 0; y < size; y++)
+        var rows = new Dft(width);
+        var line = new Complex[width];
+        for (var y = 0; y < height; y++)
         {
-            Array.Copy(data, y * size, line, 0, size);
-            Fft(line);
-            Array.Copy(line, 0, data, y * size, size);
+            Array.Copy(data, y * width, line, 0, width);
+            rows.Transform(line);
+            Array.Copy(line, 0, data, y * width, width);
         }
 
-        for (var x = 0; x < size; x++)
+        var columns = new Dft(height);
+        line = new Complex[height];
+        for (var x = 0; x < width; x++)
         {
-            for (var y = 0; y < size; y++)
-                line[y] = data[(y * size) + x];
-            Fft(line);
-            for (var y = 0; y < size; y++)
-                data[(y * size) + x] = line[y];
+            for (var y = 0; y < height; y++)
+                line[y] = data[(y * width) + x];
+            columns.Transform(line);
+            for (var y = 0; y < height; y++)
+                data[(y * width) + x] = line[y];
         }
 
         double all = 0, high = 0;
-        var half = size / 2.0;
-        for (var v = 0; v < size; v++)
+        double halfW = width / 2.0, halfH = height / 2.0;
+        for (var v = 0; v < height; v++)
         {
-            var ry = (((v + (size / 2)) % size) - half) / half;
-            for (var u = 0; u < size; u++)
+            var ry = (((v + (height / 2)) % height) - halfH) / halfH;
+            for (var u = 0; u < width; u++)
             {
-                var rx = (((u + (size / 2)) % size) - half) / half;
-                var m = data[(v * size) + u].Magnitude;
+                var rx = (((u + (width / 2)) % width) - halfW) / halfW;
+                var m = data[(v * width) + u].Magnitude;
                 var power = m * m;
                 all += power;
                 if (Math.Sqrt((rx * rx) + (ry * ry)) > 0.25)
@@ -190,6 +187,60 @@ public static class QualityAnalyzer
         }
 
         return all > 0 ? high / all : 0;
+    }
+
+    /// <summary>A forward DFT of one length: radix 2 when the length is a power of two, otherwise Bluestein's chirp-z through a padded radix-2 convolution.</summary>
+    private sealed class Dft
+    {
+        private readonly int n;
+        private readonly bool radix2;
+        private readonly int m;
+        private readonly Complex[]? chirp;
+        private readonly Complex[]? kernel;
+        private readonly Complex[]? work;
+
+        public Dft(int length)
+        {
+            n = length;
+            radix2 = (n & (n - 1)) == 0;
+            if (radix2)
+                return;
+            m = 1;
+            while (m < (2 * n) - 1)
+                m <<= 1;
+            chirp = new Complex[n];
+            for (var k = 0; k < n; k++)
+            {
+                var phase = Math.PI * (((long)k * k) % (2L * n)) / n;
+                chirp[k] = new Complex(Math.Cos(phase), -Math.Sin(phase));
+            }
+
+            kernel = new Complex[m];
+            kernel[0] = Complex.Conjugate(chirp[0]);
+            for (var k = 1; k < n; k++)
+                kernel[k] = kernel[m - k] = Complex.Conjugate(chirp[k]);
+            Fft(kernel);
+            work = new Complex[m];
+        }
+
+        public void Transform(Complex[] a)
+        {
+            if (radix2)
+            {
+                Fft(a);
+                return;
+            }
+
+            Array.Clear(work!);
+            for (var k = 0; k < n; k++)
+                work![k] = a[k] * chirp![k];
+            Fft(work!);
+            for (var k = 0; k < m; k++)
+                work![k] = Complex.Conjugate(work[k] * kernel![k]);
+            Fft(work!);
+            for (var k = 0; k < n; k++)
+                a[k] = Complex.Conjugate(work![k]) / m * chirp![k];
+        }
     }
 
     private static void Fft(Complex[] a)

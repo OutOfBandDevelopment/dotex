@@ -9,7 +9,7 @@ Pure image-analysis functions over decoded pixels. BCL only: no image library, n
 | `BurstRanker.Pairs` | Frame pairs within a time window (each frame against the next four) |
 | `BurstRanker.Components` | Transitive groups of two or more from similarity links |
 | `BurstRanker.Score` | Best-first ranking with reasons; advice only, nothing is removed or marked |
-| `QualityAnalyzer.Analyze(gray, w, h)` | Computes the eight measures from an 8-bit gray buffer (tile focus, isotropy, high-frequency share, luma mean, clipping, range, noise); BCL only. Borders are skipped and the FFT uses the largest centred power-of-two square (at most 512), so values differ slightly from the Python recipe `q1` |
+| `QualityAnalyzer.Analyze(gray, w, h)` | Computes the eight measures from an 8-bit gray buffer (tile focus, isotropy, high-frequency share, luma mean, clipping, range, noise); BCL only. The Laplacian is OpenCV's 3x3 kernel and the spectrum covers the whole image, so on identical pixels every measure is within about 2 % of the Python recipe `q1` (borders are skipped instead of reflected, which is the remaining difference) |
 | `QualityMeasures`, `QualityLabels` | Eight stored measures and the labels derived from them (shaky, defocused, soft, under, dark, over, noisy, flat) |
 | `DHash` | 64-bit difference hash of a gray buffer, equal to the retired Pillow values; `Hamming` compares |
 
