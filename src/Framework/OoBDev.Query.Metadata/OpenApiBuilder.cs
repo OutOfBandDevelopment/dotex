@@ -70,6 +70,14 @@ public static class OpenApiBuilder
             };
         }
 
+        if (kind.Hints is { Count: > 0 })
+        {
+            var flags = new JsonObject();
+            foreach (var hint in kind.Hints.Keys)
+                flags[hint] = new JsonObject { ["type"] = "boolean" };
+            properties["has"] = new JsonObject { ["type"] = "object", ["description"] = "Hint flags for the page; present when select has \"has\".", ["properties"] = flags };
+        }
+
         return new JsonObject { ["type"] = "object", ["properties"] = properties, ["x-kind"] = kind.Name, ["x-title"] = kind.Title, ["x-default-sort"] = kind.DefaultSort };
     }
 

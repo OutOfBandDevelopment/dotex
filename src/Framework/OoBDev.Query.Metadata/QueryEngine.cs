@@ -60,7 +60,11 @@ public sealed partial class QueryEngine(
                 next = cursors.Encode(new CursorState(kind.Name, compiled.SortSpec, values));
             }
 
-            page = rows.Take(compiled.Top).Select(Strip).ToList();
+            var taken = rows.Take(compiled.Top).ToList();
+            var hints = kind.Hints is { Count: > 0 } && request.Select?.Contains("has", StringComparer.OrdinalIgnoreCase) == true && taken.Count > 0
+                ? await ReadHintsAsync(kind, taken, compiled.SortColumns - 1, cancellationToken).ConfigureAwait(false)
+                : null;
+            page = taken.Select(r => Strip(r, hints, compiled.SortColumns - 1)).ToList();
         }
 
         long? count = null;
@@ -95,8 +99,42 @@ public sealed partial class QueryEngine(
         };
     }
 
-    private static Dictionary<string, object?> Strip(IReadOnlyDictionary<string, object?> row) =>
-        row.Where(kv => !kv.Key.StartsWith("__s", StringComparison.Ordinal)).ToDictionary(kv => kv.Key, kv => kv.Value);
+    private async Task<Dictionary<string, IReadOnlyDictionary<string, bool>>> ReadHintsAsync(KindInfo kind, List<IReadOnlyDictionary<string, object?>> rows, int keyColumn, CancellationToken cancellationToken)
+    {
+        var hints = kind.Hints!;
+        var keys = rows.Select(r => r["__s" + keyColumn]).Where(k => k is not null).Cast<object>().ToList();
+        var names = hints.Keys.ToArray();
+        var expressions = names.Select(n => $"({hints[n].Replace("{k}", kind.Key, StringComparison.Ordinal)}) AS {dialect.Quote(n)}");
+        var parameters = new SqlParameters();
+        var sql = $"SELECT {kind.Key} AS {dialect.Quote("__key")}, {string.Join(", ", expressions)} FROM {kind.Base} {kind.Joins}".TrimEnd()
+            + $" WHERE {dialect.In(kind.Key, parameters.Add(TypedArray(keys)))}";
+        var found = await executor.ReadAsync(sql, parameters.Values, cancellationToken).ConfigureAwait(false);
+        return found.ToDictionary(
+            r => KeyText(r["__key"]),
+            r => (IReadOnlyDictionary<string, bool>)names.ToDictionary(n => n, n => r.TryGetValue(n, out var v) && v is true, StringComparer.OrdinalIgnoreCase));
+    }
+
+    private static string KeyText(object? key) => Convert.ToString(key, CultureInfo.InvariantCulture) ?? "";
+
+    private static Array TypedArray(List<object> keys) => keys[0] switch
+    {
+        long => keys.Cast<long>().ToArray(),
+        int => keys.Cast<int>().ToArray(),
+        Guid => keys.Cast<Guid>().ToArray(),
+        _ => keys.Select(KeyText).ToArray(),
+    };
+
+    private static Dictionary<string, object?> Strip(IReadOnlyDictionary<string, object?> row, Dictionary<string, IReadOnlyDictionary<string, bool>>? hints, int keyColumn)
+    {
+        var result = row.Where(kv => !kv.Key.StartsWith("__s", StringComparison.Ordinal)).ToDictionary(kv => kv.Key, kv => kv.Value);
+        if (hints is not null)
+        {
+            var key = row["__s" + keyColumn];
+            result["has"] = hints.TryGetValue(KeyText(key), out var flags) ? flags : new Dictionary<string, bool>();
+        }
+
+        return result;
+    }
 
     private static JsonElement ToJson(object? value) => value switch
     {

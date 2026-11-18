@@ -51,7 +51,8 @@ public sealed class KindRegistry
         var predicates = type.GetCustomAttributes<PredicateAttribute>().GroupBy(p => p.Name)
             .ToDictionary(g => g.Key, g => (IReadOnlyDictionary<string, string>)g.ToDictionary(p => p.Value, p => p.Sql, StringComparer.OrdinalIgnoreCase), StringComparer.OrdinalIgnoreCase);
         var operators = type.GetCustomAttributes<SearchOperatorAttribute>().ToDictionary(o => o.Name, o => o.Sql, StringComparer.OrdinalIgnoreCase);
-        return new KindInfo(attribute.Name, type, attribute.Title, attribute.Base, attribute.Joins, attribute.Key, attribute.DefaultSort, attribute.Right, facets, predicates, operators, attribute.Sample);
+        var hints = type.GetCustomAttributes<HintAttribute>().ToDictionary(h => h.Name, h => h.Sql, StringComparer.OrdinalIgnoreCase);
+        return new KindInfo(attribute.Name, type, attribute.Title, attribute.Base, attribute.Joins, attribute.Key, attribute.DefaultSort, attribute.Right, facets, predicates, operators, attribute.Sample, hints);
     }
 
     private static string TypeName(Type type)

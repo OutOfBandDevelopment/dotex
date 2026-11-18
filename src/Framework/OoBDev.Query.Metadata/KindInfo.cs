@@ -30,7 +30,8 @@ public sealed record KindInfo(
     IReadOnlyList<FacetInfo> Facets,
     IReadOnlyDictionary<string, IReadOnlyDictionary<string, string>> Predicates,
     IReadOnlyDictionary<string, string> Operators,
-    string Sample = "")
+    string Sample = "",
+    IReadOnlyDictionary<string, string>? Hints = null)
 {
     /// <summary>Finds a facet by name, ignoring case.</summary>
     /// <param name="name">The facet name.</param>

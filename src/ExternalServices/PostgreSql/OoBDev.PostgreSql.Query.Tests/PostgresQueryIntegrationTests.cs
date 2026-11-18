@@ -147,6 +147,20 @@ public class PostgresQueryIntegrationTests
         Assert.AreEqual(1, page.Rows[1].Count);
     }
 
+    [IntegrationTestMethod("oobd-test-pgvector")]
+    public async Task Query_SelectHas_FlagsThePageRowsInOneStatement()
+    {
+        var page = await _engine.QueryAsync<ItemRow>(new QueryRequest { From = "items", Select = ["has"], Sort = ["id"], Top = 4 });
+
+        TestContext.WriteLine("Rows: {0}", string.Join("; ", page.Rows.Select(r => $"{r.Id}:{r.Has!.Tagged}/{r.Has.HighScore}")));
+        Assert.AreEqual(4, page.Rows.Count);
+        Assert.IsTrue(page.Rows.All(r => r.Has is not null));
+        Assert.IsTrue(page.Rows.Where(r => r.Id % 2 == 0).All(r => r.Has!.Tagged));
+        Assert.IsTrue(page.Rows.Where(r => r.Id % 2 == 1).All(r => !r.Has!.Tagged));
+        Assert.IsTrue(page.Rows.Single(r => r.Id == 3).Has!.HighScore);
+        Assert.IsFalse(page.Rows.Single(r => r.Id == 4).Has!.HighScore);
+    }
+
     private static Dictionary<string, JsonElement> Filters(string json) => JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json)!;
 
     private static async Task Run(NpgsqlConnection connection, string sql)

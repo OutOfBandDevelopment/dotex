@@ -5,6 +5,8 @@ namespace OoBDev.PostgreSql.Query.Tests;
 
 [QueryKind("items", Base = "items r", Key = "r.id", DefaultSort = "-created")]
 [Predicate("live", "yes", "r.removed IS FALSE")]
+[Hint("tagged", "'even' = ANY(r.tags)")]
+[Hint("highScore", "r.score >= 3")]
 [SearchOperator("tag", "{x} = ANY(r.tags)")]
 public sealed class ItemRow
 {
@@ -22,4 +24,6 @@ public sealed class ItemRow
 
     [Facet("r.score")]
     public int Score { get; set; }
+
+    public ItemHints? Has { get; set; }
 }

@@ -26,11 +26,22 @@ internal static class RowMapper
         return result;
     }
 
+    private static object MapFlags(IReadOnlyDictionary<string, bool> flags, Type type)
+    {
+        var result = Activator.CreateInstance(type)!;
+        foreach (var property in type.GetProperties().Where(p => p.PropertyType == typeof(bool) && p.CanWrite))
+            if (flags.TryGetValue(property.Name, out var on))
+                property.SetValue(result, on);
+        return result;
+    }
+
     private static object? Convert(object? value, Type target)
     {
         if (value is null)
             return null;
         var type = Nullable.GetUnderlyingType(target) ?? target;
+        if (value is IReadOnlyDictionary<string, bool> flags && type.IsClass && type != typeof(string))
+            return MapFlags(flags, type);
         if (type.IsInstanceOfType(value) || type == typeof(object))
             return value;
         if (type == typeof(DateTimeOffset) && value is DateTime dt)

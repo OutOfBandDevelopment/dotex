@@ -47,9 +47,13 @@ The text form `photos tag:beach by -taken top 60 count` (`QueryText.Parse`) and 
 
 `shape: "buckets"` with `by: [a, b]` (two numeric facets) groups the filtered rows into grid cells of `cell` units (default 1, clamped 0.0001 to 90) and returns `Bucket` rows (`A` and `B` are the cell means, `Count`, `Sample`), largest cell first, at most 1000. `QueryKind.Sample` is an aggregate expression (for example `min(r.sha)`) that picks one representative per cell; without it the sample is null. Text form: `as buckets by lat,lon cell 0.5`. A dialect supplies `GridCell`. Buckets are not paged.
 
+## Hints
+
+`[Hint("copies", "EXISTS (... {k} ...)")]` on a kind declares a boolean flag that tells the client a second lookup exists. When a request selects `has`, the engine runs one extra statement for the keys of the returned page only (`{k}` is the kind's key expression) and adds a `has` object of flags to each row; a row class receives it in a property named `Has` whose type has a `bool` property per hint (matched ignoring case). The description lists the hint names and the OpenAPI row schema declares `has`.
+
 ## Not built yet
 
-Hints, relations, graph shape, snapshot sources, vector spaces (near) and the host sample; see the design document.
+Relations, graph shape, snapshot sources, vector spaces (near) and the host sample; see the design document.
 
 ## Tests
 
