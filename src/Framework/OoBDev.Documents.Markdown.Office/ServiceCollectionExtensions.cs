@@ -18,4 +18,17 @@ public static class ServiceCollectionExtensions
         services.TryAddEnumerable(ServiceDescriptor.Transient<IFileMarkdownReader, OfficeFileMarkdownReader>());
         return services;
     }
+
+    /// <summary>
+    /// Adds the spreadsheet (<see cref="XlsxFileMarkdownReader"/>) and presentation (<see cref="PptxFileMarkdownReader"/>) readers.
+    /// They read the Open XML package directly and need no conversion chain.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <returns>The same collection.</returns>
+    public static IServiceCollection TryAddOpenXmlMarkdown(this IServiceCollection services)
+    {
+        services.TryAddEnumerable(ServiceDescriptor.Transient<IFileMarkdownReader, XlsxFileMarkdownReader>());
+        services.TryAddEnumerable(ServiceDescriptor.Transient<IFileMarkdownReader, PptxFileMarkdownReader>());
+        return services;
+    }
 }

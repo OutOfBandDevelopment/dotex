@@ -61,9 +61,13 @@ The request's open question (default converter) is answered as recommended: a pr
 
 Converter: text and Markdown pass through, a PDF with enough text converts with one anchor per page, a thin PDF returns needs-ocr, a non-PDF named .pdf returns not-pdf, an existing Markdown is unchanged. Segments: plan boundaries, resume after a failed second piece, page count padded or merged to the plan. Docling client with a fake handler: post, poll twice, fetch; failure status raises `OcrFailedException`; the light options run after a heavy failure; timeout raises `TimeoutException`. Golden sample accuracy is a `DevLocal` test that records host and date. Target 85 to 90 percent coverage.
 
+## Built after the first slice
+
+- `.xlsx`/`.xlsm` and `.pptx`/`.pptm` readers (2026-11-18) in `OoBDev.Documents.Markdown.Office`: they read the Open XML zip with `System.IO.Compression` and `System.Xml.Linq` (no package, no Tika). Spreadsheets give a table per sheet (stored values, shared strings, first row as header, `|` escaped, formulas as last saved); presentations give a section per slide in `sldIdLst` order (title placeholder as the heading, other paragraphs as bullets, speaker notes). `TryAddOpenXmlMarkdown()` registers them. Not done: number formats and dates (serials stay numbers), merged cells, charts, images, tables inside slides as tables.
+
 ## Not in the first slice
 
 - Region coordinates and language detection.
 - The queue, lease and twin reuse (catalog database).
 - Rendering stages (`RenderStageRunner`, the renderer container) and summarize.
-- Spreadsheet and presentation readers (xlsx, pptx, OLE): no Tika handler exists for them; each would be a further `IFileMarkdownReader` or a Tika handler, after its own comparison. Word-processing and e-book files are built (`OoBDev.Documents.Markdown.Office`, owner 2026-11-16: compose the Tika and MysticMind handlers, no new package).
+- Legacy OLE spreadsheet and presentation readers (`.xls`, `.ppt`): `.xlsx` and `.pptx` are built (2026-11-18, below); the binary formats have no reader. Word-processing and e-book files are built (`OoBDev.Documents.Markdown.Office`, owner 2026-11-16: compose the Tika and MysticMind handlers, no new package).
