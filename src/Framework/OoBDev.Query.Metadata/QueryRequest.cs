@@ -40,4 +40,7 @@ public sealed record QueryRequest
 
     /// <summary>Grid cell size in the units of the two <see cref="By"/> facets for shape <c>buckets</c> (for example degrees); default 1.</summary>
     public double? Cell { get; init; }
+
+    /// <summary>Only rows related to an anchor row through a relation the kind declares.</summary>
+    public RelatedClause? Related { get; init; }
 }

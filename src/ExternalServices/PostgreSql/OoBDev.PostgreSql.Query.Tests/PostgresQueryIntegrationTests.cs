@@ -161,6 +161,17 @@ public class PostgresQueryIntegrationTests
         Assert.IsFalse(page.Rows.Single(r => r.Id == 4).Has!.HighScore);
     }
 
+    [IntegrationTestMethod("oobd-test-pgvector")]
+    public async Task Query_Related_ReturnsRowsThatShareTheRelationWithTheAnchor()
+    {
+        var page = await _engine.QueryAsync<ItemRow>(new QueryRequest { From = "items", Related = new RelatedClause("same-score", "1"), Sort = ["id"], Top = 100 });
+
+        TestContext.WriteLine("Ids: {0}", string.Join(",", page.Rows.Select(r => r.Id)));
+        Assert.IsTrue(page.Rows.Count > 1);
+        Assert.IsTrue(page.Rows.All(r => r.Id % 4 == 1), "every row has the anchor's score");
+        Assert.IsTrue(page.Rows.Any(r => r.Id == 1), "the anchor matches itself");
+    }
+
     private static Dictionary<string, JsonElement> Filters(string json) => JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json)!;
 
     private static async Task Run(NpgsqlConnection connection, string sql)

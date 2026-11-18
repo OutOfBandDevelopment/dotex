@@ -23,5 +23,6 @@ public static class Describer
         kind.Facets.Select(f => new FacetDescription(f.Name, f.Label, f.Format, f.Type, f.Filterable, f.Sortable, f.Search, f.Role, f.Hidden)).ToArray(),
         kind.Predicates.ToDictionary(p => p.Key, p => p.Value.Keys.ToArray(), StringComparer.OrdinalIgnoreCase),
         kind.Operators.Keys.Order(StringComparer.Ordinal).ToArray(),
-        (kind.Hints?.Keys ?? []).Order(StringComparer.Ordinal).ToArray());
+        (kind.Hints?.Keys ?? []).Order(StringComparer.Ordinal).ToArray(),
+        (kind.Relations?.Keys ?? []).Order(StringComparer.Ordinal).ToArray());
 }

@@ -51,6 +51,8 @@ public static class QueryCompiler
             .Concat(sorts.Select((s, i) => $"{s.Expr} AS {dialect.Quote("__s" + i)}"));
 
         var where = FilterCompiler.Compile(kind, request, parameters, dialect).ToList();
+        if (request.Related is { } related)
+            where.Add(Relation(kind, related, parameters));
         var from = $"FROM {kind.Base} {kind.Joins}".TrimEnd();
         var countSql = request.Count ? $"SELECT count(*) {from}{Where(where)}" : null;
 
@@ -66,6 +68,13 @@ public static class QueryCompiler
             .Append(" ORDER BY ").AppendJoin(", ", sorts.Select(s => s.Expr + dialect.Direction(s.Descending)))
             .Append(' ').Append(dialect.Limit(top + 1)).ToString();
         return new CompiledQuery(sql, parameters.Values, countSql, top, spec, sorts.Count);
+    }
+
+    private static string Relation(KindInfo kind, RelatedClause related, SqlParameters parameters)
+    {
+        if (kind.Relations is null || !kind.Relations.TryGetValue(related.Via, out var sql))
+            throw new QueryException($"Kind '{kind.Name}' has no relation '{related.Via}'. Relations: {string.Join(", ", kind.Relations?.Keys ?? [])}.");
+        return "(" + sql.Replace("{k}", kind.Key, StringComparison.Ordinal).Replace("{anchor}", parameters.Add(related.Of), StringComparison.Ordinal) + ")";
     }
 
     private static CompiledQuery Facets(KindInfo kind, QueryRequest request, IQueryDialect dialect, SqlParameters parameters, int top)

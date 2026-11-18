@@ -11,7 +11,7 @@ namespace OoBDev.Query.Metadata;
 /// </summary>
 public static class QueryText
 {
-    private static readonly HashSet<string> Keywords = new(StringComparer.OrdinalIgnoreCase) { "as", "by", "top", "count" };
+    private static readonly HashSet<string> Keywords = new(StringComparer.OrdinalIgnoreCase) { "as", "by", "top", "count", "of" };
 
     private sealed record Token(string Text, string Raw, bool Quoted);
 
@@ -49,6 +49,12 @@ public static class QueryText
                 case "count":
                     request = request with { Count = true };
                     i++;
+                    break;
+                case "of":
+                    if (i + 1 >= tokens.Count || tokens[i + 1].Text.Split(':', 2) is not [{ Length: > 0 } via, { Length: > 0 } id])
+                        throw new QueryException("'of' needs relation:key, for example: of burst:4711.");
+                    request = request with { Related = new RelatedClause(via, id) };
+                    i += 2;
                     break;
                 case "top":
                     if (i + 1 >= tokens.Count || !int.TryParse(tokens[i + 1].Text, NumberStyles.None, CultureInfo.InvariantCulture, out var n) || n < 1)

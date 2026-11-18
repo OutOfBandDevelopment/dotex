@@ -51,9 +51,13 @@ The text form `photos tag:beach by -taken top 60 count` (`QueryText.Parse`) and 
 
 `[Hint("copies", "EXISTS (... {k} ...)")]` on a kind declares a boolean flag that tells the client a second lookup exists. When a request selects `has`, the engine runs one extra statement for the keys of the returned page only (`{k}` is the kind's key expression) and adds a `has` object of flags to each row; a row class receives it in a property named `Has` whose type has a `bool` property per hint (matched ignoring case). The description lists the hint names and the OpenAPI row schema declares `has`.
 
+## Relations
+
+`[Relation("copies", "... {anchor} ...")]` declares a condition for rows related to one anchor row (`{k}` is the key expression, `{anchor}` the bound anchor key as text, so cast it when the key is not text). A request names it with `related: { via, of }`, or in text `of copies:42`. An unknown relation is a `QueryException` that lists the declared ones; the description lists the relation names.
+
 ## Not built yet
 
-Relations, graph shape, snapshot sources, vector spaces (near) and the host sample; see the design document.
+Graph shape, snapshot sources, vector spaces (near) and the host sample; see the design document.
 
 ## Tests
 
