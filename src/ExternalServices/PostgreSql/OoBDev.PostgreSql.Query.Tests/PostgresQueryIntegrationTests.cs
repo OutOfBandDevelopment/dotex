@@ -40,6 +40,8 @@ public class PostgresQueryIntegrationTests
             await Run(connection, $"CREATE TABLE \"{_schema}\".items (id bigint PRIMARY KEY, title text NOT NULL, created timestamp NULL, tags text[] NULL, score int NOT NULL, removed boolean NOT NULL DEFAULT false)");
             await Run(connection, $"CREATE TABLE \"{_schema}\".places (id bigint PRIMARY KEY, name text NOT NULL, lat double precision NULL, lon double precision NULL, sha text NULL)");
             await Run(connection, $"INSERT INTO \"{_schema}\".places VALUES (1, 'a', 10.1, 20.1, 'sha-b'), (2, 'b', 10.2, 20.2, 'sha-a'), (3, 'c', 50.5, 60.5, 'sha-c'), (4, 'd', NULL, NULL, 'sha-d')");
+            await Run(connection, $"CREATE TABLE \"{_schema}\".links (id bigint PRIMARY KEY, a int NOT NULL, b int NOT NULL, shared int NOT NULL)");
+            await Run(connection, $"INSERT INTO \"{_schema}\".links VALUES (1, 1, 2, 9), (2, 2, 3, 5), (3, 3, 4, 7), (4, 8, 9, 100)");
             for (var i = 1; i <= 25; i++)
             {
                 var suffix = i % 5 == 0 ? "50%_off" : "plain";
@@ -170,6 +172,28 @@ public class PostgresQueryIntegrationTests
         Assert.IsTrue(page.Rows.Count > 1);
         Assert.IsTrue(page.Rows.All(r => r.Id % 4 == 1), "every row has the anchor's score");
         Assert.IsTrue(page.Rows.Any(r => r.Id == 1), "the anchor matches itself");
+    }
+
+    [IntegrationTestMethod("oobd-test-pgvector")]
+    public async Task Query_Graph_ReturnsTheStrongestLinksAndTheNodes()
+    {
+        var result = await _engine.QueryAsync<GraphEdge>(new QueryRequest { From = "links", Shape = "graph", Top = 3 });
+
+        TestContext.WriteLine("Edges: {0}", string.Join("; ", result.Rows.Select(e => $"{e.Source}-{e.Target}:{e.Weight}")));
+        CollectionAssert.AreEqual(new[] { "8", "1", "3" }, result.Rows.Select(e => e.Source).ToArray(), "strongest first");
+        CollectionAssert.AreEquivalent(new[] { "8", "9", "1", "2", "3", "4" }, result.Nodes!.ToArray());
+    }
+
+    [IntegrationTestMethod("oobd-test-pgvector")]
+    public async Task Query_GraphFromRoot_WalksOutwardsByDepth()
+    {
+        var one = await _engine.QueryAsync<GraphEdge>(new QueryRequest { From = "links", Shape = "graph", Root = "1", Depth = 1 });
+        var three = await _engine.QueryAsync<GraphEdge>(new QueryRequest { From = "links", Shape = "graph", Root = "1", Depth = 3 });
+
+        TestContext.WriteLine("Depth 1: {0} edges, depth 3: {1} edges", one.Rows.Count, three.Rows.Count);
+        Assert.AreEqual(1, one.Rows.Count);
+        Assert.AreEqual(3, three.Rows.Count, "1-2, 2-3, 3-4 and never the unconnected 8-9");
+        Assert.IsFalse(three.Nodes!.Contains("8"));
     }
 
     private static Dictionary<string, JsonElement> Filters(string json) => JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json)!;

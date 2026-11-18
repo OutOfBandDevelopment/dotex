@@ -46,6 +46,9 @@ public sealed partial class QueryEngine(
         if (kind.Right.Length > 0 && authorizer?.IsAllowed(kind.Right) != true)
             throw new QueryException($"Kind '{kind.Name}' needs the right '{kind.Right}'.", 403);
 
+        if (request.Shape == "graph")
+            return await GraphAsync(kind, request, started, cancellationToken).ConfigureAwait(false);
+
         var compiled = QueryCompiler.Compile(kind, request, dialect, options.Value.MaxTop, cursors);
         var rows = await executor.ReadAsync(compiled.Sql, compiled.Parameters, cancellationToken).ConfigureAwait(false);
 
@@ -96,6 +99,51 @@ public sealed partial class QueryEngine(
             Next = result.Next,
             Count = result.Count,
             ElapsedMs = result.ElapsedMs,
+            Nodes = result.Nodes,
+        };
+    }
+
+    private async Task<QueryResult<IReadOnlyDictionary<string, object?>>> GraphAsync(KindInfo kind, QueryRequest request, long started, CancellationToken cancellationToken)
+    {
+        var top = Math.Clamp(request.Top, 1, options.Value.MaxTop);
+        var edges = new Dictionary<string, IReadOnlyDictionary<string, object?>>();
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        var frontier = request.Root is null ? null : new[] { request.Root };
+        var steps = request.Root is null ? 1 : Math.Clamp(request.Depth, 1, 4);
+        for (var step = 0; step < steps && edges.Count < top; step++)
+        {
+            var compiled = QueryCompiler.Graph(kind, request, dialect, new SqlParameters(), top, frontier);
+            var rows = await executor.ReadAsync(compiled.Sql, compiled.Parameters, cancellationToken).ConfigureAwait(false);
+            var next = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var row in rows)
+            {
+                var source = KeyText(row["source"]);
+                var target = KeyText(row["target"]);
+                var weight = Convert.ToDouble(row["weight"] ?? 0, CultureInfo.InvariantCulture);
+                if (edges.Count >= top || !edges.TryAdd(source + "\u0001" + target, new Dictionary<string, object?> { ["source"] = source, ["target"] = target, ["weight"] = weight }))
+                    continue;
+                foreach (var node in new[] { source, target })
+                    if (seen.Add(node))
+                        next.Add(node);
+            }
+
+            if (frontier is null)
+                break;
+            frontier = next.Except(frontier).ToArray();
+            if (frontier.Length == 0)
+                break;
+        }
+
+        var list = edges.Values.ToList();
+        var elapsed = (long)Stopwatch.GetElapsedTime(started).TotalMilliseconds;
+        Ran(logger, kind.Name, request.Shape, elapsed);
+        return new QueryResult<IReadOnlyDictionary<string, object?>>
+        {
+            Kind = kind.Name,
+            Shape = "graph",
+            Rows = list,
+            ElapsedMs = elapsed,
+            Nodes = list.SelectMany(e => new[] { (string)e["source"]!, (string)e["target"]! }).Distinct(StringComparer.Ordinal).ToList(),
         };
     }
 

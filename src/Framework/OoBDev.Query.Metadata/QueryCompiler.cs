@@ -36,7 +36,8 @@ public static class QueryCompiler
             "rows" => Rows(kind, request, dialect, parameters, top, cursors),
             "facets" => Facets(kind, request, dialect, parameters, top),
             "buckets" => Buckets(kind, request, dialect, parameters),
-            _ => throw new QueryException("shape is rows, facets or buckets."),
+            "graph" => Graph(kind, request, dialect, parameters, top, null),
+            _ => throw new QueryException("shape is rows, facets, buckets or graph."),
         };
     }
 
@@ -134,6 +135,25 @@ public static class QueryCompiler
         if (facet.Type != "number")
             throw new QueryException($"Facet '{facet.Name}' is not numeric, so it cannot be a bucket axis.");
         return facet;
+    }
+
+    /// <summary>The strongest links of an edge kind that pass the filters; with a frontier, only links that touch it (one step of a walk).</summary>
+    internal static CompiledQuery Graph(KindInfo kind, QueryRequest request, IQueryDialect dialect, SqlParameters parameters, int top, string[]? frontier)
+    {
+        var edge = kind.Edge ?? throw new QueryException($"Kind '{kind.Name}' is not made of links, so it has no graph.");
+        var where = FilterCompiler.Compile(kind, request, parameters, dialect).ToList();
+        var source = $"CAST({edge.Source} AS text)";
+        var target = $"CAST({edge.Target} AS text)";
+        if (frontier is not null)
+        {
+            var parameter = parameters.Add(frontier);
+            where.Add($"({dialect.In(source, parameter)} OR {dialect.In(target, parameter)})");
+        }
+
+        var sql = $"SELECT {source} AS {dialect.Quote("source")}, {target} AS {dialect.Quote("target")}, ({edge.Weight}) AS {dialect.Quote("weight")} "
+            + $"FROM {kind.Base} {kind.Joins}".TrimEnd()
+            + $"{Where(where)} ORDER BY ({edge.Weight}) DESC, {source}, {target} {dialect.Limit(top)}";
+        return new CompiledQuery(sql, parameters.Values, null, top, "", 0);
     }
 
     private static string Where(List<string> terms) => terms.Count == 0 ? "" : " WHERE " + string.Join(" AND ", terms);

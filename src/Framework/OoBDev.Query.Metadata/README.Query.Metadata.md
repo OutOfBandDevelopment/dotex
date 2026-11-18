@@ -55,9 +55,13 @@ The text form `photos tag:beach by -taken top 60 count` (`QueryText.Parse`) and 
 
 `[Relation("copies", "... {anchor} ...")]` declares a condition for rows related to one anchor row (`{k}` is the key expression, `{anchor}` the bound anchor key as text, so cast it when the key is not text). A request names it with `related: { via, of }`, or in text `of copies:42`. An unknown relation is a `QueryException` that lists the declared ones; the description lists the relation names.
 
+## Graph shape
+
+`[Edge(source, target, weight)]` marks a kind whose rows are links. `shape: "graph"` (text: `as graph [from <id>] [depth <n>]`) returns the strongest `top` links that pass the filters as `GraphEdge` rows (`source`, `target` as text, `weight`) plus `Nodes`, the distinct ends. With `root` the engine walks outwards `depth` steps (1 to 4), one statement per step, each limited to links that touch the previous frontier, and stops when `top` links are collected. A kind without `[Edge]` answers a `QueryException`.
+
 ## Not built yet
 
-Graph shape, snapshot sources, vector spaces (near) and the host sample; see the design document.
+Snapshot sources, vector spaces (near) and the host sample; see the design document.
 
 ## Tests
 

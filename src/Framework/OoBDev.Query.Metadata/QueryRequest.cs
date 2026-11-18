@@ -43,4 +43,10 @@ public sealed record QueryRequest
 
     /// <summary>Only rows related to an anchor row through a relation the kind declares.</summary>
     public RelatedClause? Related { get; init; }
+
+    /// <summary>For shape <c>graph</c>: walk outwards from this node id.</summary>
+    public string? Root { get; init; }
+
+    /// <summary>For shape <c>graph</c> with a root: how many steps to walk, 1 to 4.</summary>
+    public int Depth { get; init; } = 1;
 }

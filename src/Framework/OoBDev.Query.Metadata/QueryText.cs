@@ -70,7 +70,7 @@ public static class QueryText
                     i += 2;
                     break;
                 case "as":
-                    const string usage = "'as' is followed by rows, facets by <facet> or buckets by <a>,<b> [cell <size>].";
+                    const string usage = "'as' is followed by rows, facets by <facet> or buckets by <a>,<b> [cell <size>] or graph [from <id>] [depth <n>].";
                     if (i + 1 >= tokens.Count)
                         throw new QueryException(usage);
                     var shape = tokens[i + 1].Text.ToLowerInvariant();
@@ -93,6 +93,24 @@ public static class QueryText
                             if (i + 1 >= tokens.Count || !double.TryParse(tokens[i + 1].Text, NumberStyles.Float, CultureInfo.InvariantCulture, out var cell) || cell <= 0)
                                 throw new QueryException("'cell' needs a size, for example: cell 0.5.");
                             request = request with { Cell = cell };
+                            i += 2;
+                        }
+                    }
+                    else if (shape == "graph")
+                    {
+                        request = request with { Shape = "graph" };
+                        i += 2;
+                        if (i + 1 < tokens.Count && tokens[i].Text.Equals("from", StringComparison.OrdinalIgnoreCase))
+                        {
+                            request = request with { Root = tokens[i + 1].Text };
+                            i += 2;
+                        }
+
+                        if (i < tokens.Count && tokens[i].Text.Equals("depth", StringComparison.OrdinalIgnoreCase))
+                        {
+                            if (i + 1 >= tokens.Count || !int.TryParse(tokens[i + 1].Text, NumberStyles.None, CultureInfo.InvariantCulture, out var depth) || depth < 1)
+                                throw new QueryException("'depth' needs a number, for example: depth 2.");
+                            request = request with { Depth = depth };
                             i += 2;
                         }
                     }
