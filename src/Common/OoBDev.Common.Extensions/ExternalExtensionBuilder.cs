@@ -85,7 +85,7 @@ public record ExternalExtensionBuilder
 
     /// <summary>
     /// Gets or sets a value indicating whether the HTML to PDF converter (wkhtmltopdf, a native process) is registered.
-    /// Off by default: Apache Tika converts to PDF, and the converter runs an external library on HTML.
+    /// Off by default because it runs a native process; Apache Tika converts documents to HTML only, so PDF output needs this converter after it.
     /// </summary>
     public bool IncludeWkHtmlToPdf { get; init; }
 

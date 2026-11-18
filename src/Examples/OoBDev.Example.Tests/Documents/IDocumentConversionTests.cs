@@ -22,7 +22,7 @@ public class IDocumentConversionTests
     [TestCategory(TestCategories.Unit)]
     [TestMethod]
     [DataRow("HelloWorld.html", "text/html", "text/x-markdown", ".md")]
-    //NOTE: PDF output comes from Apache Tika (Integration rows below); the wkhtmltopdf converter is opt-in (ExternalExtensionBuilder.IncludeWkHtmlToPdf)
+    //NOTE: PDF output is Tika to HTML, then wkhtmltopdf; that converter is opt-in (ExternalExtensionBuilder.IncludeWkHtmlToPdf), which the Integration rows switch on
     [DataRow("HelloWorld.txt", "text/plain", "text/html", ".html")]
     [DataRow("HelloWorld.md", "text/markdown", "text/html", ".html")]
     [DataRow("HelloWorld.txt", "text/plain", "text/plain", ".txt")]
@@ -73,7 +73,7 @@ public class IDocumentConversionTests
                 aspNetBuilder: new(),
                 jwtBuilder: new(),
                 identityBuilder: new(),
-                externalBuilder: new(),
+                externalBuilder: new() { IncludeWkHtmlToPdf = includeExternal },
                 hostingBuilder: new()
                 )
             .BuildServiceProvider()
