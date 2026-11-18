@@ -1,6 +1,6 @@
 ﻿# Feature request: Image color analysis: histograms, HSV facets and exposure metrics
 
-- **Status:** triaged
+- **Status:** done
 - **Requested by:** owner (filed from the notes repository, `projects/applications/second-shooter-photo-library.md`; design concepts only, its code is not reused)
 - **Date:** 2026-11-11
 - **Area:** new, near `OoBDev.Onnx.ImageEmbeddings.Skia`, `OoBDev.System.Graphics.ColorConversion` and `OoBDev.Extensions.Drawing`
@@ -57,3 +57,7 @@ Reads decoded pixels only. Cost is one pass over the image, so it should reuse a
 Origin: notes repository `projects/applications/second-shooter-photo-library.md`. Maintainers: accept, schedule or decline.
 
 2026-11-11: triaged. Accepted as a backlog idea from the storage and photo-library review; the code named above was not read in full, so the first step is the superset comparison before any design. Face and pet matching also needs an owner decision on personal data. Backlog: BACKLOG.md, Consolidation requests.
+
+## Outcome
+
+2026-11-18: built in `OoBDev.Imaging.Analysis` (`RgbImage`, `ImageHistograms`, `ExposureMetrics`, `ColorFacets`, transforms; 2026-11-16) and used by burst ranking, whose `QualityAnalyzer` followed. Answers: a purpose-built `RgbImage` buffer instead of Skia; storage of histograms is the caller's choice; histogram rendering is out of scope (data only) and stays a later slice in the [design](../../design/ImageAnalysis/README.md). Change documents: [2026-11-16](../../changes/2026-11-16.md).

@@ -1,6 +1,6 @@
 ﻿# Image analysis (histograms, colour facets, exposure)
 
-Status: **first slice built 2026-11-16** (RgbImage, histograms, exposure, colour facets, transforms) (placement confirmed by the owner 2026-11-12, option A). Request: [image colour analysis and histograms](../../features/request/2026-11-11-image-color-analysis-and-histograms.md).
+Status: **built 2026-11-16, request closed 2026-11-18** (RgbImage, histograms, exposure, colour facets, transforms) (placement confirmed by the owner 2026-11-12, option A). Request: [image colour analysis and histograms](../../features/completed/2026-11-11-image-color-analysis-and-histograms.md).
 
 ## Contents
 
