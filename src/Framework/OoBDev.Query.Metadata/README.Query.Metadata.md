@@ -59,9 +59,13 @@ The text form `photos tag:beach by -taken top 60 count` (`QueryText.Parse`) and 
 
 `[Edge(source, target, weight)]` marks a kind whose rows are links. `shape: "graph"` (text: `as graph [from <id>] [depth <n>]`) returns the strongest `top` links that pass the filters as `GraphEdge` rows (`source`, `target` as text, `weight`) plus `Nodes`, the distinct ends. With `root` the engine walks outwards `depth` steps (1 to 4), one statement per step, each limited to links that touch the previous frontier, and stops when `top` links are collected. A kind without `[Edge]` answers a `QueryException`.
 
+## Near (spaces)
+
+`[Space(name, metric)]` declares how a kind measures closeness. `SpaceMetric.Haversine` takes two numeric facets (`A` latitude, `B` longitude) and a request position, and gives kilometres. `SpaceMetric.Cosine` joins an embedding table as `sv` (`Table`, `IdColumn`, `VectorColumn`, `IdType`) and gives the cosine distance to the vector stored for the anchor row `ref`. `DefaultMax` limits the distance when the request gives none. A request names `near: { space, ref | lat + lon, max }` (text: `near geo:51.5,-0.1 max 25`, `near similar:42`); the rows get a `distance` column, sort by it by default (`sort: ["distance"]` also works) and page with the usual cursor. `IQueryDialect.Haversine` and `VectorDistance` give the SQL; the PostgreSQL dialect uses the `<=>` operator, so the pgvector extension must be on the connection's search path.
+
 ## Not built yet
 
-Snapshot sources, vector spaces (near) and the host sample; see the design document.
+Snapshot sources, text anchors for vector spaces (they need an embedder), paging the embedding table first so an approximate index is used, and the host sample; see the design document.
 
 ## Tests
 

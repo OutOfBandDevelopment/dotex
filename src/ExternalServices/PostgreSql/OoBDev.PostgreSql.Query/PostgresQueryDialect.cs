@@ -43,6 +43,13 @@ public sealed class PostgresQueryDialect : IQueryDialect
     public string GridCell(string expr, string cellParameter) => $"floor(({expr}) / {cellParameter})";
 
     /// <inheritdoc />
+    public string Haversine(string lat, string lon, string latParameter, string lonParameter) =>
+        $"(6371.0 * acos(least(1.0, greatest(-1.0, cos(radians({lat})) * cos(radians({latParameter})) * cos(radians({lonParameter}) - radians({lon})) + sin(radians({lat})) * sin(radians({latParameter}))))))";
+
+    /// <inheritdoc />
+    public string VectorDistance(string column, string anchor) => $"(({column}) <=> ({anchor}))";
+
+    /// <inheritdoc />
     public string ContainsPattern(string text) =>
         "%" + text.Replace("\\", "\\\\", StringComparison.Ordinal).Replace("%", "\\%", StringComparison.Ordinal).Replace("_", "\\_", StringComparison.Ordinal) + "%";
 }

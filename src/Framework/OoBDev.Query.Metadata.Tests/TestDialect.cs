@@ -11,6 +11,10 @@ internal sealed class TestDialect : IQueryDialect
 
     public string NotLike(string expr, string parameter) => $"{expr} NOT ILIKE {parameter}";
 
+    public string Haversine(string lat, string lon, string latParameter, string lonParameter) => $"HAV({lat},{lon},{latParameter},{lonParameter})";
+
+    public string VectorDistance(string column, string anchor) => $"VEC({column},{anchor})";
+
     public string In(string expr, string parameter) => $"{expr} = ANY({parameter})";
 
     public string ArrayContains(string parameter, string expr) => $"{parameter} = ANY({expr})";

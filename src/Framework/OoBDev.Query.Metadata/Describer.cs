@@ -24,5 +24,6 @@ public static class Describer
         kind.Predicates.ToDictionary(p => p.Key, p => p.Value.Keys.ToArray(), StringComparer.OrdinalIgnoreCase),
         kind.Operators.Keys.Order(StringComparer.Ordinal).ToArray(),
         (kind.Hints?.Keys ?? []).Order(StringComparer.Ordinal).ToArray(),
-        (kind.Relations?.Keys ?? []).Order(StringComparer.Ordinal).ToArray());
+        (kind.Relations?.Keys ?? []).Order(StringComparer.Ordinal).ToArray(),
+        (kind.Spaces?.Keys ?? []).Order(StringComparer.Ordinal).ToArray());
 }

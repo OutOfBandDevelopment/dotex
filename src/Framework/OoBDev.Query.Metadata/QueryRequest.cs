@@ -44,6 +44,9 @@ public sealed record QueryRequest
     /// <summary>Only rows related to an anchor row through a relation the kind declares.</summary>
     public RelatedClause? Related { get; init; }
 
+    /// <summary>Order rows by closeness to an anchor in a space the kind declares (shape rows only).</summary>
+    public NearClause? Near { get; init; }
+
     /// <summary>For shape <c>graph</c>: walk outwards from this node id.</summary>
     public string? Root { get; init; }
 

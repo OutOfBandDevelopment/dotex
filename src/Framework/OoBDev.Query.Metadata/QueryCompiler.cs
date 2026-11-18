@@ -43,18 +43,21 @@ public static class QueryCompiler
 
     private static CompiledQuery Rows(KindInfo kind, QueryRequest request, IQueryDialect dialect, SqlParameters parameters, int top, CursorCodec? cursors)
     {
-        var sorts = ResolveSort(kind, request);
+        var from = $"FROM {kind.Base} {kind.Joins}".TrimEnd();
+        var where = new List<string>();
+        var distance = request.Near is { } near ? Near(kind, near, dialect, parameters, ref from, where) : null;
+        var sorts = ResolveSort(kind, request, distance);
         var spec = string.Join(',', sorts.Take(sorts.Count - 1).Select(s => (s.Descending ? "-" : "") + s.Name));
 
         var columns = kind.Facets
             .Where(f => !f.Lazy || request.Select?.Contains(f.Name, StringComparer.OrdinalIgnoreCase) == true)
             .Select(f => $"{f.Expr} AS {dialect.Quote(f.Name)}")
+            .Concat(distance is null ? [] : [$"{distance} AS {dialect.Quote("distance")}"])
             .Concat(sorts.Select((s, i) => $"{s.Expr} AS {dialect.Quote("__s" + i)}"));
 
-        var where = FilterCompiler.Compile(kind, request, parameters, dialect).ToList();
+        where.AddRange(FilterCompiler.Compile(kind, request, parameters, dialect));
         if (request.Related is { } related)
             where.Add(Relation(kind, related, parameters));
-        var from = $"FROM {kind.Base} {kind.Joins}".TrimEnd();
         var countSql = request.Count ? $"SELECT count(*) {from}{Where(where)}" : null;
 
         if (!string.IsNullOrEmpty(request.After))
@@ -69,6 +72,36 @@ public static class QueryCompiler
             .Append(" ORDER BY ").AppendJoin(", ", sorts.Select(s => s.Expr + dialect.Direction(s.Descending)))
             .Append(' ').Append(dialect.Limit(top + 1)).ToString();
         return new CompiledQuery(sql, parameters.Values, countSql, top, spec, sorts.Count);
+    }
+
+    private static string Near(KindInfo kind, NearClause near, IQueryDialect dialect, SqlParameters parameters, ref string from, List<string> where)
+    {
+        if (kind.Spaces is null || !kind.Spaces.TryGetValue(near.Space, out var space))
+            throw new QueryException($"Kind '{kind.Name}' has no space '{near.Space}'. Spaces: {string.Join(", ", kind.Spaces?.Keys ?? [])}.");
+
+        string distance;
+        if (space.Metric == SpaceMetric.Haversine)
+        {
+            if (near.Lat is not { } lat || near.Lon is not { } lon)
+                throw new QueryException($"Space '{space.Name}' needs an anchor position: lat and lon.");
+            var a = Numeric(kind, space.A);
+            var b = Numeric(kind, space.B);
+            where.Add($"{a.Expr} IS NOT NULL AND {b.Expr} IS NOT NULL");
+            distance = dialect.Haversine(a.Expr, b.Expr, parameters.Add(lat), parameters.Add(lon));
+        }
+        else
+        {
+            if (string.IsNullOrEmpty(near.Ref))
+                throw new QueryException($"Space '{space.Name}' needs an anchor: ref, the key of a row.");
+            from += $" JOIN {space.Table} sv ON sv.{space.IdColumn} = {kind.Key}";
+            var anchor = $"SELECT x.{space.VectorColumn} FROM {space.Table} x WHERE x.{space.IdColumn} = CAST({parameters.Add(near.Ref)} AS {space.IdType})";
+            distance = dialect.VectorDistance("sv." + space.VectorColumn, anchor);
+        }
+
+        var max = near.Max ?? (double.IsNaN(space.DefaultMax) ? (double?)null : space.DefaultMax);
+        if (max is { } limit)
+            where.Add($"{distance} <= {parameters.Add(limit)}");
+        return distance;
     }
 
     private static string Relation(KindInfo kind, RelatedClause related, SqlParameters parameters)
@@ -158,17 +191,26 @@ public static class QueryCompiler
 
     private static string Where(List<string> terms) => terms.Count == 0 ? "" : " WHERE " + string.Join(" AND ", terms);
 
-    private static List<SortColumn> ResolveSort(KindInfo kind, QueryRequest request)
+    private static List<SortColumn> ResolveSort(KindInfo kind, QueryRequest request, string? distance)
     {
         var requested = request.Sort is { Length: > 0 }
             ? request.Sort
-            : kind.DefaultSort.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+            : distance is not null ? ["distance"] : kind.DefaultSort.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
 
         var sorts = new List<SortColumn>();
         foreach (var raw in requested)
         {
             var descending = raw.StartsWith('-');
             var name = raw.TrimStart('-', '+');
+            if (name.Equals("distance", StringComparison.OrdinalIgnoreCase))
+            {
+                if (distance is null)
+                    throw new QueryException("Sort by distance needs a near clause.");
+                if (sorts.All(s => s.Name != "distance"))
+                    sorts.Add(new SortColumn("distance", distance, descending, null));
+                continue;
+            }
+
             var facet = kind.Facet(name) ?? throw new QueryException($"Kind '{kind.Name}' has no facet '{name}' to sort by.");
             if (!facet.Sortable)
                 throw new QueryException($"Facet '{facet.Name}' cannot be sorted.");

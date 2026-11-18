@@ -11,7 +11,7 @@ namespace OoBDev.Query.Metadata;
 /// </summary>
 public static class QueryText
 {
-    private static readonly HashSet<string> Keywords = new(StringComparer.OrdinalIgnoreCase) { "as", "by", "top", "count", "of" };
+    private static readonly HashSet<string> Keywords = new(StringComparer.OrdinalIgnoreCase) { "as", "by", "top", "count", "of", "near" };
 
     private sealed record Token(string Text, string Raw, bool Quoted);
 
@@ -49,6 +49,9 @@ public static class QueryText
                 case "count":
                     request = request with { Count = true };
                     i++;
+                    break;
+                case "near":
+                    request = request with { Near = ParseNear(tokens, ref i) };
                     break;
                 case "of":
                     if (i + 1 >= tokens.Count || tokens[i + 1].Text.Split(':', 2) is not [{ Length: > 0 } via, { Length: > 0 } id])
@@ -126,6 +129,36 @@ public static class QueryText
         }
 
         return request;
+    }
+
+    private static NearClause ParseNear(List<Token> tokens, ref int i)
+    {
+        const string usage = "'near' needs space:key or space:lat,lon, optionally followed by max <distance>, for example: near geo:51.5,-0.1 max 25.";
+        if (i + 1 >= tokens.Count || tokens[i + 1].Text.Split(':', 2) is not [{ Length: > 0 } space, { Length: > 0 } anchor])
+            throw new QueryException(usage);
+        i += 2;
+        var near = new NearClause(space);
+        var position = anchor.Split(',');
+        if (position.Length == 2)
+        {
+            if (!double.TryParse(position[0], NumberStyles.Float, CultureInfo.InvariantCulture, out var lat) || !double.TryParse(position[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var lon))
+                throw new QueryException(usage);
+            near = near with { Lat = lat, Lon = lon };
+        }
+        else
+        {
+            near = near with { Ref = anchor };
+        }
+
+        if (i < tokens.Count && tokens[i].Text.Equals("max", StringComparison.OrdinalIgnoreCase))
+        {
+            if (i + 1 >= tokens.Count || !double.TryParse(tokens[i + 1].Text, NumberStyles.Float, CultureInfo.InvariantCulture, out var max) || max <= 0)
+                throw new QueryException(usage);
+            near = near with { Max = max };
+            i += 2;
+        }
+
+        return near;
     }
 
     private static List<Token> Tokenize(string s)

@@ -55,7 +55,11 @@ public sealed class KindRegistry
         var relations = type.GetCustomAttributes<RelationAttribute>().ToDictionary(r => r.Name, r => r.Sql, StringComparer.OrdinalIgnoreCase);
         var edgeAttribute = type.GetCustomAttribute<EdgeAttribute>();
         var edge = edgeAttribute is null ? null : new EdgeInfo(edgeAttribute.Source, edgeAttribute.Target, edgeAttribute.Weight);
-        return new KindInfo(attribute.Name, type, attribute.Title, attribute.Base, attribute.Joins, attribute.Key, attribute.DefaultSort, attribute.Right, facets, predicates, operators, attribute.Sample, hints, relations, edge);
+        var spaces = type.GetCustomAttributes<SpaceAttribute>().ToDictionary(
+            s => s.Name,
+            s => new SpaceInfo(s.Name, s.Metric, s.A, s.B, s.Table, s.IdColumn, s.IdType, s.VectorColumn, s.DefaultMax),
+            StringComparer.OrdinalIgnoreCase);
+        return new KindInfo(attribute.Name, type, attribute.Title, attribute.Base, attribute.Joins, attribute.Key, attribute.DefaultSort, attribute.Right, facets, predicates, operators, attribute.Sample, hints, relations, edge, spaces);
     }
 
     private static string TypeName(Type type)

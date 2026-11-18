@@ -32,7 +32,7 @@ public class PostgresQueryIntegrationTests
             Assert.Inconclusive("The connection string is not a test database.");
 
         _schema = $"q_{Guid.NewGuid():N}";
-        _connectionString = baseConnection.TrimEnd(';') + $";Search Path={_schema}";
+        _connectionString = baseConnection.TrimEnd(';') + $";Search Path={_schema},public";
         await using (var connection = new NpgsqlConnection(baseConnection))
         {
             await connection.OpenAsync();
@@ -40,6 +40,9 @@ public class PostgresQueryIntegrationTests
             await Run(connection, $"CREATE TABLE \"{_schema}\".items (id bigint PRIMARY KEY, title text NOT NULL, created timestamp NULL, tags text[] NULL, score int NOT NULL, removed boolean NOT NULL DEFAULT false)");
             await Run(connection, $"CREATE TABLE \"{_schema}\".places (id bigint PRIMARY KEY, name text NOT NULL, lat double precision NULL, lon double precision NULL, sha text NULL)");
             await Run(connection, $"INSERT INTO \"{_schema}\".places VALUES (1, 'a', 10.1, 20.1, 'sha-b'), (2, 'b', 10.2, 20.2, 'sha-a'), (3, 'c', 50.5, 60.5, 'sha-c'), (4, 'd', NULL, NULL, 'sha-d')");
+            await Run(connection, "CREATE EXTENSION IF NOT EXISTS vector");
+            await Run(connection, $"CREATE TABLE \"{_schema}\".place_vectors (place_id bigint PRIMARY KEY, vec vector(3) NOT NULL)");
+            await Run(connection, $"INSERT INTO \"{_schema}\".place_vectors VALUES (1, '[1,0,0]'), (2, '[0.9,0.1,0]'), (3, '[0,1,0]'), (4, '[0,0,1]')");
             await Run(connection, $"CREATE TABLE \"{_schema}\".links (id bigint PRIMARY KEY, a int NOT NULL, b int NOT NULL, shared int NOT NULL)");
             await Run(connection, $"INSERT INTO \"{_schema}\".links VALUES (1, 1, 2, 9), (2, 2, 3, 5), (3, 3, 4, 7), (4, 8, 9, 100)");
             for (var i = 1; i <= 25; i++)
@@ -194,6 +197,35 @@ public class PostgresQueryIntegrationTests
         Assert.AreEqual(1, one.Rows.Count);
         Assert.AreEqual(3, three.Rows.Count, "1-2, 2-3, 3-4 and never the unconnected 8-9");
         Assert.IsFalse(three.Nodes!.Contains("8"));
+    }
+
+    [IntegrationTestMethod("oobd-test-pgvector")]
+    public async Task Query_NearGeo_OrdersByKilometresAndHonoursMax()
+    {
+        var near = new NearClause("geo", Lat: 10.1, Lon: 20.1);
+
+        var all = await _engine.QueryAsync<PlaceRow>(new QueryRequest { From = "places", Near = near });
+        var close = await _engine.QueryAsync<PlaceRow>(new QueryRequest { From = "places", Near = near with { Max = 50 } });
+
+        TestContext.WriteLine("All: {0}; within 50 km: {1}", string.Join(",", all.Rows.Select(r => $"{r.Name}:{r.Distance:F1}")), close.Rows.Count);
+        CollectionAssert.AreEqual(new[] { "a", "b", "c" }, all.Rows.Select(r => r.Name).ToArray(), "d has no position and is left out");
+        Assert.IsTrue(all.Rows[0].Distance < 1);
+        Assert.AreEqual(2, close.Rows.Count);
+        Assert.IsTrue(all.Rows[1].Distance is > 10 and < 20, "0.1 degrees on both axes is about 15 km");
+    }
+
+    [IntegrationTestMethod("oobd-test-pgvector")]
+    public async Task Query_NearVector_OrdersByCosineDistanceToTheAnchor()
+    {
+        var page = await _engine.QueryAsync<PlaceRow>(new QueryRequest { From = "places", Near = new NearClause("similar", Ref: "1"), Top = 2 });
+        var next = await _engine.QueryAsync<PlaceRow>(new QueryRequest { From = "places", Near = new NearClause("similar", Ref: "1"), Top = 2, After = page.Next });
+
+        TestContext.WriteLine("Page: {0}; next: {1}", string.Join(",", page.Rows.Select(r => r.Name)), string.Join(",", next.Rows.Select(r => r.Name)));
+        CollectionAssert.AreEqual(new[] { "a", "b" }, page.Rows.Select(r => r.Name).ToArray());
+        Assert.IsNotNull(page.Next);
+        Assert.AreEqual(2, next.Rows.Count);
+        Assert.AreEqual(0.0, page.Rows[0].Distance!.Value, 1e-9);
+        CollectionAssert.AreEquivalent(new[] { "c", "d" }, next.Rows.Select(r => r.Name).ToArray());
     }
 
     private static Dictionary<string, JsonElement> Filters(string json) => JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json)!;
