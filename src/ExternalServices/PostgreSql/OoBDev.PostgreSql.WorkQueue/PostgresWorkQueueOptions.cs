@@ -32,4 +32,14 @@ public sealed class PostgresWorkQueueOptions
     [Required]
     [RegularExpression(IdentifierPattern)]
     public string DeadLettersTable { get; set; } = "dead_letters";
+
+    /// <summary>The table holding the worker event history.</summary>
+    [Required]
+    [RegularExpression(IdentifierPattern)]
+    public string EventsTable { get; set; } = "worker_events";
+
+    /// <summary>The table holding one high-water mark per event reader.</summary>
+    [Required]
+    [RegularExpression(IdentifierPattern)]
+    public string EventReadersTable { get; set; } = "worker_events_reader";
 }

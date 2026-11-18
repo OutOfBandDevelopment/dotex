@@ -32,7 +32,7 @@ Paths are in the catalog repository `C:epo_storage`. They are the code to merge
 
 ## Security and operations
 
-Inputs are private files (photos, scans), so nothing is logged beyond identifiers and counts, and no source file is modified. Runs as a worker with a lease and a runtime ceiling (see `2026-11-11-database-stage-work-queue.md`).
+Inputs are private files (photos, scans), so nothing is logged beyond identifiers and counts, and no source file is modified. Runs as a worker with a lease and a runtime ceiling (see [`2026-11-11-database-stage-work-queue.md`](2026-11-11-database-stage-work-queue.md)).
 
 ## Priority
 

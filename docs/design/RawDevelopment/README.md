@@ -56,4 +56,4 @@ Detection: a TIFF-based RAW header is RAW, a plain JPEG and a plain TIFF are not
 
 - The native provider itself (needs the owner's package choice).
 - Colour profiles and lens corrections.
-- Batch conversion and the work queue (see [work queue](../../features/request/2026-11-11-database-stage-work-queue.md)).
+- Batch conversion and the work queue (see [work queue](../../features/completed/2026-11-11-database-stage-work-queue.md)).

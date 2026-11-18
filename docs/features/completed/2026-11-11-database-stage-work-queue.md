@@ -1,6 +1,6 @@
 ﻿# Feature request: database-backed stage work queue with leases, throttling and worker events
 
-- **Status:** triaged
+- **Status:** done (built 2026-11-16 and 2026-11-17, see [change](../../changes/2026-11-17.md#work-queue-worker-events))
 - **Requested by:** owner (filed from the NAS storage catalog application, `C:\repo\_storage`, `src/Storage.Work` and `src/Storage.Workers`)
 - **Date:** 2026-11-11
 - **Area:** `OoBDev.MessageQueueing` neighbours; the queue and event-stream answer in `2026-11-10-postgres-support.md`
@@ -68,6 +68,16 @@ The queue tables hold paths and statuses, not content. The operator controls (pa
 
 - Keep the PGMQ-style message queue beside the task rows (the application does, for wake-ups) or use `LISTEN`/`NOTIFY` for the wake-up and rows only (recommended to decide after a spike; the application has measured only the first)?
 - Should the table shape be fixed by the library or mapped by the application?
+
+## Outcome
+
+Built: `OoBDev.WorkQueue` (contracts, in-memory provider, stage workers, `StageSla`, options), `OoBDev.PostgreSql.WorkQueue` (claim with `SKIP LOCKED`, fenced complete and fail, dead letters, generated migration script) and, on 2026-11-17, the worker events: `IWorkerEvents` with `InMemoryWorkerEvents` and `PostgresWorkerEvents` (event table, one high-water mark per reader, retention by count and age, idle readers dropped).
+
+Decisions from the open questions: the task rows are the source of truth and the wake-up is polling (`PollInterval`), so there is no `LISTEN`/`NOTIFY` or PGMQ reader in the queue (`OoBDev.PostgreSql.Pgmq` stays a separate adapter for those who want it); table and schema names are options and the script is generated from them.
+
+Not taken: application stages and duties (stay in the catalog application, which now references the packages).
+
+Tests: 35 Unit in `OoBDev.WorkQueue.Tests`, 9 Unit and 12 Integration (pgvector service) in `OoBDev.PostgreSql.WorkQueue.Tests`; the Integration set was run on 2026-11-17 and passed.
 
 ## Triage notes
 

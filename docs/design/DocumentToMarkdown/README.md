@@ -27,7 +27,7 @@ Turn documents (PDF, office formats, text, scans) into page-anchored Markdown wi
 | Catalog `IDocumentOcr` and `DoclingOcr` (80 lines) | Docling-serve client: post, poll in 20 s waits, fetch Markdown; heavy options then a light retry; page mark `<<<PAGE>>>` | Base for an OCR provider; plain `HttpClient`, so an adapter under ExternalServices |
 | Catalog `PdfSegments` and the segment loop in `OcrStageRunner` | Plan page ranges, write a piece, keep each finished piece's text so a retry resumes, pad or merge pages so numbers stay true | Base for `PdfSegmenter` and a resumable `SegmentedOcr`; needs a PDF page splitter |
 | Catalog `OcrMarkdown`, `ExtractPaths`, `ChunkText`, `HtmlMarkdown`, `HtmlText` | Front matter writer, content-hash paths, chunking, HTML to Markdown | Base for the Markdown writer and HTML converters |
-| Catalog stage runners, work queue, twin reuse | Database and lease wiring | Catalog-specific; see [work queue](../../features/request/2026-11-11-database-stage-work-queue.md) |
+| Catalog stage runners, work queue, twin reuse | Database and lease wiring | Catalog-specific; see [work queue](../../features/completed/2026-11-11-database-stage-work-queue.md) |
 
 The request's open question (default converter) is answered as recommended: a provider interface first, Docling as the first provider, Tesseract through `ExternalTools` second.
 

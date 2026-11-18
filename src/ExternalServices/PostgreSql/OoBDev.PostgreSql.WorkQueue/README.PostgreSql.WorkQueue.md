@@ -31,6 +31,10 @@ await queue.MigrateAsync(options);                  // creates the schema and ta
 
 Names match `^[a-z_][a-z0-9_]{0,62}$` and are quoted into the SQL.
 
+## Worker events
+
+`TryAddPostgresWorkerEvents(configuration)` registers `PostgresWorkerEvents` as the `IWorkerEvents`. It uses the same connection string and schema as the queue and two more tables (`EventsTable` default `worker_events`, `EventReadersTable` default `worker_events_reader`; the migration script creates them with the task tables). Retention binds from `WorkQueue:Events`.
+
 ## Tests
 
 Unit tests cover the script, identifier validation and registration. Integration tests run against the `pgvector` service of the test stack (`PGVECTOR_CONNECTION_STRING`) in a throwaway schema per test.
