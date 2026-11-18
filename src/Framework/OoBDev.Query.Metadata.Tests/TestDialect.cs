@@ -21,5 +21,7 @@ internal sealed class TestDialect : IQueryDialect
 
     public string? DatePart(string part, string expr) => part == "month" ? $"to_char({expr}, 'YYYY-MM')" : null;
 
+    public string GridCell(string expr, string cellParameter) => $"floor(({expr}) / {cellParameter})";
+
     public string ContainsPattern(string text) => "%" + text.Replace("\\", "\\\\", StringComparison.Ordinal).Replace("%", "\\%", StringComparison.Ordinal).Replace("_", "\\_", StringComparison.Ordinal) + "%";
 }

@@ -11,6 +11,8 @@ namespace OoBDev.Query.Metadata;
 /// </summary>
 public static class QueryCompiler
 {
+    private const int BucketLimit = 1000;
+
     private sealed record SortColumn(string Name, string Expr, bool Descending, FacetInfo? Facet);
 
     /// <summary>Compiles the request.</summary>
@@ -33,7 +35,8 @@ public static class QueryCompiler
         {
             "rows" => Rows(kind, request, dialect, parameters, top, cursors),
             "facets" => Facets(kind, request, dialect, parameters, top),
-            _ => throw new QueryException("shape is rows or facets."),
+            "buckets" => Buckets(kind, request, dialect, parameters),
+            _ => throw new QueryException("shape is rows, facets or buckets."),
         };
     }
 
@@ -95,6 +98,33 @@ public static class QueryCompiler
         var sql = $"SELECT {expr} AS {dialect.Quote("value")}, count(*) AS {dialect.Quote("count")} FROM {kind.Base} {kind.Joins}".TrimEnd()
             + $"{Where(where)} GROUP BY {expr} ORDER BY {order} {dialect.Limit(top)}";
         return new CompiledQuery(sql, parameters.Values, null, top, "", 0);
+    }
+
+    private static CompiledQuery Buckets(KindInfo kind, QueryRequest request, IQueryDialect dialect, SqlParameters parameters)
+    {
+        if (!string.IsNullOrEmpty(request.After))
+            throw new QueryException("shape buckets is not paged.");
+        if (request.By is not { Length: 2 })
+            throw new QueryException("shape buckets needs by: [facetA, facetB].");
+
+        var a = Numeric(kind, request.By[0]);
+        var b = Numeric(kind, request.By[1]);
+        var where = FilterCompiler.Compile(kind, request, parameters, dialect).ToList();
+        where.Add($"{a.Expr} IS NOT NULL AND {b.Expr} IS NOT NULL");
+        var cell = parameters.Add(Math.Clamp(request.Cell ?? 1.0, 0.0001, 90));
+        var sample = kind.Sample.Length > 0 ? kind.Sample : "NULL";
+        var sql = $"SELECT avg({a.Expr}) AS {dialect.Quote("a")}, avg({b.Expr}) AS {dialect.Quote("b")}, count(*) AS {dialect.Quote("count")}, {sample} AS {dialect.Quote("sample")} "
+            + $"FROM {kind.Base} {kind.Joins}".TrimEnd()
+            + $"{Where(where)} GROUP BY {dialect.GridCell(a.Expr, cell)}, {dialect.GridCell(b.Expr, cell)} ORDER BY count(*) DESC {dialect.Limit(BucketLimit)}";
+        return new CompiledQuery(sql, parameters.Values, null, BucketLimit, "", 0);
+    }
+
+    private static FacetInfo Numeric(KindInfo kind, string name)
+    {
+        var facet = kind.Facet(name) ?? throw new QueryException($"Kind '{kind.Name}' has no facet '{name}'.");
+        if (facet.Type != "number")
+            throw new QueryException($"Facet '{facet.Name}' is not numeric, so it cannot be a bucket axis.");
+        return facet;
     }
 
     private static string Where(List<string> terms) => terms.Count == 0 ? "" : " WHERE " + string.Join(" AND ", terms);

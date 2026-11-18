@@ -38,6 +38,8 @@ public class PostgresQueryIntegrationTests
             await connection.OpenAsync();
             await Run(connection, $"CREATE SCHEMA \"{_schema}\"");
             await Run(connection, $"CREATE TABLE \"{_schema}\".items (id bigint PRIMARY KEY, title text NOT NULL, created timestamp NULL, tags text[] NULL, score int NOT NULL, removed boolean NOT NULL DEFAULT false)");
+            await Run(connection, $"CREATE TABLE \"{_schema}\".places (id bigint PRIMARY KEY, name text NOT NULL, lat double precision NULL, lon double precision NULL, sha text NULL)");
+            await Run(connection, $"INSERT INTO \"{_schema}\".places VALUES (1, 'a', 10.1, 20.1, 'sha-b'), (2, 'b', 10.2, 20.2, 'sha-a'), (3, 'c', 50.5, 60.5, 'sha-c'), (4, 'd', NULL, NULL, 'sha-d')");
             for (var i = 1; i <= 25; i++)
             {
                 var suffix = i % 5 == 0 ? "50%_off" : "plain";
@@ -130,6 +132,19 @@ public class PostgresQueryIntegrationTests
         var page = await _engine.QueryAsync<FacetCount>(new QueryRequest { From = "items", Shape = "facets", By = ["score"] });
 
         Assert.AreEqual(25, page.Rows.Sum(r => r.Count));
+    }
+
+    [IntegrationTestMethod("oobd-test-pgvector")]
+    public async Task Query_BucketsShape_GroupsIntoGridCellsAndSkipsRowsWithoutPosition()
+    {
+        var page = await _engine.QueryAsync<Bucket>(new QueryRequest { From = "places", Shape = "buckets", By = ["lat", "lon"], Cell = 1 });
+
+        TestContext.WriteLine("Buckets: {0}", string.Join("; ", page.Rows.Select(r => $"{r.A:0.##},{r.B:0.##} x{r.Count} {r.Sample}")));
+        Assert.AreEqual(2, page.Rows.Count);
+        Assert.AreEqual(2, page.Rows[0].Count);
+        Assert.AreEqual(10.15, page.Rows[0].A, 0.0001);
+        Assert.AreEqual("sha-a", page.Rows[0].Sample);
+        Assert.AreEqual(1, page.Rows[1].Count);
     }
 
     private static Dictionary<string, JsonElement> Filters(string json) => JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json)!;

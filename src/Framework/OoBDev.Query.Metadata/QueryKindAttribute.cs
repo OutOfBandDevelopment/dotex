@@ -29,4 +29,7 @@ public sealed class QueryKindAttribute(string name) : Attribute
 
     /// <summary>The application right a caller needs to query the kind; empty means any caller.</summary>
     public string Right { get; init; } = "";
+
+    /// <summary>Aggregate SQL expression that picks one representative per bucket (for example <c>min(r.sha)</c>); empty gives a null sample.</summary>
+    public string Sample { get; init; } = "";
 }

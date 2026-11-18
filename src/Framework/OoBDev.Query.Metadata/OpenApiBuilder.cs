@@ -48,7 +48,7 @@ public static class OpenApiBuilder
         ("select", new JsonObject { ["type"] = "array", ["items"] = Str() }),
         ("top", Int()),
         ("after", Str()),
-        ("shape", new JsonObject { ["type"] = "string", ["enum"] = new JsonArray("rows", "facets") }),
+        ("shape", new JsonObject { ["type"] = "string", ["enum"] = new JsonArray("rows", "facets", "buckets") }),
         ("by", new JsonObject { ["type"] = "array", ["items"] = Str() }),
         ("count", new JsonObject { ["type"] = "boolean" }));
 

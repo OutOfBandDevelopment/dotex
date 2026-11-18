@@ -40,6 +40,9 @@ public sealed class PostgresQueryDialect : IQueryDialect
     };
 
     /// <inheritdoc />
+    public string GridCell(string expr, string cellParameter) => $"floor(({expr}) / {cellParameter})";
+
+    /// <inheritdoc />
     public string ContainsPattern(string text) =>
         "%" + text.Replace("\\", "\\\\", StringComparison.Ordinal).Replace("%", "\\%", StringComparison.Ordinal).Replace("_", "\\_", StringComparison.Ordinal) + "%";
 }

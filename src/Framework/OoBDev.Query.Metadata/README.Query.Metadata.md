@@ -1,6 +1,6 @@
 # OoBDev.Query.Metadata
 
-A metadata-driven query engine with no database reference. A row class declares by attributes what a client may ask; one request shape (rows, facet counts, keyset paging) is compiled to parameterized SQL. Design: [docs/design/MetadataQuery](../../../docs/design/MetadataQuery/README.md). The PostgreSQL adapter is [OoBDev.PostgreSql.Query](../../ExternalServices/PostgreSql/OoBDev.PostgreSql.Query/README.PostgreSql.Query.md).
+A metadata-driven query engine with no database reference. A row class declares by attributes what a client may ask; one request shape (rows, facet counts, grid buckets, keyset paging) is compiled to parameterized SQL. Design: [docs/design/MetadataQuery](../../../docs/design/MetadataQuery/README.md). The PostgreSQL adapter is [OoBDev.PostgreSql.Query](../../ExternalServices/PostgreSql/OoBDev.PostgreSql.Query/README.PostgreSql.Query.md).
 
 ## Declare a kind
 
@@ -43,9 +43,13 @@ The text form `photos tag:beach by -taken top 60 count` (`QueryText.Parse`) and 
 | `CursorKey` | required, 32 characters or more | HMAC key that signs cursors |
 | `MaxTop` | 500 (1 to 5000) | Largest page a request may ask for |
 
-## Not in the first slice
+## Buckets
 
-Hints, relations, graph shape, buckets, snapshot sources, vector spaces (near) and the host sample; see the design document.
+`shape: "buckets"` with `by: [a, b]` (two numeric facets) groups the filtered rows into grid cells of `cell` units (default 1, clamped 0.0001 to 90) and returns `Bucket` rows (`A` and `B` are the cell means, `Count`, `Sample`), largest cell first, at most 1000. `QueryKind.Sample` is an aggregate expression (for example `min(r.sha)`) that picks one representative per cell; without it the sample is null. Text form: `as buckets by lat,lon cell 0.5`. A dialect supplies `GridCell`. Buckets are not paged.
+
+## Not built yet
+
+Hints, relations, graph shape, snapshot sources, vector spaces (near) and the host sample; see the design document.
 
 ## Tests
 

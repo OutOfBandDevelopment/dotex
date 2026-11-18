@@ -60,11 +60,11 @@ public static class QueryText
                     if (i + 1 >= tokens.Count)
                         throw new QueryException("'by' needs facet names, for example: by -updated.");
                     var names = tokens[i + 1].Text.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                    request = request.Shape == "facets" ? request with { By = names } : request with { Sort = names };
+                    request = request.Shape is "facets" or "buckets" ? request with { By = names } : request with { Sort = names };
                     i += 2;
                     break;
                 case "as":
-                    const string usage = "'as' is followed by rows or facets by <facet>.";
+                    const string usage = "'as' is followed by rows, facets by <facet> or buckets by <a>,<b> [cell <size>].";
                     if (i + 1 >= tokens.Count)
                         throw new QueryException(usage);
                     var shape = tokens[i + 1].Text.ToLowerInvariant();
@@ -77,6 +77,18 @@ public static class QueryText
                     {
                         request = request with { Shape = "facets", By = tokens[i + 3].Text.Split(',', StringSplitOptions.RemoveEmptyEntries) };
                         i += 4;
+                    }
+                    else if (shape == "buckets" && i + 3 < tokens.Count && tokens[i + 2].Text.Equals("by", StringComparison.OrdinalIgnoreCase))
+                    {
+                        request = request with { Shape = "buckets", By = tokens[i + 3].Text.Split(',', StringSplitOptions.RemoveEmptyEntries) };
+                        i += 4;
+                        if (i < tokens.Count && tokens[i].Text.Equals("cell", StringComparison.OrdinalIgnoreCase))
+                        {
+                            if (i + 1 >= tokens.Count || !double.TryParse(tokens[i + 1].Text, NumberStyles.Float, CultureInfo.InvariantCulture, out var cell) || cell <= 0)
+                                throw new QueryException("'cell' needs a size, for example: cell 0.5.");
+                            request = request with { Cell = cell };
+                            i += 2;
+                        }
                     }
                     else
                     {

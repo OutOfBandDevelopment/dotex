@@ -1,6 +1,6 @@
 ﻿# Metadata-driven query engine
 
-Status: **first slice built 2026-11-16 (rows, facets, keyset paging, text form, describer, OpenAPI, rights; Framework project plus PostgreSQL adapter, owner placement 2026-11-12 option A); the items under "Not in the first slice" are open.** Request: [metadata-driven query engine](../../features/request/2026-11-11-metadata-driven-query-engine.md). Transport options: [OData over QUERY](../ODataQuery/README.md) and [HTTP QUERY verb](../HttpQueryVerb/README.md).
+Status: **first slice built 2026-11-16 (rows, facets, keyset paging, text form, describer, OpenAPI, rights; Framework project plus PostgreSQL adapter, owner placement 2026-11-12 option A); buckets built 2026-11-18; the items under "Not in the first slice" are open.** Request: [metadata-driven query engine](../../features/request/2026-11-11-metadata-driven-query-engine.md). Transport options: [OData over QUERY](../ODataQuery/README.md) and [HTTP QUERY verb](../HttpQueryVerb/README.md).
 
 ## Contents
 
@@ -64,6 +64,10 @@ Registry: a class with attributes appears in the description with its facets, pr
 
 ## Not in the first slice
 
-- Hints, relations, graph shape and buckets (second slice, after rows, facets and paging).
+- Hints, relations and graph shape (second slice, after rows, facets and paging).
+
+## Built in the second slice
+
+- Buckets (2026-11-18): shape `buckets` over two numeric facets, `QueryRequest.Cell`, `QueryKind.Sample`, `IQueryDialect.GridCell`, the `Bucket` row, text form `as buckets by a,b cell n`. Checked against the catalog's `Buckets` compile; the catalog's fixed `sha` sample became the declared `Sample` expression so no column name is assumed.
 - Snapshot sources and the anchor store (catalog caching).
 - GraphQL and OData transports on top (see the existing transport designs).

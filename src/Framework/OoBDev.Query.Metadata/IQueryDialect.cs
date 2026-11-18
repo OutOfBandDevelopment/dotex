@@ -54,4 +54,7 @@ public interface IQueryDialect
     /// <param name="text">The text.</param>
     /// <returns>A contains pattern.</returns>
     string ContainsPattern(string text);
+
+    /// <summary>The grid cell number of a numeric expression, for example <c>floor(expr / cell)</c>.</summary>
+    string GridCell(string expr, string cellParameter);
 }

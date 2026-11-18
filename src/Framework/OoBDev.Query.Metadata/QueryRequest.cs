@@ -37,4 +37,7 @@ public sealed record QueryRequest
 
     /// <summary>Also return the number of rows that match the filters.</summary>
     public bool Count { get; init; }
+
+    /// <summary>Grid cell size in the units of the two <see cref="By"/> facets for shape <c>buckets</c> (for example degrees); default 1.</summary>
+    public double? Cell { get; init; }
 }
