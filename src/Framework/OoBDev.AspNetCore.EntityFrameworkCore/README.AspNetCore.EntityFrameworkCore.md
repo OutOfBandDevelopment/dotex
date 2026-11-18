@@ -7,7 +7,8 @@ A durable audit trail of application right checks, with retention. `AddRightAudi
 | `IRightAuditSink` / `RightAuditEntry` (in `OoBDev.AspNetCore.Abstractions`) | The contract `AuditingApplicationRightChecker` writes to. `Record` never blocks or throws. |
 | `BufferedRightAuditSink` | A bounded buffer (`QueueCapacity`). When it is full the entry is dropped and counted in `Dropped`: an audit write must not stop a request. |
 | `RightAuditWriter` | Hosted service: flushes the buffer every `FlushSeconds` in batches of `BatchSize`, purges entries older than `RetentionDays` once a day, and flushes on shutdown. |
-| `EfRightAuditStore` | `AppendAsync`, `QueryAsync(subject, from, maxCount)` newest first, `PurgeAsync(olderThan)`. Over-long values are clipped to the column length. |
+| `IRightAuditQuery` / `RightAuditFilter` (in `OoBDev.AspNetCore.Abstractions`) | The swappable read contract; `MapRightAuditQuery(rights)` in `OoBDev.AspNetCore.Mvc` exposes it as a right-guarded `GET /api/v1/right-audit` |
+| `EfRightAuditStore` | The default `IRightAuditQuery`: `AppendAsync`, `QueryAsync(filter)` (or `QueryAsync(subject, from, maxCount)`) newest first, `PurgeAsync(olderThan)`. Over-long values are clipped to the column length. |
 | `RightAuditDbContext` / `RightAuditRow` | The `RightAudit` table (time stored as UTC ticks), indexed by time and by subject and time. |
 
 ```csharp
