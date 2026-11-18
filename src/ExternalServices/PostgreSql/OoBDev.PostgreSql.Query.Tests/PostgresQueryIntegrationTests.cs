@@ -228,6 +228,17 @@ public class PostgresQueryIntegrationTests
         CollectionAssert.AreEquivalent(new[] { "c", "d" }, next.Rows.Select(r => r.Name).ToArray());
     }
 
+    [IntegrationTestMethod("oobd-test-pgvector")]
+    public async Task Query_NearVectorWithCandidatePool_RunsOnPostgresAndReturnsOnlyThePool()
+    {
+        var page = await _engine.QueryAsync<IndexedPlaceRow>(new QueryRequest { From = "indexedplaces", Near = new NearClause("similar", Ref: "1"), Top = 10 });
+
+        TestContext.WriteLine("Pool of 2 nearest to place 1: {0}", string.Join(",", page.Rows.Select(r => $"{r.Name}:{r.Distance:F4}")));
+        CollectionAssert.AreEqual(new[] { "a", "b" }, page.Rows.Select(r => r.Name).ToArray(), "only the two nearest vectors enter the pool");
+        Assert.AreEqual(0.0, page.Rows[0].Distance!.Value, 1e-9);
+        Assert.IsTrue(page.Rows[1].Distance is > 0 and < 0.1);
+    }
+
     private static Dictionary<string, JsonElement> Filters(string json) => JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json)!;
 
     private static async Task Run(NpgsqlConnection connection, string sql)
