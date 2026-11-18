@@ -12,6 +12,11 @@
   <PropertyGroup>
     <!-- MSBuild tooling packages only ship build-time assets; their net10.0 support warning is noise -->
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+    <!-- Only high and critical advisories are reported, and they fail the build (owner, 2026-11-17) -->
+    <NuGetAudit>true</NuGetAudit>
+    <NuGetAuditMode>all</NuGetAuditMode>
+    <NuGetAuditLevel>high</NuGetAuditLevel>
+    <WarningsAsErrors>$(WarningsAsErrors);NU1901;NU1902;NU1903;NU1904</WarningsAsErrors>
     <Company>Out-of-Band Development, LLC</Company>
     <Copyright>$(Company), $([System.DateTime]::Now.ToString('yyyy'))</Copyright>
 

@@ -4,7 +4,7 @@
 > **Owner questions:** [OPEN-QUESTIONS.md](./OPEN-QUESTIONS.md) · **New to this project?** Read [CLAUDE.md](./CLAUDE.md) first.
 > **Other repositories to harvest from:** [docs/harvest-candidates.md](docs/harvest-candidates.md)
 
-**Last Updated:** 2026-11-17
+**Last Updated:** 2026-11-18
 
 GitHub is no longer the primary repository (local bare repo `origin`), so nothing here waits on GitHub Actions. Keep items to one short line; detail lives in the linked feature doc (rule `work-tracking`).
 
@@ -49,7 +49,6 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 before). Analyzers are wired from `src/Directory.Build.props` (`OoBDev.Analyzers` OOB0001 to OOB0003, NetAnalyzers Recommended, Meziantou); `Tools`, `Examples` and `Applications` are exempt from MA0004, and `Tools` and `Examples` from MA0048, in `src/.editorconfig`.
 
-- [ ] Vulnerable packages break the build (owner, 2026-11-17, Q5): `NuGetAuditLevel` high plus `WarningsAsErrors` for NU1901 to NU1904 in `src/Directory.Build.props`; low and moderate stay warnings; check that restore is still clean.
 - [ ] Reference architecture stack: add a full identity admin feature (create and disable users) once the reference architecture is located; not for the example app (owner, 2026-11-10).
 - [ ] Feature landscape gaps (review 2026-11-12; the right-coverage test exists since 2026-11-16, its 18 findings are fixed 2026-11-16; each other gap needs a design line first; areas: [web](docs/design/FeatureLandscape/web-and-api.md), [messaging](docs/design/FeatureLandscape/messaging-and-documents.md), [AI](docs/design/FeatureLandscape/ai-and-data.md), [DevTerm](docs/design/FeatureLandscape/devterm-and-devices.md)):
   - Web: a query endpoint and screen for the durable rights audit trail (the store exists since 2026-11-16); decided 2026-11-17 (owner, Q3): an abstraction (`IRightAuditQuery`, swappable) with a default EF implementation in the framework; the endpoint lives behind the abstraction.
