@@ -20,7 +20,6 @@ public static class ServiceCollectionExtensions
     /// <returns>The modified <see cref="IServiceCollection"/>.</returns>
     public static IServiceCollection TryAddWkHtmlToPdfServices(this IServiceCollection services)
     {
-        // Request: docs/features/request/2026-11-17-document-converter-dependencies.md
         services.AddOptions<HtmlToPdfOptions>();
         services.AddTransient<IDocumentConversionHandler, HtmlToPdfConversionHandler>();
         services.AddTransient<ITools, PdfTools>();

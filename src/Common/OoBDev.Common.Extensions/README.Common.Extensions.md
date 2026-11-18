@@ -15,7 +15,7 @@ In Debug builds both builders are required parameters, in Release they default t
 
 ## What it registers
 
-In order: MongoDB, Azure storage (blob), RabbitMQ, MailKit (SMTP and IMAP), OpenTelemetry, Keycloak (only when `IdentityProvider` has the `Keycloak` flag, the default), SBert, all-MiniLM-L6-v2 embeddings, Qdrant, OpenSearch, Ollama, GroqCloud, Apache Tika, WkHtmlToPdf, Markdig, Handlebars, MysticMind, HtmlToOpenXml, SQL Server, Microsoft caching and Redis caching. Each adapter's readme lists its own configuration.
+In order: MongoDB, Azure storage (blob), RabbitMQ, MailKit (SMTP and IMAP), OpenTelemetry, Keycloak (only when `IdentityProvider` has the `Keycloak` flag, the default), SBert, all-MiniLM-L6-v2 embeddings, Qdrant, OpenSearch, Ollama, GroqCloud, Apache Tika, Markdig, Handlebars, MysticMind, SQL Server, Microsoft caching and Redis caching. Each adapter's readme lists its own configuration. WkHtmlToPdf and HtmlToOpenXml are opt-in: set `IncludeWkHtmlToPdf` and `IncludeHtmlToOpenXml` on `ExternalExtensionBuilder` (Apache Tika already converts to PDF).
 
 ## Builders
 

@@ -41,6 +41,7 @@ public static class Program
         var identityProvider = Enum.TryParse<IdentityProviders>(
             Environment.GetEnvironmentVariable("IDENTITY_PROVIDER"), ignoreCase: true, out var ip) ? ip :
             IdentityProviders.None;
+        var disableHosting = string.Equals(Environment.GetEnvironmentVariable("DISABLE_HOSTING"), "true", StringComparison.OrdinalIgnoreCase);
         var authProvider = identityProvider != IdentityProviders.None ? $"{identityProvider}:" : "";
 
         // Add internal services
@@ -68,9 +69,10 @@ public static class Program
             },
             hostingBuilder: new()
             {
-                // Request: docs/features/request/2026-11-17-document-converter-dependencies.md
-                DisableCommunications = false,
-                //DisableMessageQueueing = true,  // skipHosting,
+                // DISABLE_HOSTING=true (launch profile "http (no hosting)") runs the API without its hosted services
+                DisableCommunications = disableHosting,
+                DisableMessageQueueing = disableHosting,
+                DisableVectorHosting = disableHosting,
             });
 
         ConfigureVectorsAndModels(builder);

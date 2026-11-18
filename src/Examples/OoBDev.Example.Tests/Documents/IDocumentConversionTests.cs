@@ -22,9 +22,7 @@ public class IDocumentConversionTests
     [TestCategory(TestCategories.Unit)]
     [TestMethod]
     [DataRow("HelloWorld.html", "text/html", "text/x-markdown", ".md")]
-    // Request: docs/features/request/2026-11-17-document-converter-dependencies.md
-    //[DataRow("HelloWorld.html", "text/html", "application/pdf", ".pdf")]
-    //[DataRow("HelloWorld.txt", "text/plain", "application/pdf", ".pdf")]
+    //NOTE: PDF output comes from Apache Tika (Integration rows below); the wkhtmltopdf converter is opt-in (ExternalExtensionBuilder.IncludeWkHtmlToPdf)
     [DataRow("HelloWorld.txt", "text/plain", "text/html", ".html")]
     [DataRow("HelloWorld.md", "text/markdown", "text/html", ".html")]
     [DataRow("HelloWorld.txt", "text/plain", "text/plain", ".txt")]

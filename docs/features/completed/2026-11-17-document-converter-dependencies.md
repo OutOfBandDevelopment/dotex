@@ -1,6 +1,6 @@
 # Feature request: document converter dependencies and Linux support
 
-- **Status:** triaged
+- **Status:** done (built 2026-11-17, see [change](../../changes/2026-11-17.md#document-converter-dependencies-and-linux-support))
 - **Requested by:** owner (source `TODO` comments, collected 2026-11-17)
 - **Date:** 2026-11-17
 - **Area:** `OoBDev.WkHtmlToPdf`, `OoBDev.HtmlToOpenXml`, document conversion tests, example Web API
@@ -21,7 +21,7 @@ Converters are opt-in registrations, not part of the common set; decide whether 
 
 ## Existing code checked
 
-`docs/design/DocumentServices/ConversionService` (Tika based), request [document packaging and store](2026-11-10-document-packaging-and-store.md). They cover Tika but not removing the two converters from the common set.
+`docs/design/DocumentServices/ConversionService` (Tika based), request [document packaging and store](../request/2026-11-10-document-packaging-and-store.md). They cover Tika but not removing the two converters from the common set.
 
 Source comments (replaced by a reference to this request):
 
@@ -47,4 +47,16 @@ Replace with Tika or keep opt-in? Recommendation: opt-in now, evaluate Tika in t
 
 ## Triage notes
 
-Triaged 2026-11-17 into [BACKLOG.md](../../../BACKLOG.md) section 5 (source TODO comments). Design document to follow when built.
+Triaged 2026-11-17 into [BACKLOG.md](../../../BACKLOG.md) section 5 (source TODO comments).
+
+## Outcome
+
+Built:
+
+- `ExternalExtensionBuilder.IncludeWkHtmlToPdf` and `IncludeHtmlToOpenXml` (default false) gate the two converters in `TryCommonExternalExtensions`; Apache Tika stays registered and converts to PDF. The document converter CLI opts in to both because it advertises HTML to PDF.
+- The example Web API reads `DISABLE_HOSTING` and has the launch profile `http (no hosting)`; it turns off the communications, message queue and vector hosted services.
+- The wkhtmltopdf test ends Inconclusive with the reason (the bundled native library is Windows only); the commented HTML to PDF example rows now point to the Tika Integration rows.
+
+Declined: replacing the converters with Tika outright (the HTML converters are in-process and useful for a host without Tika; the opt-in covers the exclusion need, and the Tika evaluation stays with the document services work).
+
+Tests: 2 Unit tests (`ConverterRegistrationTests`).
