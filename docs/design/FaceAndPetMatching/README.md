@@ -69,6 +69,6 @@ Unit: owner-confirmed assignments are unchanged after clustering; fewer than the
 
 ## Not in the first slice
 
-- The permissive detector choice and conversion to ONNX (a spike: licence check, accuracy against `buffalo_l` on a sample set).
+- The permissive detector choice and conversion to ONNX (a spike: licence check, accuracy against `buffalo_l` on a sample set). Candidate found 2026-11-19 (secondhand, to be confirmed against the `LICENSE` files before use): the [OpenCV Zoo](https://huggingface.co/opencv/opencv_zoo) models YuNet (face detector, reported MIT) and SFace (face recognizer, reported Apache-2.0) ship as ONNX; the repository itself is Apache-2.0 and says to check each model's licence. Accuracy against `buffalo_l` is still unmeasured.
 - Manual detections and pet claims (catalog duties tied to its screens).
 - Sub-group bubbles and threshold tuning.
