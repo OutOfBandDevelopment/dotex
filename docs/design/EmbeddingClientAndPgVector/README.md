@@ -66,4 +66,4 @@ Unit: batch vectors come back in request order with the configured dimension; op
 - Annotation abstractions in code.
 - The image variant (`IImageEmbeddingProvider` posting bytes) and the ONNX providers implementing the shared interface. Deferred 2026-11-16: no server in the stack or the catalog speaks an image wire format (OpenAI has no image embeddings route), so a contract written now could not be tested against a real server; build it with the first server that needs it.
 - A shared explanation type with HybridSearch: `VectorMatch` (vector index and distance) lives in the pgvector project until HybridSearch needs it.
-- ONNX versus HTTP cosine comparison on a fixed sample (needs a running embedding server; the Ollama service in the stack can serve it).
+- ONNX versus HTTP cosine comparison: built 2026-11-19 (`OnnxVersusHttpTests`, Integration, against the stack's Ollama `all-minilm`): five sentences, lowest cosine 1.00000, bar 0.995. Whether a dedicated embedding image is still wanted is Q12.

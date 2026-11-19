@@ -1,6 +1,6 @@
 ﻿# Feature request: Embedding service container with a configurable client
 
-- **Status:** triaged (text client built 2026-11-16; container image, image variant and ONNX parity open, see the [design](../../design/EmbeddingClientAndPgVector/README.md))
+- **Status:** triaged (text client and ONNX parity built, cosine 1.00000 on 2026-11-19; the container image and image variant wait on owner question Q12, see the [design](../../design/EmbeddingClientAndPgVector/README.md))
 - **Requested by:** owner (filed from the NAS storage catalog application, `C:\repo\_storage`)
 - **Date:** 2026-11-11
 - **Area:** `OoBDev.Onnx.ImageEmbeddings`, `Onnx.SentenceEmbeddings`, `Vision.*`, `Ollama`, `SBert`; a new client abstraction
