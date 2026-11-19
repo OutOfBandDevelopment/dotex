@@ -24,7 +24,7 @@ Read capture time, camera, orientation and GPS (and every other tag) from image 
 | dotex `OoBDev.Extensions.Drawing` (`JpegSegmentReader`) | Splits a JPEG into marker segments; no tag parsing | Useful for repair, not a reader; stays |
 | Storage catalog `Readers/ExifReader.cs` (161 lines) | Finds the TIFF block in JPEG (APP1), PNG (`eXIf`), WebP (`EXIF`) and plain TIFF; typed fields: make, model, orientation, taken, latitude, longitude; unreadable data gives an empty result | Base for `ExifReader` |
 | Storage catalog `ExifDump.cs` + `ExifTagNames.cs` (475 lines) | Every tag of IFD0, Exif, GPS and Interop as `{name: text}` with the same text a Python Pillow dump gives (so catalog rows stay equal) | Base for `ExifDump`; the Pillow-style text is kept on purpose |
-| Storage catalog `HeicContainer.cs`, `AudioFormats.cs`, `DateCombiner.cs`, `FileDatesDuty.cs` | HEIC Exif item, audio tags, date merging | Later slices, see below |
+| Storage catalog `HeicContainer.cs`, `AudioFormats.cs`, `DateCombiner.cs`, `FileDatesDuty.cs` | HEIC Exif item, audio tags, date merging | Built (see README.Media.Metadata.md) |
 | Python helpers (`exif_service.py`, `heic_service.py`) | Pillow, pillow-heif and LibRaw for camera raw | Stay a container (no first-party reader for raw); out of scope |
 
 No third-party library is needed: the catalog reader is first-party, BCL-only and small. This answers the request's open question (wrap an existing reader or own code) with own code, recorded as the recommendation.
@@ -64,7 +64,7 @@ Unit tests build tiny TIFF blocks in memory (little and big endian) and wrap the
 ## Not in the first slice
 
 - Reporting which tags were damaged (request acceptance criterion 2): the catalog code skips them silently; add a result type with problems after the port.
-- HEIC Exif item, XMP and IPTC: separate slices in the order the catalog needs them.
+- XMP and IPTC: separate slices in the order the catalog needs them. HEIC, audio tags and date merging are built.
 - Camera raw: stays in the Pillow/LibRaw container.
 - Built 2026-11-16 as `OoBDev.Media.Metadata`: `ExifLocator`, `ExifReader` (`ExifFields`), `ExifDump`, `ExifTagNames`, with the catalog's Pillow-style text kept. Differences from the catalog copy: the locator bounds-checks every chunk length instead of relying on a caught exception, one shared TIFF directory walker serves reader and dump, and tag tables are read-only.
 - Audio tags built 2026-11-19 as `OoBDev.Media.Metadata.Audio`: `AudioTagReader` reads ID3v2.3/2.4, ID3v1, FLAC and Ogg Vorbis comments and MP4 ilst items into normalized keys (the catalog gets them from the audio container; codec, duration and fingerprint stay there).
