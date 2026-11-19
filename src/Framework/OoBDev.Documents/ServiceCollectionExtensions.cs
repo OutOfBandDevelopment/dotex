@@ -1,6 +1,7 @@
 using OoBDev.Documents.Containers;
 using OoBDev.Documents.Conversion;
 using OoBDev.Documents.Models;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -47,6 +48,20 @@ public static class ServiceCollectionExtensions
             FileExtensions = [".xml"],
             ContentTypes = ["text/xml"],
         });
+        return services;
+    }
+
+    /// <summary>
+    /// Adds the file system blob container provider factory; it is offered while <c>RootDirectory</c> is set.
+    /// </summary>
+    /// <param name="services">The services.</param>
+    /// <param name="configuration">The configuration holding the options section.</param>
+    /// <param name="sectionName">The options section.</param>
+    /// <returns>The services.</returns>
+    public static IServiceCollection TryAddFileSystemBlobServices(this IServiceCollection services, IConfiguration configuration, string sectionName = nameof(FileSystemBlobOptions))
+    {
+        _ = services.AddOptions<FileSystemBlobOptions>().Bind(configuration.GetSection(sectionName));
+        services.AddTransient<IBlobContainerProviderFactory, FileSystemBlobContainerProviderFactory>();
         return services;
     }
 }

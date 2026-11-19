@@ -27,6 +27,7 @@
     <ProjectReference Include="..\..\Common\OoBDev.Common.Extensions\OoBDev.Common.Extensions.csproj" />
     <ProjectReference Include="..\..\Common\OoBDev.Common\OoBDev.Common.csproj" />
     <ProjectReference Include="..\OoBDev.Documents\OoBDev.Documents.csproj" />
+    <ProjectReference Include="..\OoBDev.System\OoBDev.System.csproj" />
   </ItemGroup>
 
 </Project>

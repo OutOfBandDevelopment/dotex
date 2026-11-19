@@ -10,6 +10,7 @@ in their applications.
 ## Key Classes and Features
 
 - **BlobContainerFactory**: Creates blob containers for storing documents.
+- **FileSystemBlobContainerProvider**: a directory per container under `FileSystemBlobOptions.RootDirectory`; content type and metadata sit in a `.blobmeta.json` file beside each file; paths leaving the container directory are rejected. Register with `TryAddFileSystemBlobServices(configuration)`. Other providers: Azure (`OoBDev.Microsoft.Azure.StorageAccount`) and S3 (`OoBDev.Amazon.S3`).
 - **DocumentConversion**: Performs document conversion from one format to another.
 - **DocumentConversionChainBuilder**: Constructs document conversion chains.
 - **DocumentTypeTools**: Provides tools for managing document types, including content type detection.
