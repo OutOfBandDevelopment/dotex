@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections.ObjectModel;
@@ -170,7 +170,14 @@ public static class ConfigureMode
         formOptions.CustomWidgets[nameof(ConnectionEditorViewModel.SelectedBleNotifyCharacteristic)] = _ => new TuiCustomWidget(pickBleNotifyCharacteristicButton, 2);
 
         var binding = new FormBinding(viewModel);
-        var form = FormRenderer.Build(app, viewModel.FormDefinition, binding, formOptions);
+        // The scan buttons are the WPF form's; here each picker has its own Detect... button and dialog.
+        var definition = FormDefinitionGenerator.Generate(viewModel, "Connection");
+        foreach (var section in definition.Sections)
+        {
+            section.Controls = [.. section.Controls.Where(c => c.Id is not (nameof(ConnectionEditorViewModel.ScanLxiCommand) or nameof(ConnectionEditorViewModel.ScanBleCommand) or nameof(ConnectionEditorViewModel.ExploreBleCommand)))];
+        }
+
+        var form = FormRenderer.Build(app, definition, binding, formOptions);
         form.Root.Y = Pos.Bottom(exportSelectedButton) + 1;
 
         var saveNameLabel = new Label { X = 0, Y = Pos.Bottom(form.Root) + 1, Text = "Save as profile named:" };

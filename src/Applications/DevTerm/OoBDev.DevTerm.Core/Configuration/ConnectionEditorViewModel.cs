@@ -43,11 +43,11 @@ namespace OoBDev.DevTerm.Configuration;
 [FormSection("Serial", Order = 1, VisibleWhen = nameof(IsSerialLikeTransport))]
 [FormSection("TCP", Order = 2, VisibleWhen = nameof(IsTcpLikeTransport))]
 [FormSection("USB Device", Order = 3, VisibleWhen = nameof(IsUsbDeviceTransport))]
-[FormSection("BLE", Order = 4, VisibleWhen = nameof(IsBleTransport))]
+[FormSection("BLE", Order = 5, VisibleWhen = nameof(IsBleTransport))]
 [FormSection("MQTT", Order = 4, VisibleWhen = nameof(IsMqttTransport))]
-[FormSection("Loopback", Order = 5, VisibleWhen = nameof(IsLoopbackTransport))]
-[FormSection("Presentation", Order = 6)]
-[FormSection("Timing", Order = 7, VisibleWhen = nameof(SupportsWriteByteDelay))]
+[FormSection("Loopback", Order = 6, VisibleWhen = nameof(IsLoopbackTransport))]
+[FormSection("Presentation", Order = 7)]
+[FormSection("Timing", Order = 8, VisibleWhen = nameof(SupportsWriteByteDelay))]
 public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposable
 {
     private static readonly CliOptionsValidator _validator = new();
@@ -172,7 +172,10 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
         string? statusMessage = null,
         ISerialPortDiscovery? serialPortDiscovery = null,
         IUsbHidDiscovery? hidDeviceDiscovery = null,
-        IUsbTmcDeviceDiscovery? usbtmcDeviceDiscovery = null)
+        IUsbTmcDeviceDiscovery? usbtmcDeviceDiscovery = null,
+        Func<IReadOnlyList<LxiDeviceOption>>? lxiScan = null,
+        Func<IReadOnlyList<BleDeviceOption>>? bleScan = null,
+        Func<string, IReadOnlyList<BleGattServiceDescriptor>>? bleExplore = null)
     {
         _store = store;
         PresenterChoices = [.. PresenterOptions.Select(name => new PresenterSelection(name))];
@@ -198,6 +201,9 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
         RefreshProfiles();
         IsDirty = false; // LoadIntoFields above marks every field it sets as dirty; a freshly-opened editor showing its starting configuration isn't actually dirty yet.
 
+        ScanLxiCommand = new RelayCommand(() => SetLxiDeviceOptions((lxiScan ?? LxiDeviceScanner.ScanNetwork)()));
+        ScanBleCommand = new RelayCommand(() => SetBleDeviceOptions((bleScan ?? BleDeviceScanner.Scan)()));
+        ExploreBleCommand = new RelayCommand(() => SetBleCharacteristicOptions((bleExplore ?? BleDeviceScanner.ExploreCharacteristics)(BleDeviceId)));
         ConnectCommand = new RelayCommand(Connect);
         LoadCommand = new RelayCommand(LoadSelected);
         SaveCommand = new RelayCommand(SaveAsProfile);
@@ -391,6 +397,24 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public ObservableCollection<string> Profiles { get; } = [];
+
+    /// <summary>Scans the LAN for instruments and fills <see cref="LxiDeviceOptions"/> (takes seconds).</summary>
+    [Category("TCP")]
+    [DisplayName("Scan network")]
+    [FormField(Order = 2, VisibleWhen = nameof(IsTcpLikeTransport))]
+    public ICommand ScanLxiCommand { get; }
+
+    /// <summary>Scans for BLE peripherals and fills <see cref="BleDeviceOptions"/>.</summary>
+    [Category("BLE")]
+    [DisplayName("Scan Bluetooth")]
+    [FormField(Order = 3, VisibleWhen = nameof(IsBleTransport))]
+    public ICommand ScanBleCommand { get; }
+
+    /// <summary>Reads the GATT characteristics of <see cref="BleDeviceId"/> into <see cref="BleCharacteristicOptions"/>.</summary>
+    [Category("BLE")]
+    [DisplayName("Explore characteristics")]
+    [FormField(Order = 7, VisibleWhen = nameof(IsBleTransport))]
+    public ICommand ExploreBleCommand { get; }
 
     public ICommand ConnectCommand { get; }
 

@@ -22,6 +22,7 @@ public sealed class ConnectionEditorFieldCoverageTests
             .Where(p => p.GetCustomAttributes().Any(a => a.GetType().Name == "FormFieldAttribute"))
             .Select(p => p.Name)
             .Where(name => name != nameof(ConnectionEditorViewModel.PresentersText)) // the checkbox list binds PresenterChoices instead
+            .Where(name => !name.EndsWith("Command", StringComparison.Ordinal)) // the scan buttons bind through ConnectionDeviceScans until the XAML is replaced by the generated form
             .ToList();
 
         // Test
