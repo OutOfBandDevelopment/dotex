@@ -74,3 +74,16 @@ The OCR request asks for a golden sample run that records text accuracy with hos
 **Default:** B is not started; the request stays open on this line only.
 
 **Your answer:**
+
+### Q6 (2026-11-19, DevTerm UiDefinitions, saved-profile list): how should a list of saved items be expressed in a UiDefinition?
+
+The Connection Editor fields are generated from a definition, but the saved-profile list (select, add, delete) and the zip row are still hand-written XAML. A list with select, add and delete is a master-detail view, not a single-value control kind ([language shape](docs/design/DevTermParity/ui-language-later.md)).
+
+**Options**
+- A. Add one `List` control kind: items bound to a collection, a selected item, and add and delete commands; the detail is the existing form bound to the selected item (recommended: smallest addition, reuses the form renderer and stays host-neutral for Blazor, WPF and Tui).
+- B. Keep master-detail as a layout of two definitions (a list definition and a form definition) that hosts compose. No new control kind, but each host repeats the wiring.
+- C. Leave the profile list as hand-written XAML and document it as an accepted exception.
+
+**Default:** C stays; nothing is built until you answer.
+
+**Your answer:**
