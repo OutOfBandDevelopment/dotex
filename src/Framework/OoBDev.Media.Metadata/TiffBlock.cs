@@ -49,9 +49,16 @@ internal sealed class TiffBlock
     public int FirstIfd => (int)U32(4);
 
     /// <summary>The entries of the directory at <paramref name="offset"/>; entries that do not fit in the block or have an unknown type are skipped.</summary>
-    public List<Entry> Ifd(int offset)
+    public List<Entry> Ifd(int offset) => Ifd(offset, out _);
+
+    /// <summary>The entries of the directory at <paramref name="offset"/>, and how many entries were skipped or cut off.</summary>
+    /// <param name="offset">Where the directory starts.</param>
+    /// <param name="skipped">The number of entries with an unknown type, a bad size, data outside the block, or that the block ended before.</param>
+    /// <returns>The readable entries.</returns>
+    public List<Entry> Ifd(int offset, out int skipped)
     {
         var list = new List<Entry>();
+        skipped = 0;
         if (offset <= 0 || offset + 2 > _bytes.Length)
             return list;
         var n = U16(offset);
@@ -59,15 +66,27 @@ internal sealed class TiffBlock
         {
             var e = offset + 2 + (i * 12);
             if (e + 12 > _bytes.Length)
+            {
+                skipped += n - i;
                 break;
+            }
+
             var type = U16(e + 2);
             var count = (int)U32(e + 4);
             var size = TypeSize(type) * (long)count;
             if (size <= 0)
+            {
+                skipped++;
                 continue;
+            }
+
             var at = size <= 4 ? e + 8 : (long)U32(e + 8);
             if (at + size > _bytes.Length)
+            {
+                skipped++;
                 continue;
+            }
+
             list.Add(new Entry(U16(e), type, count, (int)at));
         }
 

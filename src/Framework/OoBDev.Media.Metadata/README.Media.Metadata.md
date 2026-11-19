@@ -28,7 +28,9 @@ Dates (`OoBDev.Media.Metadata.Dates`): `PathDateParser.Parse(path, thisYear)` re
 
 Descriptors (`OoBDev.Media.Metadata.Descriptors`): `XmpReader.Read(jpeg)` (APP1 packet: title, creator, description, subjects, rating, create date) and `IptcReader.Read(jpeg)` (APP13 record 2: object name, keywords, byline, caption, date) return `ImageDescriptors`; malformed data gives `Empty`.
 
-Not built yet: a result that reports which tags were damaged; XMP and IPTC in PNG, WebP and TIFF. HEIC: `HeicContainer.Read` gives the primary image size (rotation applied) and the Exif item, and `ExifLocator.Find` now locates it.
+Damage report: `ExifReader.ReadWithProblems(file)` returns `ExifReadResult(Fields, Problems)`: the valid fields plus one sentence per cut-off or invalid-type entry, wrong-typed tag, unparseable capture time and out-of-range GPS (`Read` is the same without the list).
+
+Not built yet: XMP and IPTC in PNG, WebP and TIFF. HEIC: `HeicContainer.Read` gives the primary image size (rotation applied) and the Exif item, and `ExifLocator.Find` now locates it.
 
 ## RAW files (`OoBDev.Media.Metadata.Raw`)
 

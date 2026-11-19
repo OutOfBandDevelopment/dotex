@@ -63,7 +63,7 @@ Unit tests build tiny TIFF blocks in memory (little and big endian) and wrap the
 
 ## Not in the first slice
 
-- Reporting which tags were damaged (request acceptance criterion 2): the catalog code skips them silently; add a result type with problems after the port.
+- Damaged-tag report built 2026-11-19 (`ExifReader.ReadWithProblems`, `ExifReadResult`).
 - XMP and IPTC built 2026-11-19 for JPEG only (new work, no catalog source); PNG, WebP and TIFF carriers are open. HEIC, audio tags and date merging are built.
 - Camera raw: stays in the Pillow/LibRaw container.
 - Built 2026-11-16 as `OoBDev.Media.Metadata`: `ExifLocator`, `ExifReader` (`ExifFields`), `ExifDump`, `ExifTagNames`, with the catalog's Pillow-style text kept. Differences from the catalog copy: the locator bounds-checks every chunk length instead of relying on a caught exception, one shared TIFF directory walker serves reader and dump, and tag tables are read-only.
