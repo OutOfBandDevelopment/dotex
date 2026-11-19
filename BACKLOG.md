@@ -53,7 +53,7 @@ A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 befo
 
 - [ ] Reference architecture stack: add a full identity admin feature (create and disable users) once the reference architecture is located; not for the example app (owner, 2026-11-10).
 - [ ] Feature landscape gaps (review 2026-11-12; the right-coverage test exists since 2026-11-16, its 18 findings are fixed 2026-11-16; each other gap needs a design line first; areas: [web](docs/design/FeatureLandscape/web-and-api.md), [messaging](docs/design/FeatureLandscape/messaging-and-documents.md), [AI](docs/design/FeatureLandscape/ai-and-data.md), [DevTerm](docs/design/FeatureLandscape/devterm-and-devices.md)):
-  - Web: a screen for the durable rights audit trail (needs a screen spec); `IRightAuditQuery`, the EF implementation and `MapRightAuditQuery` built 2026-11-18.
+  - Web: a screen for the durable rights audit trail (waits on Q2 in OPEN-QUESTIONS.md); `IRightAuditQuery`, the EF implementation and `MapRightAuditQuery` built 2026-11-18.
   - Messaging: GDPR erasure remainder (steps 3 to 5 of `docs/design/CqrsEventSourcing/erasure.md`: hash-chain re-seal once chaining exists and a right-guarded entry point with a screen spec; the entry point is decided 2026-11-17 (owner, Q4): an interface in a security core library with default implementations in the related leaf libraries, the pattern for all such features).
   - DevTerm: the manifest, permissions and signing prompt are designed in PluginSandbox and tracked on the sandbox item below.
 

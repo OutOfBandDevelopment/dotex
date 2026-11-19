@@ -22,3 +22,16 @@ You chose a Framework library `OoBDev.Security.OAuthClient` with a Windows DPAPI
 **Default:** A is assumed for the design only; no project is created until you answer.
 
 **Your answer:**
+
+### Q2 (2026-11-19, Example app, rights audit screen): should the example host store the right audit trail?
+
+The audit screen in [the missing screens](docs/design/example-ui/missing-screens.md) needs `MapRightAuditQuery` and a store. The example host does not reference `OoBDev.AspNetCore.EntityFrameworkCore`, does not call `AddRightAuditLog()` and runs mostly anonymous, so a screen would show an empty trail unless the host gains a database provider and a rights-bearing sign-in. That is a layering and persistence choice (a host reference to an EF provider), so it is yours.
+
+**Options**
+- A. Config-gated: the host references the EF project and maps the endpoint only when `OoBDev:RightAudit:ConnectionString` (SQL Server) is set; the screen says "not configured" otherwise (recommended: reversible, no new startup dependency, matches how the SQL vector store is gated).
+- B. In-memory `IRightAuditQuery` for the example only (no database; the trail is lost on restart, and the screen demonstrates the shape, not the durable store).
+- C. Leave the screen out of the example app and keep the endpoint documented only.
+
+**Default:** none built until you answer; the item stays in BACKLOG section 5.
+
+**Your answer:**
