@@ -87,3 +87,16 @@ The Connection Editor fields are generated from a definition, but the saved-prof
 **Default:** C stays; nothing is built until you answer.
 
 **Your answer:**
+
+### Q7 (2026-11-19, DevTerm, Ebyte E810 config editor): is an E810-DTU on the bench so a fresh capture can be taken?
+
+The Ebyte `IDeviceConfigEditor` is the next step after the first WPF device panel, but the [protocol notes](docs/protocols/ebyte-e810-dtu-config-protocol.md) are a working hypothesis from old captures (one byte-count discrepancy was found by walking a single capture), and a decoder built on them could not be tested against the device.
+
+**Options**
+- A. You connect the E810-DTU and I capture the UDP port 1901 exchanges, verify the field table, then build the editor and a Hardware test (recommended: the notes say to verify against a fresh capture).
+- B. Build the editor from the notes with a fake device only and mark it unverified until a capture exists.
+- C. Drop the editor; configure the device with the vendor tool.
+
+**Default:** B is not started; the item stays in BACKLOG section DevTerm.
+
+**Your answer:**
