@@ -35,4 +35,6 @@ The 2026-11-19 per-test timing showed the longest tests were the first test of a
 
 ## Repeat run (2026-11-19)
 
-A second full Integration run with the stack already warm (`--no-build`, after the warm-up script) took 3 min 41 s. Two tests failed again, `RealRabbitMq_Stomp_RoutesBothWays` (DevTerm.Core.Tests) and `Recognize_RealDoclingServe_ReturnsTheText` (Docling.Tests), each in under a second; both pass when their project runs alone, so the failure is tied to the parallel full run (probably their containers, RabbitMQ and Docling, are not up when the test starts), not to the code.
+A second full Integration run with the stack already warm (`--no-build`, after the warm-up script) took 3 min 41 s. Two tests failed, `RealRabbitMq_Stomp_RoutesBothWays` (DevTerm.Core.Tests, "The STOMP broker closed the connection") and `Recognize_RealDoclingServe_ReturnsTheText` (Docling.Tests), each in under a second; both pass when their project runs alone, so the failure is tied to the parallel full run (probably their containers, RabbitMQ and Docling, are not up when the test starts), not to the code.
+
+Cause and fix: both containers pass their health check before the service answers its first request (the STOMP listener of RabbitMQ, the first Docling call), and the harness had started them on demand a moment earlier. `RabbitMQ` and `Docling` are now in the warm-up defaults; the full Integration run after the warm-up had no failing test. A test started against a container the harness has just brought up can still hit this window (tracked in BACKLOG).
