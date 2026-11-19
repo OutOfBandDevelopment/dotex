@@ -8,7 +8,7 @@ Keep this file short (about 15 one-line items). When an item starts, move it her
 
 ## In progress
 
-- [x] Owner request 2026-11-19, "do everything you can do without question": work every item that needs no answer, recording an assumption on its question when a default exists; do not stop early. Left, in order: (1) tracking audit via `work-backlog`; the wish-list and roadmap triage and the desired-state bake-off wait for Q19 and Q4. Done: reference designs catalogue, ONNX versus HTTP comparison, TextTemplating status, claims comparison (Q21), proposed designs for complex events, data loader, spatial, test data, file inventory and HP-GL audio. Parked: Q5, Q12, Q24, plugin sandbox, hardware requests (Q13 to Q17).
+- [x] Owner request 2026-11-19, "do everything you can do without question": work every item that needs no answer, record an assumption on its question when a default exists, do not stop early. Left: the tracking audit via `work-backlog`. Waiting on answers: wish-list and roadmap triage (Q19), bake-off (Q4), Q5, Q12, Q24, plugin sandbox, hardware requests (Q13 to Q17). Done items are in `docs/changes/2026-11-19.md`.
 
 ## Next
 
