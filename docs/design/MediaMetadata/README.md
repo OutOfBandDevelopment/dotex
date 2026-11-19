@@ -64,7 +64,7 @@ Unit tests build tiny TIFF blocks in memory (little and big endian) and wrap the
 ## Not in the first slice
 
 - Damaged-tag report built 2026-11-19 (`ExifReader.ReadWithProblems`, `ExifReadResult`).
-- XMP and IPTC built 2026-11-19 for JPEG only (new work, no catalog source); XMP in PNG (uncompressed `iTXt`) and WebP (`XMP ` chunk) and TIFF (IFD0 tag 700) built 2026-11-19; IPTC in TIFF (IFD0 tag 33723) built the same day; IPTC in PNG (compressed raw-profile text) and WebP (no standard carrier) stay open. HEIC, audio tags and date merging are built.
+- XMP and IPTC built 2026-11-19 for JPEG only (new work, no catalog source); XMP in PNG (uncompressed `iTXt`) and WebP (`XMP ` chunk) and TIFF (IFD0 tag 700) built 2026-11-19; IPTC in TIFF (IFD0 tag 33723) built the same day; IPTC in PNG (`Raw profile type iptc` in `zTXt`/`tEXt`) built 2026-11-19; WebP (no standard carrier) stays open. HEIC, audio tags and date merging are built.
 - Camera raw: stays in the Pillow/LibRaw container.
 - Built 2026-11-16 as `OoBDev.Media.Metadata`: `ExifLocator`, `ExifReader` (`ExifFields`), `ExifDump`, `ExifTagNames`, with the catalog's Pillow-style text kept. Differences from the catalog copy: the locator bounds-checks every chunk length instead of relying on a caught exception, one shared TIFF directory walker serves reader and dump, and tag tables are read-only.
 - Audio tags built 2026-11-19 as `OoBDev.Media.Metadata.Audio`: `AudioTagReader` reads ID3v2.3/2.4, ID3v1, FLAC and Ogg Vorbis comments and MP4 ilst items into normalized keys (the catalog gets them from the audio container; codec, duration and fingerprint stay there).

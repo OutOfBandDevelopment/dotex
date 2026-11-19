@@ -19,10 +19,12 @@ public static class IptcReader
         var iims = new List<byte[]>();
         if (TiffIim(jpeg) is { } tiffIim)
             iims.Add(tiffIim);
+        if (PngRawProfile.Find(jpeg, "iptc") is { Length: > 0 } png)
+            iims.Add(png[0] == 0x1C ? png : FindIim(png, 0));
         foreach (var (marker, payload) in JpegSegments.Read(jpeg))
         {
             if (marker == 0xED && payload.Length >= 14 && payload.AsSpan(0, 14).SequenceEqual(Photoshop))
-                iims.Add(FindIim(payload));
+                iims.Add(FindIim(payload, 14));
         }
 
         return Parse(iims);
@@ -86,9 +88,9 @@ public static class IptcReader
         return found.IsEmpty ? ImageDescriptors.Empty : found;
     }
 
-    private static byte[] FindIim(byte[] payload)
+    private static byte[] FindIim(byte[] payload, int start)
     {
-        var p = 14;
+        var p = start;
         while (p + 12 <= payload.Length && payload.AsSpan(p, 4).SequenceEqual("8BIM"u8))
         {
             var id = BinaryPrimitives.ReadUInt16BigEndian(payload.AsSpan(p + 4));

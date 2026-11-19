@@ -1,3 +1,4 @@
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.Media.Metadata.Descriptors;
 using OoBDev.TestUtilities;
@@ -128,6 +129,51 @@ public class DescriptorReaderTests
 
         Assert.AreEqual("Dune", d.Title);
         Assert.AreEqual("Eve", d.Creator);
+    }
+
+    private static string RawProfile(byte[] data) =>
+        "\nIPTC profile\n" + data.Length.ToString(global::System.Globalization.CultureInfo.InvariantCulture).PadLeft(8) + "\n" + Convert.ToHexString(data).ToLowerInvariant() + "\n";
+
+    private static byte[] Png(string type, byte[] body) =>
+        [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, .. PngChunk("IHDR", new byte[13]), .. PngChunk(type, body), .. PngChunk("IEND", [])];
+
+    [TestMethod]
+    public void Iptc_PngDeflatedRawProfileWithPhotoshopResource_ReadsFields()
+    {
+        var iim = new[] { Dataset(5, "Harbour"), Dataset(25, "boat"), Dataset(80, "Kai") }.SelectMany(x => x).ToArray();
+        byte[] resource = [.. "8BIM"u8.ToArray(), 0x04, 0x04, 0, 0, 0, 0, (byte)(iim.Length >> 8), (byte)iim.Length, .. iim];
+        using var packed = new global::System.IO.MemoryStream();
+        using (var z = new global::System.IO.Compression.ZLibStream(packed, global::System.IO.Compression.CompressionLevel.Optimal, true))
+            z.Write(Encoding.Latin1.GetBytes(RawProfile(resource)));
+        byte[] body = [.. Encoding.ASCII.GetBytes("Raw profile type iptc"), 0, 0, .. packed.ToArray()];
+
+        var d = IptcReader.Read(Png("zTXt", body));
+
+        TestContext.WriteLine("{0}|{1}", d.Title, d.Creator);
+        Assert.AreEqual("Harbour", d.Title);
+        Assert.AreEqual("Kai", d.Creator);
+        CollectionAssert.AreEqual(new[] { "boat" }, d.Keywords.ToArray());
+    }
+
+    [TestMethod]
+    public void Iptc_PngPlainRawProfileOfBareIim_ReadsFields()
+    {
+        var iim = Dataset(5, "Dock");
+        byte[] body = [.. Encoding.ASCII.GetBytes("Raw profile type iptc"), 0, .. Encoding.Latin1.GetBytes(RawProfile(iim))];
+
+        Assert.AreEqual("Dock", IptcReader.Read(Png("tEXt", body)).Title);
+    }
+
+    [TestMethod]
+    public void Iptc_PngRawProfileShortOrCorrupt_IsEmpty()
+    {
+        byte[] shortHex = [.. Encoding.ASCII.GetBytes("Raw profile type iptc"), 0, .. Encoding.Latin1.GetBytes("\nIPTC profile\n      50\n1c0205\n")];
+        byte[] notDeflated = [.. Encoding.ASCII.GetBytes("Raw profile type iptc"), 0, 0, 1, 2, 3];
+        byte[] otherKey = [.. Encoding.ASCII.GetBytes("Raw profile type exif"), 0, .. Encoding.Latin1.GetBytes(RawProfile(Dataset(5, "x")))];
+
+        Assert.IsTrue(IptcReader.Read(Png("tEXt", shortHex)).IsEmpty);
+        Assert.IsTrue(IptcReader.Read(Png("zTXt", notDeflated)).IsEmpty);
+        Assert.IsTrue(IptcReader.Read(Png("tEXt", otherKey)).IsEmpty);
     }
 
     [TestMethod]
