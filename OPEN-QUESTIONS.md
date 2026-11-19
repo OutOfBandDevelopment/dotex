@@ -48,3 +48,16 @@ You decided (Q4, 2026-11-17) that the entry point is an interface in a security 
 **Default:** A is assumed for the design only; nothing is built until you answer. The hash-chain re-seal stays open until chaining exists (requirement R9).
 
 **Your answer:**
+
+### Q4 (2026-11-19, Desired-state database, bake-off): may the bake-off run before you review the test plan?
+
+The [bake-off test plan](docs/design/DesiredStateDatabase/bake-off-test-plan.md) (status: draft for owner review before the run) is written. The run downloads sqldef, pgschema and Atlas (versions pinned and recorded) and runs 12 scenarios against throwaway containers; it touches no live data.
+
+**Options**
+- A. Review the plan first, then run (recommended: the plan fixes the licence gate and the scoring weights, which are yours to set).
+- B. Run it now with the plan as written and record the results as provisional until you review.
+- C. Change the plan (say what).
+
+**Default:** A; the item stays in BACKLOG section 6 until you answer.
+
+**Your answer:**
