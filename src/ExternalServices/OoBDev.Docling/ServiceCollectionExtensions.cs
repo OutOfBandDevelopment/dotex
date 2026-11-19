@@ -27,6 +27,7 @@ public static class ServiceCollectionExtensions
             client.BaseAddress = new Uri(settings.BaseUrl.TrimEnd('/') + "/");
             client.Timeout = TimeSpan.FromSeconds(settings.TimeoutSeconds + 60);
         });
+        services.TryAddTransient<IDocumentLayoutOcr>(sp => sp.GetRequiredService<DoclingOcr>());
         services.TryAddTransient<IDocumentOcr>(sp => sp.GetRequiredService<DoclingOcr>());
         services.TryAddKeyedTransient<IDocumentOcr>(DoclingGlobals.ProviderKey, (sp, _) => sp.GetRequiredService<DoclingOcr>());
         return services;

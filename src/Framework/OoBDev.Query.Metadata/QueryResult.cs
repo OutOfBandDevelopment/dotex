@@ -25,4 +25,7 @@ public sealed record QueryResult<T>
 
     /// <summary>The time the query took.</summary>
     public long ElapsedMs { get; init; }
+
+    /// <summary>For shape <c>graph</c>: the distinct node ids the edges touch.</summary>
+    public IReadOnlyList<string>? Nodes { get; init; }
 }

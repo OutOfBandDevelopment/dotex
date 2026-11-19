@@ -18,6 +18,11 @@ namespace OoBDev.Query.Metadata;
 /// <param name="Facets">The facets.</param>
 /// <param name="Predicates">Predicate name to allowed value to condition.</param>
 /// <param name="Operators">Search operator name to condition.</param>
+/// <param name="Sample">A sample expression for the buckets shape.</param>
+/// <param name="Hints">Hint name to boolean expression.</param>
+/// <param name="Relations">Relation name to condition.</param>
+/// <param name="Edge">The link expressions when the kind is made of links.</param>
+/// <param name="Spaces">Proximity spaces by name.</param>
 public sealed record KindInfo(
     string Name,
     Type RowType,
@@ -29,7 +34,12 @@ public sealed record KindInfo(
     string Right,
     IReadOnlyList<FacetInfo> Facets,
     IReadOnlyDictionary<string, IReadOnlyDictionary<string, string>> Predicates,
-    IReadOnlyDictionary<string, string> Operators)
+    IReadOnlyDictionary<string, string> Operators,
+    string Sample = "",
+    IReadOnlyDictionary<string, string>? Hints = null,
+    IReadOnlyDictionary<string, string>? Relations = null,
+    EdgeInfo? Edge = null,
+    IReadOnlyDictionary<string, SpaceInfo>? Spaces = null)
 {
     /// <summary>Finds a facet by name, ignoring case.</summary>
     /// <param name="name">The facet name.</param>

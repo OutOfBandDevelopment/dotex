@@ -16,6 +16,6 @@ services.TryAddMysticMindServices();    // HTML to Markdown
 services.TryAddOfficeMarkdown();
 ```
 
-`IFileMarkdownReader.Read` is synchronous, so the conversion is awaited on the caller's thread. Spreadsheets and presentations (`.xlsx`, `.pptx`) have no Tika handler yet and are not listed.
+`IFileMarkdownReader.Read` is synchronous, so the conversion is awaited on the caller's thread. Spreadsheets and presentations are read directly: `XlsxFileMarkdownReader` (`.xlsx`, `.xlsm`: a table per sheet, first row as the header, stored values) and `PptxFileMarkdownReader` (`.pptx`, `.pptm`: a section per slide in presentation order, the title placeholder as the heading, paragraphs as bullets, speaker notes). They use only `System.IO.Compression` and `System.Xml.Linq`, need no conversion chain and are registered with `TryAddOpenXmlMarkdown()`. Dates and number formats are not interpreted; legacy `.xls` and `.ppt` are not read.
 
 Tests: unit tests in `OoBDev.Documents.Markdown.Office.Tests`; the real chain is exercised by `OfficeMarkdownReaderTests` in `OoBDev.Example.Tests` (Integration, needs the Tika container).

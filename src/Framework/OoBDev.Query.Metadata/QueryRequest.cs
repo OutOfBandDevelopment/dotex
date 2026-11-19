@@ -37,4 +37,19 @@ public sealed record QueryRequest
 
     /// <summary>Also return the number of rows that match the filters.</summary>
     public bool Count { get; init; }
+
+    /// <summary>Grid cell size in the units of the two <see cref="By"/> facets for shape <c>buckets</c> (for example degrees); default 1.</summary>
+    public double? Cell { get; init; }
+
+    /// <summary>Only rows related to an anchor row through a relation the kind declares.</summary>
+    public RelatedClause? Related { get; init; }
+
+    /// <summary>Order rows by closeness to an anchor in a space the kind declares (shape rows only).</summary>
+    public NearClause? Near { get; init; }
+
+    /// <summary>For shape <c>graph</c>: walk outwards from this node id.</summary>
+    public string? Root { get; init; }
+
+    /// <summary>For shape <c>graph</c> with a root: how many steps to walk, 1 to 4.</summary>
+    public int Depth { get; init; } = 1;
 }

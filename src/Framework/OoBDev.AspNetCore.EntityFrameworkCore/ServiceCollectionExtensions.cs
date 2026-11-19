@@ -29,6 +29,7 @@ public static class ServiceCollectionExtensions
         services.AddDbContextFactory<RightAuditDbContext>(configure);
         services.TryAddSingleton(TimeProvider.System);
         services.TryAddSingleton<EfRightAuditStore>();
+        services.TryAddSingleton<IRightAuditQuery>(sp => sp.GetRequiredService<EfRightAuditStore>());
         services.TryAddSingleton<BufferedRightAuditSink>();
         services.TryAddSingleton<IRightAuditSink>(sp => sp.GetRequiredService<BufferedRightAuditSink>());
         services.AddHostedService<RightAuditWriter>();

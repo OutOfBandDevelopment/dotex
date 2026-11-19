@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using OoBDev.AspNetCore.Authorization;
 using System.IO;
 using System.Text;
 using System.Text.Json;
@@ -16,7 +18,21 @@ public class HealthCheckOptionsFactory
     /// Creates and configures a new instance of <see cref="HealthCheckOptions"/>.
     /// </summary>
     /// <returns>The configured <see cref="HealthCheckOptions"/> instance.</returns>
-    public static HealthCheckOptions Create() =>
+    public const string DefaultDetailRight = "health.details";
+
+    /// <summary>Resolves what the caller may see: status only when anonymous, the check list when authenticated, everything with the detail right.</summary>
+    internal static HealthCheckDetailLevel GetLevel(HttpContext context, string detailRight)
+    {
+        if (context.User.Identity?.IsAuthenticated != true)
+            return HealthCheckDetailLevel.Status;
+
+        var checker = context.RequestServices.GetService<IApplicationRightChecker>();
+        return checker?.Check(context.User, [detailRight]) == RightCheckResult.Allowed
+            ? HealthCheckDetailLevel.Details
+            : HealthCheckDetailLevel.Checks;
+    }
+
+    public static HealthCheckOptions Create(string detailRight = DefaultDetailRight) =>
         new()
         {
             Predicate = _ => true,
@@ -25,17 +41,14 @@ public class HealthCheckOptionsFactory
             {
                 // https://blog.kritner.com/2020/12/04/prettifying-healthchecks/
                 context.Response.ContentType = "application/json; charset=utf-8";
-
-                // Request: docs/features/request/2026-11-17-health-check-detail-by-caller.md
-                // Request: docs/features/request/2026-11-17-health-check-detail-by-caller.md
-                // Request: docs/features/request/2026-11-17-health-check-detail-by-caller.md
+                var level = GetLevel(context, detailRight);
 
                 var options = new JsonWriterOptions
                 {
                     Indented = true
                 };
 
-                var json = Write(report, options);
+                var json = Write(report, options, level);
                 await context.Response.WriteAsync(json);
             },
 
@@ -47,23 +60,30 @@ public class HealthCheckOptionsFactory
             }
         };
 
-    private static string Write(HealthReport report, JsonWriterOptions options)
+    internal static string Write(HealthReport report, JsonWriterOptions options, HealthCheckDetailLevel level)
     {
         using var stream = new MemoryStream();
         using (var writer = new Utf8JsonWriter(stream, options))
         {
             writer.WriteStartObject();
             writer.WriteString("status", report.Status.ToString());
+            if (level == HealthCheckDetailLevel.Status)
+            {
+                writer.WriteEndObject();
+                writer.Flush();
+                return Encoding.UTF8.GetString(stream.ToArray());
+            }
+
             writer.WriteStartObject("results");
             foreach (var entry in report.Entries)
             {
                 writer.WriteStartObject(entry.Key);
                 writer.WriteString("status", entry.Value.Status.ToString());
 
-                if (entry.Value.Description is not null)
+                if (level == HealthCheckDetailLevel.Details && entry.Value.Description is not null)
                     writer.WriteString("description", entry.Value.Description);
 
-                if (entry.Value.Data is not null && entry.Value.Data.Count > 0)
+                if (level == HealthCheckDetailLevel.Details && entry.Value.Data is not null && entry.Value.Data.Count > 0)
                 {
                     writer.WriteStartObject("data");
                     foreach (var item in entry.Value.Data)
@@ -74,7 +94,7 @@ public class HealthCheckOptionsFactory
                     writer.WriteEndObject();
                 }
 
-                if (entry.Value.Exception?.Message is not null)
+                if (level == HealthCheckDetailLevel.Details && entry.Value.Exception?.Message is not null)
                     writer.WriteString("exception", entry.Value.Exception?.Message);
 
                 writer.WriteEndObject();

@@ -16,7 +16,7 @@ The registration adds transient `IQueryBuilder<>`, `ISortBuilder<>` and `IExpres
 
 ## Filter operators
 
-`EqualTo`, `NotEqualTo`, `InSet`, `LessThan`, `LessThanOrEqualTo`, `GreaterThan`, `GreaterThanOrEqualTo` (enum `Operators`). Filtering on a member excludes rows where it is null (known issue); recursive `OR`/`AND` groups are a suggested feature. The request and result shapes are in [SearchQueryMiddleware.md](SearchQueryMiddleware.md) and the examples in `notes/`.
+`EqualTo`, `NotEqualTo`, `InSet`, `LessThan`, `LessThanOrEqualTo`, `GreaterThan`, `GreaterThanOrEqualTo` (enum `Operators`). Filtering on a member excludes rows where it is null (known issue); recursive `OR`/`AND` groups are a suggested feature. `InSet` accepts any sequence (array, `List<T>`) and a whole-number text such as `0.0` matches an integer member. String values take the wildcards `*x`, `x*` and `*x*` (this is the "like" of the filter) and a leading `!` negates. The request and result shapes are in [SearchQueryMiddleware.md](SearchQueryMiddleware.md) and the examples in `notes/`.
 
 ## Notes
 

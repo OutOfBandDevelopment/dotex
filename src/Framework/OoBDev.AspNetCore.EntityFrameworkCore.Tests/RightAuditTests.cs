@@ -18,6 +18,8 @@ namespace OoBDev.AspNetCore.EntityFrameworkCore.Tests;
 [TestClass]
 public sealed class RightAuditTests
 {
+    public required TestContext TestContext { get; set; }
+
     private sealed class FixedClock(DateTimeOffset now) : TimeProvider
     {
         public DateTimeOffset Now { get; set; } = now;
@@ -101,6 +103,27 @@ public sealed class RightAuditTests
 
         Assert.HasCount(1, mine);
         Assert.AreEqual(t.AddDays(-1), mine[0].At);
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Simulate)]
+    public async Task Query_ByFilter_AppliesResultAndUpperBoundThroughTheAbstraction()
+    {
+        await using var f = new Fixture();
+        var t = f.Clock.Now;
+        await f.Store.AppendAsync([Entry("u-1", t.AddDays(-3), "Forbidden"), Entry("u-1", t.AddDays(-2)), Entry("u-2", t.AddDays(-1), "Forbidden")]);
+        IRightAuditQuery query = f.Store;
+
+        var denied = await query.QueryAsync(new RightAuditFilter(Result: "Forbidden"));
+        var before = await query.QueryAsync(new RightAuditFilter(To: t.AddDays(-2)));
+        var one = await query.QueryAsync(new RightAuditFilter(MaxCount: 1));
+
+        TestContext.WriteLine("denied {0}, before {1}, one {2}", denied.Count, before.Count, one.Count);
+        Assert.HasCount(2, denied);
+        Assert.HasCount(1, before);
+        Assert.AreEqual(t.AddDays(-3), before[0].At);
+        Assert.AreEqual("u-2", one[0].Subject);
+        await Assert.ThrowsExactlyAsync<ArgumentOutOfRangeException>(() => query.QueryAsync(new RightAuditFilter(MaxCount: 0)));
     }
 
     [TestMethod]

@@ -15,6 +15,7 @@
 
 	<ItemGroup>
 	  <EmbeddedResource Include="Retro\Apple2\Dos33\1983_dos33c.dsk" />
+	  <EmbeddedResource Include="Text\Templating\EmbeddedTemplates\hello.md.tpl" LogicalName="TestTemplates.hello.md.tpl" />
 	</ItemGroup>
 
 	<ItemGroup>

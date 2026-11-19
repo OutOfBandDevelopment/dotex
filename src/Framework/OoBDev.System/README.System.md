@@ -33,6 +33,9 @@ Adds support for shared serializers.
 ### TryTemplatingExtensions
 Adds support for shared templating.
 
+### Translations
+`ITranslationProvider` looks up text by key and culture (fr-CA, then fr, then the neutral entries); `OptionsTranslationProvider` reads `TranslationOptions.Cultures` (culture name, then key, then text; bind it from configuration). Registered by `TryAddProviders`.
+
 ## SystemExtensionBuilder
 Builder for configuring system extensions.
 
@@ -77,6 +80,9 @@ Wraps an `ITemplateEngine` so a template name resolves for the current UI cultur
 Access template from the file system.
 - **Get(templateName: string)**: Looks up templates from the file system.
 
+### EmbeddedResourceTemplateSource
+Access templates embedded in an assembly (`prefix + name + target extension + template extension`, folders as dots). Its priority (1000) is behind the file source (100), so a template on disk overrides the embedded default. Add it with `AddEmbeddedTemplates(assembly, prefix)`.
+
 ### FileTemplatingOptions
 Configuration settings for file templating engine.
 
@@ -111,6 +117,10 @@ Single-byte `Encoding` for Apple ][ text. Bytes with bit 7 set (normal text) dec
 ## IO.PathEx globbing
 
 `PathEx.EnumerateFiles(pattern)` takes the literal leading segments as the root and matches the rest with `Microsoft.Extensions.FileSystemGlobbing` (`*` and `**`; `?` is narrowed by a regular expression because the matcher lacks it). `PathEx.EnumerateFiles(root, patterns)` matches under a root only and treats a pattern starting with `!` as an exclusion, for example `!**/obj/**`.
+
+## IO.TextContent
+
+`TextContent.LooksLikeText(bytes)` and `FileLooksLikeText(path)` tell text from binary by the first 8 KB: no NUL bytes (a UTF-16 byte order mark is accepted) and at most 5% control characters. Use it instead of an extension list.
 
 ## IO.Fat
 

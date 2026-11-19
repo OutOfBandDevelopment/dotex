@@ -8,6 +8,8 @@ HTML to Word (`.docx`) conversion for the document conversion pipeline, using th
 services.TryAddHtmlToOpenXmlServices();
 ```
 
+The common registration does not add it; set `ExternalExtensionBuilder.IncludeHtmlToOpenXml`.
+
 This registers `HtmlToDocxConversionHandler` as an `IDocumentConversionHandler` and a `Microsoft Word - OpenXML` `IDocumentType` (extension `.docx`, content type `application/vnd.openxmlformats-officedocument.wordprocessingml.document`). A TODO in the registration considers Tika instead, or making this adapter excludable from the common set.
 
 **Table 1 — Content types of `HtmlToDocxConversionHandler` (compared ignoring case)**

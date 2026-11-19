@@ -27,4 +27,10 @@ public class EmbeddingSentenceTransformerQueueReaderOptions
     /// Default is 30 seconds.
     /// </summary>
     public TimeSpan ErrorWaitTimeout { get; init; } = new(0, 0, 30);
+
+    /// <summary>
+    /// Gets or initializes how long the host waits before it restarts a reader that stopped with an error.
+    /// Default is 10 seconds.
+    /// </summary>
+    public TimeSpan RestartDelay { get; init; } = TimeSpan.FromSeconds(10);
 }

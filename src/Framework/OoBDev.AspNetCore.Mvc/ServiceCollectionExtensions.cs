@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using OoBDev.AspNetCore.Mvc.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -52,6 +53,7 @@ public static class ServiceCollectionExtensions
         builder ??= new();
 
         services.AddHealthChecks();
+        services.TryAddSingleton<HealthCheckPath>();
 
         services.TryAddCommonOpenApiExtensions();
         services.TryAddAspNetCoreSearchQuery();
@@ -86,11 +88,24 @@ public static class ServiceCollectionExtensions
         if (builder.RequireAuthenticatedByDefault)
         {
             services.AddRequireAuthenticatedUser(
-                builder.RequireApplicationUserId,
+                builder.ApplicationUserIdClaim,
                 builder.AuthorizationPolicyBuilder
                 );
         }
 
+        return services;
+    }
+
+    /// <summary>
+    /// Adds the options of <see cref="Middleware.CultureInfoMiddleware"/> (<c>OoBDev:Culture</c>: <c>DefaultCulture</c>, <c>SupportedCultures</c>).
+    /// Without them the middleware accepts any valid culture and keeps the process culture for a request that names none.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configuration">The configuration holding the <c>OoBDev:Culture</c> section.</param>
+    /// <returns>The modified service collection.</returns>
+    public static IServiceCollection TryAddCultureNegotiation(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddValidatedOptions<Middleware.CultureInfoMiddlewareOptions>(configuration, "OoBDev:Culture");
         return services;
     }
 
@@ -140,16 +155,16 @@ public static class ServiceCollectionExtensions
     /// Adds authentication requirements to the service collection.
     /// </summary>
     /// <param name="services">The service collection to which authentication requirements should be added.</param>
-    /// <param name="requireApplicationUserId">Indicates whether the application user ID is required.</param>
+    /// <param name="applicationUserIdClaim">The claim that carries the application user ID; <c>null</c> turns the requirement off.</param>
     /// <param name="authorizationPolicyBuilder">Action to configure the authorization policy builder.</param>
     /// <returns>The modified service collection.</returns>
     public static IServiceCollection AddRequireAuthenticatedUser(
         this IServiceCollection services,
 #if DEBUG
-        bool requireApplicationUserId,
+        string? applicationUserIdClaim,
         Action<AuthorizationPolicyBuilder>? authorizationPolicyBuilder
 #else
-        bool requireApplicationUserId = true, // Request: docs/features/request/2026-11-17-configurable-application-user-claim.md
+        string? applicationUserIdClaim = CommonClaims.UserId,
         Action<AuthorizationPolicyBuilder>? authorizationPolicyBuilder = null
 #endif
     )
@@ -160,7 +175,7 @@ public static class ServiceCollectionExtensions
         // Policy builder
         var policyBuilder = new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
-                .AddRequirements(new UserAuthorizationRequirement(requireApplicationUserId));
+                .AddRequirements(new UserAuthorizationRequirement(applicationUserIdClaim));
         authorizationPolicyBuilder?.Invoke(policyBuilder);
 
         var authorizationPolicy = policyBuilder.Build();

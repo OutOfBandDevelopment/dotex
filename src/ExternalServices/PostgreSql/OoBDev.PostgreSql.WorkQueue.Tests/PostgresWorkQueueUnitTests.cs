@@ -23,6 +23,8 @@ public class PostgresWorkQueueUnitTests
         StringAssert.Contains(script, "CREATE TABLE IF NOT EXISTS \"jobs\".\"items\"");
         StringAssert.Contains(script, "CREATE TABLE IF NOT EXISTS \"jobs\".\"graveyard\"");
         StringAssert.Contains(script, "PRIMARY KEY (stage, item_key)");
+        StringAssert.Contains(script, "CREATE TABLE IF NOT EXISTS \"jobs\".\"worker_events\"");
+        StringAssert.Contains(script, "CREATE TABLE IF NOT EXISTS \"jobs\".\"worker_events_reader\"");
     }
 
     [TestMethod]

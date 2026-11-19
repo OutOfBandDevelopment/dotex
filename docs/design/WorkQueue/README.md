@@ -1,6 +1,6 @@
 ﻿# Database work queue for restartable stages
 
-Status: **first slice built 2026-11-16** (Framework `OoBDev.WorkQueue` with the in-memory provider and stage workers, PostgreSQL adapter `OoBDev.PostgreSql.WorkQueue`; placement confirmed by the owner 2026-11-12, option A). Worker events, the PGMQ reader and application stages are not built. Request: [database stage work queue](../../features/request/2026-11-11-database-stage-work-queue.md). Related: [postgres support](../../features/request/2026-11-10-postgres-support.md).
+Status: **first slice built 2026-11-16** (Framework `OoBDev.WorkQueue` with the in-memory provider and stage workers, PostgreSQL adapter `OoBDev.PostgreSql.WorkQueue`; placement confirmed by the owner 2026-11-12, option A). Worker events built 2026-11-17 (`IWorkerEvents`, in-memory and PostgreSQL stores); the PGMQ reader was not taken (rows are the source of truth) and application stages stay in the catalog. Request: [database stage work queue](../../features/completed/2026-11-11-database-stage-work-queue.md). Related: [postgres support](../../features/request/2026-11-10-postgres-support.md).
 
 ## Contents
 
@@ -65,6 +65,9 @@ Unit (fake clock and in-memory provider): one claim wins when two workers race; 
 
 ## Not in the first slice
 
-- Worker events and history retention (second slice).
-- The PGMQ reader.
+- The PGMQ reader (not taken: the table is the source of truth and the wake-up is polling).
 - Application stages and duties (stay in the catalog).
+
+## Built
+
+- Worker events 2026-11-17: `IWorkerEvents` (`PublishAsync`, `ReadAsync` with a per-reader mark, `TrimAsync`), `WorkerEventsOptions` (`WorkQueue:Events`: `MaxRecords`, `MaxAge`), `InMemoryWorkerEvents`, `PostgresWorkerEvents` (tables `worker_events` and `worker_events_reader`, names in `PostgresWorkQueueOptions`), `TryAddInMemoryWorkerEvents` and `TryAddPostgresWorkerEvents`.

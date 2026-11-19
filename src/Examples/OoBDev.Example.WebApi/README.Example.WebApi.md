@@ -48,7 +48,8 @@ Most controllers need a backing service. Start the Docker services from `contain
 
 ## Notes
 
-- `RequireApplicationUserId` is set to `false` so the samples run without a signed-in user.
+- The launch profile `http (no hosting)` sets `DISABLE_HOSTING=true`, which turns off the communications, message queue and vector hosted services.
+- `ApplicationUserIdClaim` is set to `null` so the samples run without a signed-in user.
 - The MailKit hosted receiver is disabled in `Program.cs`; enable it only with a reachable mailbox.
 - This project is not packaged.
 

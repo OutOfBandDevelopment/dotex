@@ -46,7 +46,7 @@ Applications want vectors from a configurable HTTP embedding server (a container
 |---------|------------------|-----------------|-----------|-----------------|
 | HTTP embedding client | none (new) | `src/ExternalServices/OoBDev.Embeddings.Http` (built) | `OoBDev.Embeddings.Http` | packable |
 | pgvector store | catalog SQL (reference only) | `src/ExternalServices/OoBDev.Data.Vectors.Postgres` (built) | `OoBDev.Data.Vectors.Postgres` | packable, Npgsql and pgvector here only |
-| Annotation pattern page | catalog tables | `docs/design/AnnotationLayer/` after the placement answer | none | docs |
+| Annotation pattern page | catalog tables | [`docs/design/AnnotationLayer/`](../AnnotationLayer/README.md) (written 2026-11-18) | none | docs |
 | Tests | none | `Unit` (fake HTTP handler, request/response shape), `Integration` (PostgreSQL with pgvector service in the stack; Ollama for a real server) | matching | MSTest |
 
 **Table 3 — References that change**
@@ -66,5 +66,4 @@ Unit: batch vectors come back in request order with the configured dimension; op
 - Annotation abstractions in code.
 - The image variant (`IImageEmbeddingProvider` posting bytes) and the ONNX providers implementing the shared interface. Deferred 2026-11-16: no server in the stack or the catalog speaks an image wire format (OpenAI has no image embeddings route), so a contract written now could not be tested against a real server; build it with the first server that needs it.
 - A shared explanation type with HybridSearch: `VectorMatch` (vector index and distance) lives in the pgvector project until HybridSearch needs it.
-- The annotation pattern page `docs/design/AnnotationLayer/` (waits on the placement answer).
 - ONNX versus HTTP cosine comparison on a fixed sample (needs a running embedding server; the Ollama service in the stack can serve it).

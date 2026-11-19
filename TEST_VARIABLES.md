@@ -75,7 +75,7 @@ Tests that require live cloud credentials. Manual execution only.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `TIKA_URL` | `http://localhost:9998` | Apache Tika server URL |
+| `TIKA_URL` | `http://127.0.0.1:9998` | Apache Tika server URL |
 
 **Docker Container:** `apache/tika` (Port 9998)
 
@@ -88,7 +88,7 @@ Tests that require live cloud credentials. Manual execution only.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `DOCLING_URL` | `http://localhost:5001` | docling-serve base URL |
+| `DOCLING_URL` | `http://127.0.0.1:5001` | docling-serve base URL |
 
 **Docker Container:** `quay.io/docling-project/docling-serve-cpu` (Port 5001, override `TEST_PORT_DOCLING`)
 
@@ -101,7 +101,7 @@ Tests that require live cloud credentials. Manual execution only.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `CLAMAV_HOST` | `localhost` | clamd host |
+| `CLAMAV_HOST` | `127.0.0.1` | clamd host |
 | `CLAMAV_PORT` | `3310` | clamd TCP port |
 
 **Docker Container:** `clamav/clamav:stable` (Port 3310, override `TEST_PORT_CLAMAV`). The first start downloads the signature database, so the health check allows a few minutes.
@@ -115,7 +115,7 @@ Tests that require live cloud credentials. Manual execution only.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `SONARQUBE_URL` | `http://localhost:9002` | SonarQube base URL |
+| `SONARQUBE_URL` | `http://127.0.0.1:9002` | SonarQube base URL |
 
 The analysis token is a user secret (`dotnet user-secrets` or the `SONAR_TOKEN` shell variable read by `scripts/ci/sonar.ps1`), never a test parameter and never committed.
 
@@ -133,9 +133,9 @@ The analysis token is a user secret (`dotnet user-secrets` or the `SONAR_TOKEN` 
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `SMTP_HOST` | `localhost` | SMTP server hostname |
+| `SMTP_HOST` | `127.0.0.1` | SMTP server hostname |
 | `SMTP_PORT` | `25` | SMTP server port |
-| `IMAP_HOST` | `localhost` | IMAP server hostname |
+| `IMAP_HOST` | `127.0.0.1` | IMAP server hostname |
 | `IMAP_PORT` | `143` | IMAP server port |
 
 **Docker Container:** `rnwood/smtp4dev` (Ports 25 SMTP, 143 IMAP, 7777 Web UI)
@@ -152,7 +152,7 @@ The analysis token is a user secret (`dotnet user-secrets` or the `SONAR_TOKEN` 
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `MONGODB_CONNECTION_STRING` | `mongodb://localhost:27017?collation={locale:'en_US',caseLevel:false,strength:2 }` | MongoDB connection string with collation settings |
+| `MONGODB_CONNECTION_STRING` | `mongodb://127.0.0.1:27017?collation={locale:'en_US',caseLevel:false,strength:2 }` | MongoDB connection string with collation settings |
 
 **Docker Container:** `mongo:latest` (Port 27017)
 
@@ -177,7 +177,7 @@ The analysis token is a user secret (`dotnet user-secrets` or the `SONAR_TOKEN` 
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `SQLSERVER_CONNECTION_STRING` | `Server=localhost,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=True` | SQL Server connection string |
+| `SQLSERVER_CONNECTION_STRING` | `Server=127.0.0.1,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=True` | SQL Server connection string |
 
 **Docker Container:** `mcr.microsoft.com/mssql/server:2022-latest` (Port 1433)
 
@@ -196,7 +196,7 @@ The analysis token is a user secret (`dotnet user-secrets` or the `SONAR_TOKEN` 
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `RABBITMQ_HOST` | `localhost` | RabbitMQ server hostname |
+| `RABBITMQ_HOST` | `127.0.0.1` | RabbitMQ server hostname |
 | `RABBITMQ_PORT` | `5673` | RabbitMQ AMQP port (5672 used by Service Bus emulator) |
 
 **Docker Container:** `rabbitmq:latest` (Ports 5673 AMQP, 15672 Management UI, 21613 STOMP, 5671 AMQPS, 21614 STOMP TLS). DevTerm peers (Mosquitto 1883, ser2net 2217, loopback-device 7778) use `MOSQUITTO_*`, `SER2NET_*` and `LOOPBACK_DEVICE_*` (HOST and PORT each), see `src/.runsettings`.
@@ -218,7 +218,7 @@ The analysis token is a user secret (`dotnet user-secrets` or the `SONAR_TOKEN` 
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `POSTGRES_CONNECTION_STRING` | `Host=localhost;Port=5434;Database=oobdev_test;Username=postgres;Password=IntegrationTest123!` | Npgsql connection string of the test database |
+| `POSTGRES_CONNECTION_STRING` | `Host=127.0.0.1;Port=5434;Database=oobdev_test;Username=postgres;Password=IntegrationTest123!` | Npgsql connection string of the test database |
 
 **Docker Container:** `oobd-test-postgres` (host port 5434, override with `TEST_PORT_POSTGRES`)
 
@@ -230,7 +230,7 @@ The analysis token is a user secret (`dotnet user-secrets` or the `SONAR_TOKEN` 
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `PGVECTOR_CONNECTION_STRING` | `Host=localhost;Port=5435;Database=oobdev_test;Username=postgres;Password=IntegrationTest123!` | Npgsql connection string of the vector test database |
+| `PGVECTOR_CONNECTION_STRING` | `Host=127.0.0.1;Port=5435;Database=oobdev_test;Username=postgres;Password=IntegrationTest123!` | Npgsql connection string of the vector test database |
 
 **Docker Container:** `oobd-test-pgvector` (host port 5435, override with `TEST_PORT_PGVECTOR`)
 
@@ -244,7 +244,7 @@ The analysis token is a user secret (`dotnet user-secrets` or the `SONAR_TOKEN` 
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `REDIS_CONNECTION_STRING` | `localhost:6379` | Redis connection string |
+| `REDIS_CONNECTION_STRING` | `127.0.0.1:6379` | Redis connection string |
 
 **Docker Container:** `redis:7-alpine` (Port 6379)
 
@@ -265,7 +265,7 @@ The analysis token is a user secret (`dotnet user-secrets` or the `SONAR_TOKEN` 
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `OPENSEARCH_URL` | `http://localhost:9200` | OpenSearch HTTP endpoint |
+| `OPENSEARCH_URL` | `http://127.0.0.1:9200` | OpenSearch HTTP endpoint |
 | `OPENSEARCH_USERNAME` | `admin` | OpenSearch admin username |
 | `OPENSEARCH_PASSWORD` | `admin` | OpenSearch admin password |
 
@@ -287,7 +287,7 @@ The analysis token is a user secret (`dotnet user-secrets` or the `SONAR_TOKEN` 
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `SBERT_URL` | `http://localhost:5080` | SBert HTTP API endpoint |
+| `SBERT_URL` | `http://127.0.0.1:5080` | SBert HTTP API endpoint |
 
 **Docker Container:** Custom SBert image (Port 5080)
 
@@ -307,8 +307,8 @@ The analysis token is a user secret (`dotnet user-secrets` or the `SONAR_TOKEN` 
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `OLLAMA_URL` | `http://localhost:11435` | Ollama HTTP API endpoint |
-| `OLLAMA_HOST` | `localhost` | Ollama host |
+| `OLLAMA_URL` | `http://127.0.0.1:11435` | Ollama HTTP API endpoint |
+| `OLLAMA_HOST` | `127.0.0.1` | Ollama host |
 | `OLLAMA_PORT` | `11435` | Ollama port |
 | `OLLAMA_MODEL` | `phi3` | Model name to use for testing |
 | `OLLAMA_EMBEDDING_MODEL` | `all-minilm` | Embedding model (chat models such as phi3 reject embedding requests) |
@@ -340,8 +340,8 @@ The analysis token is a user secret (`dotnet user-secrets` or the `SONAR_TOKEN` 
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `OTEL_EXPORTER_OTLP_ENDPOINT` | `http://localhost:4318` | OTLP HTTP endpoint the tests export to |
-| `OTEL_DASHBOARD_URL` | `http://localhost:18888` | Aspire dashboard, used to read spans and logs back through its telemetry API |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | `http://127.0.0.1:4318` | OTLP HTTP endpoint the tests export to |
+| `OTEL_DASHBOARD_URL` | `http://127.0.0.1:18888` | Aspire dashboard, used to read spans and logs back through its telemetry API |
 | `OTEL_DASHBOARD_API_KEY` | `oobdev-test-key` | API key sent as `x-api-key` to the telemetry API |
 
 **Docker Container:** `mcr.microsoft.com/dotnet/aspire-dashboard:latest` (4317 OTLP gRPC, 4318 OTLP HTTP, 18888 dashboard)
@@ -363,7 +363,7 @@ The analysis token is a user secret (`dotnet user-secrets` or the `SONAR_TOKEN` 
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `PLANTUML_URL` | `http://localhost:8086` | The PlantUML server already running on the system (container `plantuml`); the test stack does not start its own |
+| `PLANTUML_URL` | `http://127.0.0.1:8086` | The PlantUML server already running on the system (container `plantuml`); the test stack does not start its own |
 | `DOCS_VALIDATE_PATHS` | `docs/patterns-discovery;docs/applications` | `;`-separated repo-relative folders or files to validate |
 | `DOCS_CHECK_SCREENSHOTS` | `false` | `true` compares each guide screenshot's last commit with the newest commit of the code it shows (`images/sources.json`) |
 | `DOCS_SCREENSHOT_TOLERANCE_DAYS` | `30` | days the code may be newer than its screenshot before the check reports it |
@@ -402,7 +402,7 @@ The device list with connections is in [docs/how-tos/test-hardware.md](docs/how-
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `NEO4J_URI` | `bolt://localhost:7687` | Bolt endpoint |
+| `NEO4J_URI` | `bolt://127.0.0.1:7687` | Bolt endpoint |
 | `NEO4J_USER` | `neo4j` | User |
 | `NEO4J_PASSWORD` | `oobdev-test-pass` | Password (test instance only) |
 
@@ -418,7 +418,7 @@ The device list with connections is in [docs/how-tos/test-hardware.md](docs/how-
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `QDRANT_URL` | `http://localhost:6333` | Qdrant HTTP API endpoint |
+| `QDRANT_URL` | `http://127.0.0.1:6333` | Qdrant HTTP API endpoint |
 
 **Docker Container:** `qdrant/qdrant` (Ports 6333 HTTP, 6334 gRPC)
 
@@ -437,7 +437,7 @@ The device list with connections is in [docs/how-tos/test-hardware.md](docs/how-
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `AZURITE_URL` | `http://localhost:10000` | Azurite base endpoint (blob on 10000) |
+| `AZURITE_URL` | `http://127.0.0.1:10000` | Azurite base endpoint (blob on 10000) |
 
 **Docker Container:** `mcr.microsoft.com/azure-storage/azurite` (Ports 10000-10002)
 
@@ -456,7 +456,7 @@ The device list with connections is in [docs/how-tos/test-hardware.md](docs/how-
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `SERVICEBUS_CONNECTION_STRING` | `Endpoint=sb://localhost;...;UseDevelopmentEmulator=true;` | Emulator connection string (AMQP on port 5672) |
+| `SERVICEBUS_CONNECTION_STRING` | `Endpoint=sb://127.0.0.1;...;UseDevelopmentEmulator=true;` | Emulator connection string (AMQP on port 5672) |
 | `SERVICEBUS_TEST_QUEUE` | `integration-test-queue` | Plain queue from `containers/testing/servicebus-config/Config.json` |
 | `SERVICEBUS_TEST_TOPIC` | `integration-test-topic` | Topic from the same file |
 | `SERVICEBUS_TEST_SUBSCRIPTION` | `test-subscription` | Subscription on the test topic |
@@ -474,7 +474,7 @@ The device list with connections is in [docs/how-tos/test-hardware.md](docs/how-
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `MOTO_URL` | `http://localhost:4566` | Moto unified endpoint |
+| `MOTO_URL` | `http://127.0.0.1:4566` | Moto unified endpoint |
 
 **Docker Container:** `motoserver/moto` (Port 4566)
 
@@ -493,7 +493,7 @@ The device list with connections is in [docs/how-tos/test-hardware.md](docs/how-
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `KEYCLOAK_URL` | `http://localhost:8081` | Keycloak server base URL |
+| `KEYCLOAK_URL` | `http://127.0.0.1:8081` | Keycloak server base URL |
 | `KEYCLOAK_REALM` | `integration-test` | Keycloak realm name for tests |
 | `KEYCLOAK_CLIENT_ID` | `integration-test-client` | OAuth confidential client ID |
 | `KEYCLOAK_CLIENT_SECRET` | `test-client-secret-12345` | OAuth client secret |
@@ -520,10 +520,10 @@ The device list with connections is in [docs/how-tos/test-hardware.md](docs/how-
 - To be migrated
 
 **Notes:**
-- Admin console: `http://localhost:8081` (admin/admin)
+- Admin console: `http://127.0.0.1:8081` (admin/admin)
 - Realm auto-imported on startup from `keycloak-config/integration-test-realm.json`
 - See [KEYCLOAK-TESTING.md](containers/testing/KEYCLOAK-TESTING.md) for detailed testing guide
-- Token endpoint: `http://localhost:8081/realms/integration-test/protocol/openid-connect/token`
+- Token endpoint: `http://127.0.0.1:8081/realms/integration-test/protocol/openid-connect/token`
 
 ---
 
@@ -533,26 +533,26 @@ These parameters are in `src/.runsettings` beside the URL and connection-string 
 
 | Variable | Default | Used for |
 |----------|---------|----------|
-| `TIKA_HOST`, `TIKA_PORT` | `localhost`, `9998` | Apache Tika |
-| `SBERT_HOST`, `SBERT_PORT` | `localhost`, `5080` | SBert embeddings |
-| `REDIS_HOST`, `REDIS_PORT` | `localhost`, `6379` | Redis |
-| `QDRANT_HOST`, `QDRANT_PORT` | `localhost`, `6333` | Qdrant |
-| `OPENSEARCH_HOST`, `OPENSEARCH_PORT`, `OPENSEARCH_USE_HTTPS` | `localhost`, `9200`, `true` | OpenSearch |
-| `OPENSEARCH_DASHBOARDS_URL`, `OPENSEARCH_DASHBOARDS_HOST`, `OPENSEARCH_DASHBOARDS_PORT` | `http://localhost:5601`, `localhost`, `5601` | OpenSearch Dashboards |
+| `TIKA_HOST`, `TIKA_PORT` | `127.0.0.1`, `9998` | Apache Tika |
+| `SBERT_HOST`, `SBERT_PORT` | `127.0.0.1`, `5080` | SBert embeddings |
+| `REDIS_HOST`, `REDIS_PORT` | `127.0.0.1`, `6379` | Redis |
+| `QDRANT_HOST`, `QDRANT_PORT` | `127.0.0.1`, `6333` | Qdrant |
+| `OPENSEARCH_HOST`, `OPENSEARCH_PORT`, `OPENSEARCH_USE_HTTPS` | `127.0.0.1`, `9200`, `true` | OpenSearch |
+| `OPENSEARCH_DASHBOARDS_URL`, `OPENSEARCH_DASHBOARDS_HOST`, `OPENSEARCH_DASHBOARDS_PORT` | `http://127.0.0.1:5601`, `127.0.0.1`, `5601` | OpenSearch Dashboards |
 | `SQLSERVER_HOST`, `SQLSERVER_PORT`, `SQLSERVER_USERNAME`, `SQLSERVER_PASSWORD` | `127.0.0.1`, `1433`, `sa`, test password | SQL Server |
 | `MONGODB_DATABASE_NAME` | `integration_tests` | MongoDB database for tests |
-| `RABBITMQ_AMQP_PORT`, `RABBITMQ_MANAGEMENT_PORT`, `RABBITMQ_USERNAME`, `RABBITMQ_PASSWORD`, `RABBITMQ_CONNECTION_STRING` | `5673`, `15672`, `guest`, `guest`, `amqp://guest:guest@localhost:5673/` | RabbitMQ AMQP and management |
+| `RABBITMQ_AMQP_PORT`, `RABBITMQ_MANAGEMENT_PORT`, `RABBITMQ_USERNAME`, `RABBITMQ_PASSWORD`, `RABBITMQ_CONNECTION_STRING` | `5673`, `15672`, `guest`, `guest`, `amqp://guest:guest@127.0.0.1:5673/` | RabbitMQ AMQP and management |
 | `RABBITMQ_STOMP_PORT`, `RABBITMQ_AMQPS_PORT`, `RABBITMQ_STOMP_TLS_PORT` | `21613`, `5671`, `21614` | DevTerm broker tests (STOMP, TLS) |
-| `MOSQUITTO_HOST`, `MOSQUITTO_PORT` | `localhost`, `1883` | MQTT broker for DevTerm tests |
-| `SER2NET_HOST`, `SER2NET_PORT` | `localhost`, `2217` | RFC 2217 serial server |
-| `LOOPBACK_DEVICE_HOST`, `LOOPBACK_DEVICE_PORT` | `localhost`, `7778` | Loopback device peer |
+| `MOSQUITTO_HOST`, `MOSQUITTO_PORT` | `127.0.0.1`, `1883` | MQTT broker for DevTerm tests |
+| `SER2NET_HOST`, `SER2NET_PORT` | `127.0.0.1`, `2217` | RFC 2217 serial server |
+| `LOOPBACK_DEVICE_HOST`, `LOOPBACK_DEVICE_PORT` | `127.0.0.1`, `7778` | Loopback device peer |
 | `AZURITE_BLOB_SERVICE_URL`, `AZURITE_CONNECTION_STRING` | development storage account | Azurite blob service and connection string |
-| `MOTO_HOST`, `MOTO_PORT` | `localhost`, `4566` | Moto AWS emulator |
+| `MOTO_HOST`, `MOTO_PORT` | `127.0.0.1`, `4566` | Moto AWS emulator |
 | `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` | `us-east-1`, `test`, `test` | Test credentials for Moto |
-| `SQS_ENDPOINT`, `SQS_TEST_QUEUE` | `http://localhost:4566`, `integration-test-queue` | SQS tests |
-| `SERVICEBUS_HOST`, `SERVICEBUS_PORT` | `localhost`, `5672` | Service Bus emulator |
-| `SMTP_URL` | `http://localhost:7777` | SMTP4Dev web API |
-| `NGINX_URL`, `NGINX_HOST`, `NGINX_PORT` | `http://localhost:8080` | Test web server |
+| `SQS_ENDPOINT`, `SQS_TEST_QUEUE` | `http://127.0.0.1:4566`, `integration-test-queue` | SQS tests |
+| `SERVICEBUS_HOST`, `SERVICEBUS_PORT` | `127.0.0.1`, `5672` | Service Bus emulator |
+| `SMTP_URL` | `http://127.0.0.1:7777` | SMTP4Dev web API |
+| `NGINX_URL`, `NGINX_HOST`, `NGINX_PORT` | `http://127.0.0.1:8080` | Test web server |
 | `DOCKER_NETWORK`, `DOCKER_COMPOSE_FILE` | `oobd-integration-test-net`, `docker-compose.integration-tests.yml` | Stack scripts |
 | `TestConfig_*`, `TestConfig:*`, `TestConfig__*` | sample values | Fixtures for the `TestContext` configuration provider tests; no service behind them |
 
@@ -596,47 +596,47 @@ These parameters are in `src/.runsettings` beside the URL and connection-string 
 <RunSettings>
   <TestRunParameters>
     <!-- Apache Tika -->
-    <Parameter name="TIKA_URL" value="http://localhost:9998" />
+    <Parameter name="TIKA_URL" value="http://127.0.0.1:9998" />
 
     <!-- SMTP/IMAP -->
-    <Parameter name="SMTP_HOST" value="localhost" />
+    <Parameter name="SMTP_HOST" value="127.0.0.1" />
     <Parameter name="SMTP_PORT" value="25" />
-    <Parameter name="IMAP_HOST" value="localhost" />
+    <Parameter name="IMAP_HOST" value="127.0.0.1" />
     <Parameter name="IMAP_PORT" value="143" />
 
     <!-- MongoDB -->
-    <Parameter name="MONGODB_CONNECTION_STRING" value="mongodb://localhost:27017?collation={locale:'en_US',caseLevel:false,strength:2 }" />
+    <Parameter name="MONGODB_CONNECTION_STRING" value="mongodb://127.0.0.1:27017?collation={locale:'en_US',caseLevel:false,strength:2 }" />
 
     <!-- SQL Server -->
-    <Parameter name="SQLSERVER_CONNECTION_STRING" value="Server=localhost,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=True" />
+    <Parameter name="SQLSERVER_CONNECTION_STRING" value="Server=127.0.0.1,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=True" />
 
     <!-- RabbitMQ -->
-    <Parameter name="RABBITMQ_HOST" value="localhost" />
+    <Parameter name="RABBITMQ_HOST" value="127.0.0.1" />
     <Parameter name="RABBITMQ_PORT" value="5673" />
 
     <!-- OpenSearch -->
-    <Parameter name="OPENSEARCH_URL" value="http://localhost:9200" />
+    <Parameter name="OPENSEARCH_URL" value="http://127.0.0.1:9200" />
     <Parameter name="OPENSEARCH_USERNAME" value="admin" />
     <Parameter name="OPENSEARCH_PASSWORD" value="admin" />
 
     <!-- SBert -->
-    <Parameter name="SBERT_URL" value="http://localhost:5080" />
+    <Parameter name="SBERT_URL" value="http://127.0.0.1:5080" />
 
     <!-- Qdrant -->
-    <Parameter name="QDRANT_URL" value="http://localhost:6333" />
+    <Parameter name="QDRANT_URL" value="http://127.0.0.1:6333" />
 
     <!-- Azurite -->
-    <Parameter name="AZURITE_URL" value="http://localhost:10000" />
+    <Parameter name="AZURITE_URL" value="http://127.0.0.1:10000" />
 
     <!-- Moto -->
-    <Parameter name="MOTO_URL" value="http://localhost:4566" />
+    <Parameter name="MOTO_URL" value="http://127.0.0.1:4566" />
 
     <!-- Keycloak -->
-    <Parameter name="KEYCLOAK_URL" value="http://localhost:8081" />
+    <Parameter name="KEYCLOAK_URL" value="http://127.0.0.1:8081" />
 
     <!-- OpenTelemetry (Aspire dashboard) -->
-    <Parameter name="OTEL_EXPORTER_OTLP_ENDPOINT" value="http://localhost:4318" />
-    <Parameter name="OTEL_DASHBOARD_URL" value="http://localhost:18888" />
+    <Parameter name="OTEL_EXPORTER_OTLP_ENDPOINT" value="http://127.0.0.1:4318" />
+    <Parameter name="OTEL_DASHBOARD_URL" value="http://127.0.0.1:18888" />
     <Parameter name="OTEL_DASHBOARD_API_KEY" value="oobdev-test-key" />
 
     <!-- Groq Cloud (LiveIntegration) -->
@@ -686,7 +686,7 @@ public async Task MyIntegrationTest()
     var port = TestContext.GetPropertyOrDefault("SERVICE_PORT", 8080);
 
     // ❌ WRONG: Don't use Environment.GetEnvironmentVariable()
-    // var url = Environment.GetEnvironmentVariable("SERVICE_URL") ?? "http://localhost:8080";
+    // var url = Environment.GetEnvironmentVariable("SERVICE_URL") ?? "http://127.0.0.1:8080";
 
     // Your test logic...
 }

@@ -36,6 +36,20 @@ public class OcrMarkdownTests
     }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
+    public void Write_LongGermanText_RecordsTheLanguageAndShortTextDoesNot()
+    {
+        var pdf = Path.Combine(dir, "scan.pdf");
+        File.WriteAllText(pdf, "x");
+        var german = "Der Bericht wurde am Montag an das Büro geschickt und es ist klar, dass die Ergebnisse nicht so sind, wie sie es sich gewünscht haben, aber das Team wird sie mit dem Vorstand prüfen.";
+
+        OcrMarkdown.Write(pdf, Path.Combine(dir, "de.md"), "hash", german, "fake");
+        OcrMarkdown.Write(pdf, Path.Combine(dir, "short.md"), "hash", "first", "fake");
+
+        StringAssert.Contains(File.ReadAllText(Path.Combine(dir, "de.md")), "language: de\n---");
+        Assert.IsFalse(File.ReadAllText(Path.Combine(dir, "short.md")).Contains("language:", global::System.StringComparison.Ordinal));
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
     public void CopyFrom_OcrDonor_RewritesSource()
     {
         var a = Path.Combine(dir, "a.pdf");

@@ -61,9 +61,11 @@ Pairs: five frames within two seconds pair up, a gap above the window breaks the
 ## Not in the first slice
 
 - Eyes-open and face signals (need the face decision, see [face and pet matching](../../features/request/2026-11-11-face-and-pet-matching.md)).
-- Computing the eight quality measures in .NET (sharpness tiles, isotropy, noise); they stay in the Python container for now.
+- Subject-region focus (needs the face decision); the eight whole-frame measures are built (below).
 - Database queue and API: catalog-specific.
 
 ## Built
+
+2026-11-18: `QualityAnalyzer.Analyze` computes the eight measures in .NET from a gray buffer (recipe `q1` port). Compared with the `storage-tools` Python container on 7 real photos, fed the same gray pixels (the container's decode and 1024 resize, dumped raw): the first run showed `focus_tile` about 10 times lower because the 4-neighbour Laplacian is not OpenCV's `ksize=3` kernel (`[[2,0,2],[0,-8,0],[2,0,2]]`), and `hf_share` off by up to 190 % because of the 512 crop. Both fixed (OpenCV kernel; whole-image spectrum with Bluestein for sides that are not powers of two). Now every measure is within about 2 % (`focus_tile` 0 to 1.7 %, `hf_share` under 0.1 %, luma, clipping, range and isotropy under 0.3 %, noise under 2 %), the remainder being reflected versus skipped borders, so the catalog thresholds carry over as they are. The comparison was a throwaway script on private photos, not committed; the tests check ordering (blur lowers focus and high-frequency share), clipping, range, isotropy and argument checks.
 
 2026-11-16: `OoBDev.Imaging.Analysis.Bursts` has `BurstRanker` (Pairs, Components, Score), `QualityMeasures`, `SubjectFocus`, `BurstScore`, `QualityLabels` and `DHash` (gray buffer in, Pillow-equal Lanczos resize; RGB and RGBA gray helpers). Differences from the catalog copy: no Skia, a record result instead of a tuple, a dark frame is not also labelled under. The catalog's golden dHash values were not available (the catalog has no test for them), so the tests pin gradients and a step image; compare against the catalog values when the catalog switches to the package.

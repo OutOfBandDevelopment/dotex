@@ -51,7 +51,15 @@ public sealed class KindRegistry
         var predicates = type.GetCustomAttributes<PredicateAttribute>().GroupBy(p => p.Name)
             .ToDictionary(g => g.Key, g => (IReadOnlyDictionary<string, string>)g.ToDictionary(p => p.Value, p => p.Sql, StringComparer.OrdinalIgnoreCase), StringComparer.OrdinalIgnoreCase);
         var operators = type.GetCustomAttributes<SearchOperatorAttribute>().ToDictionary(o => o.Name, o => o.Sql, StringComparer.OrdinalIgnoreCase);
-        return new KindInfo(attribute.Name, type, attribute.Title, attribute.Base, attribute.Joins, attribute.Key, attribute.DefaultSort, attribute.Right, facets, predicates, operators);
+        var hints = type.GetCustomAttributes<HintAttribute>().ToDictionary(h => h.Name, h => h.Sql, StringComparer.OrdinalIgnoreCase);
+        var relations = type.GetCustomAttributes<RelationAttribute>().ToDictionary(r => r.Name, r => r.Sql, StringComparer.OrdinalIgnoreCase);
+        var edgeAttribute = type.GetCustomAttribute<EdgeAttribute>();
+        var edge = edgeAttribute is null ? null : new EdgeInfo(edgeAttribute.Source, edgeAttribute.Target, edgeAttribute.Weight);
+        var spaces = type.GetCustomAttributes<SpaceAttribute>().ToDictionary(
+            s => s.Name,
+            s => new SpaceInfo(s.Name, s.Metric, s.A, s.B, s.Table, s.IdColumn, s.IdType, s.VectorColumn, s.DefaultMax, s.Candidates),
+            StringComparer.OrdinalIgnoreCase);
+        return new KindInfo(attribute.Name, type, attribute.Title, attribute.Base, attribute.Joins, attribute.Key, attribute.DefaultSort, attribute.Right, facets, predicates, operators, attribute.Sample, hints, relations, edge, spaces);
     }
 
     private static string TypeName(Type type)

@@ -10,7 +10,7 @@ namespace OoBDev.AspNetCore.EntityFrameworkCore;
 
 /// <summary>Writes, reads and purges the durable right audit trail.</summary>
 /// <param name="factory">Creates a context per call.</param>
-public sealed class EfRightAuditStore(IDbContextFactory<RightAuditDbContext> factory)
+public sealed class EfRightAuditStore(IDbContextFactory<RightAuditDbContext> factory) : IRightAuditQuery
 {
     /// <summary>Stores a batch in one transaction.</summary>
     /// <param name="entries">The checks.</param>
@@ -41,9 +41,15 @@ public sealed class EfRightAuditStore(IDbContextFactory<RightAuditDbContext> fac
     /// <param name="maxCount">The most entries to return.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The entries.</returns>
-    public async Task<IReadOnlyList<RightAuditEntry>> QueryAsync(string? subject = null, DateTimeOffset? from = null, int maxCount = 100, CancellationToken cancellationToken = default)
+    public Task<IReadOnlyList<RightAuditEntry>> QueryAsync(string? subject = null, DateTimeOffset? from = null, int maxCount = 100, CancellationToken cancellationToken = default) =>
+        QueryAsync(new RightAuditFilter(subject, null, from, null, maxCount), cancellationToken);
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<RightAuditEntry>> QueryAsync(RightAuditFilter filter, CancellationToken cancellationToken = default)
     {
-        ArgumentOutOfRangeException.ThrowIfLessThan(maxCount, 1);
+        ArgumentNullException.ThrowIfNull(filter);
+        ArgumentOutOfRangeException.ThrowIfLessThan(filter.MaxCount, 1, nameof(filter));
+        var (subject, from, maxCount) = (filter.Subject, filter.From, filter.MaxCount);
         var db = await factory.CreateDbContextAsync(cancellationToken).ConfigureAwait(false);
         await using var disposer = db.ConfigureAwait(false);
         var query = db.RightAudit.AsNoTracking();
@@ -56,6 +62,17 @@ public sealed class EfRightAuditStore(IDbContextFactory<RightAuditDbContext> fac
         {
             var ticks = start.UtcTicks;
             query = query.Where(x => x.AtTicks >= ticks);
+        }
+
+        if (filter.To is { } end)
+        {
+            var endTicks = end.UtcTicks;
+            query = query.Where(x => x.AtTicks < endTicks);
+        }
+
+        if (filter.Result is { } result)
+        {
+            query = query.Where(x => x.Result == result);
         }
 
         var rows = await query.OrderByDescending(x => x.AtTicks).ThenByDescending(x => x.Id).Take(maxCount).ToListAsync(cancellationToken).ConfigureAwait(false);

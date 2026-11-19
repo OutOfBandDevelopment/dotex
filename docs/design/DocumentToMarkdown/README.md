@@ -27,7 +27,7 @@ Turn documents (PDF, office formats, text, scans) into page-anchored Markdown wi
 | Catalog `IDocumentOcr` and `DoclingOcr` (80 lines) | Docling-serve client: post, poll in 20 s waits, fetch Markdown; heavy options then a light retry; page mark `<<<PAGE>>>` | Base for an OCR provider; plain `HttpClient`, so an adapter under ExternalServices |
 | Catalog `PdfSegments` and the segment loop in `OcrStageRunner` | Plan page ranges, write a piece, keep each finished piece's text so a retry resumes, pad or merge pages so numbers stay true | Base for `PdfSegmenter` and a resumable `SegmentedOcr`; needs a PDF page splitter |
 | Catalog `OcrMarkdown`, `ExtractPaths`, `ChunkText`, `HtmlMarkdown`, `HtmlText` | Front matter writer, content-hash paths, chunking, HTML to Markdown | Base for the Markdown writer and HTML converters |
-| Catalog stage runners, work queue, twin reuse | Database and lease wiring | Catalog-specific; see [work queue](../../features/request/2026-11-11-database-stage-work-queue.md) |
+| Catalog stage runners, work queue, twin reuse | Database and lease wiring | Catalog-specific; see [work queue](../../features/completed/2026-11-11-database-stage-work-queue.md) |
 
 The request's open question (default converter) is answered as recommended: a provider interface first, Docling as the first provider, Tesseract through `ExternalTools` second.
 
@@ -61,9 +61,15 @@ The request's open question (default converter) is answered as recommended: a pr
 
 Converter: text and Markdown pass through, a PDF with enough text converts with one anchor per page, a thin PDF returns needs-ocr, a non-PDF named .pdf returns not-pdf, an existing Markdown is unchanged. Segments: plan boundaries, resume after a failed second piece, page count padded or merged to the plan. Docling client with a fake handler: post, poll twice, fetch; failure status raises `OcrFailedException`; the light options run after a heavy failure; timeout raises `TimeoutException`. Golden sample accuracy is a `DevLocal` test that records host and date. Target 85 to 90 percent coverage.
 
+## Built after the first slice
+
+- `.xlsx`/`.xlsm` and `.pptx`/`.pptm` readers (2026-11-18) in `OoBDev.Documents.Markdown.Office`: they read the Open XML zip with `System.IO.Compression` and `System.Xml.Linq` (no package, no Tika). Spreadsheets give a table per sheet (stored values, shared strings, first row as header, `|` escaped, formulas as last saved); presentations give a section per slide in `sldIdLst` order (title placeholder as the heading, other paragraphs as bullets, speaker notes). `TryAddOpenXmlMarkdown()` registers them. Not done: number formats and dates (serials stay numbers), merged cells, charts, images, tables inside slides as tables.
+
+- Region coordinates (2026-11-18): `IDocumentLayoutOcr` (extends `IDocumentOcr`) returns `OcrLayout(Markdown, Regions)`; `OcrRegion` carries page, label, text and a box as fractions of the page (top-left origin, so it survives any render scale and matches the [annotation layer](../AnnotationLayer/README.md)). `DoclingOcr` implements it by also asking for `json` and reading `json_content` with `DoclingLayout` (texts, tables and pictures; bottom-left boxes flipped; boxes clamped to the page). Tested with fixture JSON written from the docling document schema; not yet compared with a live docling-serve response.
+
 ## Not in the first slice
 
-- Region coordinates and language detection.
+- Language detection (2026-11-18): `LanguageDetector.Detect(text)` in `OoBDev.Documents.Markdown` guesses en, de, fr, es, it, nl or pt from stop-word shares (at least 20 words, a clear lead, otherwise `null`). It is a hint for the front matter, not a classifier: other scripts and languages answer `null`; a model-based detector can replace it behind the same call. `MarkdownPages.FrontMatter` writes a `language:` line when it answers (converter and `OcrMarkdown`), and leaves it out otherwise.
 - The queue, lease and twin reuse (catalog database).
 - Rendering stages (`RenderStageRunner`, the renderer container) and summarize.
-- Spreadsheet and presentation readers (xlsx, pptx, OLE): no Tika handler exists for them; each would be a further `IFileMarkdownReader` or a Tika handler, after its own comparison. Word-processing and e-book files are built (`OoBDev.Documents.Markdown.Office`, owner 2026-11-16: compose the Tika and MysticMind handlers, no new package).
+- Legacy OLE spreadsheet and presentation readers (`.xls`, `.ppt`): `.xlsx` and `.pptx` are built (2026-11-18, below); the binary formats have no reader. Word-processing and e-book files are built (`OoBDev.Documents.Markdown.Office`, owner 2026-11-16: compose the Tika and MysticMind handlers, no new package).

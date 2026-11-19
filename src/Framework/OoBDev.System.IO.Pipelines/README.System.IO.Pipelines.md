@@ -45,7 +45,7 @@ The handlers and the reader must be set before `With(...)` fixes the reader; a l
 
 ## Message devices
 
-`StreamDevice<TMessage>` runs a device definition over an opened adapter: it initialises the device (`IDeviceDefinitionInitialize`), decodes received segments into messages (`IDeviceDefinitionReceiver<TMessage>`) and encodes queued messages for sending (`IDeviceDefinitionTransmitter<TMessage>`), pausing at least `minimumTransmissionDelay` milliseconds (default 1000) between transmissions. It raises `MessageReceived`, `DeviceStatus` (initializing, receiving, transmitting and so on) and the two error events, `Transmit(message)` queues a message, `Runner` is the running task, and `Dispose` stops it and the adapter.
+`StreamDevice<TMessage>` runs a device definition over an opened adapter: it initialises the device (`IDeviceDefinitionInitialize`), decodes received segments into messages (`IDeviceDefinitionReceiver<TMessage>`) and encodes queued messages for sending (`IDeviceDefinitionTransmitter<TMessage>`), pausing at least `minimumTransmissionDelay` milliseconds (the explicit argument, else the definition's `IDeviceDefinitionTransmissionDelay`, else 1000) between transmissions. It raises `MessageReceived`, `DeviceStatus` (initializing, receiving, transmitting and so on) and the two error events, `Transmit(message)` queues a message, `Runner` is the running task, and `Dispose` stops it and the adapter.
 
 ## Stream helpers
 

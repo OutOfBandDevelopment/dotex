@@ -119,7 +119,7 @@ public class DocsTests
     {
         // Stage
         var root = RepoRoot();
-        var baseUrl = TestContext.GetPropertyOrDefault("PLANTUML_URL", "http://localhost:8086").TrimEnd('/');
+        var baseUrl = TestContext.GetPropertyOrDefault("PLANTUML_URL", "http://127.0.0.1:8086").TrimEnd('/');
         using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
         var problems = new List<string>();
 

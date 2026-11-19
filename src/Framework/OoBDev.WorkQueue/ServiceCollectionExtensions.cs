@@ -39,6 +39,30 @@ public static class ServiceCollectionExtensions
     }
 
     /// <summary>
+    /// Binds <see cref="WorkerEventsOptions"/> from <see cref="WorkerEventsOptions.SectionName"/> and registers <see cref="InMemoryWorkerEvents"/> as the <see cref="IWorkerEvents"/> when none is registered.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configuration">The configuration.</param>
+    /// <returns>The service collection for chaining.</returns>
+    public static IServiceCollection TryAddInMemoryWorkerEvents(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.TryAddWorkerEventsOptions(configuration);
+        services.TryAddSingleton<IWorkerEvents, InMemoryWorkerEvents>();
+        return services;
+    }
+
+    /// <summary>Binds the retention options and registers <see cref="TimeProvider.System"/> when none exists; used by every event store.</summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configuration">The configuration.</param>
+    /// <returns>The service collection for chaining.</returns>
+    public static IServiceCollection TryAddWorkerEventsOptions(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddValidatedOptions<WorkerEventsOptions>(configuration, WorkerEventsOptions.SectionName);
+        services.TryAddSingleton(TimeProvider.System);
+        return services;
+    }
+
+    /// <summary>
     /// Adds a hosted <see cref="StageWorker"/> for a stage. The worker runs only while the stage is enabled in <see cref="WorkQueueOptions.Stages"/>
     /// (<c>WorkQueue:Stages:{stage}:Enabled</c>).
     /// </summary>

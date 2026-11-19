@@ -54,4 +54,21 @@ public interface IQueryDialect
     /// <param name="text">The text.</param>
     /// <returns>A contains pattern.</returns>
     string ContainsPattern(string text);
+
+    /// <summary>The grid cell number of a numeric expression, for example <c>floor(expr / cell)</c>.</summary>
+    string GridCell(string expr, string cellParameter);
+
+    /// <summary>The great-circle distance in kilometres between a stored position and a bound one.</summary>
+    /// <param name="lat">The stored latitude expression.</param>
+    /// <param name="lon">The stored longitude expression.</param>
+    /// <param name="latParameter">The placeholder holding the anchor latitude.</param>
+    /// <param name="lonParameter">The placeholder holding the anchor longitude.</param>
+    /// <returns>The distance expression.</returns>
+    string Haversine(string lat, string lon, string latParameter, string lonParameter);
+
+    /// <summary>The cosine distance between a stored vector and an anchor vector expression.</summary>
+    /// <param name="column">The stored vector expression.</param>
+    /// <param name="anchor">An expression that yields the anchor vector.</param>
+    /// <returns>The distance expression.</returns>
+    string VectorDistance(string column, string anchor);
 }

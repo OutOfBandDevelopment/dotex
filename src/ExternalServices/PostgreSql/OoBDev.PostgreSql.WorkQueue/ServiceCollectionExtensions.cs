@@ -28,4 +28,19 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IWorkQueue, PostgresWorkQueue>();
         return services;
     }
+
+    /// <summary>
+    /// Registers <see cref="PostgresWorkerEvents"/> as the <see cref="IWorkerEvents"/>; it shares the connection string and schema of the work queue options
+    /// and binds the retention from <see cref="WorkerEventsOptions.SectionName"/>.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configuration">The configuration.</param>
+    /// <returns>The service collection for chaining.</returns>
+    public static IServiceCollection TryAddPostgresWorkerEvents(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.TryAddWorkerEventsOptions(configuration);
+        services.AddValidatedOptions<PostgresWorkQueueOptions>(configuration, PostgresWorkQueueOptions.SectionName);
+        services.TryAddSingleton<IWorkerEvents, PostgresWorkerEvents>();
+        return services;
+    }
 }

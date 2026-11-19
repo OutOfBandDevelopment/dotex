@@ -88,7 +88,7 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 	<!-- Test Run Parameters for Integration Tests -->
 	<TestRunParameters>
 		<!-- MongoDB -->
-		<Parameter name="MONGODB_CONNECTION_STRING" value="mongodb://localhost:27017" />
+		<Parameter name="MONGODB_CONNECTION_STRING" value="mongodb://127.0.0.1:27017" />
 		<Parameter name="MONGODB_DATABASE_NAME" value="integration_tests" />
 
 		<!-- SQL Server -->
@@ -99,79 +99,79 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="SQLSERVER_PASSWORD" value="IntegrationTest123!" />
 
 		<!-- RabbitMQ -->
-		<Parameter name="RABBITMQ_HOST" value="localhost" />
+		<Parameter name="RABBITMQ_HOST" value="127.0.0.1" />
 		<Parameter name="RABBITMQ_PORT" value="5673" />
 		<Parameter name="RABBITMQ_AMQP_PORT" value="5673" />
 		<Parameter name="RABBITMQ_MANAGEMENT_PORT" value="15672" />
 		<Parameter name="RABBITMQ_USERNAME" value="guest" />
 		<Parameter name="RABBITMQ_PASSWORD" value="guest" />
-		<Parameter name="RABBITMQ_CONNECTION_STRING" value="amqp://guest:guest@localhost:5673/" />
+		<Parameter name="RABBITMQ_CONNECTION_STRING" value="amqp://guest:guest@127.0.0.1:5673/" />
 		<Parameter name="RABBITMQ_STOMP_PORT" value="21613" />
 		<Parameter name="RABBITMQ_AMQPS_PORT" value="5671" />
 		<Parameter name="RABBITMQ_STOMP_TLS_PORT" value="21614" />
-		<Parameter name="MOSQUITTO_HOST" value="localhost" />
+		<Parameter name="MOSQUITTO_HOST" value="127.0.0.1" />
 		<Parameter name="MOSQUITTO_PORT" value="1883" />
-		<Parameter name="SER2NET_HOST" value="localhost" />
+		<Parameter name="SER2NET_HOST" value="127.0.0.1" />
 		<Parameter name="SER2NET_PORT" value="2217" />
-		<Parameter name="LOOPBACK_DEVICE_HOST" value="localhost" />
+		<Parameter name="LOOPBACK_DEVICE_HOST" value="127.0.0.1" />
 		<Parameter name="LOOPBACK_DEVICE_PORT" value="7778" />
 
 		<!-- Integration container start-up (IntegrationTestMethod) -->
-		<Parameter name="CONTAINER_STARTUP_TIMEOUT_SECONDS" value="5" />
+		<Parameter name="CONTAINER_STARTUP_TIMEOUT_SECONDS" value="30" />
 		<Parameter name="CONTAINER_AUTOSTART" value="true" />
 		<Parameter name="CONTAINER_STOP_AFTER_TESTS" value="true" />
 
 		<!-- Redis -->
-		<Parameter name="REDIS_CONNECTION_STRING" value="localhost:6379" />
-		<Parameter name="REDIS_HOST" value="localhost" />
+		<Parameter name="REDIS_CONNECTION_STRING" value="127.0.0.1:6379" />
+		<Parameter name="REDIS_HOST" value="127.0.0.1" />
 		<Parameter name="REDIS_PORT" value="6379" />
 
 		<!-- PostgreSQL (pgmq) -->
-		<Parameter name="POSTGRES_CONNECTION_STRING" value="Host=localhost;Port=5434;Database=oobdev_test;Username=postgres;Password=IntegrationTest123!" />
-		<Parameter name="PGVECTOR_CONNECTION_STRING" value="Host=localhost;Port=5435;Database=oobdev_test;Username=postgres;Password=IntegrationTest123!" />
+		<Parameter name="POSTGRES_CONNECTION_STRING" value="Host=127.0.0.1;Port=5434;Database=oobdev_test;Username=postgres;Password=IntegrationTest123!" />
+		<Parameter name="PGVECTOR_CONNECTION_STRING" value="Host=127.0.0.1;Port=5435;Database=oobdev_test;Username=postgres;Password=IntegrationTest123!" />
 
 		<!-- OpenSearch -->
-		<Parameter name="OPENSEARCH_URL" value="https://localhost:9200" />
-		<Parameter name="OPENSEARCH_HOST" value="localhost" />
+		<Parameter name="OPENSEARCH_URL" value="https://127.0.0.1:9200" />
+		<Parameter name="OPENSEARCH_HOST" value="127.0.0.1" />
 		<Parameter name="OPENSEARCH_PORT" value="9200" />
 		<Parameter name="OPENSEARCH_USERNAME" value="admin" />
 		<Parameter name="OPENSEARCH_PASSWORD" value="IntegrationTest123!" />
 		<Parameter name="OPENSEARCH_USE_HTTPS" value="true" />
 
 		<!-- PlantUML renderer and docs validation -->
-		<Parameter name="PLANTUML_URL" value="http://localhost:8086" />
+		<Parameter name="PLANTUML_URL" value="http://127.0.0.1:8086" />
 		<Parameter name="DOCS_VALIDATE_PATHS" value="docs/patterns-discovery;docs/applications" />
 		<Parameter name="DOCS_CHECK_SCREENSHOTS" value="false" />
 		<Parameter name="DOCS_SCREENSHOT_TOLERANCE_DAYS" value="30" />
 
 		<!-- Qdrant -->
-		<Parameter name="QDRANT_URL" value="http://localhost:6333" />
-		<Parameter name="QDRANT_HOST" value="localhost" />
+		<Parameter name="QDRANT_URL" value="http://127.0.0.1:6333" />
+		<Parameter name="QDRANT_HOST" value="127.0.0.1" />
 		<Parameter name="QDRANT_PORT" value="6333" />
 
 		<!-- Neo4j -->
-		<Parameter name="NEO4J_URI" value="bolt://localhost:7687" />
+		<Parameter name="NEO4J_URI" value="bolt://127.0.0.1:7687" />
 		<Parameter name="NEO4J_USER" value="neo4j" />
 		<Parameter name="NEO4J_PASSWORD" value="oobdev-test-pass" />
 
 		<!-- Azure Storage (Azurite) -->
-		<Parameter name="AZURITE_URL" value="http://localhost:10000" />
+		<Parameter name="AZURITE_URL" value="http://127.0.0.1:10000" />
 		<Parameter name="AZURITE_BLOB_SERVICE_URL" value="http://127.0.0.1:10000/devstoreaccount1" />
 		<Parameter name="AZURITE_CONNECTION_STRING" value="DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;" />
 
 		<!-- AWS Moto -->
-		<Parameter name="MOTO_URL" value="http://localhost:4566" />
-		<Parameter name="MOTO_HOST" value="localhost" />
+		<Parameter name="MOTO_URL" value="http://127.0.0.1:4566" />
+		<Parameter name="MOTO_HOST" value="127.0.0.1" />
 		<Parameter name="MOTO_PORT" value="4566" />
 		<Parameter name="AWS_REGION" value="us-east-1" />
 		<Parameter name="AWS_ACCESS_KEY_ID" value="test" />
 		<Parameter name="AWS_SECRET_ACCESS_KEY" value="test" />
-		<Parameter name="SQS_ENDPOINT" value="http://localhost:4566" />
+		<Parameter name="SQS_ENDPOINT" value="http://127.0.0.1:4566" />
 		<Parameter name="SQS_TEST_QUEUE" value="integration-test-queue" />
 
 		<!-- Azure Service Bus Emulator -->
-		<Parameter name="SERVICEBUS_CONNECTION_STRING" value="Endpoint=sb://localhost;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;" />
-		<Parameter name="SERVICEBUS_HOST" value="localhost" />
+		<Parameter name="SERVICEBUS_CONNECTION_STRING" value="Endpoint=sb://127.0.0.1;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;" />
+		<Parameter name="SERVICEBUS_HOST" value="127.0.0.1" />
 		<Parameter name="SERVICEBUS_PORT" value="5672" />
 		<Parameter name="SERVICEBUS_TEST_QUEUE" value="integration-test-queue" />
 		<Parameter name="SERVICEBUS_TEST_TOPIC" value="integration-test-topic" />
@@ -179,7 +179,7 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="SERVICEBUS_TEST_SUBSCRIPTION" value="test-subscription" />
 
 		<!-- Keycloak -->
-		<Parameter name="KEYCLOAK_URL" value="http://localhost:8081" />
+		<Parameter name="KEYCLOAK_URL" value="http://127.0.0.1:8081" />
 		<Parameter name="KEYCLOAK_ADMIN_USERNAME" value="admin" />
 		<Parameter name="KEYCLOAK_ADMIN_PASSWORD" value="admin" />
 		<Parameter name="KEYCLOAK_REALM" value="integration-test" />
@@ -189,54 +189,54 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="KEYCLOAK_TEST_PASSWORD" value="testpassword" />
 
 		<!-- SMTP (SMTP4Dev) -->
-		<Parameter name="SMTP_HOST" value="localhost" />
+		<Parameter name="SMTP_HOST" value="127.0.0.1" />
 		<Parameter name="SMTP_PORT" value="25" />
-		<Parameter name="SMTP_URL" value="http://localhost:7777" />
-		<Parameter name="IMAP_HOST" value="localhost" />
+		<Parameter name="SMTP_URL" value="http://127.0.0.1:7777" />
+		<Parameter name="IMAP_HOST" value="127.0.0.1" />
 		<Parameter name="IMAP_PORT" value="143" />
 
 		<!-- Apache Tika -->
-		<Parameter name="TIKA_URL" value="http://localhost:9998" />
-		<Parameter name="TIKA_HOST" value="localhost" />
+		<Parameter name="TIKA_URL" value="http://127.0.0.1:9998" />
+		<Parameter name="TIKA_HOST" value="127.0.0.1" />
 		<Parameter name="TIKA_PORT" value="9998" />
 
 		<!-- Docling serve (document conversion and OCR) -->
-		<Parameter name="DOCLING_URL" value="http://localhost:5001" />
+		<Parameter name="DOCLING_URL" value="http://127.0.0.1:5001" />
 
 		<!-- ClamAV (virus scanning over clamd INSTREAM) -->
-		<Parameter name="CLAMAV_HOST" value="localhost" />
+		<Parameter name="CLAMAV_HOST" value="127.0.0.1" />
 		<Parameter name="CLAMAV_PORT" value="3310" />
 
 		<!-- SonarQube Community (static analysis; the token is a user secret) -->
-		<Parameter name="SONARQUBE_URL" value="http://localhost:9002" />
+		<Parameter name="SONARQUBE_URL" value="http://127.0.0.1:9002" />
 
 		<!-- SBert (Sentence Embeddings) -->
-		<Parameter name="SBERT_URL" value="http://localhost:5080" />
-		<Parameter name="SBERT_HOST" value="localhost" />
+		<Parameter name="SBERT_URL" value="http://127.0.0.1:5080" />
+		<Parameter name="SBERT_HOST" value="127.0.0.1" />
 		<Parameter name="SBERT_PORT" value="5080" />
 
 		<!-- Ollama (LLM Inference) -->
-		<Parameter name="OLLAMA_URL" value="http://localhost:11435" />
+		<Parameter name="OLLAMA_URL" value="http://127.0.0.1:11435" />
 		<Parameter name="RAW_TEST_FILE" value="" />
-		<Parameter name="OLLAMA_HOST" value="localhost" />
+		<Parameter name="OLLAMA_HOST" value="127.0.0.1" />
 		<Parameter name="OLLAMA_PORT" value="11435" />
 		<Parameter name="OLLAMA_MODEL" value="phi3" />
 		<Parameter name="OLLAMA_EMBEDDING_MODEL" value="all-minilm" />
 		<Parameter name="OLLAMA_VISION_MODEL" value="llava-phi3" />
 
 		<!-- OpenTelemetry (Aspire dashboard) -->
-		<Parameter name="OTEL_EXPORTER_OTLP_ENDPOINT" value="http://localhost:4318" />
-		<Parameter name="OTEL_DASHBOARD_URL" value="http://localhost:18888" />
+		<Parameter name="OTEL_EXPORTER_OTLP_ENDPOINT" value="http://127.0.0.1:4318" />
+		<Parameter name="OTEL_DASHBOARD_URL" value="http://127.0.0.1:18888" />
 		<Parameter name="OTEL_DASHBOARD_API_KEY" value="oobdev-test-key" />
 
 		<!-- OpenSearch Dashboards -->
-		<Parameter name="OPENSEARCH_DASHBOARDS_URL" value="http://localhost:5601" />
-		<Parameter name="OPENSEARCH_DASHBOARDS_HOST" value="localhost" />
+		<Parameter name="OPENSEARCH_DASHBOARDS_URL" value="http://127.0.0.1:5601" />
+		<Parameter name="OPENSEARCH_DASHBOARDS_HOST" value="127.0.0.1" />
 		<Parameter name="OPENSEARCH_DASHBOARDS_PORT" value="5601" />
 
 		<!-- Nginx Dashboard -->
-		<Parameter name="NGINX_URL" value="http://localhost:8080" />
-		<Parameter name="NGINX_HOST" value="localhost" />
+		<Parameter name="NGINX_URL" value="http://127.0.0.1:8080" />
+		<Parameter name="NGINX_HOST" value="127.0.0.1" />
 		<Parameter name="NGINX_PORT" value="8080" />
 
 		<!-- General Docker Network -->

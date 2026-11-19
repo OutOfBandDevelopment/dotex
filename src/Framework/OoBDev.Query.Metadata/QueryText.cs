@@ -11,7 +11,7 @@ namespace OoBDev.Query.Metadata;
 /// </summary>
 public static class QueryText
 {
-    private static readonly HashSet<string> Keywords = new(StringComparer.OrdinalIgnoreCase) { "as", "by", "top", "count" };
+    private static readonly HashSet<string> Keywords = new(StringComparer.OrdinalIgnoreCase) { "as", "by", "top", "count", "of", "near" };
 
     private sealed record Token(string Text, string Raw, bool Quoted);
 
@@ -50,6 +50,15 @@ public static class QueryText
                     request = request with { Count = true };
                     i++;
                     break;
+                case "near":
+                    request = request with { Near = ParseNear(tokens, ref i) };
+                    break;
+                case "of":
+                    if (i + 1 >= tokens.Count || tokens[i + 1].Text.Split(':', 2) is not [{ Length: > 0 } via, { Length: > 0 } id])
+                        throw new QueryException("'of' needs relation:key, for example: of burst:4711.");
+                    request = request with { Related = new RelatedClause(via, id) };
+                    i += 2;
+                    break;
                 case "top":
                     if (i + 1 >= tokens.Count || !int.TryParse(tokens[i + 1].Text, NumberStyles.None, CultureInfo.InvariantCulture, out var n) || n < 1)
                         throw new QueryException("'top' needs a number, for example: top 50.");
@@ -60,11 +69,11 @@ public static class QueryText
                     if (i + 1 >= tokens.Count)
                         throw new QueryException("'by' needs facet names, for example: by -updated.");
                     var names = tokens[i + 1].Text.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                    request = request.Shape == "facets" ? request with { By = names } : request with { Sort = names };
+                    request = request.Shape is "facets" or "buckets" ? request with { By = names } : request with { Sort = names };
                     i += 2;
                     break;
                 case "as":
-                    const string usage = "'as' is followed by rows or facets by <facet>.";
+                    const string usage = "'as' is followed by rows, facets by <facet> or buckets by <a>,<b> [cell <size>] or graph [from <id>] [depth <n>].";
                     if (i + 1 >= tokens.Count)
                         throw new QueryException(usage);
                     var shape = tokens[i + 1].Text.ToLowerInvariant();
@@ -78,6 +87,36 @@ public static class QueryText
                         request = request with { Shape = "facets", By = tokens[i + 3].Text.Split(',', StringSplitOptions.RemoveEmptyEntries) };
                         i += 4;
                     }
+                    else if (shape == "buckets" && i + 3 < tokens.Count && tokens[i + 2].Text.Equals("by", StringComparison.OrdinalIgnoreCase))
+                    {
+                        request = request with { Shape = "buckets", By = tokens[i + 3].Text.Split(',', StringSplitOptions.RemoveEmptyEntries) };
+                        i += 4;
+                        if (i < tokens.Count && tokens[i].Text.Equals("cell", StringComparison.OrdinalIgnoreCase))
+                        {
+                            if (i + 1 >= tokens.Count || !double.TryParse(tokens[i + 1].Text, NumberStyles.Float, CultureInfo.InvariantCulture, out var cell) || cell <= 0)
+                                throw new QueryException("'cell' needs a size, for example: cell 0.5.");
+                            request = request with { Cell = cell };
+                            i += 2;
+                        }
+                    }
+                    else if (shape == "graph")
+                    {
+                        request = request with { Shape = "graph" };
+                        i += 2;
+                        if (i + 1 < tokens.Count && tokens[i].Text.Equals("from", StringComparison.OrdinalIgnoreCase))
+                        {
+                            request = request with { Root = tokens[i + 1].Text };
+                            i += 2;
+                        }
+
+                        if (i < tokens.Count && tokens[i].Text.Equals("depth", StringComparison.OrdinalIgnoreCase))
+                        {
+                            if (i + 1 >= tokens.Count || !int.TryParse(tokens[i + 1].Text, NumberStyles.None, CultureInfo.InvariantCulture, out var depth) || depth < 1)
+                                throw new QueryException("'depth' needs a number, for example: depth 2.");
+                            request = request with { Depth = depth };
+                            i += 2;
+                        }
+                    }
                     else
                     {
                         throw new QueryException(usage);
@@ -90,6 +129,36 @@ public static class QueryText
         }
 
         return request;
+    }
+
+    private static NearClause ParseNear(List<Token> tokens, ref int i)
+    {
+        const string usage = "'near' needs space:key or space:lat,lon, optionally followed by max <distance>, for example: near geo:51.5,-0.1 max 25.";
+        if (i + 1 >= tokens.Count || tokens[i + 1].Text.Split(':', 2) is not [{ Length: > 0 } space, { Length: > 0 } anchor])
+            throw new QueryException(usage);
+        i += 2;
+        var near = new NearClause(space);
+        var position = anchor.Split(',');
+        if (position.Length == 2)
+        {
+            if (!double.TryParse(position[0], NumberStyles.Float, CultureInfo.InvariantCulture, out var lat) || !double.TryParse(position[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var lon))
+                throw new QueryException(usage);
+            near = near with { Lat = lat, Lon = lon };
+        }
+        else
+        {
+            near = near with { Ref = anchor };
+        }
+
+        if (i < tokens.Count && tokens[i].Text.Equals("max", StringComparison.OrdinalIgnoreCase))
+        {
+            if (i + 1 >= tokens.Count || !double.TryParse(tokens[i + 1].Text, NumberStyles.Float, CultureInfo.InvariantCulture, out var max) || max <= 0)
+                throw new QueryException(usage);
+            near = near with { Max = max };
+            i += 2;
+        }
+
+        return near;
     }
 
     private static List<Token> Tokenize(string s)

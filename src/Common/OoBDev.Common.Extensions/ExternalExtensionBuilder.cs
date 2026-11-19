@@ -82,4 +82,15 @@ public record ExternalExtensionBuilder
     /// gets or sets the configuration section name of Apache Tika Client options.
     /// </summary>
     public string ApacheTikaClientOptionSection { get; init; } = nameof(ApacheTikaClientOptions);
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the HTML to PDF converter (wkhtmltopdf, a native process) is registered.
+    /// Off by default because it runs a native process; Apache Tika converts documents to HTML only, so PDF output needs this converter after it.
+    /// </summary>
+    public bool IncludeWkHtmlToPdf { get; init; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the HTML to Word (OpenXML) converter is registered. Off by default.
+    /// </summary>
+    public bool IncludeHtmlToOpenXml { get; init; }
 }

@@ -20,4 +20,4 @@ Pure and host-free: no I/O, no references beyond the base library. Bytes arrive 
 
 ## Not built
 
-A device definition that plugs the decoder into the segmenter pipeline, and a MIDI transport in DevTerm, wait for a consumer (request `docs/features/request/2026-11-10-midi-support.md`). Verified by unit tests on hand-built bytes; no real `.mid` files or MIDI hardware were used.
+A device definition that plugs the decoder into the segmenter pipeline, and a MIDI transport in DevTerm, wait for a consumer (request `docs/features/completed/2026-11-10-midi-support.md`). Verified by unit tests on hand-built bytes; no real `.mid` files or MIDI hardware were used.

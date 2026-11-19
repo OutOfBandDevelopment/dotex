@@ -13,7 +13,7 @@
 
 ## Need
 
-The old `bdd-svc-host` tool started the echo, discard, daytime, time and chargen servers. The owner decided (D6, 2026-11-10) that DevTerm hosts them, so they double as test peers over its other channels. Request: [generic service listeners](../../features/request/2026-11-10-devterm-generic-service-listeners.md).
+The old `bdd-svc-host` tool started the echo, discard, daytime, time and chargen servers. The owner decided (D6, 2026-11-10) that DevTerm hosts them, so they double as test peers over its other channels. Request: [generic service listeners](../../features/completed/2026-11-10-devterm-generic-service-listeners.md).
 
 ## Current code
 

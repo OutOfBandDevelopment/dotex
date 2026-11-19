@@ -29,6 +29,17 @@ public sealed class ProcessDockerCli : IDockerCli
         await RunAsync(["compose", "-f", composeFile, "up", "-d", "--no-deps", service], cancellationToken);
 
     /// <inheritdoc />
+    public async Task<bool> LogContainsAsync(string container, string text, CancellationToken cancellationToken)
+    {
+        var (inspected, startedAt) = await RunAsync(["inspect", "-f", "{{.State.StartedAt}}", container], cancellationToken);
+        if (inspected != 0)
+            return false;
+
+        var (code, output) = await RunAsync(["logs", "--since", startedAt.Trim(), container], cancellationToken);
+        return code == 0 && output.Contains(text, StringComparison.Ordinal);
+    }
+
+    /// <inheritdoc />
     public async Task StopAsync(string container, TimeSpan grace, CancellationToken cancellationToken) =>
         await RunAsync(["stop", "-t", Math.Max(1, (int)grace.TotalSeconds).ToString(CultureInfo.InvariantCulture), container], cancellationToken);
 

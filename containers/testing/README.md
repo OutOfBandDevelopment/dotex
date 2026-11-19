@@ -325,7 +325,7 @@ scripts\integration-down.bat --clean
 |---------|-------|---------|---------|--------------|
 | **MongoDB** | `mongo:latest` | 27017 | NoSQL document database | `mongosh --eval "db.adminCommand('ping')"` |
 | **SQL Server** | `mcr.microsoft.com/mssql/server:2022-latest` | 1433 | Relational database | `sqlcmd -Q "SELECT 1"` |
-| **RabbitMQ** | `rabbitmq:latest` | 5673 (AMQP)<br>15672 (Management) | Message broker | `rabbitmq-diagnostics ping` |
+| **RabbitMQ** | `rabbitmq:latest` | 5673 (AMQP)<br>15672 (Management) | Message broker | `rabbitmq-diagnostics check_port_connectivity` |
 | **Redis** | `valkey/valkey:8-alpine` | 6379 | In-memory cache store | `valkey-cli ping` |
 | **PostgreSQL** | `ghcr.io/pgmq/pg17-pgmq:v1.8.0` | 5434 | Relational store with the pgmq queue extension | `pg_isready` |
 | **PostgreSQL (pgvector)** | `pgvector/pgvector:0.8.1-pg17` | 5435 | Relational store with the vector extension for embedding stores and the work queue tests | `pg_isready` |
@@ -353,7 +353,7 @@ scripts\integration-down.bat --clean
 | **Mosquitto** | `eclipse-mosquitto` | 1883 (MQTT, anonymous) | MQTT transport and broker bridge | `nc -z localhost 1883` |
 | **ser2net** | Custom | 2217 (RFC 2217) | RFC 2217 client and server bridge; the port behind it echoes every byte | `nc -z localhost 2217` |
 | **loopback-device** | Custom | 7778 (TCP) | Line device (`hello`, `STATUS?`, `help`) for the TCP transport without hardware | `nc -z localhost 7778` |
-| **RabbitMQ** (shared) | `rabbitmq` | 5673 AMQP, 5671 AMQPS, 21613 STOMP, 21614 STOMP over TLS | AMQP and STOMP transports (STOMP's usual 61613 is in a Windows reserved range) | `rabbitmq-diagnostics ping` |
+| **RabbitMQ** (shared) | `rabbitmq` | 5673 AMQP, 5671 AMQPS, 21613 STOMP, 21614 STOMP over TLS | AMQP and STOMP transports (STOMP's usual 61613 is in a Windows reserved range) | `rabbitmq-diagnostics check_port_connectivity` |
 
 Tests: `TestCategory=Integration` in `OoBDev.System.IO.{Mqtt,Brokers,Tcp}.Tests` and `OoBDev.DevTerm.Core.Tests`; each ends Inconclusive when its port is unreachable. Settings: `MOSQUITTO_*`, `SER2NET_*`, `LOOPBACK_DEVICE_*`, `RABBITMQ_*` in `src/.runsettings`.
 

@@ -16,6 +16,9 @@ public interface IDockerCli
     /// <summary>Creates and starts one service of a compose file without its dependencies.</summary>
     Task ComposeUpAsync(string composeFile, string service, CancellationToken cancellationToken);
 
+    /// <summary>Whether the container log contains the text; false when Docker is not available.</summary>
+    Task<bool> LogContainsAsync(string container, string text, CancellationToken cancellationToken);
+
     /// <summary>Stops a container.</summary>
     Task StopAsync(string container, TimeSpan grace, CancellationToken cancellationToken);
 }

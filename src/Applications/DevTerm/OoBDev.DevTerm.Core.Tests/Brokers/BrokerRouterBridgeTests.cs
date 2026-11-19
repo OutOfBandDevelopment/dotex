@@ -1,4 +1,5 @@
 ﻿using System;
+using OoBDev.TestUtilities.Containers;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -102,12 +103,12 @@ public sealed class BrokerRouterBridgeTests
         await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => bridge.PublishAsync("t", "p"u8.ToArray(), TestContext.CancellationToken));
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-rabbitmq")]
     [TestCategory("Integration")]
     public Task RealRabbitMq_Amqp_RoutesBothWays() =>
         RoundTripAsync(new AmqpConnectionFactory(), "RABBITMQ_AMQP_PORT", 5673, "devterm-it.router.sensor", "devterm-it.router.cmd");
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-rabbitmq")]
     [TestCategory("Integration")]
     public Task RealRabbitMq_Stomp_RoutesBothWays() =>
         RoundTripAsync(new StompConnectionFactory(), "RABBITMQ_STOMP_PORT", 21613, "/topic/devterm-it-router-sensor", "/topic/devterm-it-router-cmd");

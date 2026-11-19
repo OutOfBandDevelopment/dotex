@@ -39,7 +39,8 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Built 2026-11-16:** `EndpointRightCoverageTests` (example API) fails on a new controller action with no `[ApplicationRight]`, `[Authorize]` or `[AllowAnonymous]`. The 18 open actions got rights on 2026-11-16 (`toolbox.use`, `cache.manage`, `ai.invoke`, `operations.read`, all held by the `admin` role in `appsettings.json`), so the test now allows none.
 - **Built 2026-11-16:** `AuditingApplicationRightChecker` and `AddRightAuditLog()` log every right check (who, rights, outcome).
 - **Built 2026-11-16:** `OoBDev.AspNetCore.EntityFrameworkCore`: `IRightAuditSink` receives each check, a bounded buffer and `RightAuditWriter` store it in batches with a retention purge (`OoBDev:RightAudit`).
-- **Missing:** a right-guarded query endpoint and screen for the trail; shipped migrations.
+- **Built 2026-11-18:** `IRightAuditQuery` and `RightAuditFilter` (subject, result, from, to, max count) in `OoBDev.AspNetCore.Abstractions`; `EfRightAuditStore` is the default implementation (registered by `TryAddEntityFrameworkRightAudit`); `MapRightAuditQuery(rights, path)` in `OoBDev.AspNetCore.Mvc` serves `GET /api/v1/right-audit` newest first, checked with `IApplicationRightChecker` (401, 403, 400 for bad dates or counts, page capped at 1000). Owner decision Q3, 2026-11-17.
+- **Missing:** a screen for the trail (needs a screen spec); shipped migrations.
 
 ## HttpQueryVerb and ODataQuery
 

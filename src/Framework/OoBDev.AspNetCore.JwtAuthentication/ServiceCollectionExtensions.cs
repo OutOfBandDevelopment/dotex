@@ -82,6 +82,7 @@ public static class ServiceCollectionExtensions
 #endif
     )
     {
+        services.AddHttpClient<OpenIdConfigurationDiscovery>();
         services.TryAddEnumerable(ServiceDescriptor.Singleton<IConfigureOptions<OpenApiOptions>, ConfigureOAuthOpenApiOptions>());
         services.TryAddEnumerable(ServiceDescriptor.Singleton<IApiReferenceConfigurator, OAuthApiReferenceConfigurator>());
 

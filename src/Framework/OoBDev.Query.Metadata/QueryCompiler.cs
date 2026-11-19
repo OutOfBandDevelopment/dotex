@@ -11,6 +11,8 @@ namespace OoBDev.Query.Metadata;
 /// </summary>
 public static class QueryCompiler
 {
+    private const int BucketLimit = 1000;
+
     private sealed record SortColumn(string Name, string Expr, bool Descending, FacetInfo? Facet);
 
     /// <summary>Compiles the request.</summary>
@@ -33,22 +35,29 @@ public static class QueryCompiler
         {
             "rows" => Rows(kind, request, dialect, parameters, top, cursors),
             "facets" => Facets(kind, request, dialect, parameters, top),
-            _ => throw new QueryException("shape is rows or facets."),
+            "buckets" => Buckets(kind, request, dialect, parameters),
+            "graph" => Graph(kind, request, dialect, parameters, top, null),
+            _ => throw new QueryException("shape is rows, facets, buckets or graph."),
         };
     }
 
     private static CompiledQuery Rows(KindInfo kind, QueryRequest request, IQueryDialect dialect, SqlParameters parameters, int top, CursorCodec? cursors)
     {
-        var sorts = ResolveSort(kind, request);
+        var from = $"FROM {kind.Base} {kind.Joins}".TrimEnd();
+        var where = new List<string>();
+        var distance = request.Near is { } near ? Near(kind, near, dialect, parameters, ref from, where) : null;
+        var sorts = ResolveSort(kind, request, distance);
         var spec = string.Join(',', sorts.Take(sorts.Count - 1).Select(s => (s.Descending ? "-" : "") + s.Name));
 
         var columns = kind.Facets
             .Where(f => !f.Lazy || request.Select?.Contains(f.Name, StringComparer.OrdinalIgnoreCase) == true)
             .Select(f => $"{f.Expr} AS {dialect.Quote(f.Name)}")
+            .Concat(distance is null ? [] : [$"{distance} AS {dialect.Quote("distance")}"])
             .Concat(sorts.Select((s, i) => $"{s.Expr} AS {dialect.Quote("__s" + i)}"));
 
-        var where = FilterCompiler.Compile(kind, request, parameters, dialect).ToList();
-        var from = $"FROM {kind.Base} {kind.Joins}".TrimEnd();
+        where.AddRange(FilterCompiler.Compile(kind, request, parameters, dialect));
+        if (request.Related is { } related)
+            where.Add(Relation(kind, related, parameters));
         var countSql = request.Count ? $"SELECT count(*) {from}{Where(where)}" : null;
 
         if (!string.IsNullOrEmpty(request.After))
@@ -63,6 +72,52 @@ public static class QueryCompiler
             .Append(" ORDER BY ").AppendJoin(", ", sorts.Select(s => s.Expr + dialect.Direction(s.Descending)))
             .Append(' ').Append(dialect.Limit(top + 1)).ToString();
         return new CompiledQuery(sql, parameters.Values, countSql, top, spec, sorts.Count);
+    }
+
+    private static string Near(KindInfo kind, NearClause near, IQueryDialect dialect, SqlParameters parameters, ref string from, List<string> where)
+    {
+        if (kind.Spaces is null || !kind.Spaces.TryGetValue(near.Space, out var space))
+            throw new QueryException($"Kind '{kind.Name}' has no space '{near.Space}'. Spaces: {string.Join(", ", kind.Spaces?.Keys ?? [])}.");
+
+        string distance;
+        if (space.Metric == SpaceMetric.Haversine)
+        {
+            if (near.Lat is not { } lat || near.Lon is not { } lon)
+                throw new QueryException($"Space '{space.Name}' needs an anchor position: lat and lon.");
+            var a = Numeric(kind, space.A);
+            var b = Numeric(kind, space.B);
+            where.Add($"{a.Expr} IS NOT NULL AND {b.Expr} IS NOT NULL");
+            distance = dialect.Haversine(a.Expr, b.Expr, parameters.Add(lat), parameters.Add(lon));
+        }
+        else
+        {
+            if (string.IsNullOrEmpty(near.Ref))
+                throw new QueryException($"Space '{space.Name}' needs an anchor: ref, the key of a row.");
+            var anchor = $"SELECT a.{space.VectorColumn} FROM {space.Table} a WHERE a.{space.IdColumn} = CAST({parameters.Add(near.Ref)} AS {space.IdType})";
+            if (space.Candidates > 0)
+            {
+                var pool = dialect.VectorDistance("x." + space.VectorColumn, anchor);
+                from += $" JOIN (SELECT x.{space.IdColumn} AS id, {pool} AS d FROM {space.Table} x ORDER BY {pool} {dialect.Limit(space.Candidates)}) sv ON sv.id = {kind.Key}";
+                distance = "sv.d";
+            }
+            else
+            {
+                from += $" JOIN {space.Table} sv ON sv.{space.IdColumn} = {kind.Key}";
+                distance = dialect.VectorDistance("sv." + space.VectorColumn, anchor);
+            }
+        }
+
+        var max = near.Max ?? (double.IsNaN(space.DefaultMax) ? (double?)null : space.DefaultMax);
+        if (max is { } limit)
+            where.Add($"{distance} <= {parameters.Add(limit)}");
+        return distance;
+    }
+
+    private static string Relation(KindInfo kind, RelatedClause related, SqlParameters parameters)
+    {
+        if (kind.Relations is null || !kind.Relations.TryGetValue(related.Via, out var sql))
+            throw new QueryException($"Kind '{kind.Name}' has no relation '{related.Via}'. Relations: {string.Join(", ", kind.Relations?.Keys ?? [])}.");
+        return "(" + sql.Replace("{k}", kind.Key, StringComparison.Ordinal).Replace("{anchor}", parameters.Add(related.Of), StringComparison.Ordinal) + ")";
     }
 
     private static CompiledQuery Facets(KindInfo kind, QueryRequest request, IQueryDialect dialect, SqlParameters parameters, int top)
@@ -97,19 +152,74 @@ public static class QueryCompiler
         return new CompiledQuery(sql, parameters.Values, null, top, "", 0);
     }
 
+    private static CompiledQuery Buckets(KindInfo kind, QueryRequest request, IQueryDialect dialect, SqlParameters parameters)
+    {
+        if (!string.IsNullOrEmpty(request.After))
+            throw new QueryException("shape buckets is not paged.");
+        if (request.By is not { Length: 2 })
+            throw new QueryException("shape buckets needs by: [facetA, facetB].");
+
+        var a = Numeric(kind, request.By[0]);
+        var b = Numeric(kind, request.By[1]);
+        var where = FilterCompiler.Compile(kind, request, parameters, dialect).ToList();
+        where.Add($"{a.Expr} IS NOT NULL AND {b.Expr} IS NOT NULL");
+        var cell = parameters.Add(Math.Clamp(request.Cell ?? 1.0, 0.0001, 90));
+        var sample = kind.Sample.Length > 0 ? kind.Sample : "NULL";
+        var sql = $"SELECT avg({a.Expr}) AS {dialect.Quote("a")}, avg({b.Expr}) AS {dialect.Quote("b")}, count(*) AS {dialect.Quote("count")}, {sample} AS {dialect.Quote("sample")} "
+            + $"FROM {kind.Base} {kind.Joins}".TrimEnd()
+            + $"{Where(where)} GROUP BY {dialect.GridCell(a.Expr, cell)}, {dialect.GridCell(b.Expr, cell)} ORDER BY count(*) DESC {dialect.Limit(BucketLimit)}";
+        return new CompiledQuery(sql, parameters.Values, null, BucketLimit, "", 0);
+    }
+
+    private static FacetInfo Numeric(KindInfo kind, string name)
+    {
+        var facet = kind.Facet(name) ?? throw new QueryException($"Kind '{kind.Name}' has no facet '{name}'.");
+        if (facet.Type != "number")
+            throw new QueryException($"Facet '{facet.Name}' is not numeric, so it cannot be a bucket axis.");
+        return facet;
+    }
+
+    /// <summary>The strongest links of an edge kind that pass the filters; with a frontier, only links that touch it (one step of a walk).</summary>
+    internal static CompiledQuery Graph(KindInfo kind, QueryRequest request, IQueryDialect dialect, SqlParameters parameters, int top, string[]? frontier)
+    {
+        var edge = kind.Edge ?? throw new QueryException($"Kind '{kind.Name}' is not made of links, so it has no graph.");
+        var where = FilterCompiler.Compile(kind, request, parameters, dialect).ToList();
+        var source = $"CAST({edge.Source} AS text)";
+        var target = $"CAST({edge.Target} AS text)";
+        if (frontier is not null)
+        {
+            var parameter = parameters.Add(frontier);
+            where.Add($"({dialect.In(source, parameter)} OR {dialect.In(target, parameter)})");
+        }
+
+        var sql = $"SELECT {source} AS {dialect.Quote("source")}, {target} AS {dialect.Quote("target")}, ({edge.Weight}) AS {dialect.Quote("weight")} "
+            + $"FROM {kind.Base} {kind.Joins}".TrimEnd()
+            + $"{Where(where)} ORDER BY ({edge.Weight}) DESC, {source}, {target} {dialect.Limit(top)}";
+        return new CompiledQuery(sql, parameters.Values, null, top, "", 0);
+    }
+
     private static string Where(List<string> terms) => terms.Count == 0 ? "" : " WHERE " + string.Join(" AND ", terms);
 
-    private static List<SortColumn> ResolveSort(KindInfo kind, QueryRequest request)
+    private static List<SortColumn> ResolveSort(KindInfo kind, QueryRequest request, string? distance)
     {
         var requested = request.Sort is { Length: > 0 }
             ? request.Sort
-            : kind.DefaultSort.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+            : distance is not null ? ["distance"] : kind.DefaultSort.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
 
         var sorts = new List<SortColumn>();
         foreach (var raw in requested)
         {
             var descending = raw.StartsWith('-');
             var name = raw.TrimStart('-', '+');
+            if (name.Equals("distance", StringComparison.OrdinalIgnoreCase))
+            {
+                if (distance is null)
+                    throw new QueryException("Sort by distance needs a near clause.");
+                if (sorts.All(s => s.Name != "distance"))
+                    sorts.Add(new SortColumn("distance", distance, descending, null));
+                continue;
+            }
+
             var facet = kind.Facet(name) ?? throw new QueryException($"Kind '{kind.Name}' has no facet '{name}' to sort by.");
             if (!facet.Sortable)
                 throw new QueryException($"Facet '{facet.Name}' cannot be sorted.");

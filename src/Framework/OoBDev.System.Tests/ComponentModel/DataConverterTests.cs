@@ -3,6 +3,7 @@ using OoBDev.System.ComponentModel;
 using OoBDev.TestUtilities;
 using System;
 using System.Collections;
+using System.Linq;
 
 namespace OoBDev.System.Tests.ComponentModel;
 
@@ -55,5 +56,17 @@ public class DataConverterTests
 
         Assert.IsNotNull(result);
         Assert.AreEqual(expected, result.ToString());
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public void Split_JsonStringNode_SplitsTheInnerString()
+    {
+        TestContext.WriteLine("Stage: a JsonValue holding the string 1,2");
+        var node = global::System.Text.Json.Nodes.JsonValue.Create("1,2");
+
+        var result = new DataConverter().Split(node);
+
+        TestContext.WriteLine($"Assert: {result?.Length} items");
+        CollectionAssert.AreEqual(new object[] { 1m, 2m }.Select(v => v.ToString()).ToArray(), result!.Select(v => v.ToString()).ToArray());
     }
 }

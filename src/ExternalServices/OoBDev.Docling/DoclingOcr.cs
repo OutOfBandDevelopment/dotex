@@ -18,7 +18,7 @@ namespace OoBDev.Docling;
 /// <param name="http">The client with <see cref="HttpClient.BaseAddress"/> set to the server.</param>
 /// <param name="options">The settings.</param>
 /// <param name="time">The clock used for the deadline.</param>
-public sealed class DoclingOcr(HttpClient http, IOptions<DoclingOptions> options, TimeProvider? time = null) : IDocumentOcr
+public sealed class DoclingOcr(HttpClient http, IOptions<DoclingOptions> options, TimeProvider? time = null) : IDocumentLayoutOcr
 {
     private static readonly (string Key, string Value)[] HeavyOptions =
     [
@@ -40,25 +40,46 @@ public sealed class DoclingOcr(HttpClient http, IOptions<DoclingOptions> options
     public string Extractor => "docling-serve tesseract (OCR)";
 
     /// <inheritdoc />
-    public async Task<string> RecognizeAsync(string pdfPath, CancellationToken cancellationToken)
+    public async Task<string> RecognizeAsync(string pdfPath, CancellationToken cancellationToken) =>
+        Markdown(await ConvertWithRetryAsync(pdfPath, false, cancellationToken).ConfigureAwait(false));
+
+    /// <inheritdoc />
+    public async Task<OcrLayout> RecognizeLayoutAsync(string pdfPath, CancellationToken cancellationToken)
+    {
+        var document = await ConvertWithRetryAsync(pdfPath, true, cancellationToken).ConfigureAwait(false);
+        var regions = document.ValueKind == JsonValueKind.Object && document.TryGetProperty("json_content", out var json) && json.ValueKind == JsonValueKind.Object
+            ? DoclingLayout.Parse(json)
+            : [];
+        return new OcrLayout(Markdown(document), regions);
+    }
+
+    private static string Markdown(JsonElement document) =>
+        document.ValueKind == JsonValueKind.Object && document.TryGetProperty("md_content", out var md) ? md.GetString() ?? "" : "";
+
+    private async Task<JsonElement> ConvertWithRetryAsync(string pdfPath, bool layout, CancellationToken ct)
     {
         try
         {
-            return await ConvertAsync(pdfPath, HeavyOptions, cancellationToken).ConfigureAwait(false);
+            return await ConvertAsync(pdfPath, HeavyOptions, layout, ct).ConfigureAwait(false);
         }
         catch (OcrFailedException)
         {
-            return await ConvertAsync(pdfPath, LightOptions, cancellationToken).ConfigureAwait(false);
+            return await ConvertAsync(pdfPath, LightOptions, layout, ct).ConfigureAwait(false);
         }
     }
 
-    private async Task<string> ConvertAsync(string pdfPath, (string Key, string Value)[] settings, CancellationToken ct)
+    private async Task<JsonElement> ConvertAsync(string pdfPath, (string Key, string Value)[] settings, bool layout, CancellationToken ct)
     {
         var timeout = TimeSpan.FromSeconds(options.Value.TimeoutSeconds);
         using var form = new MultipartFormDataContent();
         foreach (var (key, value) in settings)
         {
             form.Add(new StringContent(value), key);
+        }
+
+        if (layout)
+        {
+            form.Add(new StringContent("json"), "to_formats");
         }
 
         foreach (var lang in options.Value.OcrLanguages.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
@@ -117,7 +138,7 @@ public sealed class DoclingOcr(HttpClient http, IOptions<DoclingOptions> options
             throw new OcrFailedException($"docling: {outcome} {errors}".TrimEnd());
         }
 
-        return body.TryGetProperty("document", out var document) && document.TryGetProperty("md_content", out var md) ? md.GetString() ?? "" : "";
+        return body.TryGetProperty("document", out var document) ? document : default;
     }
 
     private static async Task<JsonElement> ReadJsonAsync(HttpResponseMessage response, CancellationToken ct)

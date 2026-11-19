@@ -40,7 +40,7 @@ public class QueryableExtensionsTests
     [DataRow(typeof(TestTargetModel), nameof(TestTargetModel.Index), Operators.GreaterThan, 995, 4, "996,997,998,999")]
     [DataRow(typeof(TestTargetModel), nameof(TestTargetModel.Index), Operators.GreaterThanOrEqualTo, 995, 5, "995,996,997,998,999")]
     [DataRow(typeof(TestTargetModel), nameof(TestTargetModel.Index), Operators.EqualTo, "0", 1, "0")]
-    // Request: docs/features/request/2026-11-17-search-query-expression-gaps.md [DataRow(typeof(TestTargetModel), nameof(TestTargetModel.Index), Operators.EqualTo, "0.0", 1, "0")]
+    [DataRow(typeof(TestTargetModel), nameof(TestTargetModel.Index), Operators.EqualTo, "0.0", 1, "0")]
     [DataRow(typeof(TestTargetModel), nameof(TestTargetModel.Index), Operators.EqualTo, 0, 1, "0")]
     [DataRow(typeof(TestTargetModel), nameof(TestTargetModel.Index), Operators.EqualTo, 0.0, 1, "0")]
     [DataRow(typeof(TestTargetModel), nameof(TestTargetModel.Name), Operators.EqualTo, "*03", 9, "103,203,303,403,503,603,703,803,903")]
@@ -85,6 +85,14 @@ public class QueryableExtensionsTests
                 expectedRows,
                 expectedKeys
             ]);
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public void ExecuteByTest_Filter_InSetWithList_BehavesLikeAnArray()
+    {
+        TestContext.WriteLine("InSet given as List<int> {{1, 2, 3}}");
+        ExecuteByTestFilter<TestTargetModel>(nameof(TestTargetModel.Index), Operators.InSet, new List<int> { 1, 2, 3 }, 3, "1,2,3");
     }
 
     [TestMethod]

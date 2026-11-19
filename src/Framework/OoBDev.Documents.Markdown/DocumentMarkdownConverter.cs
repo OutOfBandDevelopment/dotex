@@ -90,7 +90,7 @@ public sealed class DocumentMarkdownConverter(IPdfTextReader pdfText, IEnumerabl
             Directory.CreateDirectory(directory);
         }
 
-        var front = MarkdownPages.FrontMatter(title, file, sha256, new FileInfo(file).Length, kind, pages, extractor);
+        var front = MarkdownPages.FrontMatter(title, file, sha256, new FileInfo(file).Length, kind, pages, extractor, LanguageDetector.Detect(body));
         File.WriteAllText(markdownPath, front + body, new UTF8Encoding(false));
         return new ConversionResult(ConversionStatus.Converted, markdownPath.Replace('\\', '/'));
     }

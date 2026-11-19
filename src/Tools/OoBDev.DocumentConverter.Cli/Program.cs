@@ -43,7 +43,7 @@ public class Program
                 services.AddHttpClient();
 
                 services.TryCommonExtensions(context.Configuration, new());
-                services.TryCommonExternalExtensions(context.Configuration, new(), new());
+                services.TryCommonExternalExtensions(context.Configuration, new(), new() { IncludeWkHtmlToPdf = true, IncludeHtmlToOpenXml = true });
             })
             .StartAsync();
 }

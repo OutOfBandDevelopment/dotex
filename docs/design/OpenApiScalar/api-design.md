@@ -38,7 +38,7 @@ app.MapApiReference();                                    // /openapi/{name}.jso
 
 | Type | Role |
 |------|------|
-| `OAuth2OpenApiOptions` | `UserReadApiClaim`, `AuthorizationUrl`, `TokenUrl` |
+| `OAuth2OpenApiOptions` | `UserReadApiClaim`, `AuthorizationUrl`, `TokenUrl` (both optional when `Authority` is set and its `.well-known/openid-configuration` supplies them) |
 | `OAuthDocumentTransformer` | Declares the `oauth2` authorization code scheme |
 | `OAuthApiReferenceConfigurator` | Scalar authorization code flow with PKCE |
 | `ConfigureOAuthOpenApiOptions` | Adds the document transformer |

@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using Microsoft.Extensions.Options;
 using OoBDev.TestUtilities;
+using OoBDev.TestUtilities.Containers;
 namespace OoBDev.System.IO.Brokers.Tests;
 
 /// <summary>Round trips through the real RabbitMQ in containers/testing (integration-up): AMQP 0-9-1, STOMP, and the TLS listeners (ports and credentials from the RABBITMQ_* test parameters).</summary>
@@ -30,7 +31,7 @@ public sealed class RabbitMqIntegrationTests
 
     private string Password => TestContext.GetPropertyOrDefault("RABBITMQ_PASSWORD", "guest");
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-rabbitmq")]
     public async Task Amqp_PublishedLine_ComesBackAsRoutingKeyTabPayload()
     {
         await RequireAsync(AmqpPort);
@@ -44,7 +45,7 @@ public sealed class RabbitMqIntegrationTests
         Assert.AreEqual(ConnectionState.Open, transport.State);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-rabbitmq")]
     public async Task Stomp_PublishedLine_ComesBackAsDestinationTabPayload()
     {
         await RequireAsync(StompPort);
@@ -57,7 +58,7 @@ public sealed class RabbitMqIntegrationTests
         Assert.AreEqual("/topic/devterm-it\thello stomp\n", await ReadAsync(transport));
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-rabbitmq")]
     public async Task Stomp_WrongPassword_FailsTheOpen()
     {
         await RequireAsync(StompPort);
@@ -69,11 +70,11 @@ public sealed class RabbitMqIntegrationTests
         Assert.AreEqual(ConnectionState.Faulted, transport.State);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-rabbitmq")]
     public async Task Amqps_WithTheTestCa_RoundTrips()
     {
         var ca = await RequireTlsAsync(AmqpsPort);
-        var options = new BrokerDeviceAdapterOptions { TimeoutMs = 30000, Host = "localhost", Port = AmqpsPort, Username = Username, Password = Password, UseTls = true, TlsCaCertificatePath = ca, SubscribeTopics = ["devterm-tls.#"], PublishTopic = "devterm-tls.out" };
+        var options = new BrokerDeviceAdapterOptions { TimeoutMs = 30000, Host = "127.0.0.1", Port = AmqpsPort, Username = Username, Password = Password, UseTls = true, TlsCaCertificatePath = ca, SubscribeTopics = ["devterm-tls.#"], PublishTopic = "devterm-tls.out" };
         await using var transport = new BrokerDeviceAdapter(new AmqpConnectionFactory(), Options.Create(options));
         await transport.OpenAsync(TestContext.CancellationToken);
 
@@ -82,11 +83,11 @@ public sealed class RabbitMqIntegrationTests
         Assert.AreEqual("devterm-tls.out\thello amqps\n", await ReadAsync(transport));
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-rabbitmq")]
     public async Task StompOverTls_WithTheTestCa_RoundTrips()
     {
         var ca = await RequireTlsAsync(StompTlsPort);
-        var options = new BrokerDeviceAdapterOptions { TimeoutMs = 30000, Host = "localhost", Port = StompTlsPort, Username = Username, Password = Password, UseTls = true, TlsCaCertificatePath = ca, SubscribeTopics = ["/topic/devterm-tls"], PublishTopic = "/topic/devterm-tls" };
+        var options = new BrokerDeviceAdapterOptions { TimeoutMs = 30000, Host = "127.0.0.1", Port = StompTlsPort, Username = Username, Password = Password, UseTls = true, TlsCaCertificatePath = ca, SubscribeTopics = ["/topic/devterm-tls"], PublishTopic = "/topic/devterm-tls" };
         await using var transport = new BrokerDeviceAdapter(new StompConnectionFactory(), Options.Create(options));
         await transport.OpenAsync(TestContext.CancellationToken);
 
@@ -95,11 +96,11 @@ public sealed class RabbitMqIntegrationTests
         Assert.AreEqual("/topic/devterm-tls\thello stomps\n", await ReadAsync(transport));
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-rabbitmq")]
     public async Task StompOverTls_WithoutTrustingTheCa_RefusesTheServerCertificate()
     {
         await RequireTlsAsync(StompTlsPort);
-        var options = new BrokerDeviceAdapterOptions { TimeoutMs = 30000, Host = "localhost", Port = StompTlsPort, Username = Username, Password = Password, UseTls = true };
+        var options = new BrokerDeviceAdapterOptions { TimeoutMs = 30000, Host = "127.0.0.1", Port = StompTlsPort, Username = Username, Password = Password, UseTls = true };
         await using var transport = new BrokerDeviceAdapter(new StompConnectionFactory(), Options.Create(options));
 
         await Assert.ThrowsAsync<global::System.Security.Authentication.AuthenticationException>(() => transport.OpenAsync(TestContext.CancellationToken));

@@ -42,6 +42,8 @@ public class IntegrationContainersTests
             return Task.CompletedTask;
         }
 
+        public Task<bool> LogContainsAsync(string container, string text, CancellationToken cancellationToken) => Task.FromResult(true);
+
         public Task StopAsync(string container, TimeSpan grace, CancellationToken cancellationToken)
         {
             Calls.Add("stop " + container);

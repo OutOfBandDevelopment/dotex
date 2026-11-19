@@ -25,7 +25,7 @@ public static partial class OcrMarkdown
             pages.RemoveAt(pages.Count - 1);
         }
 
-        var front = MarkdownPages.FrontMatter(Path.GetFileNameWithoutExtension(file), file, sha256, new FileInfo(file).Length, "pdf-ocr", pages.Count, extractor);
+        var front = MarkdownPages.FrontMatter(Path.GetFileNameWithoutExtension(file), file, sha256, new FileInfo(file).Length, "pdf-ocr", pages.Count, extractor, LanguageDetector.Detect(string.Join(' ', pages)));
         var directory = Path.GetDirectoryName(Path.GetFullPath(markdownPath));
         if (!string.IsNullOrEmpty(directory))
         {

@@ -11,6 +11,8 @@ namespace OoBDev.System.Tests.IO;
 [TestClass]
 public class SegmenterTests
 {
+    public required TestContext TestContext { get; set; }
+
     private static ISegmenter Build(ISegmentBuildDefinition definition, List<byte[]> received) =>
         definition.ThenDo(segment =>
         {
@@ -128,5 +130,22 @@ public class SegmenterTests
             Next = next;
             return next;
         }
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public async Task BigEndianLengthFieldGivesTheSameSegmentAsLittleEndianTest()
+    {
+        var little = new List<byte[]>();
+        var big = new List<byte[]>();
+        var littleSegmenter = Build(Segment.StartsWith(0x7A).AndIsLength(8).ExtendedWithLengthAt<ushort>(4, Endianness.Little), little);
+        var bigSegmenter = Build(Segment.StartsWith(0x7A).AndIsLength(8).ExtendedWithLengthAt<ushort>(4, Endianness.Big), big);
+        byte[] tail = [0x00, 0x00, 0xAA, 0xBB, 0xCC];
+
+        await littleSegmenter.TryReadAsync(new ReadOnlySequence<byte>([0x7A, 0xFF, 0x20, 0x00, 0x03, 0x00, .. tail])).ConfigureAwait(false);
+        await bigSegmenter.TryReadAsync(new ReadOnlySequence<byte>([0x7A, 0xFF, 0x20, 0x00, 0x00, 0x03, .. tail])).ConfigureAwait(false);
+
+        TestContext.WriteLine($"little {little.Count} segment(s) of {little[0].Length} bytes, big {big.Count} of {big[0].Length}");
+        Assert.AreEqual(11, little[0].Length);
+        Assert.AreEqual(little[0].Length, big[0].Length);
     }
 }

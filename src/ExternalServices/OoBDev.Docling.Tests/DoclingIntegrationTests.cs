@@ -51,6 +51,38 @@ public class DoclingIntegrationTests
     }
 
     [IntegrationTestMethod("oobd-test-docling")]
+    public async Task RecognizeLayout_RealDoclingServe_ReturnsARegionInsideThePage()
+    {
+        var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("DOCLING_URL"));
+        using var http = new HttpClient { BaseAddress = new Uri(url.TrimEnd('/') + "/") };
+        var ocr = new DoclingOcr(http, Options.Create(new DoclingOptions { BaseUrl = url, TimeoutSeconds = 600, OcrLanguages = "eng" }));
+        await using var services = new ServiceCollection().TryAddProviders().BuildServiceProvider();
+        using var temp = services.GetRequiredService<ITempFileFactory>().GetTempFile();
+        var path = Path.ChangeExtension(temp.FilePath, ".pdf");
+        await File.WriteAllTextAsync(path, Pdf(), Encoding.ASCII, TestContext.CancellationToken);
+        try
+        {
+            var layout = await ocr.RecognizeLayoutAsync(path, CancellationToken.None);
+
+            foreach (var r in layout.Regions)
+            {
+                TestContext.WriteLine("{0} p{1} '{2}' ({3:F3},{4:F3})-({5:F3},{6:F3})", r.Label, r.Page, r.Text, r.Left, r.Top, r.Right, r.Bottom);
+            }
+
+            StringAssert.Contains(layout.Markdown, "Hello", StringComparison.OrdinalIgnoreCase);
+            Assert.IsNotEmpty(layout.Regions, "the real json_content produced no region, so the parser does not match docling's schema");
+            var hello = layout.Regions[0];
+            Assert.AreEqual(1, hello.Page);
+            Assert.IsTrue(hello.Left >= 0 && hello.Right <= 1 && hello.Top >= 0 && hello.Bottom <= 1 && hello.Left < hello.Right && hello.Top < hello.Bottom);
+            Assert.IsLessThan(0.3, hello.Top, "the text sits near the top of the page (y=700 of 792)");
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [IntegrationTestMethod("oobd-test-docling")]
     public async Task Recognize_RealDoclingServe_ReturnsTheText()
     {
         var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("DOCLING_URL"));

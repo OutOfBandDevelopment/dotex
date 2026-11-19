@@ -15,6 +15,8 @@ public static class PostgresWorkQueueSchema
         var schema = Quote(options.Schema);
         var tasks = $"{schema}.{Quote(options.TasksTable)}";
         var dead = $"{schema}.{Quote(options.DeadLettersTable)}";
+        var events = $"{schema}.{Quote(options.EventsTable)}";
+        var readers = $"{schema}.{Quote(options.EventReadersTable)}";
         return string.Format(CultureInfo.InvariantCulture, """
             CREATE SCHEMA IF NOT EXISTS {0};
 
@@ -48,12 +50,27 @@ public static class PostgresWorkQueueSchema
             );
 
             CREATE INDEX IF NOT EXISTS {4} ON {3} (stage, died_at DESC);
+
+            CREATE TABLE IF NOT EXISTS {5} (
+                id      bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                at      timestamptz NOT NULL,
+                source  text        NOT NULL,
+                message text        NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS {6} (
+                reader  text        PRIMARY KEY,
+                last_id bigint      NOT NULL,
+                updated timestamptz NOT NULL
+            );
             """,
             schema,
             tasks,
             Quote($"ix_{options.TasksTable}_claim"),
             dead,
-            Quote($"ix_{options.DeadLettersTable}_stage"));
+            Quote($"ix_{options.DeadLettersTable}_stage"),
+            events,
+            readers);
     }
 
     internal static string Quote(string identifier) => $"\"{identifier}\"";

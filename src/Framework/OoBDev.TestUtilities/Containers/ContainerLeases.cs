@@ -58,9 +58,9 @@ internal sealed class ContainerLeases(string directory)
 
     /// <summary>
     /// Drops this process's lease. Returns true when the tests started the container and no other live process still uses it,
-    /// so the caller must stop it (the marker is removed).
+    /// so it is stopped by <paramref name="stop"/> while the lock is still held (a process that starts in between must not find it half stopped).
     /// </summary>
-    public bool Release(string container)
+    public bool Release(string container, Action? stop = null)
     {
         using var mutex = Lock(container);
         try
@@ -74,6 +74,7 @@ internal sealed class ContainerLeases(string directory)
             if (others.Count > 0 || !File.Exists(marker))
                 return false;
             File.Delete(marker);
+            stop?.Invoke();
             return true;
         }
         finally

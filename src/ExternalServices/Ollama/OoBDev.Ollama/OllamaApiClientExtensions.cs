@@ -14,26 +14,33 @@ public static partial class OllamaApiClientExtensions
 {
     /// <summary>
     /// Ensures that the specified model exists in the Ollama API client.
-    /// If the model does not exist locally, it is copied from the 'llama2' model.
+    /// If the model does not exist locally, it is copied from <paramref name="sourceModel"/>, or from the first local model when none is named.
     /// </summary>
     /// <param name="ollama">The Ollama API client.</param>
     /// <param name="modelName">The name of the model to ensure exists.</param>
     /// <param name="logger">The logger instance for logging information.</param>
+    /// <param name="sourceModel">The local model to copy; empty uses the first local model.</param>
     /// <returns>The Ollama API client.</returns>
+    /// <exception cref="InvalidOperationException">The model is missing and there is no local model to copy.</exception>
     public static async Task<IOllamaApiClient> EnsureModelExistsAsync(
         this IOllamaApiClient ollama,
         string modelName,
-        ILogger logger
+        ILogger logger,
+        string? sourceModel = null
         )
     {
         LogListModels(logger);
-        var models = await ollama.ListLocalModelsAsync().ConfigureAwait(false);
+        var models = (await ollama.ListLocalModelsAsync().ConfigureAwait(false)).ToList();
         foreach (var model in models)
             LogModel(logger, model.Name, model.Size);
 
         LogCreateMaybe(logger);
-        if (models.Any(m => !m.Name.StartsWith(modelName, StringComparison.Ordinal)))
-            await ollama.CopyModelAsync("llama2", modelName).ConfigureAwait(false); // Request: docs/features/request/2026-11-17-provider-and-adapter-gaps.md
+        if (!models.Any(m => m.Name.StartsWith(modelName, StringComparison.Ordinal)))
+        {
+            var source = !string.IsNullOrWhiteSpace(sourceModel) ? sourceModel : models.FirstOrDefault()?.Name
+                ?? throw new InvalidOperationException($"Model \"{modelName}\" is missing and there is no local model to copy it from.");
+            await ollama.CopyModelAsync(source, modelName).ConfigureAwait(false);
+        }
         LogSelectModel(logger, modelName);
 
         //ollama.SelectedModel = modelName;

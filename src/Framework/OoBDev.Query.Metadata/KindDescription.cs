@@ -9,4 +9,4 @@ namespace OoBDev.Query.Metadata;
 /// <param name="Facets">The facets.</param>
 /// <param name="Predicates">Predicate names with their allowed values.</param>
 /// <param name="Operators">Search operator names.</param>
-public sealed record KindDescription(string Name, string Title, string DefaultSort, IReadOnlyList<FacetDescription> Facets, IReadOnlyDictionary<string, string[]> Predicates, string[] Operators);
+public sealed record KindDescription(string Name, string Title, string DefaultSort, IReadOnlyList<FacetDescription> Facets, IReadOnlyDictionary<string, string[]> Predicates, string[] Operators, string[] Hints, string[] Relations, string[] Spaces);

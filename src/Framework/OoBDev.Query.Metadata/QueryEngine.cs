@@ -46,6 +46,9 @@ public sealed partial class QueryEngine(
         if (kind.Right.Length > 0 && authorizer?.IsAllowed(kind.Right) != true)
             throw new QueryException($"Kind '{kind.Name}' needs the right '{kind.Right}'.", 403);
 
+        if (request.Shape == "graph")
+            return await GraphAsync(kind, request, started, cancellationToken).ConfigureAwait(false);
+
         var compiled = QueryCompiler.Compile(kind, request, dialect, options.Value.MaxTop, cursors);
         var rows = await executor.ReadAsync(compiled.Sql, compiled.Parameters, cancellationToken).ConfigureAwait(false);
 
@@ -60,7 +63,11 @@ public sealed partial class QueryEngine(
                 next = cursors.Encode(new CursorState(kind.Name, compiled.SortSpec, values));
             }
 
-            page = rows.Take(compiled.Top).Select(Strip).ToList();
+            var taken = rows.Take(compiled.Top).ToList();
+            var hints = kind.Hints is { Count: > 0 } && request.Select?.Contains("has", StringComparer.OrdinalIgnoreCase) == true && taken.Count > 0
+                ? await ReadHintsAsync(kind, taken, compiled.SortColumns - 1, cancellationToken).ConfigureAwait(false)
+                : null;
+            page = taken.Select(r => Strip(r, hints, compiled.SortColumns - 1)).ToList();
         }
 
         long? count = null;
@@ -92,11 +99,90 @@ public sealed partial class QueryEngine(
             Next = result.Next,
             Count = result.Count,
             ElapsedMs = result.ElapsedMs,
+            Nodes = result.Nodes,
         };
     }
 
-    private static Dictionary<string, object?> Strip(IReadOnlyDictionary<string, object?> row) =>
-        row.Where(kv => !kv.Key.StartsWith("__s", StringComparison.Ordinal)).ToDictionary(kv => kv.Key, kv => kv.Value);
+    private async Task<QueryResult<IReadOnlyDictionary<string, object?>>> GraphAsync(KindInfo kind, QueryRequest request, long started, CancellationToken cancellationToken)
+    {
+        var top = Math.Clamp(request.Top, 1, options.Value.MaxTop);
+        var edges = new Dictionary<string, IReadOnlyDictionary<string, object?>>();
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        var frontier = request.Root is null ? null : new[] { request.Root };
+        var steps = request.Root is null ? 1 : Math.Clamp(request.Depth, 1, 4);
+        for (var step = 0; step < steps && edges.Count < top; step++)
+        {
+            var compiled = QueryCompiler.Graph(kind, request, dialect, new SqlParameters(), top, frontier);
+            var rows = await executor.ReadAsync(compiled.Sql, compiled.Parameters, cancellationToken).ConfigureAwait(false);
+            var next = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var row in rows)
+            {
+                var source = KeyText(row["source"]);
+                var target = KeyText(row["target"]);
+                var weight = Convert.ToDouble(row["weight"] ?? 0, CultureInfo.InvariantCulture);
+                if (edges.Count >= top || !edges.TryAdd(source + "\u0001" + target, new Dictionary<string, object?> { ["source"] = source, ["target"] = target, ["weight"] = weight }))
+                    continue;
+                foreach (var node in new[] { source, target })
+                    if (seen.Add(node))
+                        next.Add(node);
+            }
+
+            if (frontier is null)
+                break;
+            frontier = next.Except(frontier).ToArray();
+            if (frontier.Length == 0)
+                break;
+        }
+
+        var list = edges.Values.ToList();
+        var elapsed = (long)Stopwatch.GetElapsedTime(started).TotalMilliseconds;
+        Ran(logger, kind.Name, request.Shape, elapsed);
+        return new QueryResult<IReadOnlyDictionary<string, object?>>
+        {
+            Kind = kind.Name,
+            Shape = "graph",
+            Rows = list,
+            ElapsedMs = elapsed,
+            Nodes = list.SelectMany(e => new[] { (string)e["source"]!, (string)e["target"]! }).Distinct(StringComparer.Ordinal).ToList(),
+        };
+    }
+
+    private async Task<Dictionary<string, IReadOnlyDictionary<string, bool>>> ReadHintsAsync(KindInfo kind, List<IReadOnlyDictionary<string, object?>> rows, int keyColumn, CancellationToken cancellationToken)
+    {
+        var hints = kind.Hints!;
+        var keys = rows.Select(r => r["__s" + keyColumn]).Where(k => k is not null).Cast<object>().ToList();
+        var names = hints.Keys.ToArray();
+        var expressions = names.Select(n => $"({hints[n].Replace("{k}", kind.Key, StringComparison.Ordinal)}) AS {dialect.Quote(n)}");
+        var parameters = new SqlParameters();
+        var sql = $"SELECT {kind.Key} AS {dialect.Quote("__key")}, {string.Join(", ", expressions)} FROM {kind.Base} {kind.Joins}".TrimEnd()
+            + $" WHERE {dialect.In(kind.Key, parameters.Add(TypedArray(keys)))}";
+        var found = await executor.ReadAsync(sql, parameters.Values, cancellationToken).ConfigureAwait(false);
+        return found.ToDictionary(
+            r => KeyText(r["__key"]),
+            r => (IReadOnlyDictionary<string, bool>)names.ToDictionary(n => n, n => r.TryGetValue(n, out var v) && v is true, StringComparer.OrdinalIgnoreCase));
+    }
+
+    private static string KeyText(object? key) => Convert.ToString(key, CultureInfo.InvariantCulture) ?? "";
+
+    private static Array TypedArray(List<object> keys) => keys[0] switch
+    {
+        long => keys.Cast<long>().ToArray(),
+        int => keys.Cast<int>().ToArray(),
+        Guid => keys.Cast<Guid>().ToArray(),
+        _ => keys.Select(KeyText).ToArray(),
+    };
+
+    private static Dictionary<string, object?> Strip(IReadOnlyDictionary<string, object?> row, Dictionary<string, IReadOnlyDictionary<string, bool>>? hints, int keyColumn)
+    {
+        var result = row.Where(kv => !kv.Key.StartsWith("__s", StringComparison.Ordinal)).ToDictionary(kv => kv.Key, kv => kv.Value);
+        if (hints is not null)
+        {
+            var key = row["__s" + keyColumn];
+            result["has"] = hints.TryGetValue(KeyText(key), out var flags) ? flags : new Dictionary<string, bool>();
+        }
+
+        return result;
+    }
 
     private static JsonElement ToJson(object? value) => value switch
     {

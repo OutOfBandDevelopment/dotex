@@ -30,7 +30,7 @@ public class KeywordSearchTests
     private static KeywordSearchProvider Provider(string body, int status = 200, params string[] filters)
     {
         var connection = new InMemoryConnection(Encoding.UTF8.GetBytes(body), status);
-        var client = new OpenSearchLowLevelClient(new ConnectionConfiguration(new SingleNodeConnectionPool(new Uri("http://localhost:9200")), connection));
+        var client = new OpenSearchLowLevelClient(new ConnectionConfiguration(new SingleNodeConnectionPool(new Uri("http://127.0.0.1:9200")), connection));
         return new KeywordSearchProvider(
             client,
             Options.Create(new OpenSearchOptions { HostName = "h", Port = 9200, IndexName = "docs" }),

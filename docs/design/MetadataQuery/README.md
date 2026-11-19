@@ -1,6 +1,6 @@
 ﻿# Metadata-driven query engine
 
-Status: **first slice built 2026-11-16 (rows, facets, keyset paging, text form, describer, OpenAPI, rights; Framework project plus PostgreSQL adapter, owner placement 2026-11-12 option A); the items under "Not in the first slice" are open.** Request: [metadata-driven query engine](../../features/request/2026-11-11-metadata-driven-query-engine.md). Transport options: [OData over QUERY](../ODataQuery/README.md) and [HTTP QUERY verb](../HttpQueryVerb/README.md).
+Status: **first slice built 2026-11-16 (rows, facets, keyset paging, text form, describer, OpenAPI, rights; Framework project plus PostgreSQL adapter, owner placement 2026-11-12 option A); buckets, hints, relations and graph built 2026-11-18; the items under "Not in the first slice" are open.** Request: [metadata-driven query engine](../../features/request/2026-11-11-metadata-driven-query-engine.md). Transport options: [OData over QUERY](../ODataQuery/README.md) and [HTTP QUERY verb](../HttpQueryVerb/README.md).
 
 ## Contents
 
@@ -64,6 +64,15 @@ Registry: a class with attributes appears in the description with its facets, pr
 
 ## Not in the first slice
 
-- Hints, relations, graph shape and buckets (second slice, after rows, facets and paging).
+- Snapshot sources and text anchors (second slice, after rows, facets and paging).
+## Built in the second slice
+
+- Host sample (2026-11-18): `src/Examples/OoBDev.Example.Query` (`NoteRow`, `/describe`, `/openapi.json`, `POST /q`, `GET /q?text=`; `QueryException` answers 400 problem details). Smoke-tested by running it; no automated test (the repo has no TestHost package).
+- Near (2026-11-18): `[Space]` with `Haversine` (two numeric facets, kilometres) and `Cosine` (joined embedding table `sv`, anchor by key), `near` clause and text form, `distance` column and sort, `DefaultMax`, keyset paging over the distance. Not carried over from the catalog: sky (angular) metric, multi-vector spaces, the text anchor (needs an embedder), halfvec cast, and the table-first paging that makes the HNSW index usable; the join form scans the embedding table.
+- Graph shape (2026-11-18): `[Edge]`, `shape: graph`, `root` and `depth` walk (at most 4 steps, one statement each), `Nodes` on the result, text form `as graph from <id> depth <n>` (`from` and `depth` are read only after `as graph`, so they stay ordinary search words elsewhere).
+- Relations (2026-11-18): `[Relation(name, sql)]`, `related { via, of }` / text `of via:key`; the anchor is a bound parameter (`{anchor}`), the condition joins the filters, so paging and counts work unchanged. The catalog's `{sha}` placeholder is not carried over.
+- Hints (2026-11-18): `[Hint(name, sql)]` on a kind, `has` in `select` triggers one batched statement for the page keys (typed key array, `IQueryDialect.In`), the `has` object per row, `Has` mapped to the row class, listed in the description and the OpenAPI row schema. The catalog also replaced `{sha}`; that placeholder is not carried over (only `{k}`).
+- Buckets (2026-11-18): shape `buckets` over two numeric facets, `QueryRequest.Cell`, `QueryKind.Sample`, `IQueryDialect.GridCell`, the `Bucket` row, text form `as buckets by a,b cell n`. Checked against the catalog's `Buckets` compile; the catalog's fixed `sha` sample became the declared `Sample` expression so no column name is assumed.
+- Index-first vector pool (2026-11-18): `[Space(Candidates = n)]` takes the nearest n rows from the embedding table alone (`ORDER BY distance LIMIT n`, which a vector index can answer), joins the kind to that pool as `sv` and filters afterwards; the distance column is `sv.d`. Paging covers the pool only and a filter can leave fewer rows; zero keeps the whole-table join. Golden SQL test with a fake dialect, plus an Integration test on the real pgvector container.
 - Snapshot sources and the anchor store (catalog caching).
 - GraphQL and OData transports on top (see the existing transport designs).

@@ -1,6 +1,7 @@
 using OoBDev.AspNetCore.Mvc.Diagnostics.HealthChecks;
 using OoBDev.AspNetCore.Mvc.Middleware;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace OoBDev.AspNetCore.Mvc;
 
@@ -37,6 +38,9 @@ public static class ApplicationBuilderExtensions
         )
     {
         healthCheckPath ??= "/health";
+        var mapped = builder.ApplicationServices.GetService<HealthCheckPath>();
+        if (mapped is not null)
+            mapped.Value = healthCheckPath;
         builder.UseHealthChecks(healthCheckPath, HealthCheckOptionsFactory.Create());
         builder.UseMiddleware<CorrelationInfoMiddleware>();
         builder.UseMiddleware<CultureInfoMiddleware>();

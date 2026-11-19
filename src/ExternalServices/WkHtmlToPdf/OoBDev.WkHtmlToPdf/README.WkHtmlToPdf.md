@@ -8,6 +8,8 @@ In-process HTML to PDF conversion for the document conversion pipeline (`IDocume
 services.TryAddWkHtmlToPdfServices();
 ```
 
+The common registration does not add it; set `ExternalExtensionBuilder.IncludeWkHtmlToPdf`. The bundled native library is Windows only, so the `DevLocal` test ends Inconclusive elsewhere.
+
 This registers `HtmlToPdfConversionHandler`, a single shared `SynchronizedConverter` (the native library is not thread-safe, so conversions are serialized), the `PdfTools` and an `IDocumentType` for `application/pdf` (extension `.pdf`, header `%PDF-`).
 
 ## Behaviour

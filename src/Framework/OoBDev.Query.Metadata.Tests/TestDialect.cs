@@ -11,6 +11,10 @@ internal sealed class TestDialect : IQueryDialect
 
     public string NotLike(string expr, string parameter) => $"{expr} NOT ILIKE {parameter}";
 
+    public string Haversine(string lat, string lon, string latParameter, string lonParameter) => $"HAV({lat},{lon},{latParameter},{lonParameter})";
+
+    public string VectorDistance(string column, string anchor) => $"VEC({column},{anchor})";
+
     public string In(string expr, string parameter) => $"{expr} = ANY({parameter})";
 
     public string ArrayContains(string parameter, string expr) => $"{parameter} = ANY({expr})";
@@ -20,6 +24,8 @@ internal sealed class TestDialect : IQueryDialect
     public string Limit(int rows) => string.Create(CultureInfo.InvariantCulture, $"LIMIT {rows}");
 
     public string? DatePart(string part, string expr) => part == "month" ? $"to_char({expr}, 'YYYY-MM')" : null;
+
+    public string GridCell(string expr, string cellParameter) => $"floor(({expr}) / {cellParameter})";
 
     public string ContainsPattern(string text) => "%" + text.Replace("\\", "\\\\", StringComparison.Ordinal).Replace("%", "\\%", StringComparison.Ordinal).Replace("_", "\\_", StringComparison.Ordinal) + "%";
 }

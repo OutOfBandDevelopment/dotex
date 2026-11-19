@@ -32,10 +32,10 @@ public static class MarkdownPages
     /// <param name="kind">The source kind such as pdf, pdf-ocr or text.</param>
     /// <param name="pages">The page count.</param>
     /// <param name="extractor">The extractor name.</param>
-    public static string FrontMatter(string title, string sourcePath, string sha256, long size, string kind, int pages, string extractor)
+    public static string FrontMatter(string title, string sourcePath, string sha256, long size, string kind, int pages, string extractor, string? language = null)
     {
         var source = Path.GetFullPath(sourcePath).Replace('\\', '/');
         return string.Create(CultureInfo.InvariantCulture,
-            $"---\ntitle: \"{title.Replace('"', '\'')}\"\nsource: \"{source}\"\nsha256: {sha256}\nsize: {size}\nkind: {kind}\npages: {pages}\nextractor: {extractor}\n---\n\n");
+            $"---\ntitle: \"{title.Replace('"', '\'')}\"\nsource: \"{source}\"\nsha256: {sha256}\nsize: {size}\nkind: {kind}\npages: {pages}\nextractor: {extractor}\n{(language is null ? "" : $"language: {language}\n")}---\n\n");
     }
 }

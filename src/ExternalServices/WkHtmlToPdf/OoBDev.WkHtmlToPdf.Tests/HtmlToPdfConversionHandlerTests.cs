@@ -23,8 +23,7 @@ public class HtmlToPdfConversionHandlerTests
     {
         if (Environment.OSVersion.Platform != PlatformID.Win32NT)
         {
-            // Request: docs/features/request/2026-11-17-document-converter-dependencies.md
-            Assert.Inconclusive();
+            Assert.Inconclusive("WkHtmlToPdfDotNet bundles the native wkhtmltopdf library for Windows only; Linux needs the library installed in the container");
             return;
         }
 

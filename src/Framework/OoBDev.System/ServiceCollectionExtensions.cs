@@ -183,6 +183,25 @@ public static class ServiceCollectionExtensions
     }
 
     /// <summary>
+    /// Adds templates embedded in an assembly as a source behind the file source: a template on disk wins, otherwise the embedded default is used.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="assembly">The assembly holding the embedded templates.</param>
+    /// <param name="resourcePrefix">The resource name prefix, for example <c>MyLib.Templates.</c>.</param>
+    /// <param name="priority">The priority; keep it above the file source's (the lowest value wins).</param>
+    /// <returns>The modified service collection.</returns>
+    public static IServiceCollection AddEmbeddedTemplates(
+        this IServiceCollection services,
+        global::System.Reflection.Assembly assembly,
+        string resourcePrefix,
+        int priority = EmbeddedResourceTemplateSource.DefaultPriority
+        )
+    {
+        services.AddTransient<ITemplateSource>(sp => new EmbeddedResourceTemplateSource(assembly, resourcePrefix, sp.GetServices<IFileType>(), priority));
+        return services;
+    }
+
+    /// <summary>
     /// Add support for type providers
     /// </summary>
     /// <param name="services"></param>
@@ -194,6 +213,8 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IDataConverter, DataConverter>();
         services.TryAddSingleton(global::System.TimeProvider.System);
         services.TryAddSingleton<IGuidProvider, GuidProvider>();
+        services.AddOptions<TranslationOptions>();
+        services.TryAddSingleton<ITranslationProvider, OptionsTranslationProvider>();
 
         services.TryAddSingleton<ITempFileFactory, TempFileFactory>();
 

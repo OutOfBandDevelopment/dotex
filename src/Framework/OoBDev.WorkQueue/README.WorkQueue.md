@@ -36,4 +36,13 @@ A handler implements `IWorkStageHandler.HandleAsync(WorkItem, CancellationToken)
 | `PollInterval` | 5 seconds | Wait when a claim finds nothing |
 | `HeartbeatInterval` | a third of the lease | How often the worker extends the lease |
 
-Not in this slice: worker events and history, the PGMQ reader (see the design).
+## Worker events (`WorkQueue:Events`)
+
+`IWorkerEvents` keeps the progress history of the workers: `PublishAsync(source, message)` appends, `ReadAsync(reader, limit, fromStart)` returns what a reader has not seen and moves its mark (a new reader starts at the end), `TrimAsync()` applies the retention. `TryAddInMemoryWorkerEvents(configuration)` registers the in-process store; the PostgreSQL store is in `OoBDev.PostgreSql.WorkQueue`.
+
+| Option | Default | Meaning |
+|--------|---------|---------|
+| `MaxRecords` | 10000 | Events kept; older ones are trimmed |
+| `MaxAge` | 7 days | Longest an event is kept; readers idle longer are dropped |
+
+Not taken: a PGMQ reader (the rows are the source of truth; see the design).

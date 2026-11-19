@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.System.IO;
 using OoBDev.System.IO.Messages;
@@ -16,6 +17,8 @@ namespace OoBDev.System.Tests.IO;
 [DoNotParallelize]
 public class StreamDeviceTests
 {
+    public required TestContext TestContext { get; set; }
+
     private sealed class TextEncoder : IMessageEncoder<string>
     {
         public ReadOnlyMemory<byte> Encode(ref string request) => Encoding.UTF8.GetBytes(request);
@@ -124,5 +127,54 @@ public class StreamDeviceTests
         // Assert
         var added = withDevice - background;
         Assert.IsLessThan(TimeSpan.FromMilliseconds(300), added, $"An idle device added {added.TotalMilliseconds:F0} ms of processor time in 700 ms (background {background.TotalMilliseconds:F0} ms).");
+    }
+
+    private sealed class SlowDevice(int delay) : IDeviceDefinitionTransmitter<string>, IDeviceDefinitionTransmissionDelay
+    {
+        public IMessageEncoder<string> Encoder { get; } = new TextEncoder();
+
+        public int MinimumTransmissionDelay { get; } = delay;
+    }
+
+    private async Task<TimeSpan> TimeBetweenTwoWritesAsync(IDeviceDefinition definition, int? delay)
+    {
+        var stream = new WrittenStream();
+        var times = new global::System.Collections.Concurrent.ConcurrentQueue<long>();
+        var both = new TaskCompletionSource();
+        var clock = Stopwatch.StartNew();
+        stream.Wrote += (_, _) =>
+        {
+            times.Enqueue(clock.ElapsedMilliseconds);
+            if (times.Count == 2) both.TrySetResult();
+        };
+        using var cancel = new CancellationTokenSource();
+        using var device = new StreamDevice<string>(await OpenAsync(stream).ConfigureAwait(false), definition, delay, cancel.Token);
+
+        await device.Transmit("a").ConfigureAwait(false);
+        await device.Transmit("b").ConfigureAwait(false);
+        await both.Task.WaitAsync(TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+        await cancel.CancelAsync().ConfigureAwait(false);
+
+        var all = times.ToArray();
+        TestContext.WriteLine($"writes at {all[0]} ms and {all[1]} ms");
+        return TimeSpan.FromMilliseconds(all[1] - all[0]);
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public async Task Transmit_DefinitionDeclaresDelay_UsesIt()
+    {
+        TestContext.WriteLine("Stage: a definition that asks for a 300 ms pause and no explicit delay");
+        var gap = await TimeBetweenTwoWritesAsync(new SlowDevice(300), null).ConfigureAwait(false);
+
+        Assert.IsGreaterThanOrEqualTo(250, gap.TotalMilliseconds);
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public async Task Transmit_ExplicitDelay_OverridesTheDefinition()
+    {
+        TestContext.WriteLine("Stage: a definition asking for 5000 ms and an explicit 0");
+        var gap = await TimeBetweenTwoWritesAsync(new SlowDevice(5000), 0).ConfigureAwait(false);
+
+        Assert.IsLessThan(2000, gap.TotalMilliseconds);
     }
 }

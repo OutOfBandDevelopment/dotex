@@ -42,6 +42,7 @@
     <Project Path="Examples/OoBDev.Example.Web/OoBDev.Example.Web.esproj">
       <Platform Project="AnyCPU" />
     </Project>
+    <Project Path="Examples/OoBDev.Example.Query/OoBDev.Example.Query.csproj" />
     <Project Path="Examples/OoBDev.Example.WebApi/OoBDev.Example.WebApi.csproj" />
     <Project Path="Examples/OoBDev.Example.WebApi.Tests/OoBDev.Example.WebApi.Tests.csproj" />
     <Project Path="Examples/OoBDev.Examples.Controls.Avalonia.Tests/OoBDev.Examples.Controls.Avalonia.Tests.csproj" />
@@ -70,6 +71,7 @@
       <BuildDependency Project="Tools/OoBDev.DacPacCompiler.Cli/OoBDev.DacPacCompiler.Cli.csproj" />
     </Project>
     <Project Path="Extensions/OoBDev.Data.Vectors.Hosting/OoBDev.Data.Vectors.Hosting.csproj" />
+    <Project Path="Extensions/OoBDev.Data.Vectors.Hosting.Tests/OoBDev.Data.Vectors.Hosting.Tests.csproj" />
     <Project Path="Extensions/OoBDev.Data.Vectors.Net481/OoBDev.Data.Vectors.Net481.csproj" />
     <Project Path="Extensions/OoBDev.Data.Vectors.SqlStore/OoBDev.Data.Vectors.SqlStore.csproj" />
     <Project Path="Extensions/OoBDev.Data.Vectors.Tests/OoBDev.Data.Vectors.Tests.csproj" />

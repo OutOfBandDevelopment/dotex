@@ -48,7 +48,9 @@ public static class OpenApiBuilder
         ("select", new JsonObject { ["type"] = "array", ["items"] = Str() }),
         ("top", Int()),
         ("after", Str()),
-        ("shape", new JsonObject { ["type"] = "string", ["enum"] = new JsonArray("rows", "facets") }),
+        ("shape", new JsonObject { ["type"] = "string", ["enum"] = new JsonArray("rows", "facets", "buckets", "graph") }),
+        ("related", new JsonObject { ["type"] = "object", ["properties"] = new JsonObject { ["via"] = Str(), ["of"] = Str() } }),
+        ("near", new JsonObject { ["type"] = "object", ["properties"] = new JsonObject { ["space"] = Str(), ["ref"] = Str(), ["lat"] = new JsonObject { ["type"] = "number" }, ["lon"] = new JsonObject { ["type"] = "number" }, ["max"] = new JsonObject { ["type"] = "number" } } }),
         ("by", new JsonObject { ["type"] = "array", ["items"] = Str() }),
         ("count", new JsonObject { ["type"] = "boolean" }));
 
@@ -68,6 +70,14 @@ public static class OpenApiBuilder
                 ["x-search"] = f.Search,
                 ["x-hidden"] = f.Hidden,
             };
+        }
+
+        if (kind.Hints is { Count: > 0 })
+        {
+            var flags = new JsonObject();
+            foreach (var hint in kind.Hints.Keys)
+                flags[hint] = new JsonObject { ["type"] = "boolean" };
+            properties["has"] = new JsonObject { ["type"] = "object", ["description"] = "Hint flags for the page; present when select has \"has\".", ["properties"] = flags };
         }
 
         return new JsonObject { ["type"] = "object", ["properties"] = properties, ["x-kind"] = kind.Name, ["x-title"] = kind.Title, ["x-default-sort"] = kind.DefaultSort };
