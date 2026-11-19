@@ -10,6 +10,7 @@ export interface VectorDistances { cosine: number; euclidean: number; dotProduct
 
 export interface Calculation { result: number; optimized: string; variables: string[]; }
 export interface Otp { secret: string; code: string; uri: string; valid: boolean | null; }
+export interface FileInspection { length: number; sha256: string; detectedContentType: string | null; hexDump: string; }
 
 /** Parses lines or comma separated "name = value" pairs; returns null when any pair is malformed. */
 export function parseVariables(text: string): Record<string, number> | null {
@@ -65,6 +66,9 @@ export class ToolboxViewModel {
   readonly jwsRead = ref<JwsRead | null>(null);
   readonly signJws = new SignJwsCommand(this);
   readonly readJws = new ReadJwsCommand(this);
+  readonly inspectFile = ref<File | null>(null);
+  readonly inspection = ref<FileInspection | null>(null);
+  readonly inspect = new InspectFileCommand(this);
 }
 
 export class HashCommand extends Command {
@@ -140,5 +144,15 @@ export class ConvertCodecCommand extends Command {
   protected async run() {
     const r = await http.postJson<ToolResult>('/api/Toolbox/codec', { codec: this.vm.codec.value, decode: this.vm.codecDecode.value, value: this.vm.codecValue.value });
     this.vm.codecResult.value = r.result;
+  }
+}
+
+export class InspectFileCommand extends Command {
+  constructor(private readonly vm: ToolboxViewModel) { super(); }
+  protected isAllowed() { return this.vm.inspectFile.value !== null; }
+  protected async run() {
+    const form = new FormData();
+    form.append('content', this.vm.inspectFile.value!);
+    this.vm.inspection.value = await http.postFormJson<FileInspection>('/api/Toolbox/inspect', form);
   }
 }

@@ -40,6 +40,18 @@ describe('toolbox commands', () => {
     expect(JSON.parse(fetchMock.mock.calls[0][1].body as string)).toEqual({ codec: 'morse', decode: false, value: 'sos' });
     expect(vm.codecResult.value).toBe('... --- ...');
   });
+  it('inspect_File_PostsFormAndFillsTheInspection', async () => {
+    const fetchMock = vi.fn(async (_p: string, _i: RequestInit) =>
+      new Response(JSON.stringify({ length: 3, sha256: 'AB', detectedContentType: null, hexDump: '0000  61\n' }), { status: 200, headers: { 'Content-Type': 'application/json' } }));
+    vi.stubGlobal('fetch', fetchMock);
+    const vm = new ToolboxViewModel();
+    expect(vm.inspect.canExecute.value).toBe(false);
+    vm.inspectFile.value = new File(['abc'], 'a.txt');
+    await vm.inspect.execute();
+    expect(fetchMock.mock.calls[0][0]).toBe('/api/Toolbox/inspect');
+    expect(fetchMock.mock.calls[0][1].body).toBeInstanceOf(FormData);
+    expect(vm.inspection.value?.length).toBe(3);
+  });
   it('convertCodec_EmptyText_CannotExecute', () => {
     const vm = new ToolboxViewModel();
     vm.codecValue.value = ' ';

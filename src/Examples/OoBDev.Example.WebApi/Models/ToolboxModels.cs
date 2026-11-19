@@ -157,3 +157,19 @@ public class CodecRequestModel
     /// <summary>Gets or sets the text to convert.</summary>
     public required string Value { get; set; }
 }
+
+/// <summary>What the file inspector found out about an uploaded file.</summary>
+public class FileInspectionModel
+{
+    /// <summary>Gets or sets the size in bytes.</summary>
+    public long Length { get; set; }
+
+    /// <summary>Gets or sets the SHA-256 hash as hex.</summary>
+    public required string Sha256 { get; set; }
+
+    /// <summary>Gets or sets the content type found from the file header, or null when it is not recognized.</summary>
+    public string? DetectedContentType { get; set; }
+
+    /// <summary>Gets or sets the hex dump of the first bytes, 16 bytes a line.</summary>
+    public required string HexDump { get; set; }
+}

@@ -1,16 +1,20 @@
 using OoBDev.AspNetCore.Mvc.Filters;
 using OoBDev.Identity.Jws;
+using OoBDev.Documents;
 using OoBDev.System;
 using OoBDev.System.Codecs;
 using OoBDev.System.ExpressionCalculator.Expressions;
 using OoBDev.System.Math;
 using OoBDev.System.Security.Cryptography;
 using OoBDev.WebApi.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Buffers.Text;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using System.Linq;
 using System.Text;
 
@@ -155,7 +159,53 @@ public class ToolboxController(IServiceProvider services) : ControllerBase
             return Problem(title: "The text cannot be converted", detail: ex.Message, statusCode: 400);
         }
     }
-private static string ToBcdHex(string digits)    {        if (digits.Length == 0 || digits.Length > 18 || !digits.All(char.IsAsciiDigit))            throw new ArgumentException("Give 1 to 18 decimal digits.", nameof(digits));        var bytes = new byte[(digits.Length + 1) / 2];        BcdEx.ToBCD(long.Parse(digits, global::System.Globalization.CultureInfo.InvariantCulture), bytes);        return Convert.ToHexString(bytes);    }
+
+    private static string ToBcdHex(string digits)
+    {
+        if (digits.Length == 0 || digits.Length > 18 || !digits.All(char.IsAsciiDigit))
+            throw new ArgumentException("Give 1 to 18 decimal digits.", nameof(digits));
+        var bytes = new byte[(digits.Length + 1) / 2];
+        BcdEx.ToBCD(long.Parse(digits, global::System.Globalization.CultureInfo.InvariantCulture), bytes);
+        return Convert.ToHexString(bytes);
+    }
+
+    /// <summary>Reports size, hash, detected type and a hex dump of the start of an uploaded file.</summary>
+    /// <param name="content">The file; at most 5 MiB.</param>
+    /// <returns>The inspection.</returns>
+    [HttpPost("inspect")]
+    [RequestSizeLimit(5 * 1024 * 1024)]
+    public async Task<ActionResult<FileInspectionModel>> Inspect(IFormFile content)
+    {
+        if (content.Length > 5 * 1024 * 1024)
+            return Problem(title: "The file is too large", detail: "At most 5 MiB.", statusCode: 400);
+        using var buffer = new MemoryStream();
+        await content.CopyToAsync(buffer);
+        var bytes = buffer.ToArray();
+        string? type = null;
+        if (services.GetService<IDocumentTypeTools>() is { } tools)
+        {
+            using var probe = new MemoryStream(bytes);
+            type = await tools.DetectContentTypeAsync(probe);
+        }
+
+        var shown = Math.Min(bytes.Length, 256);
+        var dump = new StringBuilder();
+        for (var offset = 0; offset < shown; offset += 16)
+        {
+            var row = bytes.AsSpan(offset, Math.Min(16, shown - offset)).ToArray();
+            var hex = string.Join(' ', row.Select(b => b.ToString("X2", global::System.Globalization.CultureInfo.InvariantCulture)));
+            var text = string.Concat(row.Select(b => b is >= 0x20 and < 0x7F ? (char)b : '.'));
+            dump.Append(offset.ToString("X4", global::System.Globalization.CultureInfo.InvariantCulture)).Append("  ").Append(hex.PadRight(47)).Append("  ").Append(text).Append('\n');
+        }
+
+        return new FileInspectionModel
+        {
+            Length = bytes.Length,
+            Sha256 = Convert.ToHexString(global::System.Security.Cryptography.SHA256.HashData(bytes)),
+            DetectedContentType = type,
+            HexDump = dump.ToString(),
+        };
+    }
 
     /// <summary>Signs a JSON payload as an HS256 token.</summary>
     /// <param name="model">The payload and the shared secret.</param>
