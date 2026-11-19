@@ -53,3 +53,5 @@ Which vendors are still wanted (Bing Maps is being retired by Microsoft)? Is the
 Origin: SharedFramework (the application framework dotex grew from). No design documents yet, so the design comes first (`docs/patterns-discovery/06-design-document-standard.md`).
 
 2026-11-11: triaged. Accepted as a backlog item: design first (`docs/patterns-discovery/06-design-document-standard.md`), no code until a consumer appears. Backlog: BACKLOG.md, SharedFramework requests.
+
+2026-11-19: proposed design written: [SpatialServices](../../design/SpatialServices/README.md).

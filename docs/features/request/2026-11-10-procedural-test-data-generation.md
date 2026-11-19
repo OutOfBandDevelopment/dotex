@@ -51,3 +51,5 @@ Take this over, or use `Bogus` (the owner's dependency rule applies)? Does it sh
 Origin: SharedFramework. Compare with the built-in alternatives before accepting.
 
 2026-11-11: triaged. Accepted as a backlog item: design first (`docs/patterns-discovery/06-design-document-standard.md`), no code until a consumer appears. Backlog: BACKLOG.md, SharedFramework requests.
+
+2026-11-19: proposed design written: [TestDataGeneration](../../design/TestDataGeneration/README.md).
