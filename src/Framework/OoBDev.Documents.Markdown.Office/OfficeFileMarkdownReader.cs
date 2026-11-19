@@ -23,6 +23,8 @@ public sealed class OfficeFileMarkdownReader(IDocumentConversion conversion) : I
         [".odt"] = "application/vnd.oasis.opendocument.text",
         [".rtf"] = "application/rtf",
         [".epub"] = "application/epub+zip",
+        [".xls"] = "application/vnd.ms-excel",
+        [".ppt"] = "application/vnd.ms-powerpoint",
     };
 
     /// <inheritdoc />

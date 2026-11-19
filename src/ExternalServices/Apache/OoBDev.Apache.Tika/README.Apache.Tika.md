@@ -59,6 +59,8 @@ Each handler converts one family of sources to `text/html` by calling the server
 | `TikaOdtToHtmlConversionHandler` | Open Office document | `.odt` |
 | `TikaEpubToHtmlConversionHandler` | Electronic publication | `.epub` |
 | `TikaRtfToHtmlConversionHandler` | Rich Text Format | `.rtf` |
+| `TikaXlsToHtmlConversionHandler` | Microsoft Excel (binary) | `.xls` |
+| `TikaPptToHtmlConversionHandler` | Microsoft PowerPoint (binary) | `.ppt` |
 
 ```csharp
 await handler.ConvertAsync(source, sourceContentType, destination, "text/html");

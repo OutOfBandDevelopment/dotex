@@ -59,6 +59,8 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IDocumentConversionHandler, TikaOdtToHtmlConversionHandler>();
         services.AddTransient<IDocumentConversionHandler, TikaPdfToHtmlConversionHandler>();
         services.AddTransient<IDocumentConversionHandler, TikaRtfToHtmlConversionHandler>();
+        services.AddTransient<IDocumentConversionHandler, TikaXlsToHtmlConversionHandler>();
+        services.AddTransient<IDocumentConversionHandler, TikaPptToHtmlConversionHandler>();
 
         services.AddTransient<IDocumentType>(_ => new DocumentType
         {
@@ -101,6 +103,20 @@ public static class ServiceCollectionExtensions
             FileHeader = [],
             FileExtensions = [".rtf",],
             ContentTypes = TikaRtfToHtmlConversionHandler.SOURCES,
+        });
+        services.AddTransient<IDocumentType>(_ => new DocumentType
+        {
+            Name = "Microsoft Excel",
+            FileHeader = [],
+            FileExtensions = [".xls",],
+            ContentTypes = TikaXlsToHtmlConversionHandler.SOURCES,
+        });
+        services.AddTransient<IDocumentType>(_ => new DocumentType
+        {
+            Name = "Microsoft PowerPoint",
+            FileHeader = [],
+            FileExtensions = [".ppt",],
+            ContentTypes = TikaPptToHtmlConversionHandler.SOURCES,
         });
 
         return services;
