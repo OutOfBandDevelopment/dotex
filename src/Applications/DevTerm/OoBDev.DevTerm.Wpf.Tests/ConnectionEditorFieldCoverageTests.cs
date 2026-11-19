@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -7,41 +6,32 @@ using OoBDev.DevTerm.Configuration;
 
 namespace OoBDev.DevTerm.Wpf.Tests;
 
-/// <summary>Every field the connection editor view model declares for the form is bound by the WPF window.</summary>
+/// <summary>Every field the connection editor view model declares for the form reaches the generated form the WPF window shows.</summary>
 [TestCategory("Unit")]
 [TestClass]
 public sealed class ConnectionEditorFieldCoverageTests
 {
+    public TestContext TestContext { get; set; } = null!;
+
     [TestMethod]
-    public void Xaml_BindsEveryFormFieldOfTheViewModel()
+    public void GeneratedForm_HasAControlForEveryFormFieldOfTheViewModel()
     {
         // Stage
-        var xaml = File.ReadAllText(Path.Combine(RepoRoot(), "src", "Applications", "DevTerm", "OoBDev.DevTerm.Wpf", "ConnectionEditorWindow.xaml"));
         var fields = typeof(ConnectionEditorViewModel)
             .GetProperties(BindingFlags.Public | BindingFlags.Instance)
             .Where(p => p.GetCustomAttributes().Any(a => a.GetType().Name == "FormFieldAttribute"))
             .Select(p => p.Name)
-            .Where(name => name != nameof(ConnectionEditorViewModel.PresentersText)) // the checkbox list binds PresenterChoices instead
-            .Where(name => !name.EndsWith("Command", StringComparison.Ordinal)) // the scan buttons bind through ConnectionDeviceScans until the XAML is replaced by the generated form
             .ToList();
+        TestContext.WriteLine($"{fields.Count} annotated properties");
 
         // Test
-        var missing = fields.Where(name => !xaml.Contains("Binding " + name + ",", StringComparison.Ordinal)
-            && !xaml.Contains("Binding " + name + "}", StringComparison.Ordinal)).ToList();
+        using var folder = new OoBDev.System.IO.TempDirectoryHandle();
+        using var editor = new ConnectionEditorViewModel(new ConnectionProfileStore(folder.DirectoryPath), new CliOptions { Transport = "tcp" });
+        var ids = editor.FormDefinition.Sections.SelectMany(s => s.Controls).Select(c => c.Id).ToHashSet(StringComparer.Ordinal);
+        var missing = fields.Where(f => !ids.Contains(f)).ToList();
 
         // Assert
         Assert.IsTrue(fields.Count > 20);
-        Assert.AreEqual(0, missing.Count, "Not bound in ConnectionEditorWindow.xaml: " + string.Join(", ", missing));
-    }
-
-    private static string RepoRoot()
-    {
-        var dir = new DirectoryInfo(AppContext.BaseDirectory);
-        while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "GitVersion.yml")))
-        {
-            dir = dir.Parent;
-        }
-
-        return dir?.FullName ?? throw new InvalidOperationException("repo root not found");
+        Assert.AreEqual(0, missing.Count, "No control in the generated form for: " + string.Join(", ", missing));
     }
 }

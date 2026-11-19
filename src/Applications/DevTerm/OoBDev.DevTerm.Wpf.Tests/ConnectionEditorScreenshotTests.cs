@@ -41,7 +41,7 @@ public sealed class ConnectionEditorScreenshotTests
         RunOnSta(() =>
         {
             using var editor = new ConnectionEditorViewModel(new ConnectionProfileStore(_dir), new CliOptions { Transport = transport });
-            var window = new ConnectionEditorWindow(editor, scans: new ConnectionDeviceScans(editor));
+            var window = new ConnectionEditorWindow(editor);
             WpfScreenshot.ShowOffScreen(window, 900, 700);
             Dispatcher.CurrentDispatcher.Invoke(() => { }, DispatcherPriority.Background);
             window.UpdateLayout();

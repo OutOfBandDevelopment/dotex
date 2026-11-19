@@ -126,7 +126,7 @@ public sealed class UiLayoutReviewTests
             () =>
             {
                 var editor = new ConnectionEditorViewModel(new ConnectionProfileStore(TempDirectory()), new CliOptions { Transport = transport });
-                return new ConnectionEditorWindow(editor, scans: new ConnectionDeviceScans(editor));
+                return new ConnectionEditorWindow(editor);
             },
             900,
             700);

@@ -390,7 +390,7 @@ public sealed class FormViewModelTests
     {
         var binding = new FormBinding(new Model());
 
-        Assert.ThrowsExactly<NotSupportedException>(() => ControlViewModelFactory.Create(new IndicatorControl { Id = "I", Label = "I" }, binding));
+        Assert.ThrowsExactly<NotSupportedException>(() => ControlViewModelFactory.Create(new BarGraphControl { Id = "I", Label = "I" }, binding));
     }
 
     [TestMethod]

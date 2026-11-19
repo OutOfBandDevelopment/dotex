@@ -1017,7 +1017,7 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
     /// </summary>
     [Category("TCP")]
     [DisplayName("Detected network devices")]
-    [FormField(Order = 1, Kind = FormFieldKind.Choice, VisibleWhen = nameof(IsTcpLikeTransport))]
+    [FormField(Order = 1, Kind = FormFieldKind.Choice, OptionsFrom = nameof(LxiDeviceOptions), VisibleWhen = nameof(IsTcpLikeTransport))]
     public LxiDeviceOption? SelectedLxiDevice
     {
         get => _selectedLxiDevice;
@@ -1049,7 +1049,7 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
     /// </summary>
     [Category("BLE")]
     [DisplayName("Detected BLE devices")]
-    [FormField(Order = 4, Kind = FormFieldKind.Choice, VisibleWhen = nameof(IsBleTransport))]
+    [FormField(Order = 4, Kind = FormFieldKind.Choice, OptionsFrom = nameof(BleDeviceOptions), VisibleWhen = nameof(IsBleTransport))]
     public BleDeviceOption? SelectedBleDevice
     {
         get => _selectedBleDevice;
@@ -1074,7 +1074,7 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
     /// </summary>
     [Category("BLE")]
     [DisplayName("Detected characteristics (write)")]
-    [FormField(Order = 5, Kind = FormFieldKind.Choice, VisibleWhen = nameof(IsBleTransport))]
+    [FormField(Order = 5, Kind = FormFieldKind.Choice, OptionsFrom = nameof(BleCharacteristicOptions), VisibleWhen = nameof(IsBleTransport))]
     public BleCharacteristicOption? SelectedBleWriteCharacteristic
     {
         get => _selectedBleWriteCharacteristic;
@@ -1092,7 +1092,7 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
     /// <summary>Same idea as <see cref="SelectedBleWriteCharacteristic"/>, filling in <see cref="BleNotifyCharacteristicUuid"/> instead.</summary>
     [Category("BLE")]
     [DisplayName("Detected characteristics (notify)")]
-    [FormField(Order = 6, Kind = FormFieldKind.Choice, VisibleWhen = nameof(IsBleTransport))]
+    [FormField(Order = 6, Kind = FormFieldKind.Choice, OptionsFrom = nameof(BleCharacteristicOptions), VisibleWhen = nameof(IsBleTransport))]
     public BleCharacteristicOption? SelectedBleNotifyCharacteristic
     {
         get => _selectedBleNotifyCharacteristic;
@@ -1134,7 +1134,7 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
     /// <summary>Same idea as <see cref="SelectedSerialPort"/>, for <see cref="VendorId"/>/<see cref="ProductId"/> together.</summary>
     [Category("USB Device")]
     [DisplayName("Detected HID devices")]
-    [FormField(Order = 4, Kind = FormFieldKind.Choice, VisibleWhen = nameof(IsHidTransport))]
+    [FormField(Order = 4, Kind = FormFieldKind.Choice, OptionsFrom = nameof(HidDeviceOptions), VisibleWhen = nameof(IsHidTransport))]
     public HidDeviceOption? SelectedHidDevice
     {
         get => _selectedHidDevice;
@@ -1156,7 +1156,7 @@ public sealed class ConnectionEditorViewModel : INotifyPropertyChanged, IDisposa
     /// <summary>Same idea as <see cref="SelectedHidDevice"/>, for a real USBTMC device — writes into the same shared <see cref="VendorId"/>/<see cref="ProductId"/>.</summary>
     [Category("USB Device")]
     [DisplayName("Detected USBTMC devices")]
-    [FormField(Order = 5, Kind = FormFieldKind.Choice, VisibleWhen = nameof(IsUsbtmcTransport))]
+    [FormField(Order = 5, Kind = FormFieldKind.Choice, OptionsFrom = nameof(UsbtmcDeviceOptions), VisibleWhen = nameof(IsUsbtmcTransport))]
     public UsbtmcDeviceOption? SelectedUsbtmcDevice
     {
         get => _selectedUsbtmcDevice;
