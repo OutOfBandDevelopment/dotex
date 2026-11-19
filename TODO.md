@@ -8,7 +8,7 @@ Keep this file short (about 15 one-line items). When an item starts, move it her
 
 ## In progress
 
-- [x] Owner request 2026-11-19, "do everything you can do without question": work every item that needs no answer, record an assumption on its question when a default exists, do not stop early. Left: the tracking audit via `work-backlog`. Waiting on answers: wish-list and roadmap triage (Q19), bake-off (Q4), Q5, Q12, Q24, plugin sandbox, hardware requests (Q13 to Q17). Done items are in `docs/changes/2026-11-19.md`.
+- [x] Owner request 2026-11-19, "do everything you can do without question": work every item that needs no answer, assume the default where one exists. Left: the tracking audit via `work-backlog`. Waiting on answers: wish-list and roadmap triage (Q19), bake-off (Q4), Q5, Q12, Q24, plugin sandbox, hardware requests (Q13 to Q17).
 
 ## Next
 
