@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,18 +11,27 @@ using OoBDev.System.IO;
 
 namespace OoBDev.DevTerm.Tests;
 
-/// <summary>An approved plugin found in a plugins folder runs end to end (needs python; Inconclusive without it).</summary>
+/// <summary>An approved plugin found in a plugins folder runs end to end (Python, Java and Go examples; each is Inconclusive without its runtime).</summary>
 [TestCategory("Unit")]
 [DoNotParallelize]
 [TestClass]
 public sealed class PluginTrustProcessTests
 {
     [TestMethod]
-    public async Task AnApprovedPythonPlugin_FoundByTheLoader_RendersThroughTheCatalog()
+    public Task AnApprovedPythonPlugin_FoundByTheLoader_RendersThroughTheCatalog() =>
+        RunApprovedExampleAsync("python", "python", "--version", "shout.py", "py-shout", ["{folder}/shout.py"], 10000, "HELLO");
+
+    [TestMethod]
+    public Task AnApprovedJavaPlugin_FoundByTheLoader_RendersThroughTheCatalog() =>
+        RunApprovedExampleAsync("java", "java", "-version", "Shout.java", "java-count", ["{folder}/Shout.java"], 30000, "5 bytes");
+
+    [TestMethod]
+    public Task AnApprovedGoPlugin_FoundByTheLoader_RendersThroughTheCatalog() =>
+        RunApprovedExampleAsync("go", "go", "version", "main.go", "go-reverse", ["run", "{folder}/main.go"], 120000, "olleh");
+
+    private static async Task RunApprovedExampleAsync(string language, string command, string probeArgument, string file, string name, string[] arguments, int replyTimeoutMs, string expected)
     {
-        PythonProbe.RequireOrSkip();
-
-
+        ToolProbe.RequireOrSkip(command, probeArgument);
         var root = new DirectoryInfo(AppContext.BaseDirectory);
         while (root is not null && !File.Exists(Path.Combine(root.FullName, "GitVersion.yml")))
         {
@@ -37,16 +46,16 @@ public sealed class PluginTrustProcessTests
         try
         {
             Environment.SetEnvironmentVariable(DevTermHome.EnvironmentVariable, home);
-            File.Copy(Path.Combine(root!.FullName, "examples", "python", "out-of-process-plugin", "shout.py"), Path.Combine(folder, "shout.py"));
+            File.Copy(Path.Combine(root!.FullName, "examples", "devterm", language, "out-of-process-plugin", file), Path.Combine(folder, file));
             File.WriteAllText(
                 Path.Combine(folder, PluginManifest.FileName),
-                """{ "name": "py-shout", "version": "1.0.0", "contract": 1, "process": { "command": "python", "arguments": ["{folder}/shout.py"], "replyTimeoutMs": 10000 } }""");
+                global::System.Text.Json.JsonSerializer.Serialize(new { name, version = "1.0.0", contract = 1, process = new { command, arguments, replyTimeoutMs } }));
             PluginTrust.Approver = new AlwaysApprover();
 
             var services = new ServiceCollection();
             Assert.IsTrue(PluginLoader.LoadAll(Path.Combine(home, "plugins"), services).Single().Loaded);
             await using var provider = services.BuildServiceProvider();
-            var presenter = new PresenterCatalog(provider.GetServices<IPresenter>()).Get("py-shout");
+            var presenter = new PresenterCatalog(provider.GetServices<IPresenter>()).Get(name);
 
             var lazy = (LazyExternalPresenter)presenter;
             var lines = new List<string>();
@@ -54,7 +63,7 @@ public sealed class PluginTrustProcessTests
             Assert.IsEmpty(presenter.Render(new ReadOnlySequence<byte>(Encoding.ASCII.GetBytes("hello"))));
             await lazy.FlushAsync();
 
-            CollectionAssert.AreEqual(new[] { "HELLO" }, lines);
+            CollectionAssert.AreEqual(new[] { expected }, lines);
         }
         finally
         {

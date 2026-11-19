@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -244,7 +244,7 @@ public sealed class PluginTrustTests
     [TestMethod]
     public async Task TheLazyPresenter_RenderReturnsAtOnce_AndTheSessionStillGetsTheLinesWhenThePluginAnswers()
     {
-        PythonProbe.RequireOrSkip();
+        ToolProbe.RequireOrSkip("python", "--version");
 
         var script = Path.Combine(_home, "slow.py");
         await File.WriteAllTextAsync(script, """
@@ -257,7 +257,39 @@ public sealed class PluginTrustTests
                     time.sleep(0.5)
                     print(json.dumps({"type": "output", "lines": ["decoded"]}), flush=True)
             """);
-        await using var presenter = new LazyExternalPresenter("slow", "python", [script], TimeSpan.FromSeconds(10));
+        await AssertLazyAsync(new LazyExternalPresenter("slow", "python", [script], TimeSpan.FromSeconds(10)));
+    }
+
+    [TestMethod]
+    public async Task TheLazyPresenter_JavaPlugin_RenderReturnsAtOnce_AndTheSessionStillGetsTheLines()
+    {
+        ToolProbe.RequireOrSkip("java", "-version");
+
+        var script = Path.Combine(_home, "Slow.java");
+        await File.WriteAllTextAsync(script, """
+            import java.io.*;
+            public class Slow {
+                public static void main(String[] args) throws Exception {
+                    var in = new BufferedReader(new InputStreamReader(System.in));
+                    String line;
+                    while ((line = in.readLine()) != null) {
+                        if (line.contains("\"hello\"")) {
+                            System.out.println("{\"type\":\"hello\",\"name\":\"slow\",\"protocol\":1}");
+                        } else {
+                            Thread.sleep(500);
+                            System.out.println("{\"type\":\"output\",\"lines\":[\"decoded\"]}");
+                        }
+                        System.out.flush();
+                    }
+                }
+            }
+            """);
+        await AssertLazyAsync(new LazyExternalPresenter("slow", "java", [script], TimeSpan.FromSeconds(30)));
+    }
+
+    private static async Task AssertLazyAsync(LazyExternalPresenter presenter)
+    {
+        await using var _ = presenter;
         var pipeline = new Pipeline([presenter]);
         var seen = new List<PresenterOutput>();
         pipeline.AsyncOutput += (_, o) => seen.Add(o);
