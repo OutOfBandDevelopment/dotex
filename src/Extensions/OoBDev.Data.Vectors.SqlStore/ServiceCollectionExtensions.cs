@@ -23,6 +23,7 @@ public static class ServiceCollectionExtensions
             .Bind(configuration.GetSection(sectionName))
             .ValidateDataAnnotations();
         services.TryAddTransient<IVectorStoreProviderFactory, SqlVectorStoreProviderFactory>();
+        services.AddTransient<IVectorStoreCollectionCatalog, SqlVectorStoreCollectionCatalog>();
         return services;
     }
 }

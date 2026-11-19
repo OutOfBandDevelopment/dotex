@@ -69,6 +69,7 @@ public class SqlServerDeploymentTests
             EXEC sp_configure 'clr strict security', {_originalClrStrict};
             EXEC sp_configure 'clr enabled', {_originalClrEnabled}; RECONFIGURE;");
     }
+[IntegrationTestMethod("oobd-test-sqlserver")]    [TestCategory(TestCategories.Integration)]    public async Task SqlVectorStore_Catalog_ListsStoredCollections()    {        var options = Microsoft.Extensions.Options.Options.Create(new OoBDev.Data.Vectors.SqlStore.SqlVectorStoreOptions { ConnectionString = DatabaseConnection(), Limit = 10 });        await new OoBDev.Data.Vectors.SqlStore.SqlVectorStoreProvider(options, "catalog-b").StoreVectorsAsync([new float[] { 1, 0, 0 }], new Dictionary<string, object>());        await new OoBDev.Data.Vectors.SqlStore.SqlVectorStoreProvider(options, "catalog-a").StoreVectorsAsync([new float[] { 0, 1, 0 }], new Dictionary<string, object>());        var names = await new OoBDev.Data.Vectors.SqlStore.SqlVectorStoreCollectionCatalog(options).ListCollectionsAsync(TestContext.CancellationToken);        TestContext.WriteLine($"collections: {string.Join(", ", names)}");        CollectionAssert.AreEqual(new[] { "catalog-a", "catalog-b" }, names.ToArray());    }
 
     [IntegrationTestMethod("oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
