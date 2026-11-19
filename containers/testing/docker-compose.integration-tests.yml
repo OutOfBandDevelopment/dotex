@@ -140,6 +140,14 @@ services:
       - "${TEST_PORT_SER2NET:-2217}:2217"   # RFC 2217; bytes sent come back (virtual echo port)
     networks:
       - integration-test-net
+    healthcheck:
+      # Listening-socket check (no connection: ser2net serves one client at a time); the container runs before ser2net listens.
+      test: ["CMD-SHELL", "grep -qiE ':08A9 [0-9A-F:]+ 0A ' /proc/net/tcp /proc/net/tcp6 && test -e /tmp/ttyA"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+      start_interval: 1s
 
   loopback-device:
     build: ./devterm/loopback-device
