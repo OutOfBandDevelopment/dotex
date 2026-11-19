@@ -43,6 +43,8 @@ internal sealed class TiffBlock
 
     public byte Byte(int offset) => _bytes[offset];
 
+    public byte[] Bytes(int offset, int count) => _bytes.AsSpan(offset, count).ToArray();
+
     public string Utf8(int offset, int count) => System.Text.Encoding.UTF8.GetString(_bytes, offset, count);
 
     /// <summary>Where the first directory starts.</summary>

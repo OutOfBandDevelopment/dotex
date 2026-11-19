@@ -16,13 +16,35 @@ public static class IptcReader
     public static ImageDescriptors Read(byte[] jpeg)
     {
         ArgumentNullException.ThrowIfNull(jpeg);
-        string? title = null, creator = null, caption = null, created = null;
-        var keywords = new List<string>();
+        var iims = new List<byte[]>();
+        if (TiffIim(jpeg) is { } tiffIim)
+            iims.Add(tiffIim);
         foreach (var (marker, payload) in JpegSegments.Read(jpeg))
         {
-            if (marker != 0xED || payload.Length < 14 || !payload.AsSpan(0, 14).SequenceEqual(Photoshop))
-                continue;
-            var iim = FindIim(payload);
+            if (marker == 0xED && payload.Length >= 14 && payload.AsSpan(0, 14).SequenceEqual(Photoshop))
+                iims.Add(FindIim(payload));
+        }
+
+        return Parse(iims);
+    }
+
+    private static byte[]? TiffIim(byte[] file)
+    {
+        if (file.Length < 8 || !((file[0] == 'I' && file[1] == 'I' && file[2] == 42 && file[3] == 0) || (file[0] == 'M' && file[1] == 'M' && file[2] == 0 && file[3] == 42)))
+            return null;
+        var tiff = TiffBlock.Open(file);
+        if (tiff is null || TiffBlock.Find(tiff.Ifd(tiff.FirstIfd), 33723) is not { } e)
+            return null;
+        var length = e.Type == 4 ? e.Count * 4 : e.Count;
+        return tiff.Bytes(e.At, length);
+    }
+
+    private static ImageDescriptors Parse(List<byte[]> iims)
+    {
+        string? title = null, creator = null, caption = null, created = null;
+        var keywords = new List<string>();
+        foreach (var iim in iims)
+        {
             var p = 0;
             while (p + 5 <= iim.Length && iim[p] == 0x1C)
             {

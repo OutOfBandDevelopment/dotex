@@ -115,6 +115,22 @@ public class DescriptorReaderTests
     }
 
     [TestMethod]
+    public void Iptc_TiffTag33723_ReadsFields()
+    {
+        var iim = new[] { Dataset(5, "Dune"), Dataset(80, "Eve") }.SelectMany(x => x).ToArray();
+        var pad = (4 - (iim.Length % 4)) % 4;
+        byte[] data = [.. iim, .. new byte[pad]];
+        var count = data.Length / 4;
+        // Type 4 (LONG) as writers use; data after the 18-byte IFD (8 + 2 + 12 + 4 = 26).
+        byte[] tiff = [.. "II"u8.ToArray(), 42, 0, 8, 0, 0, 0, 1, 0, 0xBB, 0x83, 4, 0, (byte)count, 0, 0, 0, 26, 0, 0, 0, 0, 0, 0, 0, .. data];
+
+        var d = IptcReader.Read(tiff);
+
+        Assert.AreEqual("Dune", d.Title);
+        Assert.AreEqual("Eve", d.Creator);
+    }
+
+    [TestMethod]
     public void Xmp_PngCompressedOrTruncated_IsEmpty()
     {
         byte[] compressed = [.. Encoding.ASCII.GetBytes("XML:com.adobe.xmp"), 0, 1, 0, 0, 0, 1, 2, 3];
