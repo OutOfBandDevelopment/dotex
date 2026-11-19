@@ -41,7 +41,7 @@ An empty handler value (`".exe": ""`) runs the file itself, so it must be a prog
 - Only extensions listed in `Handlers` run (403 otherwise); `.cmd` and `.bat` also need `AllowBatchFiles`.
 - No shell: the script path is a single argument; request data reaches the program only through the environment and stdin.
 - Names with `..`, separators or links leaving `ScriptRoot` are refused; `ScriptRoot` must exist and not be under the static file root (startup fails otherwise).
-- Request bodies over `MaxRequestBodyBytes` (10 MB) get 413; runs past `Timeout` (30 s) are killed with their child processes (504).
+- Request bodies over `MaxRequestBodyBytes` (10 MB) get 413; runs past `Timeout` (30 s, or the script's entry in `ScriptTimeouts` keyed by file name) are killed with their child processes (504).
 - `MaxConcurrentProcesses` (2 x CPU) caps parallel processes; extra requests get 503 with `Retry-After`.
 - Headers containing CR or NUL, a missing blank line, or no `Content-Type`/`Location` give 502; a non-zero exit with no output gives 500. Self-produced errors are RFC 9457 problem details.
 - `Proxy` and `Authorization` request headers are not passed on.

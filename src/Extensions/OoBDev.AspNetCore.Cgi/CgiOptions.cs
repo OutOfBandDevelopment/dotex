@@ -33,6 +33,11 @@ public class CgiOptions
     public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(30);
 
     /// <summary>
+    /// Run-time limit per script file name; a script not listed uses <see cref="Timeout"/>.
+    /// </summary>
+    public IDictionary<string, TimeSpan> ScriptTimeouts { get; set; } = new Dictionary<string, TimeSpan>(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
     /// Maximum request body size in bytes. Larger requests get 413.
     /// </summary>
     [Range(0, long.MaxValue)]
