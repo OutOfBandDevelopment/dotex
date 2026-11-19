@@ -51,6 +51,6 @@ Is a pipeline needed beyond `IClaimsTransformation`, which the platform already 
 
 ## Triage notes
 
-Origin: SharedFramework. Design exists; compare against platform primitives first.
+Origin: SharedFramework. Design exists; compared against platform primitives 2026-11-19 in [claims-pipeline-comparison.md](../../design/SharedIdentity/claims-pipeline-comparison.md): nothing to build until a second claim source appears (Q21).
 
 2026-11-11: triaged. The design exists in [SharedIdentity](../../design/SharedIdentity/README.md); no code until a consumer appears, and platform primitives (`IClaimsTransformation`) are compared first. Backlog: BACKLOG.md, SharedFramework.
