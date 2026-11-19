@@ -24,7 +24,9 @@ var all = ExifDump.Read(bytes);   // { "Make": "Canon", "GPS.GPSLatitude": "(52.
 
 Audio tags (`OoBDev.Media.Metadata.Audio`): `AudioTagReader.Read(bytes)` gives `AudioTags` (`Format` id3v2, id3v1 or vorbis; `Values` under `title`, `artist`, `album`, `albumartist`, `track`, `disc`, `date`, `genre`, `comment`) for MP3 (ID3v2.3 and 2.4, then ID3v1), FLAC, Ogg Vorbis and Opus (comment packet in the first 64 KiB, `Format` vorbis) and M4A/MP4 (`ilst` items, `Format` mp4); damaged frames end the read without an exception. Container facts (codec, duration, fingerprint) stay with the audio container.
 
-Not built yet: a result that reports which tags were damaged, the HEIC Exif item, XMP and IPTC and date merging.
+Dates (`OoBDev.Media.Metadata.Dates`): `PathDateParser.Parse(path, thisYear)` reads the most specific date in any folder or file name (day 0.75, month 0.60, year 0.45, +0.05 in the file name) with a place hint; `DateCombiner.Combine(evidence)` picks the most confident `DateEvidence` (ties to the finer precision), raises confidence for agreeing sources (cap 0.99) and flags a conflict over a year apart. Confidence constants for EXIF and file times are on `DateCombiner`.
+
+Not built yet: a result that reports which tags were damaged, the HEIC Exif item, and XMP and IPTC.
 
 ## RAW files (`OoBDev.Media.Metadata.Raw`)
 
