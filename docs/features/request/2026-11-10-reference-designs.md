@@ -40,3 +40,5 @@ Is this the patterns-discovery blueprint under another name?
 The deleted pages are in the parent of this commit.
 
 2026-11-11: triaged. Accepted as a backlog item: design first (`docs/patterns-discovery/06-design-document-standard.md`), no code until a consumer appears. Backlog: BACKLOG.md, SharedFramework requests.
+
+2026-11-19: proposed catalogue written: [ReferenceDesigns](../../design/ReferenceDesigns/README.md).
