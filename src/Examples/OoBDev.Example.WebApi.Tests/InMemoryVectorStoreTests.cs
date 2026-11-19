@@ -11,6 +11,8 @@ namespace OoBDev.Example.WebApi.Tests;
 [TestClass]
 public class InMemoryVectorStoreTests
 {
+    public required TestContext TestContext { get; set; }
+
     [TestMethod, TestCategory(TestCategories.Unit)]
     public async Task DeleteAsync_RemovesOnlyTheNamedRows_AndIdsStayUnique()
     {
@@ -25,5 +27,17 @@ public class InMemoryVectorStoreTests
         var left = await store.ListAsync().Select(r => r.ItemId).ToListAsync();
         CollectionAssert.AreEquivalent(new[] { second[0], third[0] }, left);
         Assert.AreNotEqual(second[0], third[0]);
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public async Task Catalog_ListsACreatedCollection()
+    {
+        var name = $"Test_{Guid.NewGuid():N}";
+        await new InMemoryVectorStoreProviderFactory().Create(name).StoreVectorsAsync([new ReadOnlyMemory<float>([1f])], new Dictionary<string, object>());
+
+        var names = await new InMemoryVectorStoreCollectionCatalog().ListCollectionsAsync(TestContext.CancellationToken);
+
+        TestContext.WriteLine($"collections: {names.Count}, looking for {name}");
+        CollectionAssert.Contains(names.ToList(), name);
     }
 }

@@ -64,6 +64,7 @@ export async function mockApi(page: Page): Promise<void> {
     }
     if (path === '/api/Toolbox/calculate') return json(route, { result: 54, optimized: '54', variables: ['A'] });
     if (path === '/api/Toolbox/otp') return json(route, { secret: 'JBSWY3DPEHPK3PXP', code: '492039', uri: 'otpauth://totp/OoBDev%20Example:demo?secret=JBSWY3DPEHPK3PXP', valid: null });
+    if (path === '/api/VectorStore/collections') return json(route, ['notes']);
     if (path === '/api/VectorStore/index') return json(route, { ids: ['1', '2', '3', '4'], store: 'memory' });
     if (path === '/api/VectorStore/query') return json(route, [{ id: '3', score: 0.31, text: 'A kitten curled up on the sofa to sleep.' }, { id: '1', score: 0.44, text: 'The cat sat on the warm windowsill.' }]);
     if (path === '/api/VectorLab/matrix') return json(route, { matrix: [[0, 1, 0.006, 0.43], [1, 0, 0.99, 0.43], [0.006, 0.99, 0, 0.45], [0.43, 0.43, 0.45, 0]], magnitudes: [1, 1, 0.906, 0.995], centroid: [0.6, 0.4, 0.175] });

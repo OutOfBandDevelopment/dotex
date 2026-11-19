@@ -1,13 +1,17 @@
 <script setup lang="ts">
+import { onMounted } from 'vue';
 import { VectorStoreViewModel } from './VectorStoreViewModel';
 
 const vm = new VectorStoreViewModel();
+onMounted(() => { void vm.loadCollections.execute(); });
 </script>
 
 <template>
   <h1>Vector store</h1>
   <p>Texts are embedded in process and stored in a collection; a query finds the closest by cosine distance. The store is SQL Server when a connection string is configured, otherwise memory.</p>
-  <p><label>Collection <input v-model="vm.collection.value" size="20" /></label></p>
+  <p><label>Collection <input v-model="vm.collection.value" size="20" list="vector-collections" /></label>
+    <datalist id="vector-collections"><option v-for="c in vm.collections.value" :key="c" :value="c" /></datalist>
+    <fluent-button @click="vm.loadCollections.execute()">Refresh collections</fluent-button></p>
   <p><label>Texts (one per line) <textarea v-model="vm.texts.value" rows="5" cols="70"></textarea></label></p>
   <p>
     <fluent-button appearance="primary" :disabled="!vm.index.canExecute.value" @click="vm.index.execute()">Store texts</fluent-button>

@@ -20,7 +20,8 @@ namespace OoBDev.WebApi.Controllers;
 [ApiController]
 public class VectorStoreController(
     [FromKeyedServices(SBertGlobals.AllMiniLmL6V2Key)] IEmbeddingProvider embedding,
-    IVectorStoreProviderFactory stores
+    IVectorStoreProviderFactory stores,
+    IEnumerable<IVectorStoreCollectionCatalog> catalogs
     ) : ControllerBase
 {
     private const int MaxTexts = 100;
@@ -86,6 +87,7 @@ public class VectorStoreController(
         });
         return new VectorReembedResponseModel { Replaced = replaced, Tag = _embeddingTag };
     }
+/// <summary>Lists the collections of the configured vector store backends.</summary>    /// <returns>The collection names, sorted.</returns>    [HttpGet("collections")]    [AllowAnonymous]    public async Task<ActionResult<List<string>>> Collections()    {        var names = new SortedSet<string>(StringComparer.Ordinal);        foreach (var catalog in catalogs)            names.UnionWith(await catalog.ListCollectionsAsync(HttpContext.RequestAborted));        return names.ToList();    }
 
     /// <summary>Lists what is stored in the collection.</summary>
     /// <param name="collection">The collection name.</param>

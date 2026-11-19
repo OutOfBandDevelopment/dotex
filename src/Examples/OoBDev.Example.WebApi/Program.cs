@@ -110,10 +110,14 @@ public static class Program
 
         // The vector store: SQL Server when configured, otherwise in memory (replaces the Qdrant default)
         services.RemoveAll<OoBDev.Search.Semantic.IVectorStoreProviderFactory>();
+        services.RemoveAll<OoBDev.Search.Semantic.IVectorStoreCollectionCatalog>();
         if (!string.IsNullOrWhiteSpace(builder.Configuration["SqlVectorStoreOptions:ConnectionString"]))
             OoBDev.Data.Vectors.SqlStore.ServiceCollectionExtensions.TryAddSqlVectorStore(services, builder.Configuration, "SqlVectorStoreOptions");
         else
+        {
             services.AddSingleton<OoBDev.Search.Semantic.IVectorStoreProviderFactory, OoBDev.WebApi.Services.InMemoryVectorStoreProviderFactory>();
+            services.AddSingleton<OoBDev.Search.Semantic.IVectorStoreCollectionCatalog, OoBDev.WebApi.Services.InMemoryVectorStoreCollectionCatalog>();
+        }
 
         // Extra sentence models for the compare screen; downloaded only when first used
         OoBDev.SBert.AllMpnetBaseV2.ServiceCollectionExtensions.TryAddAllMpnetBaseV2Services(services, builder.Configuration, "AllMpnetBaseV2");
