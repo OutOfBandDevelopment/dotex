@@ -1,6 +1,6 @@
 # Hardware test coverage
 
-**Last Updated:** 2026-11-04
+**Last Updated:** 2026-11-19
 
 One row per bench device: when it last passed against real hardware and how, so the least-tested devices are visible. Update the row in the same change as every bench pass (skill `hardware-test`; the pass itself is written to `{yyyy-MM-dd-HH-mm-ss}.md` in this folder, or to the day's file in `docs/changes/` for the Hardware category run). Device list and settings: [test-hardware](../../../how-tos/test-hardware.md).
 
@@ -8,9 +8,9 @@ One row per bench device: when it last passed against real hardware and how, so 
 
 | Device | Last passed | By | Result | Gap |
 |--------|-------------|----|--------|-----|
-| Korad KA3005P, KA6003P (`Korad_*`) | never by the Hardware test (2026-11-04: COM6 and COM7 absent, 8 of 8 Inconclusive); last mentioned in a bench report 2026-10-02 | `KoradSupplyTests` | assertions against real replies have not run | ports absent; output is never switched on by the tests |
+| Korad KA3005P, KA6003P (`Korad_*`) | never by the Hardware test (2026-11-19 and 2026-11-04: COM6 and COM7 absent, 8 of 8 Inconclusive); last mentioned in a bench report 2026-10-02 | `KoradSupplyTests` | assertions against real replies have not run | ports absent; output is never switched on by the tests |
 | HP 34401A (`Hp_34401a`) | never by the Hardware test (2026-11-04: bench network unreachable, 4 of 4 Inconclusive); last in a bench report 2026-10-02 | `RealHardwareCliTests` | not run | network devices at 192.168.0.107 to .110 need the bench LAN |
-| Tektronix 2230 (`Tektronix_2230`) | last in a bench report 2026-10-02 | bench report | not re-run since | no Hardware test |
+| Tektronix 2230 (`Tektronix_2230`) | last in a bench report 2026-10-02 | bench report | 2026-11-19 raw probe of 192.168.0.108 answered `ID TEK/2230,V81.1,VERS:13;`; the Hardware test failed (empty reply) | [2026-11-19 report](2026-11-19-10-32-39.md) | see report | settle time after connect |
 | Delorme Earthmate BT-20 (`Delorme_EarthmateBt20`) | last in a bench report 2026-09-29 | bench report | not re-run since | Bluetooth LE; one report only |
 | DE-5000 (`DerEe_De5000`) | no bench report mentions it | none | never tested on the bench | |
 | K8055 (`Velleman_K8055`) | 2026-11-04 | Hardware tests | 3 passed, 9 skipped | only one board is plugged in; the other boards work but skip as expected (owner) |
