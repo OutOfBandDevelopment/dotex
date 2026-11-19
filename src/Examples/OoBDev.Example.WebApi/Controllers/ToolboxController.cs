@@ -1,5 +1,6 @@
 using OoBDev.AspNetCore.Mvc.Filters;
 using OoBDev.Identity.Jws;
+using OoBDev.System;
 using OoBDev.System.Codecs;
 using OoBDev.System.ExpressionCalculator.Expressions;
 using OoBDev.System.Math;
@@ -124,7 +125,7 @@ public class ToolboxController(IServiceProvider services) : ControllerBase
         }
     }
 
-    /// <summary>Converts text with Morse code, Roman numerals or Base32.</summary>
+    /// <summary>Converts text with Morse code, Roman numerals, Base32 or packed BCD (hex).</summary>
     /// <param name="model">The codec, direction and text.</param>
     /// <returns>The converted text.</returns>
     [HttpPost("codec")]
@@ -142,10 +143,11 @@ public class ToolboxController(IServiceProvider services) : ControllerBase
                     ? new RomanNumeral().Convert(model.Value.Trim().ToUpperInvariant()).ToString(global::System.Globalization.CultureInfo.InvariantCulture)
                     : new RomanNumeral().Convert(int.Parse(model.Value.Trim(), global::System.Globalization.CultureInfo.InvariantCulture)),
                 "base32" => model.Decode ? Encoding.UTF8.GetString(new Base32Codec().Decode(model.Value.Trim())) : new Base32Codec().Encode(Encoding.UTF8.GetBytes(model.Value)),
+                "bcd" => model.Decode ? BcdEx.AsBCD((ReadOnlySpan<byte>)Convert.FromHexString(model.Value.Trim())).ToString(global::System.Globalization.CultureInfo.InvariantCulture) : ToBcdHex(model.Value.Trim()),
                 _ => null,
             };
             return result is null
-                ? Problem(title: "Unknown codec", detail: "Use morse, roman or base32.", statusCode: 400)
+                ? Problem(title: "Unknown codec", detail: "Use morse, roman, base32 or bcd.", statusCode: 400)
                 : new ToolResultModel { Algorithm = key, Result = result };
         }
         catch (Exception ex) when (ex is ArgumentException or FormatException or OverflowException or InvalidOperationException or KeyNotFoundException)
@@ -153,6 +155,7 @@ public class ToolboxController(IServiceProvider services) : ControllerBase
             return Problem(title: "The text cannot be converted", detail: ex.Message, statusCode: 400);
         }
     }
+private static string ToBcdHex(string digits)    {        if (digits.Length == 0 || digits.Length > 18 || !digits.All(char.IsAsciiDigit))            throw new ArgumentException("Give 1 to 18 decimal digits.", nameof(digits));        var bytes = new byte[(digits.Length + 1) / 2];        BcdEx.ToBCD(long.Parse(digits, global::System.Globalization.CultureInfo.InvariantCulture), bytes);        return Convert.ToHexString(bytes);    }
 
     /// <summary>Signs a JSON payload as an HS256 token.</summary>
     /// <param name="model">The payload and the shared secret.</param>

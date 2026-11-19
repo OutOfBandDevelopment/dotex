@@ -65,9 +65,9 @@ const vm = new ToolboxViewModel();
   </table>
 
   <h2>Classic codecs</h2>
-  <p>Convert text with Morse code, Roman numerals (numbers up to 3999999) or Base32.</p>
+  <p>Convert text with Morse code, Roman numerals (numbers up to 3999999), Base32 or packed BCD (a decimal number to hex bytes and back).</p>
   <p>
-    <label>Codec <select v-model="vm.codec.value"><option value="morse">Morse</option><option value="roman">Roman numerals</option><option value="base32">Base32</option></select></label>
+    <label>Codec <select v-model="vm.codec.value"><option value="morse">Morse</option><option value="roman">Roman numerals</option><option value="base32">Base32</option><option value="bcd">Packed BCD (hex)</option></select></label>
     <label><input type="checkbox" v-model="vm.codecDecode.value" /> Decode</label>
   </p>
   <p><label>Text <input v-model="vm.codecValue.value" size="40" /></label></p>
