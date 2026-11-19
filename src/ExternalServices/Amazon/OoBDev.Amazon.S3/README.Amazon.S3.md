@@ -1,6 +1,6 @@
 # OoBDev.Amazon.S3
 
-AWS S3 blob container provider for the Documents framework: `IBlobContainerProvider` over one bucket, chosen like the Azure provider through `IBlobContainerProviderFactory` (design: [blob containers request](../../../../docs/features/request/2026-11-10-blob-container-providers.md), [PersistenceService](../../../../docs/design/DocumentServices/PersistenceService)).
+AWS S3 blob container provider for the Documents framework: `IBlobContainerProvider` over one bucket, chosen like the Azure provider through `IBlobContainerProviderFactory` (design: [blob containers request](../../../../docs/features/completed/2026-11-10-blob-container-providers.md), [PersistenceService](../../../../docs/design/DocumentServices/PersistenceService)).
 
 > **Tested against emulators only.** The Integration tests run against the Moto container in the test stack; behavior against real S3 (permissions, versioning, large uploads) is not verified.
 
@@ -27,3 +27,5 @@ AWS S3 blob container provider for the Documents framework: `IBlobContainerProvi
 ```
 
 Register with `services.TryAddAwsS3BlobServices(configuration)`. Empty keys use the AWS credential chain.
+
+The factory is also registered under the key `aws-s3` for per-container selection (`BlobContainerOptions`, see the Documents readme).

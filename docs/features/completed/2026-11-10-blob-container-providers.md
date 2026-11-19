@@ -1,6 +1,6 @@
 # Feature request: blob containers defined per point of use
 
-- **Status:** triaged
+- **Status:** done (2026-11-19, [change](../../changes/2026-11-19.md))
 - **Requested by:** owner (from `docs/Framework/BlobStorage.md`, removed 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** storage, `OoBDev.Azure.StorageAccount`, document services

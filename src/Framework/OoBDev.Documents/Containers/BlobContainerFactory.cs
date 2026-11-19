@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,6 +17,7 @@ public partial class BlobContainerFactory : IBlobContainerFactory
     private readonly IServiceProvider _serviceProvider;
     private readonly IEnumerable<IBlobContainerProviderFactory> _factories;
     private readonly ILogger _logger;
+    private readonly BlobContainerOptions _options;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BlobContainerFactory"/> class.
@@ -23,15 +25,18 @@ public partial class BlobContainerFactory : IBlobContainerFactory
     /// <param name="serviceProvider">The IOC Service provider.</param>
     /// <param name="factories">The factory used to create blob container providers.</param>
     /// <param name="logger">The logger for this service.</param>
+    /// <param name="options">The per-container provider choice (optional).</param>
     public BlobContainerFactory(
         IServiceProvider serviceProvider,
         IEnumerable<IBlobContainerProviderFactory> factories,
-        ILogger<BlobContainerFactory> logger
+        ILogger<BlobContainerFactory> logger,
+        IOptions<BlobContainerOptions>? options = null
         )
     {
         _serviceProvider = serviceProvider;
         _factories = factories;
         _logger = logger;
+        _options = options?.Value ?? new BlobContainerOptions();
     }
 
     /// <summary>
@@ -41,7 +46,9 @@ public partial class BlobContainerFactory : IBlobContainerFactory
     /// <returns>An instance of <see cref="IBlobContainer"/>.</returns>
     public virtual IBlobContainer Create(string containerName)
     {
-        var provider = _serviceProvider.GetKeyedService<IBlobContainerProvider>(containerName);
+        var provider = _options.Providers.TryGetValue(containerName, out var providerKey)
+            ? CreateConfigured(containerName, providerKey)
+            : _serviceProvider.GetKeyedService<IBlobContainerProvider>(containerName);
 
         provider ??= _factories.Select(i => i.Create(containerName))
                                .FirstOrDefault(i => i != null);
@@ -67,6 +74,10 @@ public partial class BlobContainerFactory : IBlobContainerFactory
             typeof(T).GetCustomAttribute<TableAttribute>()?.Name ??
             typeof(T).Name
             ));
+
+    private IBlobContainerProvider CreateConfigured(string containerName, string providerKey) =>
+        _serviceProvider.GetKeyedService<IBlobContainerProviderFactory>(providerKey)?.Create(containerName)
+        ?? throw new InvalidOperationException($"Container '{containerName}' is configured for provider '{providerKey}', which is not registered or does not offer it.");
 
     [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Container: {containerName} -> {type}")]
     private partial void LogContainer(string containerName, Type type);

@@ -20,6 +20,7 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IS3ClientFactory, S3ClientFactory>();
         services.TryAddSingleton<IAmazonS3>(sp => sp.GetRequiredService<IS3ClientFactory>().Create());
         services.AddTransient<IBlobContainerProviderFactory, S3BlobContainerProviderFactory>();
+        services.AddKeyedTransient<IBlobContainerProviderFactory, S3BlobContainerProviderFactory>(AwsS3Globals.ProviderName);
         return services;
     }
 }

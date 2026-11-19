@@ -45,3 +45,11 @@ await documentConversion.ConvertAsync(sourceStream, "application/pdf", destinati
 `ScanningBlobContainer` decorates any `IBlobContainer` and calls an `IContentScanner` (contract in `OoBDev.Documents.Abstractions`, namespace `OoBDev.Documents.Scanning`) before `StoreContentAsync`. An infected result or a scanner failure throws `ContentRejectedException` and nothing is stored (fail closed). Non-seekable streams are buffered once so the scan and the store read the same bytes. Reads, queries and deletes pass through. No scanner adapter ships yet (a ClamAV adapter would implement `IContentScanner`); wrap a container with `new ScanningBlobContainer(inner, scanner)` in the composition root.
 
 Tests: `ScanningBlobContainerTests`.
+
+## Choosing the provider per container
+
+`TryAddBlobContainerSelection(configuration)` binds `BlobContainerOptions`; `Providers` maps a container name to a provider key (`file-system`, `aws-s3`, `azure-blob`). Each provider package registers its factory under that key as well as unkeyed. A container that is not listed keeps the default resolution; a listed container whose key is not registered fails with the container and key names.
+
+```json
+{ "BlobContainerOptions": { "Providers": { "invoices": "aws-s3", "exports": "file-system" } } }
+```

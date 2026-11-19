@@ -52,6 +52,19 @@ public static class ServiceCollectionExtensions
     }
 
     /// <summary>
+    /// Binds <see cref="BlobContainerOptions"/> so configuration chooses the provider of each container.
+    /// </summary>
+    /// <param name="services">The services.</param>
+    /// <param name="configuration">The configuration holding the options section.</param>
+    /// <param name="sectionName">The options section.</param>
+    /// <returns>The services.</returns>
+    public static IServiceCollection TryAddBlobContainerSelection(this IServiceCollection services, IConfiguration configuration, string sectionName = nameof(BlobContainerOptions))
+    {
+        _ = services.AddOptions<BlobContainerOptions>().Bind(configuration.GetSection(sectionName));
+        return services;
+    }
+
+    /// <summary>
     /// Adds the file system blob container provider factory; it is offered while <c>RootDirectory</c> is set.
     /// </summary>
     /// <param name="services">The services.</param>
@@ -62,6 +75,7 @@ public static class ServiceCollectionExtensions
     {
         _ = services.AddOptions<FileSystemBlobOptions>().Bind(configuration.GetSection(sectionName));
         services.AddTransient<IBlobContainerProviderFactory, FileSystemBlobContainerProviderFactory>();
+        services.AddKeyedTransient<IBlobContainerProviderFactory, FileSystemBlobContainerProviderFactory>(DocumentsGlobals.FileSystemBlobProviderKey);
         return services;
     }
 }
