@@ -121,6 +121,12 @@ public static class ServiceCollectionExtensions
         services.AddValidatedOptions<RoleRightOptions>(configuration, "OoBDev:Authorization");
         services.TryAddSingleton<IRoleRightMapper, ConfigurationRoleRightMapper>();
         services.TryAddSingleton<IApplicationRightChecker, ApplicationRightChecker>();
+        // AddAuthentication registers a no-op transformation with TryAdd, so when it ran first our TryAdd would be skipped and no role would ever become a right.
+        foreach (var noop in services.Where(d => d.ServiceType == typeof(IClaimsTransformation) && d.ImplementationType?.Name == "NoopClaimsTransformation").ToArray())
+        {
+            services.Remove(noop);
+        }
+
         services.TryAddTransient<IClaimsTransformation, RoleRightClaimsTransformation>();
         return services;
     }
