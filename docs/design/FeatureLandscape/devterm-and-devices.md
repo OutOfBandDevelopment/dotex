@@ -29,7 +29,7 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 | UiDefinitions | Wpf, Tui, Blazor, ViewModels | none | Avalonia and WinForms renderers (backlog, layering question open) |
 | Theming | `WpfTheme`, theme builder, colour picker | WCAG 2.2 contrast | Tui and Web themes |
 | WindowsForms | `Extensions.Windows.Forms` | none | no UiDefinitions renderer |
-| Plugins | `DevTerm.Plugins.KeyValue`, `DevTerm.Core.TestPlugin` | none | plugin discovery order not documented |
+| Plugins | `DevTerm.Plugins.KeyValue`, `DevTerm.Core.TestPlugin` | none | none recorded |
 | PluginSandbox | `Spike.PluginSandbox` only | none | spike result not turned into a design |
 | ScpiInstruments | `OoBDev.Scpi` | IEEE 488.2, SCPI-99 | manuals per device under `docs/devices` |
 | NetworkDevices, Ser2NetWin | `Applications/Ser2NetWin` | RFC 2217 | NetworkDevices has no project |
@@ -60,6 +60,7 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 ## Plugins and PluginSandbox
 
 - **Works with:** UiDefinitions and Presenters (plugin kinds).
+- **Discovery order (2026-11-19):** `PluginLoader.LoadAll` scans the immediate sub-folders of the plugins directory (default `plugins` beside the app) that hold a manifest; it loads them by manifest `order` (lower first, default 0), then folder name (case-insensitive). The order decides how presenters and menu entries are listed; a plugin that fails to load is reported and does not stop the rest. Covered by `PluginLoaderTests.LoadAll_LowerOrderFirst_ThenFolderName`.
 - **Known issues:** the sandbox is a spike; in-process .NET plugins cannot be isolated by `AssemblyLoadContext` alone, so the design must pick out-of-process hosting or accept trusted plugins.
 - **Designed:** the manifest (version, publish and subscribe topics, permissions), package signing and the grant prompt are in [PluginSandbox](../PluginSandbox/protocol-and-manifest.md) and spiked (`PackageVerifier`, `GrantStore`); the production host waits for the owner sign-off tracked in `BACKLOG.md`.
 
