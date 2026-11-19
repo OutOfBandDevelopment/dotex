@@ -125,6 +125,8 @@
   </Folder>
   <Folder Name="/ExternalServices/" />
   <Folder Name="/ExternalServices/Amazon/">
+    <Project Path="ExternalServices/Amazon/OoBDev.Amazon.S3.Tests/OoBDev.Amazon.S3.Tests.csproj" />
+    <Project Path="ExternalServices/Amazon/OoBDev.Amazon.S3/OoBDev.Amazon.S3.csproj" />
     <Project Path="ExternalServices/Amazon/OoBDev.Amazon.Sqs.Tests/OoBDev.Amazon.Sqs.Tests.csproj" />
     <Project Path="ExternalServices/Amazon/OoBDev.Amazon.Sqs/OoBDev.Amazon.Sqs.csproj" />
     <Project Path="ExternalServices/Amazon/OoBDev.Amazon.Ses.Tests/OoBDev.Amazon.Ses.Tests.csproj" />
