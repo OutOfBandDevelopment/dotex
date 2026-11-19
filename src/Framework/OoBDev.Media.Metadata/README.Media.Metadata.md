@@ -26,7 +26,9 @@ Audio tags (`OoBDev.Media.Metadata.Audio`): `AudioTagReader.Read(bytes)` gives `
 
 Dates (`OoBDev.Media.Metadata.Dates`): `PathDateParser.Parse(path, thisYear)` reads the most specific date in any folder or file name (day 0.75, month 0.60, year 0.45, +0.05 in the file name) with a place hint; `DateCombiner.Combine(evidence)` picks the most confident `DateEvidence` (ties to the finer precision), raises confidence for agreeing sources (cap 0.99) and flags a conflict over a year apart. Confidence constants for EXIF and file times are on `DateCombiner`.
 
-Not built yet: a result that reports which tags were damaged, and XMP and IPTC. HEIC: `HeicContainer.Read` gives the primary image size (rotation applied) and the Exif item, and `ExifLocator.Find` now locates it.
+Descriptors (`OoBDev.Media.Metadata.Descriptors`): `XmpReader.Read(jpeg)` (APP1 packet: title, creator, description, subjects, rating, create date) and `IptcReader.Read(jpeg)` (APP13 record 2: object name, keywords, byline, caption, date) return `ImageDescriptors`; malformed data gives `Empty`.
+
+Not built yet: a result that reports which tags were damaged; XMP and IPTC in PNG, WebP and TIFF. HEIC: `HeicContainer.Read` gives the primary image size (rotation applied) and the Exif item, and `ExifLocator.Find` now locates it.
 
 ## RAW files (`OoBDev.Media.Metadata.Raw`)
 
