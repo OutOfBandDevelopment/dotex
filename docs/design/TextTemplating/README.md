@@ -102,11 +102,11 @@ Thank you for your order!
 
 ---
 
-### Feature 2: Database Template Source 🔄 IN PROGRESS
+### Feature 2: Database Template Source ✅ BUILT (as `EfTemplateSource`)
 **Path:** `//DatabaseTemplateSource/`
 **Priority:** MEDIUM
 **LOC:** ~200
-**Status:** 📄 Partial Documentation (2/4 documents)
+**Status:** ✅ Built 2026-11-16; documentation 4/4
 
 **Why Database Storage:**
 - Dynamic template management (edit without deployment)
@@ -147,8 +147,8 @@ CREATE TABLE Templates (
 **Documentation:**
 - ✅ [Requirements](DatabaseTemplateSource/requirements.md) - Complete with schema
 - ✅ [Architecture](DatabaseTemplateSource/architecture.md) - Complete with SQL Server implementation
-- ⏳ [API Design](DatabaseTemplateSource/api-design.md) - TODO: API examples and usage
-- ⏳ [Testing Strategy](DatabaseTemplateSource/testing-strategy.md) - TODO: Repository tests
+- ✅ [API Design](DatabaseTemplateSource/api-design.md) - Written (the built type is `EfTemplateSource`)
+- ✅ [Testing Strategy](DatabaseTemplateSource/testing-strategy.md) - Written
 
 ---
 
@@ -598,7 +598,7 @@ services/Configure<HandlebarsTemplateOptions>(options =>
 
 ### This Epic
 - ✅ [Handlebars Provider](HandlebarsProvider/requirements.md) - Complete (4/4 docs)
-- 🔄 [Database Template Source](DatabaseTemplateSource/requirements.md) - Partial (2/4 docs)
+- ✅ [Database Template Source](DatabaseTemplateSource/requirements.md) - Built as `EfTemplateSource` (4/4 docs)
 - ⏳ [Data Container Integration](DataContainerIntegration/requirements.md) - Pending (0/4 docs)
 
 ### Related Epics
@@ -647,6 +647,6 @@ Reconciled with the code on 2026-11-06. The designs are proposals; the code is t
 |---------|------|-------|
 | Existing engine (`ITemplateEngine`, `ITemplateProvider`, `ITemplateSource`, `ITemplateContext`, `XsltTemplateProvider`, `FileTemplateSource`) | `OoBDev.System.Abstractions/Text/Templating`, `OoBDev.System/Text/Templating` | built |
 | Handlebars provider | `OoBDev.Handlebars` (`HandlebarsTemplateProvider`, helper descriptors, `HandlebarsOptions`), used by the example `TextTemplateController` | built |
-| Database template source (versioning) | none (`DatabaseTemplateSource` does not exist) | not built |
+| Database template source (versioning) | `OoBDev.System.Text.Templating.EntityFrameworkCore` (`EfTemplateRepository`, `EfTemplateSource`, `TryAddEntityFrameworkTemplates`; the design name `DatabaseTemplateSource` became `EfTemplateSource`); also serves Handlebars (`HandlebarsDatabaseSourceTests`) | built 2026-11-16 (Simulate on SQLite; SQL Server, PostgreSQL, shipped migrations and a cache not done) |
 | `IDataContainer` integration (lazy evaluation) | none | not built |
 | `ICompiledTemplate` | none | not built |
