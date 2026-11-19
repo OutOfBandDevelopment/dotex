@@ -83,6 +83,7 @@ public sealed class PlaybackDialogViewModel : ViewModelBase
             if (SetProperty(ref _speed, value))
             {
                 _controller.SetSpeed(value);
+                Position = _controller.PositionText;
             }
         }
     }

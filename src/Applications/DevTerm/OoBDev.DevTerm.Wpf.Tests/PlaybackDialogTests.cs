@@ -205,4 +205,23 @@ public sealed class PlaybackDialogTests
         // Assert
         Assert.IsFalse(shell.OpenPlaybackWindow.CanExecute(null));
     }
+
+    [TestMethod]
+    public void Speed_Changed_PositionTextShowsTheNewSpeed()
+    {
+        // Stage
+        using var directoryFolder = new TempDirectoryHandle();
+        var path = Path.Combine(directoryFolder.DirectoryPath, "capture.jsonl");
+        var t0 = new DateTimeOffset(2026, 9, 25, 12, 0, 0, TimeSpan.Zero);
+        new SessionLog(
+            new SessionLogHeader { Created = t0, Connection = "loopback", Presenters = ["ascii"] },
+            [new SessionLogRecord { Kind = SessionLogRecordKind.Rx, Sequence = 1, Timestamp = t0, Data = Encoding.ASCII.GetBytes("a\r") }]).Save(path);
+        var dialog = new PlaybackDialogViewModel(new OoBDev.DevTerm.Configuration.PlaybackPresenters().Open(path, new OoBDev.DevTerm.TestUtilities.ManualTimeProvider()));
+
+        // Test
+        dialog.Speed = PlaybackController.Speeds[3];
+
+        // Assert
+        StringAssert.Contains(dialog.Position, PlaybackController.Speeds[3].Label);
+    }
 }
