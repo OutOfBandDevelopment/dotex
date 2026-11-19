@@ -54,6 +54,15 @@ public static class FormView
                 check.Bind(ToggleButton_IsChecked, new Binding(nameof(ToggleViewModel.IsChecked), BindingMode.OneWay));
                 check.Bind(global::Avalonia.Controls.Button.CommandProperty, new Binding(nameof(ToggleViewModel.Toggle)));
                 return check;
+            case ChoiceViewModel { UsesDropdown: true }:
+                var combo = new ComboBox { MinWidth = 160 };
+                combo.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(ChoiceViewModel.OptionTexts)));
+                combo.Bind(global::Avalonia.Controls.Primitives.SelectingItemsControl.SelectedItemProperty, new Binding(nameof(ChoiceViewModel.PickedOption), BindingMode.TwoWay));
+                return combo;
+            case IndicatorViewModel:
+                var indicator = new TextBlock();
+                indicator.Bind(TextBlock.TextProperty, new Binding(nameof(IndicatorViewModel.Text)));
+                return indicator;
             case ChoiceViewModel:
                 var list = new ItemsControl { ItemTemplate = new FuncDataTemplate<ChoiceOptionViewModel>((_, _) => Option()) };
                 list.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(ChoiceViewModel.OptionItems)));

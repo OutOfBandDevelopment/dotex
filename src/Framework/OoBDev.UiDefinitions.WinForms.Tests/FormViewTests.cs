@@ -165,4 +165,61 @@ public sealed class FormViewTests
         // Assert
         Assert.IsTrue(check);
     }
+
+    public sealed class PortSettings
+    {
+        public string Port { get; set; } = "COM3";
+
+        public string Reading { get; set; } = "none";
+    }
+
+    private static FormViewModel PortForm(PortSettings model) => new(
+        new UiDefinition
+        {
+            Name = "p",
+            Sections =
+            [
+                new UiSection
+                {
+                    Controls =
+                    [
+                        new ChoiceControl { Id = "Port", Label = "Port", Options = ["COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8"], Style = ChoiceStyle.Dropdown },
+                        new IndicatorControl { Id = "Reading", Label = "Reading" },
+                    ],
+                },
+            ],
+        },
+        new FormBinding(model));
+
+    [TestMethod]
+    public void Choice_LongDropdown_IsAComboBoxThatWritesTheModel()
+    {
+        // Stage
+        var model = new PortSettings();
+        using var view = new FormView(PortForm(model));
+        var combo = (ComboBox)view.Editors["Port"];
+
+        // Test
+        var initial = combo.SelectedItem;
+        combo.SelectedItem = "COM7";
+
+        // Assert
+        Assert.AreEqual(8, combo.Items.Count);
+        Assert.AreEqual("COM3", initial);
+        Assert.AreEqual("COM7", model.Port);
+    }
+
+    [TestMethod]
+    public void Indicator_Row_ShowsTheModelText()
+    {
+        // Stage
+        var model = new PortSettings { Reading = "42 V" };
+        using var view = new FormView(PortForm(model));
+
+        // Test
+        var label = (Label)view.Editors["Reading"];
+
+        // Assert
+        Assert.AreEqual("42 V", label.Text);
+    }
 }

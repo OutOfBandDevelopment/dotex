@@ -8,6 +8,7 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.UiDefinitions.Avalonia;
+using OoBDev.UiDefinitions.Forms;
 using OoBDev.UiDefinitions.ViewModels;
 
 [assembly: AvaloniaTestApplication(typeof(OoBDev.UiDefinitions.Avalonia.Tests.TestAppBuilder))]
@@ -98,5 +99,30 @@ public sealed class AvaloniaFormTests
             Assert.AreEqual("High", model.Mode);
             Shot(window, "mode-high");
         });
+    }
+
+    [TestMethod]
+    public void Choice_LongDropdown_IsAComboBoxThatWritesTheModel()
+    {
+        _session.Dispatch(() =>
+        {
+            var model = new DemoModel { Mode = "C" };
+            var definition = new UiDefinition
+            {
+                Name = "d",
+                Sections = [new UiSection { Controls = [new ChoiceControl { Id = "Mode", Label = "Mode", Options = ["A", "B", "C", "D", "E", "F", "G", "H"], Style = ChoiceStyle.Dropdown }] }],
+            };
+            var window = new Window { Width = 300, Height = 200, Content = FormView.Create(new FormViewModel(definition, new FormBinding(model))) };
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            var combo = window.GetVisualDescendants().OfType<ComboBox>().Single();
+
+            var initial = combo.SelectedItem;
+            combo.SelectedItem = "F";
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.AreEqual("C", initial);
+            Assert.AreEqual("F", model.Mode);
+        }, default).GetAwaiter().GetResult();
     }
 }

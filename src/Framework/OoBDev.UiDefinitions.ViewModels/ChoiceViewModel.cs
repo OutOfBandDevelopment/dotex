@@ -15,6 +15,7 @@ public sealed class ChoiceViewModel : ControlViewModel
     private string? _customOption;
     private readonly ICommand _pick;
     private readonly ObservableCollection<ChoiceOptionViewModel> _items;
+    private readonly ObservableCollection<string> _texts;
 
     /// <summary>Creates the view model and reads the model.</summary>
     /// <param name="control">The choice.</param>
@@ -28,6 +29,7 @@ public sealed class ChoiceViewModel : ControlViewModel
         var pick = control.Style == ChoiceStyle.CheckList ? ToggleOption : Select;
         _pick = pick;
         _items = new ObservableCollection<ChoiceOptionViewModel>(control.Options.Select(o => new ChoiceOptionViewModel(o, pick)));
+        _texts = new ObservableCollection<string>(control.Options);
         Refresh();
     }
 
@@ -48,6 +50,9 @@ public sealed class ChoiceViewModel : ControlViewModel
 
     /// <summary>The options as bindable items; each carries its command and whether it is picked or checked.</summary>
     public IReadOnlyList<ChoiceOptionViewModel> OptionItems => _items;
+
+    /// <summary>The option texts as a change-notifying list, for a drop-down list to bind its items to.</summary>
+    public ObservableCollection<string> OptionTexts => _texts;
 
     /// <summary>The picked option (dropdown and radio group), as the model spells it.</summary>
     public string SelectedOption
@@ -146,9 +151,11 @@ public sealed class ChoiceViewModel : ControlViewModel
         Choice.Options.Clear();
         Choice.Options.AddRange(current);
         _items.Clear();
+        _texts.Clear();
         foreach (var option in current)
         {
             _items.Add(new ChoiceOptionViewModel(option, _pick));
+            _texts.Add(option);
         }
 
         OnPropertyChanged(nameof(Options));

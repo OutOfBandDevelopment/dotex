@@ -56,6 +56,7 @@ public sealed class ChoiceDynamicOptionsTests
         CollectionAssert.AreEqual(new[] { "COM1", "COM6", "COM7" }, row.Options.ToArray());
         CollectionAssert.AreEqual(new[] { "COM1", "COM6", "COM7" }, row.OptionItems.Select(o => o.Text).ToArray());
         Assert.IsTrue(raised > 0);
+        CollectionAssert.AreEqual(new[] { "COM1", "COM6", "COM7" }, row.OptionTexts.ToArray());
         Assert.IsTrue(row.OptionItems.Single(o => o.Text == "COM1").IsSelected);
     }
 
