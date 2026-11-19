@@ -3,6 +3,7 @@ using OoBDev.TestUtilities.Containers;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,7 +27,13 @@ public class IntegrationContainersTests
 
         public List<string> Calls { get; } = [];
 
-        public Task<ContainerState?> InspectAsync(string container, CancellationToken cancellationToken) => Task.FromResult(State);
+        public Action<string>? OnInspect { get; set; }
+
+        public Task<ContainerState?> InspectAsync(string container, CancellationToken cancellationToken)
+        {
+            OnInspect?.Invoke(container);
+            return Task.FromResult(State);
+        }
 
         public Task StartAsync(string container, CancellationToken cancellationToken)
         {
@@ -277,6 +284,29 @@ public class IntegrationContainersTests
         await IntegrationContainers.EnsureAsync(TestContext, "oobd-test-smtp");
 
         Assert.AreEqual(0, _docker.Calls.Count);
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public async Task Ensure_TakesTheLeaseBeforeLookingAtTheContainerAsync()
+    {
+        // Stage: a process finishing its tests must see this one as a user, or it stops the container between our inspect and our lease.
+        var leaseSeenAtInspect = new List<bool>();
+        _docker.State = new ContainerState(true, "healthy");
+        _docker.OnInspect = container =>
+        {
+            var folder = Path.Combine(_leaseDirectory, container);
+            leaseSeenAtInspect.Add(Directory.Exists(folder) && File.Exists(Path.Combine(folder, Environment.ProcessId + ".lease")));
+        };
+
+        // Test
+        await IntegrationContainers.EnsureAsync(TestContext, "oobd-test-redis");
+        TestContext.WriteLine("Inspect calls: {0}; lease present at each: {1}", leaseSeenAtInspect.Count, string.Join(",", leaseSeenAtInspect));
+
+        // Assert
+        Assert.IsNotEmpty(leaseSeenAtInspect);
+        Assert.IsTrue(leaseSeenAtInspect.All(seen => seen), "The lease file must exist before the first Docker inspect.");
+        await IntegrationContainers.ReleaseAsync(TestContext, "oobd-test-redis");
     }
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
