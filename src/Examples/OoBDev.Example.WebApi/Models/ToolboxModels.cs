@@ -173,3 +173,29 @@ public class FileInspectionModel
     /// <summary>Gets or sets the hex dump of the first bytes, 16 bytes a line.</summary>
     public required string HexDump { get; set; }
 }
+
+/// <summary>Text and the ordered byte transforms to run over it.</summary>
+public class PipelineRequestModel
+{
+    /// <summary>Gets or sets the starting text (UTF-8).</summary>
+    public required string Value { get; set; }
+
+    /// <summary>Gets or sets the step keys, in order (see <c>GET api/Toolbox/pipeline/steps</c>).</summary>
+    public required IList<string> Steps { get; set; }
+}
+
+/// <summary>The bytes after one pipeline step.</summary>
+public class PipelineStepResultModel
+{
+    /// <summary>Gets or sets the step key.</summary>
+    public required string Step { get; set; }
+
+    /// <summary>Gets or sets the number of bytes after the step.</summary>
+    public int Length { get; set; }
+
+    /// <summary>Gets or sets the bytes as hex.</summary>
+    public required string Hex { get; set; }
+
+    /// <summary>Gets or sets the bytes as text when they are valid UTF-8 without control characters; otherwise null.</summary>
+    public string? Text { get; set; }
+}

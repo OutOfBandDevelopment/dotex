@@ -169,6 +169,49 @@ public class ToolboxController(IServiceProvider services) : ControllerBase
         return Convert.ToHexString(bytes);
     }
 
+    /// <summary>Lists the pipeline step keys.</summary>
+    /// <returns>The step keys.</returns>
+    [HttpGet("pipeline/steps")]
+    public IReadOnlyList<string> PipelineSteps() => ToolboxPipeline.Keys;
+
+    /// <summary>Runs text through a chain of byte transforms and returns every intermediate result.</summary>
+    /// <param name="model">The text and the steps.</param>
+    /// <returns>One result per step.</returns>
+    [HttpPost("pipeline")]
+    public ActionResult<IReadOnlyList<PipelineStepResultModel>> Pipeline([FromBody] PipelineRequestModel model)
+    {
+        if (model.Value.Length > 10_000 || model.Steps.Count is 0 or > 20)
+            return Problem(title: "The request is too large", detail: "Give at most 10000 characters and 1 to 20 steps.", statusCode: 400);
+        try
+        {
+            var results = ToolboxPipeline.Run(Encoding.UTF8.GetBytes(model.Value), model.Steps);
+            return Ok(model.Steps.Zip(results, (step, bytes) => new PipelineStepResultModel
+            {
+                Step = step,
+                Length = bytes.Length,
+                Hex = Convert.ToHexString(bytes),
+                Text = ToText(bytes),
+            }).ToList());
+        }
+        catch (Exception ex) when (ex is ArgumentException or FormatException or InvalidDataException or KeyNotFoundException)
+        {
+            return Problem(title: "The pipeline cannot run", detail: ex.Message, statusCode: 400);
+        }
+    }
+
+    private static string? ToText(byte[] bytes)
+    {
+        try
+        {
+            var text = new UTF8Encoding(false, true).GetString(bytes);
+            return text.Any(c => char.IsControl(c) && c is not ('\r' or '\n' or '\t')) ? null : text;
+        }
+        catch (ArgumentException)
+        {
+            return null;
+        }
+    }
+
     /// <summary>Reports size, hash, detected type and a hex dump of the start of an uploaded file.</summary>
     /// <param name="content">The file; at most 5 MiB.</param>
     /// <returns>The inspection.</returns>
