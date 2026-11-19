@@ -28,3 +28,7 @@ The no-flaky-tests goal is met: ten consecutive full Integration runs passed on 
 ## Audit 2026-11-12
 
 The stack was not running and the goal is CPU-bound with host load, so no change was made. The `Microsoft.Identity.Client` load failure in `OoBDev.Data.Vectors.DB.Tests` did not recur in the 2026-11-11 run. That run passed once the host ports another project held (8081, 8080, 18888) were overridden with `TEST_PORT_KEYCLOAK`, `TEST_PORT_NGINX` and `TEST_PORT_OTEL_DASHBOARD` plus matching `-- TestRunParameters` URLs. Measure the suite again the next time the stack is up.
+
+## Warm-up script (2026-11-19)
+
+The 2026-11-19 per-test timing showed the longest tests were the first test of a project waiting for its container (pgvector 2 min 23 s, SQL Server 2 min 22 s). `scripts/ci/warm-up-integration.ps1` pulls the images and runs `docker compose up -d` (no `--wait`) for the slow services before the build, so they initialise while the solution compiles; the harness then finds them healthy and the tests do not stop them. `scripts/ci/run-tests.ps1 -Category Integration` already starts the whole stack with `--wait` before the build, so it needs no warm-up. The script is verified with `-DryRun` (service names checked against the compose file); the run-time gain is not measured yet.
