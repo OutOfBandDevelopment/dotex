@@ -24,12 +24,12 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 |---------|------|-----------|----------|
 | MessageQueuing | adapters (SQS, Service Bus, RabbitMQ) with AsyncAPI contributors | AMQP 0-9-1 and 1.0, AsyncAPI | dead-letter and retry policy is per adapter |
 | SqlServiceBroker | built (design and code) | none (SQL Server feature) | none recorded |
-| Communications | `OoBDev.Communications` plus Abstractions, Hosting, MessageQueueing | RFC 5321/5322 (mail), RFC 2045 (MIME) | design status stale |
+| Communications | `OoBDev.Communications` plus Abstractions, Hosting, MessageQueueing | RFC 5321/5322 (mail), RFC 2045 (MIME) | channel providers beyond email and SMS are not designed |
 | MessageComposition | none | MIME, RFC 8058 (one-click unsubscribe) | design only |
 | TextTemplating | Handlebars adapter, `OoBDev.System.Text.Templating.Xslt` | XSLT 1.0 | engine selection by key is not shown in the design |
 | TemplateTools | `OoBDev.TemplateEngine.Cli` | none | status unclear |
 | DataEnhancement | none | none | design only |
-| DocumentServices | `OoBDev.Documents` plus Abstractions, ExternalTools, Guides, Hpgl | PDF 2.0 (ISO 32000), Tika detection | design status stale |
+| DocumentServices | `OoBDev.Documents` plus Abstractions, ExternalTools, Guides, Hpgl | PDF 2.0 (ISO 32000), Tika detection | none recorded (design reconciled 2026-11-11) |
 | SharedCaching | `OoBDev.Caching` plus Abstractions | RFC 9111 (HTTP caching semantics) for the web part | attribute-based and background-task parts unconfirmed |
 | SharedFramework | umbrella epics | none | epics 2, 6, 7 and 10 still design-first |
 | CqrsEventSourcing | design drafted, no library | CloudEvents 1.0 for event envelopes | decisions list for the owner (see the CQRS design) |
