@@ -32,3 +32,7 @@ The stack was not running and the goal is CPU-bound with host load, so no change
 ## Warm-up script (2026-11-19)
 
 The 2026-11-19 per-test timing showed the longest tests were the first test of a project waiting for its container (pgvector 2 min 23 s, SQL Server 2 min 22 s). `scripts/ci/warm-up-integration.ps1` pulls the images and runs `docker compose up -d` (no `--wait`) for the slow services before the build, so they initialise while the solution compiles; the harness then finds them healthy and the tests do not stop them. `scripts/ci/run-tests.ps1 -Category Integration` already starts the whole stack with `--wait` before the build, so it needs no warm-up. The script is verified with `-DryRun` (service names checked against the compose file); measured 2026-11-19: 5 min 3 s for the full run with the warm-up against about 7 min 50 s without; the Service Bus emulator is left out because it fails against a SQL Server volume that an earlier emulator run already initialised (`Cannot create file SbGatewayDatabase.mdf`): remove `oobd-test-sqlserver-data` to reset it.
+
+## Repeat run (2026-11-19)
+
+A second full Integration run with the stack already warm (`--no-build`, after the warm-up script) took 3 min 41 s with no failing test, so the 5 min 3 s figure (stack down, build included) holds and the earlier Docling and Stomp failures did not recur.
