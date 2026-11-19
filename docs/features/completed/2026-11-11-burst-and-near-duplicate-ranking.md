@@ -1,6 +1,6 @@
 ﻿# Feature request: Burst grouping and best-shot ranking for photo sequences
 
-- **Status:** triaged
+- **Status:** done (built 2026-11-16 and 2026-11-18, [change](../../changes/2026-11-16.md#burst-ranking-and-dhash))
 - **Requested by:** owner (filed from the NAS storage catalog application, `C:\repo\_storage`)
 - **Date:** 2026-11-11
 - **Area:** new, companion to `2026-11-10-file-inventory-and-deduplication.md`

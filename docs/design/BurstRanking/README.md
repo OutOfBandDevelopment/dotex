@@ -1,6 +1,6 @@
 ﻿# Burst grouping and best-shot ranking
 
-Status: **first slice built 2026-11-16** (ranker, labels, measures, dHash in `OoBDev.Imaging.Analysis`; placement confirmed by the owner 2026-11-12, shared with [ImageAnalysis](../ImageAnalysis/README.md)). Request: [burst and near-duplicate ranking](../../features/request/2026-11-11-burst-and-near-duplicate-ranking.md).
+Status: **first slice built 2026-11-16** (ranker, labels, measures, dHash in `OoBDev.Imaging.Analysis`; placement confirmed by the owner 2026-11-12, shared with [ImageAnalysis](../ImageAnalysis/README.md)). Request: [burst and near-duplicate ranking](../../features/completed/2026-11-11-burst-and-near-duplicate-ranking.md).
 
 ## Contents
 
