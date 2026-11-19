@@ -35,3 +35,16 @@ The audit screen in [the missing screens](docs/design/example-ui/missing-screens
 **Default:** none built until you answer; the item stays in BACKLOG section 5.
 
 **Your answer:**
+
+### Q3 (2026-11-19, Event sourcing, erasure entry point): where does the right-guarded erasure entry point live?
+
+You decided (Q4, 2026-11-17) that the entry point is an interface in a security core library with default implementations in the related leaf libraries. No library named as a security core exists today (`ls src/Framework | grep -i security` finds only the crypto and identity libraries), and the layering rule needs the project table confirmed before a project is created.
+
+**Options**
+- A. Add the interface `IErasureEntryPoint` (request an erasure, read its status) to `OoBDev.EventSourcing.Abstractions`, with the default implementation in `OoBDev.EventSourcing`, and a controller in an ASP.NET adapter guarded by `[ApplicationRight("erasure.request")]` (recommended: no new project, the right check stays at the HTTP edge like every other surface, reversible).
+- B. Create a new Common library `OoBDev.Security.Abstractions` for such entry-point interfaces now. Matches your wording most literally; adds a project with one interface.
+- C. Something else (say what).
+
+**Default:** A is assumed for the design only; nothing is built until you answer. The hash-chain re-seal stays open until chaining exists (requirement R9).
+
+**Your answer:**
