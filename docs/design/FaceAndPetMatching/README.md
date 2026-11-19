@@ -1,6 +1,6 @@
 # Face and pet matching
 
-Status: **design written 2026-11-12 from the owner's answers (the framework takes this on); nothing built.** Request: [face and pet matching](../../features/request/2026-11-11-face-and-pet-matching.md). Related: [ImageEmbeddings](../ImageEmbeddings/README.md) (model cache and ONNX runners), [EmbeddingClientAndPgVector](../EmbeddingClientAndPgVector/README.md), [BurstRanking](../BurstRanking/README.md), [WorkQueue](../WorkQueue/README.md).
+Status: **design written 2026-11-12 from the owner's answers (the framework takes this on); clustering and schedule policy built 2026-11-19 in `OoBDev.Imaging.People`; detectors, embedders and the adapter not built.** Request: [face and pet matching](../../features/request/2026-11-11-face-and-pet-matching.md). Related: [ImageEmbeddings](../ImageEmbeddings/README.md) (model cache and ONNX runners), [EmbeddingClientAndPgVector](../EmbeddingClientAndPgVector/README.md), [BurstRanking](../BurstRanking/README.md), [WorkQueue](../WorkQueue/README.md).
 
 ## Contents
 
