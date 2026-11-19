@@ -41,6 +41,8 @@ public static class AudioTagReader
     {
         if (file.Length >= 4 && file[..4].SequenceEqual("fLaC"u8))
             return ReadFlac(file);
+        if (file.Length >= 4 && file[..4].SequenceEqual("OggS"u8))
+            return ReadOgg(file);
         if (file.Length >= 12 && file.Slice(4, 4).SequenceEqual("ftyp"u8))
             return Mp4Tags.Read(file);
         if (file.Length >= 10 && file[..3].SequenceEqual("ID3"u8))
@@ -135,7 +137,21 @@ public static class AudioTagReader
         return AudioTags.Empty;
     }
 
-    private static AudioTags ParseVorbisComments(ReadOnlySpan<byte> block)
+    private static AudioTags ReadOgg(ReadOnlySpan<byte> file)
+    {
+        // The comment packet follows the identification packet in the first pages; a packet split by a page header is cut short and yields what was read.
+        var head = file[..Math.Min(file.Length, 65536)];
+        foreach (var marker in new[] { "\u0003vorbis"u8.ToArray(), "OpusTags"u8.ToArray() })
+        {
+            var at = head.IndexOf(marker);
+            if (at >= 0)
+                return ParseVorbisComments(head[(at + marker.Length)..]);
+        }
+
+        return AudioTags.Empty;
+    }
+
+    internal static AudioTags ParseVorbisComments(ReadOnlySpan<byte> block)
     {
         var pos = 0;
         if (!TryLittleEndian(block, ref pos, out var vendor) || vendor > block.Length - pos)

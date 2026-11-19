@@ -152,6 +152,24 @@ public class AudioTagReaderTests
     }
 
     [TestMethod]
+    [DataRow("\u0003vorbis")]
+    [DataRow("OpusTags")]
+    public void Read_Ogg_ReadsCommentPacket(string marker)
+    {
+        static byte[] Le(int v) => BitConverter.GetBytes(v);
+        var comments = new[] { "TITLE=Wave", "album=Disc" };
+        var packet = Encoding.Latin1.GetBytes(marker).Concat(Le(3)).Concat("lib"u8.ToArray()).Concat(Le(comments.Length))
+            .Concat(comments.SelectMany(c => Le(c.Length).Concat(Encoding.UTF8.GetBytes(c)))).ToArray();
+        var file = "OggS"u8.ToArray().Concat(new byte[40]).Concat(packet).ToArray();
+
+        var tags = AudioTagReader.Read(file);
+
+        Assert.AreEqual("vorbis", tags.Format);
+        Assert.AreEqual("Wave", tags.Values["title"]);
+        Assert.AreEqual("Disc", tags.Values["album"]);
+    }
+
+    [TestMethod]
     public void Read_NoTags_ReturnsEmpty()
     {
         Assert.AreEqual(0, AudioTagReader.Read(new byte[300]).Values.Count);
