@@ -16,7 +16,18 @@ internal static class XmpContainers
             return FromPng(file);
         if (file.Length >= 12 && file.AsSpan(0, 4).SequenceEqual("RIFF"u8) && file.AsSpan(8, 4).SequenceEqual("WEBP"u8))
             return FromWebP(file);
+        if (file.Length >= 8 && ((file[0] == 'I' && file[1] == 'I' && file[2] == 42 && file[3] == 0) || (file[0] == 'M' && file[1] == 'M' && file[2] == 0 && file[3] == 42)))
+            return FromTiff(file);
         return null;
+    }
+
+    private static string? FromTiff(byte[] file)
+    {
+        var tiff = TiffBlock.Open(file);
+        if (tiff is null)
+            return null;
+        var xmp = TiffBlock.Find(tiff.Ifd(tiff.FirstIfd), 700);
+        return xmp is { Type: 1 or 7 } e ? tiff.Utf8(e.At, e.Count) : null;
     }
 
     private static string? FromPng(byte[] file)

@@ -30,7 +30,7 @@ Descriptors (`OoBDev.Media.Metadata.Descriptors`): `XmpReader.Read(jpeg)` (APP1 
 
 Damage report: `ExifReader.ReadWithProblems(file)` returns `ExifReadResult(Fields, Problems)`: the valid fields plus one sentence per cut-off or invalid-type entry, wrong-typed tag, unparseable capture time and out-of-range GPS (`Read` is the same without the list).
 
-XMP is also read from PNG (uncompressed `iTXt` keyed `XML:com.adobe.xmp`) and WebP (`XMP ` chunk); compressed PNG text is skipped. Not built: IPTC in PNG and WebP, and XMP or IPTC in TIFF. HEIC: `HeicContainer.Read` gives the primary image size (rotation applied) and the Exif item, and `ExifLocator.Find` now locates it.
+XMP is also read from PNG (uncompressed `iTXt` keyed `XML:com.adobe.xmp`), WebP (`XMP ` chunk) and TIFF (IFD0 tag 700); compressed PNG text is skipped. Not built: IPTC in PNG, WebP and TIFF. HEIC: `HeicContainer.Read` gives the primary image size (rotation applied) and the Exif item, and `ExifLocator.Find` now locates it.
 
 ## RAW files (`OoBDev.Media.Metadata.Raw`)
 

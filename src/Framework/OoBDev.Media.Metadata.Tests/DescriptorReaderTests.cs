@@ -103,6 +103,18 @@ public class DescriptorReaderTests
     }
 
     [TestMethod]
+    public void Xmp_TiffTag700_ReadsFieldsInBothByteOrders()
+    {
+        var xml = Encoding.UTF8.GetBytes(Packet);
+        // IFD at 8: one entry, tag 700 (0x02BC), type 7 (undefined), count, offset 26 (8 + 2 + 12 + 4).
+        byte[] le = [.. "II"u8.ToArray(), 42, 0, 8, 0, 0, 0, 1, 0, 0xBC, 0x02, 7, 0, (byte)xml.Length, (byte)(xml.Length >> 8), 0, 0, 26, 0, 0, 0, 0, 0, 0, 0, .. xml];
+        byte[] be = [.. "MM"u8.ToArray(), 0, 42, 0, 0, 0, 8, 0, 1, 0x02, 0xBC, 0, 7, 0, 0, (byte)(xml.Length >> 8), (byte)xml.Length, 0, 0, 0, 26, 0, 0, 0, 0, .. xml];
+
+        Assert.AreEqual(3, XmpReader.Read(le).Rating);
+        Assert.AreEqual(3, XmpReader.Read(be).Rating);
+    }
+
+    [TestMethod]
     public void Xmp_PngCompressedOrTruncated_IsEmpty()
     {
         byte[] compressed = [.. Encoding.ASCII.GetBytes("XML:com.adobe.xmp"), 0, 1, 0, 0, 0, 1, 2, 3];
