@@ -50,15 +50,25 @@ internal sealed class BenchTcpInstrument : IDisposable
     /// <summary>Sends <paramref name="command"/> plus <paramref name="terminator"/> and returns everything received until the line goes quiet.</summary>
     public async Task<string> QueryAsync(string command, string terminator, TimeSpan quiet)
     {
-        await DrainAsync(TimeSpan.FromMilliseconds(300)).ConfigureAwait(false);
-
-        foreach (var ch in command + terminator)
+        // A bridge drops a command sent right after connect (docs/changes/2026-09-24.md), so an empty reply is retried.
+        var reply = string.Empty;
+        for (var attempt = 0; attempt < 3 && reply.Length == 0; attempt++)
         {
-            await _stream.WriteAsync(new[] { (byte)ch }).ConfigureAwait(false);
-            await Task.Delay(_byteDelay).ConfigureAwait(false);
+            if (attempt > 0)
+                await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
+
+            await DrainAsync(TimeSpan.FromMilliseconds(300)).ConfigureAwait(false);
+
+            foreach (var ch in command + terminator)
+            {
+                await _stream.WriteAsync(new[] { (byte)ch }).ConfigureAwait(false);
+                await Task.Delay(_byteDelay).ConfigureAwait(false);
+            }
+
+            reply = await DrainAsync(quiet).ConfigureAwait(false);
         }
 
-        return await DrainAsync(quiet).ConfigureAwait(false);
+        return reply;
     }
 
     private async Task<string> DrainAsync(TimeSpan quiet)
