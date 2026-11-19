@@ -20,4 +20,4 @@ Pure and host-free: no I/O, no references beyond the base library. Bytes arrive 
 
 ## Not built
 
-A device definition that plugs the decoder into the segmenter pipeline, and a MIDI transport in DevTerm, wait for a consumer (request `docs/features/completed/2026-11-10-midi-support.md`). Verified by unit tests on hand-built bytes; no real `.mid` files or MIDI hardware were used.
+The DevTerm panel is built (`Panels` folder: serial only, sliders for channel, note, velocity and program, send buttons, decoder line per message). A device definition for the segmenter pipeline and a USB MIDI transport wait for a consumer (request `docs/features/completed/2026-11-10-midi-support.md`). Verified by unit tests on hand-built bytes; no real `.mid` files or MIDI hardware were used.
