@@ -55,10 +55,11 @@ public class AmazonSqsIntegrationTests
 
         // Assert
         Assert.IsNotNull(response);
-        Assert.IsNotNull(response.QueueUrls);
+        // A fresh Moto has no queues, and the SDK then leaves QueueUrls null instead of empty.
+        var queueUrls = response.QueueUrls ?? [];
 
-        TestContext.WriteLine($"Found {response.QueueUrls.Count} queue(s):");
-        foreach (var queueUrl in response.QueueUrls)
+        TestContext.WriteLine($"Found {queueUrls.Count} queue(s):");
+        foreach (var queueUrl in queueUrls)
         {
             TestContext.WriteLine($"  - {queueUrl}");
         }

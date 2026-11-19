@@ -1,3 +1,4 @@
+using OoBDev.TestUtilities.Containers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Diagnostics;
@@ -23,14 +24,14 @@ public sealed class LoopbackDeviceCliIntegrationTests
     private string GetProperty(string name, string fallback) =>
         TestContext.Properties.TryGetValue(name, out var value) && value is string text && text.Length > 0 ? text : fallback;
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-loopback-device")]
     [DataRow("hello", "From Loopback test")]
     [DataRow("STATUS?", "temp=")]
     [DataRow("nonsense", "ERR unknown command")]
     public async Task CliMode_AgainstTheLoopbackDevice_AnswersTheCommand(string command, string expectedReplySubstring)
     {
         // Stage
-        var host = GetProperty("LOOPBACK_DEVICE_HOST", "localhost");
+        var host = GetProperty("LOOPBACK_DEVICE_HOST", "127.0.0.1");
         var port = int.Parse(GetProperty("LOOPBACK_DEVICE_PORT", "7778"), CultureInfo.InvariantCulture);
         if (!await RealDeviceReachability.IsTcpReachableAsync(host, port, TestContext.CancellationToken))
         {

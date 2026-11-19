@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Net.Sockets;
 using System.Text;
@@ -15,7 +16,7 @@ public sealed class MosquittoIntegrationTests
 {
     public TestContext TestContext { get; set; } = null!;
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-mosquitto")]
     public async Task PublishedLine_ComesBackAsTopicTabPayload()
     {
         var host = TestContext.GetPropertyOrDefault("MOSQUITTO_HOST", "127.0.0.1");

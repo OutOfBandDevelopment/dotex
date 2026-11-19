@@ -1,4 +1,5 @@
 ﻿using OoBDev.TestUtilities;
+using OoBDev.TestUtilities.Containers;
 using System;
 using System.Net.Sockets;
 using System.Text;
@@ -17,7 +18,7 @@ public sealed class Ser2NetIntegrationTests
 {
     public TestContext TestContext { get; set; } = null!;
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-ser2net")]
     public async Task SentBytes_ComeBackFromTheServersEchoPort()
     {
         var host = TestContext.GetPropertyOrDefault("SER2NET_HOST", "127.0.0.1");

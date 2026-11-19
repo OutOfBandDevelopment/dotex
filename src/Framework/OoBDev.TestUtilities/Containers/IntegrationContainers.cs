@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,6 +32,12 @@ public static class IntegrationContainers
     private static readonly Dictionary<string, DateTimeOffset> _readyUntil = new(StringComparer.Ordinal);
     private static readonly TimeSpan _readyCache = TimeSpan.FromSeconds(30);
     private static bool _exitHookRegistered;
+
+    private static readonly Dictionary<string, string> _readyMarkers = new(StringComparer.Ordinal)
+    {
+        ["oobd-test-servicebus"] = "Emulator Service is Successfully Up!",
+        ["oobd-test-smtp"] = "IMAP Server is listening",
+    };
     private static bool _stopAfterTests = true;
     private static IDockerCli _docker = new ProcessDockerCli();
     private static ContainerLeases _leases = new(ContainerLeases.DefaultDirectory);
@@ -80,6 +87,9 @@ public static class IntegrationContainers
                     continue;
             }
 
+            // Take the lease before looking at the container: a process finishing its tests must see this one as a user,
+            // or it stops the container between our inspect and our lease.
+            _leases.Acquire(container, false);
             var started = false;
             var problem = await TryEnsureAsync(container, autostart, timeout.Token, () => started = true);
             if (problem is null)
@@ -108,18 +118,20 @@ public static class IntegrationContainers
 
     private static async Task ReleaseCoreAsync(bool stopAllowed, IEnumerable<string> containers)
     {
-        foreach (var container in containers)
+        var owned = new List<string>();
+        foreach (var container in containers.ToArray())
         {
             lock (_gate)
             {
                 _readyUntil.Remove(container);
-                if (!_leased.Remove(container))
-                    continue;
+                if (_leased.Remove(container))
+                    owned.Add(container);
             }
-
-            if (_leases.Release(container) && stopAllowed)
-                await Docker.StopAsync(container, TimeSpan.FromSeconds(10), CancellationToken.None);
         }
+
+        // In parallel: the process may be torn down soon after exit begins, so a slow stop must not hold back the others.
+        await Task.WhenAll(owned.Select(container => Task.Run(() =>
+            _leases.Release(container, stopAllowed ? () => Docker.StopAsync(container, TimeSpan.FromSeconds(10), CancellationToken.None).GetAwaiter().GetResult() : null))));
     }
 
     private static void Lease(string container, bool startedByTests)
@@ -148,7 +160,7 @@ public static class IntegrationContainers
         try
         {
             var state = await Docker.InspectAsync(container, cancellationToken);
-            if (state is { Ready: true })
+            if (state is { Ready: true } && await MarkerSeenAsync(container, cancellationToken))
                 return null;
 
             if (state is not { Running: true })
@@ -179,8 +191,10 @@ public static class IntegrationContainers
                 state = await Docker.InspectAsync(container, cancellationToken);
                 if (state is null)
                     return "Docker does not know the container";
-                if (state.Ready)
+                if (state.Ready && await MarkerSeenAsync(container, cancellationToken))
                     return null;
+                if (!state.Running)
+                    return "it stopped while starting (see docker logs)";
                 if (state.Health == "unhealthy")
                     return "its health check reports unhealthy";
                 await Task.Delay(PollInterval, cancellationToken);
@@ -191,6 +205,9 @@ public static class IntegrationContainers
             return "it did not become healthy in time";
         }
     }
+
+    private static async Task<bool> MarkerSeenAsync(string container, CancellationToken cancellationToken) =>
+        !_readyMarkers.TryGetValue(container, out var marker) || await Docker.LogContainsAsync(container, marker, cancellationToken);
 
     private static bool Flag(TestContext testContext, string name) =>
         !bool.TryParse(Overrides.TryGetValue(name, out var overridden) ? overridden : testContext.GetPropertyOrDefault(name, "true"), out var value) || value;

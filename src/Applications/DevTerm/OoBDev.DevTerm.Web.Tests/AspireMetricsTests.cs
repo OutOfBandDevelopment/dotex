@@ -4,18 +4,21 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using Microsoft.Playwright;
 using OoBDev.TestUtilities;
+using OoBDev.TestUtilities.Containers;
 namespace OoBDev.DevTerm.Web.Tests;
 
 /// <summary>
 /// Reads the Aspire dashboard's Metrics page for the <c>devterm</c> resource in a real browser (its Blazor circuit needs one).
-/// Needs <c>docker compose up -d aspire-dashboard</c> in <c>containers/</c> and at least one <c>--otlp</c> run; skips otherwise.
+/// Starts the <c>oobd-test-otel</c> container when it is down; needs at least one <c>--otlp</c> run; skips otherwise.
 /// </summary>
 [TestClass]
 [TestCategory("DevLocal")]
 [TestCategory(TestCategories.Web)]
 public sealed class AspireMetricsTests
 {
-    [TestMethod]
+    public required TestContext TestContext { get; set; }
+
+    [IntegrationTestMethod("oobd-test-otel")]
     public async Task MetricsPage_ListsTheDevTermInstruments()
     {
         using (var probe = new TcpClient())
@@ -37,6 +40,11 @@ public sealed class AspireMetricsTests
         await page.WaitForTimeoutAsync(5000);
         var text = await page.InnerTextAsync("body");
         File.WriteAllText(WebTestTemp.File("aspire-metrics.txt"), text);
+        TestContext.WriteLine("Aspire metrics page text: {0}", text.ReplaceLineEndings(" | "));
+        if (text.Contains("Select a resource to view metrics", global::System.StringComparison.Ordinal))
+        {
+            Assert.Inconclusive("The dashboard has no devterm resource yet: run DevTerm once with --otlp so it reports metrics.");
+        }
         StringAssert.Contains(text, "devterm.bytes.sent");
     }
 }

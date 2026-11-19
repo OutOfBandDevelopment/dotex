@@ -1,4 +1,5 @@
 ﻿using System;
+using OoBDev.TestUtilities.Containers;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -104,7 +105,7 @@ public sealed class MqttRouterBridgeTests
         await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => bridge.PublishAsync("t", "p"u8.ToArray(), TestContext.CancellationToken));
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-mosquitto")]
     [TestCategory("Integration")]
     public async Task RealMosquitto_DeviceLineIsPublished_AndBrokerCommandReachesTheDevice()
     {
