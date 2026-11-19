@@ -100,3 +100,16 @@ The Ebyte `IDeviceConfigEditor` is the next step after the first WPF device pane
 **Default:** B is not started; the item stays in BACKLOG section DevTerm.
 
 **Your answer:**
+
+### Q8 (2026-11-19, Example web, live journeys): how should the mock-only journey expectations run against the live host?
+
+Of 28 Playwright journeys, 20 pass against the live Example AppHost as user `grace`; the other 8 assert mock data (a signed-out `Unauthenticated` result, the name Ada Lovelace, a user `ann`, a message sent earlier). The guides and screenshots come from the mocked run, so changing an expectation changes the guide ([details](docs/design/example-ui/apphost-live-journeys.md)).
+
+**Options**
+- A. Mark each such journey (or step) as mock-only and skip it live; the mock run stays the guide source (recommended: smallest change, keeps the guides deterministic, and the live run still covers the other 20).
+- B. Give each journey a live variant with its own expectations (more coverage, doubles the maintenance of those 8).
+- C. Seed the live host so it matches the mock data (user `ann`, a sent message, sign in as `ada`); the journeys then run unchanged but the realm and host carry test-only data.
+
+**Default:** A is not started until you answer; the item stays in BACKLOG.
+
+**Your answer:**
