@@ -119,6 +119,38 @@ public class AudioTagReaderTests
         Assert.AreEqual(2, tags.Values.Count);
     }
 
+    private static byte[] Box(string type, params byte[][] body)
+    {
+        var data = body.SelectMany(b => b).ToArray();
+        var size = data.Length + 8;
+        return [(byte)(size >> 24), (byte)(size >> 16), (byte)(size >> 8), (byte)size, .. Encoding.Latin1.GetBytes(type), .. data];
+    }
+
+    [TestMethod]
+    public void Read_Mp4_ReadsIlstItems()
+    {
+        var title = Box("©nam", Box("data", [0, 0, 0, 1, 0, 0, 0, 0], Encoding.UTF8.GetBytes("Tune")));
+        var track = Box("trkn", Box("data", [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 5, 0, 9, 0, 0]));
+        var ilst = Box("ilst", title, track);
+        var meta = Box("meta", [0, 0, 0, 0], ilst);
+        var file = Box("ftyp", "M4A "u8.ToArray(), [0, 0, 0, 0]).Concat(Box("moov", Box("udta", meta))).ToArray();
+
+        var tags = AudioTagReader.Read(file);
+
+        TestContext.WriteLine($"format={tags.Format} values={string.Join(",", tags.Values.Select(v => v.Key + "=" + v.Value))}");
+        Assert.AreEqual("mp4", tags.Format);
+        Assert.AreEqual("Tune", tags.Values["title"]);
+        Assert.AreEqual("5/9", tags.Values["track"]);
+    }
+
+    [TestMethod]
+    public void Read_Mp4WithoutIlst_ReturnsEmpty()
+    {
+        var file = Box("ftyp", "M4A "u8.ToArray(), [0, 0, 0, 0]).Concat(Box("moov", Box("trak"))).ToArray();
+
+        Assert.AreEqual(0, AudioTagReader.Read(file).Values.Count);
+    }
+
     [TestMethod]
     public void Read_NoTags_ReturnsEmpty()
     {

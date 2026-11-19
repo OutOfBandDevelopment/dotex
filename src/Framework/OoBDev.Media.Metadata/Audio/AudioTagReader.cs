@@ -41,6 +41,8 @@ public static class AudioTagReader
     {
         if (file.Length >= 4 && file[..4].SequenceEqual("fLaC"u8))
             return ReadFlac(file);
+        if (file.Length >= 12 && file.Slice(4, 4).SequenceEqual("ftyp"u8))
+            return Mp4Tags.Read(file);
         if (file.Length >= 10 && file[..3].SequenceEqual("ID3"u8))
         {
             var v2 = ReadId3v2(file);

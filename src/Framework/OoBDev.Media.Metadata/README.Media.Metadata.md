@@ -22,9 +22,9 @@ var all = ExifDump.Read(bytes);   // { "Make": "Canon", "GPS.GPSLatitude": "(52.
 - `Make` and `Model` are trimmed and cut at 100 characters. The capture time is `DateTimeOriginal`, else `DateTime`, without a time zone.
 - GPS south and west are negative; a result outside -90 to 90 or -180 to 180, or exactly 0, 0, is dropped.
 
-Audio tags (`OoBDev.Media.Metadata.Audio`): `AudioTagReader.Read(bytes)` gives `AudioTags` (`Format` id3v2, id3v1 or vorbis; `Values` under `title`, `artist`, `album`, `albumartist`, `track`, `disc`, `date`, `genre`, `comment`) for MP3 (ID3v2.3 and 2.4, then ID3v1) and FLAC; damaged frames end the read without an exception. Container facts (codec, duration, fingerprint) stay with the audio container.
+Audio tags (`OoBDev.Media.Metadata.Audio`): `AudioTagReader.Read(bytes)` gives `AudioTags` (`Format` id3v2, id3v1 or vorbis; `Values` under `title`, `artist`, `album`, `albumartist`, `track`, `disc`, `date`, `genre`, `comment`) for MP3 (ID3v2.3 and 2.4, then ID3v1), FLAC and M4A/MP4 (`ilst` items, `Format` mp4); damaged frames end the read without an exception. Container facts (codec, duration, fingerprint) stay with the audio container.
 
-Not built yet: a result that reports which tags were damaged, the HEIC Exif item, XMP and IPTC, MP4 and Ogg tags and date merging.
+Not built yet: a result that reports which tags were damaged, the HEIC Exif item, XMP and IPTC, Ogg tags and date merging.
 
 ## RAW files (`OoBDev.Media.Metadata.Raw`)
 
