@@ -64,6 +64,7 @@ Unit tests build tiny TIFF blocks in memory (little and big endian) and wrap the
 ## Not in the first slice
 
 - Reporting which tags were damaged (request acceptance criterion 2): the catalog code skips them silently; add a result type with problems after the port.
-- HEIC Exif item, XMP and IPTC, audio tags, date merging: separate slices in the order the catalog needs them.
+- HEIC Exif item, XMP and IPTC, MP4 and Ogg tags, date merging: separate slices in the order the catalog needs them.
 - Camera raw: stays in the Pillow/LibRaw container.
 - Built 2026-11-16 as `OoBDev.Media.Metadata`: `ExifLocator`, `ExifReader` (`ExifFields`), `ExifDump`, `ExifTagNames`, with the catalog's Pillow-style text kept. Differences from the catalog copy: the locator bounds-checks every chunk length instead of relying on a caught exception, one shared TIFF directory walker serves reader and dump, and tag tables are read-only.
+- Audio tags built 2026-11-19 as `OoBDev.Media.Metadata.Audio`: `AudioTagReader` reads ID3v2.3/2.4, ID3v1 and FLAC Vorbis comments into normalized keys (the catalog gets them from the audio container; codec, duration and fingerprint stay there).
