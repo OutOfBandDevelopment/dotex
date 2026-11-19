@@ -382,6 +382,17 @@
     <Project Path="Framework/OoBDev.UiDefinitions/OoBDev.UiDefinitions.csproj" />
     <Project Path="Framework/OoBDev.TestUtilities/OoBDev.TestUtilities.csproj" />
   </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".runsettings" />
+    <File Path="Directory.Build.Database.targets" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="Directory.Packages.props" />
+    <File Path="OoBDev.Build.Tasks.props" />
+    <File Path="SqlClr.Build.props" />
+    <File Path="SqlClr.Build.targets" />
+  </Folder>
   <Folder Name="/Tools/">
     <Project Path="Tools/OoBDev.PackMan.Cli.Tests/OoBDev.PackMan.Cli.Tests.csproj" />
     <Project Path="Tools/OoBDev.PackMan.Cli/OoBDev.PackMan.Cli.csproj" />
