@@ -98,4 +98,31 @@ public sealed class ChoiceDynamicOptionsTests
         Assert.IsNull(binding.GetOptions("Nope"));
         CollectionAssert.AreEqual(new[] { "COM1" }, binding.GetOptions(nameof(Model.Ports))!.ToArray());
     }
+
+    private sealed record Device(string Display, string Host);
+
+    private sealed class DeviceModel
+    {
+        public IReadOnlyList<Device> Found { get; set; } = [new("scope  [192.168.0.5]", "192.168.0.5"), new("psu  [192.168.0.6]", "192.168.0.6")];
+
+        public Device? Picked { get; set; }
+    }
+
+    [TestMethod]
+    public void Select_ObjectValuedChoice_ShowsDisplayTextAndWritesTheItem()
+    {
+        // Stage
+        var model = new DeviceModel();
+        var control = new ChoiceControl { Id = nameof(DeviceModel.Picked), Label = "Device", OptionsSource = nameof(DeviceModel.Found), Options = [] };
+        using var form = new FormViewModel(new UiDefinition { Name = "t", Sections = [new UiSection { Label = "s", Controls = [control] }] }, new FormBinding(model));
+        var row = (ChoiceViewModel)form.Row("Picked")!;
+
+        // Test
+        row.Select.Execute("psu  [192.168.0.6]");
+
+        // Assert
+        CollectionAssert.AreEqual(new[] { "scope  [192.168.0.5]", "psu  [192.168.0.6]" }, row.Options.ToArray());
+        Assert.AreSame(model.Found[1], model.Picked);
+        Assert.AreEqual("psu  [192.168.0.6]", row.SelectedOption);
+    }
 }

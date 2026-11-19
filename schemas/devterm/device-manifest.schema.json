@@ -745,6 +745,12 @@
                             ]
                           }
                         },
+                        "OptionsSource": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
                         "DefaultValue": {
                           "type": [
                             "string",
