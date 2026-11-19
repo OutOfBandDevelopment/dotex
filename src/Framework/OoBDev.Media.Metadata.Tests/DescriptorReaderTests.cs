@@ -72,4 +72,43 @@ public class DescriptorReaderTests
         Assert.IsTrue(IptcReader.Read(Jpeg(0xED, "Photoshop 3.0\0"u8.ToArray())).IsEmpty);
         Assert.IsTrue(XmpReader.Parse("<!DOCTYPE a [<!ENTITY x \"y\">]><a/>").IsEmpty);
     }
+
+    private const string Packet = """<x:xmpmeta xmlns:x="adobe:ns:meta/"><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><rdf:Description xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmp:Rating="3"/></rdf:RDF></x:xmpmeta>""";
+
+    private static byte[] PngChunk(string type, byte[] data) =>
+        [(byte)(data.Length >> 24), (byte)(data.Length >> 16), (byte)(data.Length >> 8), (byte)data.Length, .. Encoding.ASCII.GetBytes(type), .. data, 0, 0, 0, 0];
+
+    [TestMethod]
+    public void Xmp_PngItxtChunk_ReadsFields()
+    {
+        byte[] body = [.. Encoding.ASCII.GetBytes("XML:com.adobe.xmp"), 0, 0, 0, 0, 0, .. Encoding.UTF8.GetBytes(Packet)];
+        byte[] png = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, .. PngChunk("IHDR", new byte[13]), .. PngChunk("iTXt", body), .. PngChunk("IEND", [])];
+
+        var d = XmpReader.Read(png);
+
+        TestContext.WriteLine("rating {0}", d.Rating);
+        Assert.AreEqual(3, d.Rating);
+    }
+
+    [TestMethod]
+    public void Xmp_WebpXmpChunk_ReadsFieldsAndSkipsOddPadding()
+    {
+        var xml = Encoding.UTF8.GetBytes(Packet);
+        byte[] chunks = [.. "VP8X"u8.ToArray(), 3, 0, 0, 0, 1, 2, 3, 0, .. "XMP "u8.ToArray(), (byte)xml.Length, (byte)(xml.Length >> 8), 0, 0, .. xml];
+        byte[] webp = [.. "RIFF"u8.ToArray(), 0, 0, 0, 0, .. "WEBP"u8.ToArray(), .. chunks];
+
+        var d = XmpReader.Read(webp);
+
+        Assert.AreEqual(3, d.Rating);
+    }
+
+    [TestMethod]
+    public void Xmp_PngCompressedOrTruncated_IsEmpty()
+    {
+        byte[] compressed = [.. Encoding.ASCII.GetBytes("XML:com.adobe.xmp"), 0, 1, 0, 0, 0, 1, 2, 3];
+        byte[] png = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, .. PngChunk("iTXt", compressed)];
+
+        Assert.IsTrue(XmpReader.Read(png).IsEmpty);
+        Assert.IsTrue(XmpReader.Read(png[..14]).IsEmpty);
+    }
 }

@@ -24,6 +24,8 @@ public static class XmpReader
     public static ImageDescriptors Read(byte[] jpeg)
     {
         ArgumentNullException.ThrowIfNull(jpeg);
+        if (XmpContainers.Find(jpeg) is { } packet)
+            return Parse(packet);
         foreach (var (marker, payload) in JpegSegments.Read(jpeg))
         {
             if (marker == 0xE1 && payload.Length > Header.Length && payload.AsSpan(0, Header.Length).SequenceEqual(Header))
