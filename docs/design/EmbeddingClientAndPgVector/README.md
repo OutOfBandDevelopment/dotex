@@ -1,6 +1,6 @@
 ﻿# Embedding HTTP client, pgvector store and annotation layer
 
-Status: **first slice built 2026-11-16 (HTTP embedding client and pgvector store, two ExternalServices projects per owner placement 2026-11-12; Npgsql and Pgvector in the store only); the items under "Not in the first slice" are open.** Requests: [embedding container and client](../../features/request/2026-11-11-embedding-container-and-client.md), [pgvector store and read-only annotation layer](../../features/request/2026-11-11-pgvector-store-and-read-only-annotation-layer.md). Related: [ImageEmbeddings](../ImageEmbeddings/README.md), [VectorSearch](../VectorSearch/README.md), [WorkQueue](../WorkQueue/README.md).
+Status: **first slice built 2026-11-16 (HTTP embedding client and pgvector store, two ExternalServices projects per owner placement 2026-11-12; Npgsql and Pgvector in the store only); the items under "Not in the first slice" are open.** Requests: [embedding container and client](../../features/request/2026-11-11-embedding-container-and-client.md), [pgvector store and read-only annotation layer](../../features/completed/2026-11-11-pgvector-store-and-read-only-annotation-layer.md). Related: [ImageEmbeddings](../ImageEmbeddings/README.md), [VectorSearch](../VectorSearch/README.md), [WorkQueue](../WorkQueue/README.md).
 
 ## Contents
 

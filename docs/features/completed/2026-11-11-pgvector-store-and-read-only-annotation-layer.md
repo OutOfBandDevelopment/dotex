@@ -1,6 +1,6 @@
 ﻿# Feature request: pgvector vector store and an owner annotation layer over read-only sources
 
-- **Status:** triaged (pgvector store built 2026-11-16; annotation abstractions open, see the [design](../../design/EmbeddingClientAndPgVector/README.md))
+- **Status:** done
 - **Requested by:** owner (filed from the NAS storage catalog application, `C:\repo\_storage`)
 - **Date:** 2026-11-11
 - **Area:** `OoBDev.Data.Vectors` (a PostgreSQL store beside `SqlStore`), `OoBDev.Onnx.ImageEmbeddings`, and a small pattern page
@@ -58,6 +58,7 @@ Vectors of personal photos and faces are personal data; the store provider shoul
 
 ## Triage notes
 
+2026-11-19: done. Store, multi-vector best match and the 10,000-vector HNSW timing are built ([change](../../changes/2026-11-16.md#http-embedding-client-and-pgvector-store-first-slice)); the [annotation layer pattern page](../../design/AnnotationLayer/README.md) exists (2026-11-18) and states what the layer never does. Annotation abstractions in code wait for a second consumer, as that page says.
 2026-11-12: designed in [EmbeddingClientAndPgVector](../../design/EmbeddingClientAndPgVector/README.md); placement and dependencies confirmed 2026-11-12.
 
 2026-11-11: triaged. Accepted as a backlog idea from the storage and photo-library review; the code named above was not read in full, so the first step is the superset comparison before any design. Face and pet matching also needs an owner decision on personal data. Backlog: BACKLOG.md, Consolidation requests.
