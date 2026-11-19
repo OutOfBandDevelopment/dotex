@@ -61,3 +61,16 @@ The [bake-off test plan](docs/design/DesiredStateDatabase/bake-off-test-plan.md)
 **Default:** A; the item stays in BACKLOG section 6 until you answer.
 
 **Your answer:**
+
+### Q5 (2026-11-19, Documents, OCR golden sample): which scanned documents are the golden sample?
+
+The OCR request asks for a golden sample run that records text accuracy with host and date ([design](docs/design/DocumentToMarkdown/README.md#testing-strategy)). The Docling client, regions and language hint are built, but a real accuracy figure needs scanned pages with known text, and the repository holds none (the Integration test uses a text-layer PDF, which does not exercise OCR).
+
+**Options**
+- A. You name two or three scans (and their correct text) from the storage catalog; they go under a DevLocal fixtures folder and the test records accuracy (recommended: real documents give a meaningful figure).
+- B. Generate synthetic scans (rendered text, rotated and noised) in the test. No private files, but the figure only measures easy pages.
+- C. Skip the golden test and drop that acceptance line.
+
+**Default:** B is not started; the request stays open on this line only.
+
+**Your answer:**
