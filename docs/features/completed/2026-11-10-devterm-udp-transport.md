@@ -1,6 +1,6 @@
 # Feature request: DevTerm UDP transport (target and listener) and listener sessions
 
-- **Status:** triaged
+- **Status:** done (UDP adapter [`UdpEndpointDeviceAdapter`](../../../src/Framework/OoBDev.System.IO.Tcp/UdpEndpointDeviceAdapter.cs), UDP session tab and TCP/UDP listeners; checked against the code 2026-11-19, see [the change](../../changes/2026-11-19.md))
 - **Requested by:** owner (retire dev-term, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Applications/DevTerm`
@@ -13,7 +13,7 @@ DevTerm has TCP, serial, BLE, USBTMC, VXI-11, MQTT and broker transports but no 
 
 - A UDP target mode (send to host and port) and a UDP listener mode (bind and receive).
 - Listener decision of 2026-10-13: one session, each datagram shown with its sender.
-- A TCP listener opens one tab per accepted peer (decided the same day); build it with this request so listeners share one model. The generic services request ([listeners](../completed/2026-11-10-devterm-generic-service-listeners.md)) is the first user.
+- A TCP listener opens one tab per accepted peer (decided the same day); build it with this request so listeners share one model. The generic services request ([listeners](2026-11-10-devterm-generic-service-listeners.md)) is the first user.
 
 ## Source (read-only, to be retired)
 

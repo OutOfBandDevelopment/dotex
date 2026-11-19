@@ -41,7 +41,7 @@ Broadcast probes reach the whole segment: show before sending and allow turning 
 
 ## Open questions
 
-Needs a fresh capture of each real device (the dev-term TODO said "continue to wait"). Depends on the [UDP transport](2026-11-10-devterm-udp-transport.md).
+Needs a fresh capture of each real device (the dev-term TODO said "continue to wait"). Depends on the [UDP transport](../completed/2026-11-10-devterm-udp-transport.md).
 
 ## Triage notes
 
