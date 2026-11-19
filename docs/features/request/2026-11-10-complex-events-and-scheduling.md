@@ -53,6 +53,6 @@ The owner's event-sourcing material (`event-sourcing`, `sync-mesh`) overlaps; th
 
 ## Triage notes
 
-Origin: SharedFramework. Not covered by any design; design comes first.
+Origin: SharedFramework. Proposed design written 2026-11-19: [ComplexEvents](../../design/ComplexEvents/README.md).
 
 2026-11-11: triaged. Accepted as a backlog item: design first (`docs/patterns-discovery/06-design-document-standard.md`), no code until a consumer appears. Backlog: BACKLOG.md, SharedFramework requests.
