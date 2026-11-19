@@ -68,6 +68,21 @@ public sealed class FormBinding : IDisposable
         _ => false,
     };
 
+    /// <summary>The current items of the property named by <see cref="ChoiceControl.OptionsSource"/>, as text; null when the model has no such property.</summary>
+    /// <param name="source">The property name (public or not, instance or static).</param>
+    public IReadOnlyList<string>? GetOptions(string source)
+    {
+        var property = Source.GetType().GetProperty(source, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+        if (property?.GetMethod is null)
+        {
+            return null;
+        }
+
+        return property.GetValue(property.GetMethod.IsStatic ? null : Source) is IEnumerable items
+            ? [.. items.Cast<object?>().Select(i => i is null ? string.Empty : Format(i))]
+            : [];
+    }
+
     /// <summary>A check list's checked options: a collection property's items, or a comma-separated text property split.</summary>
     public IReadOnlyList<string> GetSelection(string id) => GetValue(id) switch
     {

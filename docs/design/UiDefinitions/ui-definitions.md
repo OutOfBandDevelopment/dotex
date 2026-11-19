@@ -338,7 +338,7 @@ field (with an `Integer`/`Number` constraint for a numeric type).
 
 **Generating it.** `FormDefinitionGenerator.Generate(model)` (or `Generate<T>()`/`Generate(type,
 instance)`) walks the properties in declaration order and produces a plain `UiDefinition`: a
-control's `Id` is its property name, defaults and `OptionsFrom` lists are read from the instance.
+control's `Id` is its property name, defaults and `OptionsFrom` lists are read from the instance. The generator keeps the `OptionsFrom` name in `ChoiceControl.OptionsSource`, and a form view model re-reads that property on every refresh (`FormBinding.GetOptions`), so a list that changes while the form is open (detected serial ports) updates its rows; a fixed list leaves it null.
 The result is an ordinary definition — it serializes to JSON/XML like any other.
 
 **Binding it.** `FormBinding` connects a rendered form to its model by id = property name: read as

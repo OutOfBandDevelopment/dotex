@@ -191,6 +191,7 @@ public static class FormDefinitionGenerator
                 Id = id,
                 Label = label,
                 Options = [.. Options(property.DeclaringType!, type, field.OptionsFrom, defaults)],
+                OptionsSource = field.OptionsFrom,
                 Style = field.ChoiceStyle,
                 DefaultValue = current is null ? null : FormBinding.Format(current),
             },
