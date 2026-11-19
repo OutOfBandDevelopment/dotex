@@ -35,4 +35,4 @@ The 2026-11-19 per-test timing showed the longest tests were the first test of a
 
 ## Repeat run (2026-11-19)
 
-A second full Integration run with the stack already warm (`--no-build`, after the warm-up script) took 3 min 41 s with no failing test, so the 5 min 3 s figure (stack down, build included) holds and the earlier Docling and Stomp failures did not recur.
+A second full Integration run with the stack already warm (`--no-build`, after the warm-up script) took 3 min 41 s. Two tests failed again, `RealRabbitMq_Stomp_RoutesBothWays` (DevTerm.Core.Tests) and `Recognize_RealDoclingServe_ReturnsTheText` (Docling.Tests), each in under a second; both pass when their project runs alone, so the failure is tied to the parallel full run (probably their containers, RabbitMQ and Docling, are not up when the test starts), not to the code.
