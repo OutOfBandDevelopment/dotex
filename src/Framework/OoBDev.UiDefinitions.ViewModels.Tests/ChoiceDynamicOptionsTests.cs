@@ -125,4 +125,36 @@ public sealed class ChoiceDynamicOptionsTests
         Assert.AreSame(model.Found[1], model.Picked);
         Assert.AreEqual("psu  [192.168.0.6]", row.SelectedOption);
     }
+
+    [TestMethod]
+    public void UsesDropdown_DynamicOrLongLists_ButNotShortFixedOnes()
+    {
+        // Stage
+        using var dynamicForm = Form(new Model());
+        using var fixedForm = Form(new Model(), source: null);
+        var longFixed = new ChoiceControl { Id = nameof(Model.Port), Label = "Port", Options = [.. Enumerable.Range(1, 7).Select(i => $"COM{i}")] };
+        using var longForm = new FormViewModel(new UiDefinition { Name = "t", Sections = [new UiSection { Label = "s", Controls = [longFixed] }] }, new FormBinding(new Model()));
+
+        // Test / Assert
+        Assert.IsTrue(((ChoiceViewModel)dynamicForm.Row("Port")!).UsesDropdown, "A list that can change is a drop-down.");
+        Assert.IsFalse(((ChoiceViewModel)fixedForm.Row("Port")!).UsesDropdown, "A short fixed list stays radio buttons.");
+        Assert.IsTrue(((ChoiceViewModel)longForm.Row("Port")!).UsesDropdown, "A fixed list over the threshold is a drop-down.");
+    }
+
+    [TestMethod]
+    public void PickedOption_SetToAListedOption_WritesTheModel_AndIgnoresOthers()
+    {
+        // Stage
+        var model = new Model { Ports = ["COM1", "COM9"] };
+        using var form = Form(model);
+        var row = (ChoiceViewModel)form.Row("Port")!;
+
+        // Test
+        row.PickedOption = "COM9";
+        row.PickedOption = "COM77";
+        row.PickedOption = null;
+
+        // Assert
+        Assert.AreEqual("COM9", model.Port);
+    }
 }

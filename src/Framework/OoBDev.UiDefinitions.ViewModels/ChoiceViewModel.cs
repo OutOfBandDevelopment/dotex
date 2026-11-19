@@ -53,7 +53,35 @@ public sealed class ChoiceViewModel : ControlViewModel
     public string SelectedOption
     {
         get => _selected;
-        private set => SetProperty(ref _selected, value);
+        private set
+        {
+            if (SetProperty(ref _selected, value))
+            {
+                OnPropertyChanged(nameof(PickedOption));
+            }
+        }
+    }
+
+    /// <summary>
+    /// Whether a view should draw a drop-down list instead of radio buttons: a dropdown-style choice whose list is long
+    /// (more than <see cref="DropdownThreshold"/>) or can change while the form is open.
+    /// </summary>
+    public bool UsesDropdown => Style == ChoiceStyle.Dropdown && (Choice.OptionsSource is not null || Options.Count > DropdownThreshold);
+
+    /// <summary>The longest fixed dropdown-style list still drawn as radio buttons.</summary>
+    public const int DropdownThreshold = 6;
+
+    /// <summary>The picked option as a two-way binding target for a drop-down list; setting a listed option picks it, anything else is ignored.</summary>
+    public string? PickedOption
+    {
+        get => SelectedOption;
+        set
+        {
+            if (value is not null && !string.Equals(value, SelectedOption, StringComparison.Ordinal) && Options.Contains(value, StringComparer.Ordinal))
+            {
+                Select.Execute(value);
+            }
+        }
     }
 
     /// <summary>The checked options (check list).</summary>
@@ -124,6 +152,7 @@ public sealed class ChoiceViewModel : ControlViewModel
         }
 
         OnPropertyChanged(nameof(Options));
+        OnPropertyChanged(nameof(UsesDropdown));
     }
 
     private void MarkItems(Func<string, bool> isSelected)

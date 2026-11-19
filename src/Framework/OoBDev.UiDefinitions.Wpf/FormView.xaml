@@ -59,6 +59,18 @@
                             <DataTrigger Binding="{Binding Style}" Value="CheckList">
                                 <Setter Property="ItemTemplate" Value="{StaticResource OptionCheck}" />
                             </DataTrigger>
+                            <DataTrigger Binding="{Binding UsesDropdown}" Value="True">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ItemsControl">
+                                            <ComboBox ItemsSource="{Binding Options}"
+                                                      SelectedItem="{Binding PickedOption}"
+                                                      HorizontalAlignment="Left"
+                                                      MinWidth="200" />
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </ItemsControl.Style>
