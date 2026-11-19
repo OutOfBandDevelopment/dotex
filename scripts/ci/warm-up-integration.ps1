@@ -26,7 +26,7 @@
 #>
 [CmdletBinding()]
 param(
-    [string[]] $Service = @('pgvector', 'sql-server', 'ollama', 'sbert', 'keycloak', 'opensearch', 'servicebus-emulator', 'neo4j'),
+    [string[]] $Service = @('pgvector', 'sql-server', 'ollama', 'sbert', 'keycloak', 'opensearch', 'neo4j'),
     [switch] $SkipPull,
     [switch] $DryRun
 )
