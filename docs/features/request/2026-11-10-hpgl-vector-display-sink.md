@@ -61,3 +61,5 @@ Origin: notes repository `projects/osci-render-client` and `OoBDev.Documents.Hpg
 2026-11-17: rewritten from an osci-render TCP sink to a stereo audio signal (owner). Not built; to be scheduled later.
 
 2026-11-11: triaged. Accepted as a backlog idea with no design yet. Backlog: BACKLOG.md, Devices ideas.
+
+2026-11-19: proposed design written: [HpglAudioSink](../../design/HpglAudioSink/README.md).

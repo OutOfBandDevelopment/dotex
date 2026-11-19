@@ -59,3 +59,5 @@ Reads whole files, so IO cost is large on a NAS; the scan should be throttled an
 Origin: notes repository `projects/dotex-consolidation/README.md` (mapping section). Maintainers: accept, schedule or decline.
 
 2026-11-11: triaged. Accepted as a backlog idea: design first (`docs/patterns-discovery/06-design-document-standard.md`), no code until a consumer appears. Backlog: BACKLOG.md, Consolidation requests.
+
+2026-11-19: proposed design written: [FileInventory](../../design/FileInventory/README.md).
