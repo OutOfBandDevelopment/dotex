@@ -376,8 +376,8 @@ The analysis token is a user secret (`dotnet user-secrets` or the `SONAR_TOKEN` 
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `ZWAVE_SERIAL_PORT` | `COM13` | Serial port of the plugged-in Z-Wave stick; blank or unlisted ends the Hardware test Inconclusive |
-| `ZWAVE_TCP_HOST` | `overwatch.local:4000` | Z-Wave stick behind a serial-to-Ethernet bridge (`host:port`); wins over `ZWAVE_SERIAL_PORT` when set; blank uses the serial port |
+| `ZWAVE_SERIAL_PORT` | `COM13` | Serial port of the plugged-in Z-Wave stick; used by the `Serial` Hardware tests; blank or unlisted ends them Inconclusive |
+| `ZWAVE_TCP_HOST` | `overwatch.local:4000` | Z-Wave stick behind a serial-to-Ethernet bridge (`host:port`); used by the separate `Tcp` Hardware tests; blank or unreachable ends them Inconclusive |
 | `RADEX_ONE_SERIAL_PORT` | `COM8` | Serial port of the Radex One (9600 8-N-1); blank or unlisted ends its Hardware tests Inconclusive |
 | `ZOOM_H4N_SERIAL_PORT` | `COM3` | Serial port of the h4n2rs485 adapter on the Zoom H4n remote port (2400 8-N-1); blank or unlisted ends its Hardware test Inconclusive |
 | `HC08_SERIAL_PORT` | `COM4` | Serial port (9600 8-N-1) of the SH-HC-08 BLE module used for the BLE round-trip Hardware tests; blank or unlisted ends them Inconclusive |
