@@ -1,6 +1,6 @@
 # Feature request: template persistence (text template store)
 
-- **Status:** triaged
+- **Status:** done
 - **Requested by:** owner (SharedFramework comparison, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.System.Text.Templating*`, `OoBDev.Handlebars` (Epic 10 Text Templating)
@@ -48,4 +48,5 @@ Does it share the lookup with the embedded template fallback request?
 
 Origin: SharedFramework. Design exists; no code until a consumer appears.
 
+2026-11-19: done. Stored templates are listed and resolved by name and version: `EfTemplateSource` and `EfTemplateRepository` ([Template versioning](../../changes/2026-11-16.md#template-versioning), tenant override, rollback, culture), the fallback is [embedded templates](../../changes/2026-11-17.md#embedded-template-source), and Handlebars renders a stored row ([change](../../changes/2026-11-19.md#handlebars-templates-from-the-database)). The `IDataContainer` adapter and shipped migrations stay in BACKLOG.md.
 2026-11-11: triaged. Design exists in [TextTemplating](../../design/TextTemplating/README.md) (`DatabaseTemplateSource`); no code until a consumer appears. Backlog: BACKLOG.md, SharedFramework.

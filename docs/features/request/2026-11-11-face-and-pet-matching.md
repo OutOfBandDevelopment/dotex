@@ -1,6 +1,6 @@
 ﻿# Feature request: Face and pet detection, embedding and clustering
 
-- **Status:** triaged
+- **Status:** triaged (clustering and schedule policy built 2026-11-19 in OoBDev.Imaging.People; detectors, embedders and adapter open)
 - **Requested by:** owner (filed from the NAS storage catalog application, `C:\repo\_storage`)
 - **Date:** 2026-11-11
 - **Area:** new, near `Onnx.ImageEmbeddings` and `Data.Vectors`

@@ -1,6 +1,6 @@
 ﻿# Feature request: merge the catalog search model with dotex Search (hybrid ranking, kinds, multi-vector)
 
-- **Status:** triaged
+- **Status:** triaged (first slice built 2026-11-16: request model, fusion, hybrid, vector, keyword and SQL-kind providers; see the [design](../../design/SearchMerge/README.md))
 - **Requested by:** owner (filed from the NAS storage catalog application, `C:\repo\_storage`)
 - **Date:** 2026-11-11
 - **Area:** `OoBDev.Search`, `OoBDev.Search.Abstractions`, `Data.Vectors`; companion to `2026-11-11-metadata-driven-query-engine.md`
@@ -50,6 +50,6 @@ Search reads only. Per-kind rights apply (see the query engine request).
 
 ## Triage notes
 
-2026-11-12: compared and designed in [SearchMerge](../../design/SearchMerge/README.md); nothing built.
+2026-11-12: compared and designed in [SearchMerge](../../design/SearchMerge/README.md). 2026-11-19: first slice built, see the status line.
 
 2026-11-11: triaged. Accepted as a backlog idea from the storage and photo-library review; the code named above was not read in full, so the first step is the superset comparison before any design. Face and pet matching also needs an owner decision on personal data. Backlog: BACKLOG.md, Consolidation requests.

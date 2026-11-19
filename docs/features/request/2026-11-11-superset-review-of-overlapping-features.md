@@ -1,6 +1,6 @@
 ﻿# Feature request: superset review of features that exist in both dotex and the catalog application
 
-- **Status:** triaged
+- **Status:** triaged (comparisons written; the built features are listed in the [SearchMerge design](../../design/SearchMerge/README.md))
 - **Requested by:** owner (filed from the NAS storage catalog application, `C:\repo\_storage`)
 - **Date:** 2026-11-11
 - **Area:** cross-cutting: query layer, vectors, embeddings, search, queue, caching, telemetry, identity and rights, documents
@@ -51,6 +51,6 @@ None; this is documentation work that decides what gets built.
 
 ## Triage notes
 
-2026-11-12: compared and designed in [SearchMerge](../../design/SearchMerge/README.md); nothing built.
+2026-11-12: compared and designed in [SearchMerge](../../design/SearchMerge/README.md). 2026-11-19: first slice built, see the status line.
 
 2026-11-11: triaged. Accepted as a backlog idea from the storage and photo-library review; the code named above was not read in full, so the first step is the superset comparison before any design. Face and pet matching also needs an owner decision on personal data. Backlog: BACKLOG.md, Consolidation requests.

@@ -1,6 +1,6 @@
 ﻿# Feature request: OCR and document text extraction stage (scans and PDFs to Markdown)
 
-- **Status:** triaged
+- **Status:** triaged (Docling provider, Office readers and page regions built; retry and park rules and golden sample open, see the [design](../../design/DocumentToMarkdown/README.md))
 - **Requested by:** owner (filed from the NAS storage catalog application, `C:\repo\_storage`)
 - **Date:** 2026-11-11
 - **Area:** `OoBDev.Documents`, `Documents.ExternalTools`, `System.Text.Markdown`

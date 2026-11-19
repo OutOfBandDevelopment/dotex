@@ -1,6 +1,6 @@
 ﻿# Feature request: pgvector vector store and an owner annotation layer over read-only sources
 
-- **Status:** triaged
+- **Status:** triaged (pgvector store built 2026-11-16; annotation abstractions open, see the [design](../../design/EmbeddingClientAndPgVector/README.md))
 - **Requested by:** owner (filed from the NAS storage catalog application, `C:\repo\_storage`)
 - **Date:** 2026-11-11
 - **Area:** `OoBDev.Data.Vectors` (a PostgreSQL store beside `SqlStore`), `OoBDev.Onnx.ImageEmbeddings`, and a small pattern page
