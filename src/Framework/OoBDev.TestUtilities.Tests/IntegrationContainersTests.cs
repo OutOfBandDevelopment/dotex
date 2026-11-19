@@ -42,7 +42,9 @@ public class IntegrationContainersTests
             return Task.CompletedTask;
         }
 
-        public Task<bool> LogContainsAsync(string container, string text, CancellationToken cancellationToken) => Task.FromResult(true);
+        public bool LogHasMarker { get; set; } = true;
+
+        public Task<bool> LogContainsAsync(string container, string text, CancellationToken cancellationToken) => Task.FromResult(LogHasMarker);
 
         public Task StopAsync(string container, TimeSpan grace, CancellationToken cancellationToken)
         {
@@ -248,6 +250,34 @@ public class IntegrationContainersTests
         StringAssert.Contains(message, "unhealthy");
     }
 
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public async Task Ensure_HealthyButReadyMarkerNotInTheLog_IsInconclusiveAsync()
+    {
+        // Stage: the SMTP emulator is healthy before its IMAP/SMTP servers listen; the log marker says it is really up.
+        _docker.State = new ContainerState(true, "healthy");
+        _docker.LogHasMarker = false;
+        TestContext.WriteLine("oobd-test-smtp healthy, marker absent");
+
+        // Test
+        var message = await InconclusiveMessageAsync(() => IntegrationContainers.EnsureAsync(TestContext, "oobd-test-smtp"));
+
+        // Assert
+        StringAssert.Contains(message, "oobd-test-smtp");
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public async Task Ensure_HealthyWithReadyMarkerInTheLog_IsReadyAsync()
+    {
+        _docker.State = new ContainerState(true, "healthy");
+        _docker.LogHasMarker = true;
+
+        await IntegrationContainers.EnsureAsync(TestContext, "oobd-test-smtp");
+
+        Assert.AreEqual(0, _docker.Calls.Count);
+    }
     [TestMethod]
     [TestCategory(TestCategories.Unit)]
     public async Task Ensure_DockerUnavailable_IsInconclusiveAsync()
