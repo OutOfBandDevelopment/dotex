@@ -22,7 +22,7 @@ Review of the example web app (`src/Examples/OoBDev.Example.Web`) and API agains
 | Data access and DacPac builder | `OoBDev.Data.Common`, MongoDB, `OoBDev.DacFx` | Read-only query runner, dacpac build and diff | Read-only guard design |
 | Semantic Kernel plug-in tester | `OoBDev.SemanticKernel` | Built 2026-11-17 as `/utilities/kernel`: plug-in function list and a direct invoke with text arguments (no model) | Controller (built) |
 | Vector store browser | Qdrant, OpenSearch, SQL store | Collection list, upsert, query | `IVectorStoreCollectionCatalog` (opt-in) exists with the Qdrant, SQL store and Azure AI Search implementations (2026-11-19); the screen is built 2026-11-19 (collection picker on `/utilities/vectors`, `GET api/VectorStore/collections`) |
-| Mail receive | MailKit IMAP | Inbox view | Decision in [the plan](plan.md) section 6 |
+| Mail receive | MailKit IMAP | Inbox view | Built 2026-11-20 as the Inbox section of `/messaging/communications` (`POST api/Communications/inbox/poll`, right `communications.receive`) |
 | Formats and pipelines | `OoBDev.System.IO.Pipelines`, Tar, BCD, bit tools | Built 2026-11-19 on the Toolbox page: the file inspector, the Morse, Roman, Base32 and packed BCD codecs and a pipeline builder (hex, base64, base32, gzip, SHA-256 and SHA-512, reverse) | Controller |
 | CLI tool catalog | DacPacCompiler, DocumentConverter, FileRagEngine, and the other CLI tools | Built 2026-11-16 as `/utilities/tools` (static list with a filter; no execution from the browser) | Static page |
 

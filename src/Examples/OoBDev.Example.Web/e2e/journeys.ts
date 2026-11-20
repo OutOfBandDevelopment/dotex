@@ -571,6 +571,15 @@ export const journeys: Journey[] = [
           await expect(page.locator('pre.result')).toContainText('accepted');
         },
       },
+      {
+        title: 'Check the inbox',
+        narrative: 'Check mail polls the inbox channel over IMAP and lists the unread messages; they are marked seen, so the next check returns only newer mail.',
+        expect: ['At least one message is listed with its sender and subject.'],
+        run: async page => {
+          await press(page, 'Check mail');
+          await expect(page.locator('table.inbox')).toContainText('@example.test');
+        },
+      },
     ],
   },
   {

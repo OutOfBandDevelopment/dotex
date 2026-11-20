@@ -93,6 +93,7 @@ export async function mockApi(page: Page): Promise<void> {
     if (path === '/api/TextTemplate/Read') return json(route, { info: { name: 'order-shipped', file: 'order-shipped.html.hbs', templateContentType: 'text/x-handlebars-template', targetExtension: '.html' }, text: '<h1>Hello {{name}}</h1><p>Your order {{orderId}} has shipped.</p>' });
     if (path === '/api/TextTemplate/Preview') return text(route, '<h1>Hello Ada</h1><p>Your order 1042 has shipped.</p>');
     if (path.startsWith('/api/TextTemplate/Apply')) return text(route, '<h1>Hello Ada</h1><p>Your order 1042 has shipped.</p>');
+    if (path === '/api/Communications/inbox/poll') return json(route, [{ messageId: 'm-1', from: 'grace@example.test', to: ['ada@example.test'], subject: 'Re: Your order has shipped', preview: 'Thanks, it arrived today.', timestamp: '2026-11-20T09:30:00Z' }]);
     if (path.startsWith('/api/Communications/')) return text(route, 'Mail accepted');
     if (path === '/api/MessageQueueing/channels') return json(route, [{ channel: 'EmailMessageModel', provider: 'rabbit-mq', queueName: 'email-receive', hostName: 'localhost', receiverEnabled: false }, { channel: 'ExampleMessageProvider', provider: 'rabbit-mq', queueName: 'email-receive', hostName: 'localhost', receiverEnabled: false }]);
     if (path === '/api/MessageQueueing/received') return json(route, [{ receivedAt: '2026-11-09T12:00:00Z', correlationId: 'demo-1', message: '{"Input":"hello"}' }]);

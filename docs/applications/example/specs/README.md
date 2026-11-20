@@ -25,7 +25,7 @@ Acceptance criteria for each journey. The same journeys run as Playwright tests.
 | [Compare sentence embedding models](compare-embedding-models.md) | 1 | `/ai/model-compare` |
 | [See what the API just did](see-recent-traces.md) | 1 | `/operations/telemetry` |
 | [Render a text template](render-a-template.md) | 2 | `/content/templates` |
-| [Send an email through a channel](send-an-email.md) | 2 | `/messaging/communications` |
+| [Send an email through a channel](send-an-email.md) | 3 | `/messaging/communications` |
 | [Put a message on a queue](queue-a-message.md) | 2 | `/messaging/queues` |
 | [Convert and store a document](convert-a-document.md) | 3 | `/content/documents` |
 | [Sign in with Keycloak](sign-in.md) | 3 | `/identity/me` |
