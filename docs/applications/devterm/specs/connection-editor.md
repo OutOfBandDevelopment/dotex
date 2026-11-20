@@ -23,6 +23,8 @@ the field list, labels, grouping, choice lists, value types and "which transport
 group", instead of one per front end. See
 [ui-definitions.md](../../../design/UiDefinitions/ui-definitions.md#forms-from-one-definition) for the engine.
 
+Owner decision 2026-11-20 (Q21): the saved-profile list and zip row stay hand-built (list management with commands; multi-select and double-click are not in the generated `List` control).
+
 | Part | Generated or hand-built | Why |
 |---|---|---|
 | Transport, Description, every Serial/TCP/USB Device/Loopback field, the "not found" hints, the loopback note, Device manifest, Presenters, SCPI profile, SCPI auto-detect timeout, Send as, Line ending, ASCII max line length | **Generated** (`FormDefinition`) | Plain fields bound to view-model properties — exactly what the form vocabulary covers |
