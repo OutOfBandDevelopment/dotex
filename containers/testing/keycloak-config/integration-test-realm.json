@@ -69,6 +69,20 @@
       ]
     },
     {
+      "clientId": "integration-test-desktop-client",
+      "name": "Integration Test Desktop Client (public, PKCE, loopback redirect)",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": false,
+      "standardFlowEnabled": true,
+      "redirectUris": [
+        "http://127.0.0.1:*"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      }
+    },
+    {
       "clientId": "integration-test-public-client",
       "name": "Integration Test Public Client",
       "enabled": true,

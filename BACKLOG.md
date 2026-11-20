@@ -63,7 +63,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 
 ### Waiting on the owner
 
-- [ ] Desktop client sign-in, remaining slice (owner, 2026-11-17, Q2): Keycloak Integration tests (`[IntegrationTestMethod("oobd-test-keycloak")]`) for browser, device and refresh flows; the library and `DpapiSecretStore` are built, see [design](docs/design/OAuthClient/README.md)
+- [ ] Desktop client sign-in, remaining slice (owner, 2026-11-17, Q2): Keycloak Integration test for the device flow (browser sign-in and refresh are covered by `KeycloakSignInTests` since 2026-11-20; the realm needs device grant enabled on a client); the library and `DpapiSecretStore` are built, see [design](docs/design/OAuthClient/README.md)
 - [ ] Shipped schema for the EF stores (messaging, suppression, templates, event stores, right audit), decided 2026-11-17 (owner, Q1): the relational tables ship EF migrations (a migration set per provider, built with the SQL database tooling), and event payload types get a schema registry (versioned event contracts). Design first (`docs/design/CqrsEventSourcing/`), migrations before the registry.
 - [ ] **Harvest candidates** (D7): [open items await the owner](docs/migration/harvest-d7-comparison.md); candidate map in [harvest-candidates.md](docs/harvest-candidates.md)
 - [x] Plugin sandbox: migrated to `OoBDev.System.Sandbox*` (2026-11-20, [plan](docs/design/PluginSandbox/migration-plan.md)); Linux run in the `dotnet/sdk:10.0` container with bubblewrap: 107 passed, 17 skipped (the Windows-only ones); left: coverage check, macOS.
