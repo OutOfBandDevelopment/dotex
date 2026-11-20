@@ -36,3 +36,17 @@ The `List` control now renders in WPF, Avalonia, WinForms, Blazor and the Tui (s
 **Default:** A; the backlog item is closed with the reason recorded.
 
 **Your answer:**
+
+### Q22 · 2026-11-20 · Example app · How is the Data access query runner kept read-only?
+
+The Data access screen (missing-screens.md, "Read-only guard design") would run text queries against the example's databases from a browser, so the guard is a security decision (rule `security-audit`).
+
+**Options**
+
+- A. (recommended) Defence in depth: a dedicated read-only database login (the connection string `OoBDev:DataAccess:ConnectionString` must be a test or reporting instance, as in the Integration rule), `ApplicationIntent=ReadOnly`, a single statement that must parse as SELECT (ScriptDom, already used by `OoBDev.DacFx`), a row cap and a timeout, and the `data.query` right on admin only. The login permissions are the real guard; the parser is the second layer.
+- B. Parse check only (SELECT-only via ScriptDom) on the existing connection: least setup, but one parser gap runs a write.
+- C. No free-text queries: only a fixed list of named, parameterised reports: safest, much less useful as a demo.
+
+**Default:** A, built only after you confirm; the screen stays unbuilt meanwhile.
+
+**Your answer:**
