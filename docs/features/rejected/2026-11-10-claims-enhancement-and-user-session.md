@@ -1,6 +1,6 @@
 # Feature request: claims enhancement pipeline and user session
 
-- **Status:** triaged
+- **Status:** declined (owner, 2026-11-19, Q21: covered by IClaimsTransformation (TryAddRoleRightMapping))
 - **Requested by:** owner (SharedFramework comparison, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.Identity*` and `OoBDev.AspNetCore.*` (Epic 7 Identity)

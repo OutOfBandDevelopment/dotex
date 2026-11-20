@@ -1,6 +1,6 @@
 # Feature request: DevTerm declarative SCPI control-module schema
 
-- **Status:** triaged
+- **Status:** declined (owner, 2026-11-19, Q21: covered by the JSON profile panels)
 - **Requested by:** owner (retire dev-term, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Applications/DevTerm`, `src/HardwareDevices` (SCPI)

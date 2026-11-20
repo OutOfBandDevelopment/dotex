@@ -1,6 +1,6 @@
 # Feature request: audit tags on classes and methods
 
-- **Status:** triaged
+- **Status:** declined (owner, 2026-11-19, Q23: superseded by the right audit trail; use ILogger scopes or Activity tags for business context)
 - **Requested by:** owner
 - **Date:** 2026-01-20
 - **Area:** logging middleware, `OoBDev.Extensions`

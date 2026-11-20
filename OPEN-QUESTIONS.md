@@ -10,45 +10,6 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ## Open
 
-### Q21 (2026-11-19, Identity and DevTerm design): claims pipeline and control-module schema
-
-Requests: [claims enhancement](docs/features/request/2026-11-10-claims-enhancement-and-user-session.md) (is a pipeline needed beyond `IClaimsTransformation`, which `TryAddRoleRightMapping` now uses?) and [SCPI control-module schema](docs/features/request/2026-11-10-devterm-scpi-control-module-schema.md) (do JSON profile panels cover enough?).
-
-**Options**
-- A. Close both as covered: the platform primitive and the profile panels (recommended: matches your preference for platform primitives; reopen when a gap shows).
-- B. Keep the claims pipeline, close the schema.
-- C. Keep both.
-
-**Default:** C (nothing closes).
-
-**Your answer:**
-
-### Q22 (2026-11-19, Imaging, face and pet detection): which detection model and licence?
-
-[Request](docs/features/request/2026-11-11-face-and-pet-matching.md). Clustering is built; detectors and embedders are not, and the catalog's model is the starting point.
-
-**Options**
-- A. Use the catalog's models if their licences allow redistribution (you confirm the licence), downloaded through the existing model cache, never bundled (recommended).
-- B. Pick a different permissive model (name it).
-- C. Keep it detector-free: the library takes embeddings from an adapter you supply.
-
-**Default:** C is built (it needs no model); A waits for your answer.
-
-**Your answer:**
-
-### Q23 (2026-11-19, Query and logging examples): do the audit attribute and the query framework example still have a consumer?
-
-Requests: [audit attribute](docs/features/request/2026-01-20-audit-request-attribute.md) and [query framework example](docs/features/request/2026-01-20-query-framework-example.md), both triaged "no code until a consumer appears". The right audit trail and the metadata query engine now cover parts of both.
-
-**Options**
-- A. Decline both as superseded and move them to `rejected/` (recommended: the audit trail records right checks and MetadataQuery replaces hand-written query records).
-- B. Keep both waiting for a consumer.
-- C. Build the audit attribute for logging middleware now.
-
-**Default:** B.
-
-**Your answer:**
-
 ### Q24 (2026-11-19, MetadataQuery): are snapshot sources and the anchor store wanted, and with which transport?
 
 [Design](docs/design/MetadataQuery/README.md#not-in-the-first-slice). Left open: snapshot sources and text anchors (the catalog's caching), and the GraphQL and OData transports. The design has no requirements for the first, and the second waits on the transport evaluation.

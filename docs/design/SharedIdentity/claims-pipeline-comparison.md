@@ -1,6 +1,6 @@
 # Claims enhancement pipeline against the platform primitives
 
-Status: **comparison written 2026-11-19; recommendation: build nothing until a consumer appears.** Open question Q21 in `OPEN-QUESTIONS.md` (assumed answer A for now). Request: [claims enhancement and user session](../../features/request/2026-11-10-claims-enhancement-and-user-session.md).
+Status: **comparison written 2026-11-19; recommendation: build nothing until a consumer appears.** Open question Q21 in `OPEN-QUESTIONS.md` (assumed answer A for now). Request: [claims enhancement and user session](../../features/rejected/2026-11-10-claims-enhancement-and-user-session.md).
 
 ## Contents
 

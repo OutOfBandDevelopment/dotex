@@ -1,6 +1,6 @@
 # Feature request: stored-procedure query framework (audit log example)
 
-- **Status:** triaged
+- **Status:** declined (owner, 2026-11-19, Q23: superseded by MetadataQuery)
 - **Requested by:** owner
 - **Date:** 2026-01-20
 - **Area:** `OoBDev.Data.Common`
