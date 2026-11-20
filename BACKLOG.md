@@ -27,7 +27,6 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 ## 3. Test infrastructure
 
-- [ ] DevTerm `CommittedSchemas_MatchWhatTheModelGenerates` fails: the committed `device-manifest.schema.json` is stale (found 2026-11-20); run `OoBDev.DevTerm.Schemas` and commit the result.
 - [ ] `LxiDiscovery` as an `INetworkDeviceProbe` adapter so the detect list takes LXI from one registration (needs a reference from the adapter to `OoBDev.System.IO.Tcp`; see the [migration plan](docs/design/NetworkDevices/migration-plan.md)).
 - [ ] Integration coverage gaps: Azure runs on emulators only (Azurite, Service Bus emulator, no Azure licence); Moto now covers SQS, SES and S3 (`OoBDev.Amazon.S3`).
 - [ ] Integration suite under 5 minutes: met on 2026-11-19 with `scripts/ci/warm-up-integration.ps1` (5 min 3 s, stack down, build included; about 7 min 50 s before), see [suite-timing.md](docs/architecture/testing/integration/suite-timing.md

@@ -491,6 +491,102 @@
                 {
                   "properties": {
                     "kind": {
+                      "const": "list"
+                    },
+                    "ItemsSource": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "Items": {
+                      "type": "array",
+                      "items": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    },
+                    "AddCommand": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "DeleteCommand": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "DefaultValue": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "Id": {
+                      "type": "string"
+                    },
+                    "Label": {
+                      "type": "string"
+                    },
+                    "Description": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "VisibleWhen": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "Id": {
+                          "type": "string"
+                        },
+                        "Values": {
+                          "$ref": "#/properties/Sections/items/properties/VisibleWhen/properties/Values"
+                        }
+                      },
+                      "required": [
+                        "Id"
+                      ]
+                    },
+                    "EnabledWhen": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "Id": {
+                          "type": "string"
+                        },
+                        "Values": {
+                          "$ref": "#/properties/Sections/items/properties/VisibleWhen/properties/Values"
+                        }
+                      },
+                      "required": [
+                        "Id"
+                      ]
+                    },
+                    "DisabledReason": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "Id",
+                    "Label"
+                  ]
+                },
+                {
+                  "properties": {
+                    "kind": {
                       "const": "textField"
                     },
                     "DefaultValue": {
@@ -804,7 +900,7 @@
                     "Channels": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/properties/Sections/items/properties/Controls/items/anyOf/7/properties/Channels/items"
+                        "$ref": "#/properties/Sections/items/properties/Controls/items/anyOf/8/properties/Channels/items"
                       }
                     },
                     "Minimum": {
