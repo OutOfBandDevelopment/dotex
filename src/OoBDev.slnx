@@ -298,6 +298,8 @@
     <Project Path="Framework/OoBDev.Security.OAuthClient.Abstractions/OoBDev.Security.OAuthClient.Abstractions.csproj" />
     <Project Path="Framework/OoBDev.Security.OAuthClient.Tests/OoBDev.Security.OAuthClient.Tests.csproj" />
     <Project Path="Framework/OoBDev.Security.OAuthClient/OoBDev.Security.OAuthClient.csproj" />
+    <Project Path="Extensions/OoBDev.Security.OAuthClient.Windows/OoBDev.Security.OAuthClient.Windows.csproj" />
+    <Project Path="Extensions/OoBDev.Security.OAuthClient.Windows.Tests/OoBDev.Security.OAuthClient.Windows.Tests.csproj" />
     <Project Path="Framework/OoBDev.DacFx.Abstractions/OoBDev.DacFx.Abstractions.csproj" />
     <Project Path="Framework/OoBDev.DacFx.Tests/OoBDev.DacFx.Tests.csproj" />
     <Project Path="Framework/OoBDev.DacFx/OoBDev.DacFx.csproj" />

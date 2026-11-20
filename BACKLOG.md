@@ -64,7 +64,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 
 ### Waiting on the owner
 
-- [ ] Desktop client sign-in, remaining slices (owner, 2026-11-17, Q2): the Windows DPAPI `ISecretStore` leaf in Extensions with Windows-only tests, and Keycloak Integration tests (`[IntegrationTestMethod("oobd-test-keycloak")]`) for browser, device and refresh flows; the library itself is built, see [design](docs/design/OAuthClient/README.md)
+- [ ] Desktop client sign-in, remaining slice (owner, 2026-11-17, Q2): Keycloak Integration tests (`[IntegrationTestMethod("oobd-test-keycloak")]`) for browser, device and refresh flows; the library and `DpapiSecretStore` are built, see [design](docs/design/OAuthClient/README.md)
 - [ ] Shipped schema for the EF stores (messaging, suppression, templates, event stores, right audit), decided 2026-11-17 (owner, Q1): the relational tables ship EF migrations (a migration set per provider, built with the SQL database tooling), and event payload types get a schema registry (versioned event contracts). Design first (`docs/design/CqrsEventSourcing/`), migrations before the registry.
 - [ ] **Harvest candidates** (D7): [open items await the owner](docs/migration/harvest-d7-comparison.md); candidate map in [harvest-candidates.md](docs/harvest-candidates.md)
 - [ ] Plugin sandbox: threat model, protocol and manifest and the layering plan are signed off (owner, 2026-11-20). Next: execute the [migration plan](docs/design/PluginSandbox/migration-plan.md) (spike code to `OoBDev.System.Sandbox*`, plugin entry project, `ISandboxLauncher` from DI); spike result: [spike-result.md](docs/design/PluginSandbox/spike-result.md).
