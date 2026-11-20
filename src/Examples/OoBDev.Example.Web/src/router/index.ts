@@ -16,6 +16,7 @@ export const router = createRouter({
     { path: '/ai/rag', component: () => import('../pages/RagPage.vue'), meta: { crumbs: ['AI', 'Retrieval (RAG)'] } },
     { path: '/ai/search', component: () => import('../pages/SearchPage.vue'), meta: { crumbs: ['AI', 'Search'] } },
     { path: '/operations/info', component: () => import('../pages/OperationsPage.vue'), meta: { crumbs: ['Operations', 'Runtime and configuration'] } },
+    { path: '/data/access', component: () => import('../pages/DataAccessPage.vue'), meta: { crumbs: ['Data', 'Data access'] } },
     { path: '/data/cache', component: () => import('../pages/CachePage.vue'), meta: { crumbs: ['Data', 'Cache lab'] } },
     { path: '/utilities/kernel', component: () => import('../pages/KernelPlugInsPage.vue'), meta: { crumbs: ['Utilities', 'Kernel plug-ins'] } },
     { path: '/utilities/tools', component: () => import('../pages/ToolCatalogPage.vue'), meta: { crumbs: ['Utilities', 'Command-line tools'] } },

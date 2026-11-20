@@ -254,7 +254,7 @@ Purpose: let an auditor ask who was denied what and when. Binds to `GET /api/v1/
 
 ## Remaining screens
 
-Built screens are listed in Table 1; the rows below are still open unless Table 1 says Exists. Not built: Identity management, Queue adapters and blob storage, Data access, Semantic Kernel, Formats and the CLI catalog.
+Built screens are listed in Table 1; the rows below are still open unless Table 1 says Exists. Not built: Identity management, Queue adapters and blob storage, the dacpac half of Data access (the read-only query runner is built), Semantic Kernel, Formats and the CLI catalog.
 
 These follow the same blade pattern; each gets its own four design documents (requirements, architecture, API design, testing strategy) when the phase starts.
 

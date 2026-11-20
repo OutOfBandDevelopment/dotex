@@ -17,6 +17,7 @@ Acceptance criteria for each journey. The same journeys run as Playwright tests.
 | [Ask a question about your own text](ask-your-own-documents.md) | 2 | `/ai/rag` |
 | [Check the running service](check-the-running-service.md) | 2 | `/operations/info` |
 | [Cache a value](cache-a-value.md) | 2 | `/data/cache` |
+| [Run a read-only query](run-a-read-only-query.md) | 2 | `/data/access` |
 | [Hash, sign, compare and calculate](use-the-toolbox.md) | 5 | `/utilities/toolbox` |
 | [Query a document and render Markdown](query-and-render-text.md) | 2 | `/utilities/text` |
 | [Store texts and find the closest](store-and-search-vectors.md) | 2 | `/utilities/vectors` |

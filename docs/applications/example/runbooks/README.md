@@ -17,6 +17,7 @@ How to verify each feature and what to do when it fails. Generated from the same
 | [Ask a question about your own text](ask-your-own-documents.md) | The Ollama container is running with the phi3 model. |
 | [Check the running service](check-the-running-service.md) | Example stack running. |
 | [Cache a value](cache-a-value.md) | Example stack running. |
+| [Run a read-only query](run-a-read-only-query.md) | OoBDev:DataAccess:ConnectionString names a test or reporting instance, ideally a login that can only read. The signed-in user holds the data.query right (the admin role). |
 | [Hash, sign, compare and calculate](use-the-toolbox.md) | Example stack running. |
 | [Query a document and render Markdown](query-and-render-text.md) | Example stack running. |
 | [Store texts and find the closest](store-and-search-vectors.md) | Example stack running. |

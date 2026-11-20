@@ -179,7 +179,7 @@ Checklist (tick as work lands):
   - [x] ONNX sentence embeddings and model compare
   - [x] Vectors and matrix calculator
   - [ ] Identity management: read-only screen in the example (owner, 2026-11-10); the admin feature belongs in the reference architecture stack, see BACKLOG.md
-  - [ ] Data access and DacPac builder
+  - [ ] Data access and DacPac builder (the read-only query runner is built 2026-11-20; the dacpac build and diff are open)
   - [ ] Queue adapters monitor and blob browser
   - [ ] Semantic Kernel plug-in tester
   - [ ] Expression calculator, pipelines, text tools, security helpers, format inspectors (no device IO)

@@ -261,6 +261,40 @@ export const journeys: Journey[] = [
     ],
   },
   {
+    id: 'run-a-read-only-query',
+    title: 'Run a read-only query',
+    persona: 'A developer looking at rows in a test or reporting database',
+    goal: 'Run one SELECT and read the rows, knowing nothing else can run.',
+    start: '/data/access',
+    prerequisites: ['OoBDev:DataAccess:ConnectionString names a test or reporting instance, ideally a login that can only read.', 'The signed-in user holds the data.query right (the admin role).'],
+    features: ['OoBDev.DacFx (`SelectOnlyGuard`)', 'OoBDev.Example.WebApi (`ReadOnlyQueryRunner`)'],
+    why: 'Let a developer look at data without a path to change it: a parser allows one SELECT, the connection asks for the read-only intent, rows and time are capped, and the login permissions are the real guard.',
+    problems: [
+      { symptom: 'Data access is not configured', cause: 'OoBDev:DataAccess:ConnectionString is empty', fix: 'Set it to a test or reporting instance' },
+      { symptom: 'Query refused', cause: 'The text is not exactly one SELECT (several statements, SELECT INTO, OPENROWSET and the like)', fix: 'Send a single plain SELECT' },
+      { symptom: 'More rows exist than shown', cause: 'The row cap applies', fix: 'Add a TOP or a WHERE, or raise OoBDev:DataAccess:MaxRows' },
+    ],
+    steps: [
+      {
+        title: 'Write the query',
+        narrative: 'The box holds one SELECT. Change it to what you want to see.',
+        expect: ['The Run button is enabled while the box is not empty.'],
+        run: async page => {
+          await expect(page.getByLabel('SQL')).toBeVisible();
+        },
+      },
+      {
+        title: 'Run it',
+        narrative: 'The rows appear in a table with the elapsed time; a note says when the cap cut the list short.',
+        expect: ['The row count and elapsed time are shown.', 'The columns and rows are listed.'],
+        run: async page => {
+          await press(page, 'Run');
+          await expect(page.locator('table.grid')).toContainText('master');
+        },
+      },
+    ],
+  },
+  {
     id: 'use-the-toolbox',
     title: 'Hash, sign, compare and calculate',
     persona: 'A developer checking integrity and similarity',
