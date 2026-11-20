@@ -39,6 +39,7 @@ public static class Program
 
         // Add example application services 
         services.AddApplicationServices();
+        services.TryAddProblemDetailsExceptionHandler(builder.Configuration);
 
         var identityProvider = Enum.TryParse<IdentityProviders>(
             Environment.GetEnvironmentVariable("IDENTITY_PROVIDER"), ignoreCase: true, out var ip) ? ip :
@@ -158,6 +159,7 @@ public static class Program
             app.MapAsyncApi();
         }
 
+        app.UseProblemDetailsExceptionHandler();
         app.UseHttpsRedirection();
 
         app.UseAllCommonMiddleware(

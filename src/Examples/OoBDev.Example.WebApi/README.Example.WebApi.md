@@ -61,6 +61,10 @@ Most controllers need a backing service. Start the Docker services from `contain
 
 When `OoBDev:RightAudit:ConnectionString` (SQL Server) is set, the API stores every right check (`TryAddEntityFrameworkRightAudit`, `AddRightAuditLog`), creates the table at start (`EnsureCreated`) and maps `GET /api/v1/right-audit` for the right `audit.read` (given to `admin`). Without it the endpoint is absent.
 
+## Error handling
+
+Unhandled exceptions return RFC 9457 problem details with the trace, correlation and request identifiers (`ProblemDetailsExceptionHandler`, first in the pipeline). `appsettings.Development.json` sets `OoBDev:ProblemDetails:IncludeErrorLocation` so development responses name the original error location; other environments do not.
+
 ## Data access (read-only query runner)
 
 `POST api/DataAccess/query` (right `data.query`, admin role) runs one SELECT on the instance named by `OoBDev:DataAccess:ConnectionString` (`MaxRows` 200 and `TimeoutSeconds` 15 by default); it answers 404 until a connection string is set. Layers: `SelectOnlyGuard` (ScriptDom, one SELECT only), the `ApplicationIntent=ReadOnly` connection, the row cap and timeout, and above all a login that can only read. Point it at a test or reporting instance, never live data. The Vue page is `/data/access`.
