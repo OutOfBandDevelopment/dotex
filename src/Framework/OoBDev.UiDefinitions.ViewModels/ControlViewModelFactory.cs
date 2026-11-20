@@ -22,6 +22,7 @@ public static class ControlViewModelFactory
         {
             ToggleControl toggle => new ToggleViewModel(toggle, binding),
             ChoiceControl choice => new ChoiceViewModel(choice, binding),
+            ListControl list => new ListViewModel(list, binding),
             IndicatorControl indicator => new IndicatorViewModel(indicator, binding),
             ButtonControl button => new ButtonViewModel(button, binding, colorPicker, siblings, confirm, preview),
             TextFieldControl or NumericControl or SliderControl => new TextViewModel(control, binding),
