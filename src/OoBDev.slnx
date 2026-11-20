@@ -425,6 +425,8 @@
     <Project Path="Tools/OoBDev.DocumentConverter.Cli/OoBDev.DocumentConverter.Cli.csproj" />
     <Project Path="Tools/OoBDev.FileRagEngine.Cli/OoBDev.FileRagEngine.Cli.csproj" />
     <Project Path="Tools/OoBDev.FixSourceLinks.Cli/OoBDev.FixSourceLinks.Cli.csproj" />
+    <Project Path="Tools/OoBDev.FileInventory.Cli.Tests/OoBDev.FileInventory.Cli.Tests.csproj" />
+    <Project Path="Tools/OoBDev.FileInventory.Cli/OoBDev.FileInventory.Cli.csproj" />
     <Project Path="Tools/OoBDev.ImageMask.Cli/OoBDev.ImageMask.Cli.csproj" />
     <Project Path="Tools/OoBDev.ImageMask.Cli.Tests/OoBDev.ImageMask.Cli.Tests.csproj" />
     <Project Path="Tools/OoBDev.LlmCodeGen.Cli.Tests/OoBDev.LlmCodeGen.Cli.Tests.csproj" />
