@@ -37,34 +37,44 @@ public sealed class VectorSceneAudioWriter(VectorSceneAudioOptions options)
         var total = checked((int)(_options.SampleRate * _options.Duration.TotalSeconds));
         if (total == 0) return;
 
-        var dataLength = total * 4;
+        var channels = _options.ZChannel ? 3 : 2;
+        var dataLength = total * channels * 2;
         using var writer = new BinaryWriter(output, Encoding.ASCII, leaveOpen: true);
         writer.Write("RIFF"u8);
-        writer.Write(36 + dataLength);
+        writer.Write((_options.ZChannel ? 60 : 36) + dataLength);
         writer.Write("WAVEfmt "u8);
-        writer.Write(16);
-        writer.Write((short)1);
-        writer.Write((short)2);
+        writer.Write(_options.ZChannel ? 40 : 16);
+        writer.Write((short)(_options.ZChannel ? 0xFFFE : 1));
+        writer.Write((short)channels);
         writer.Write(_options.SampleRate);
-        writer.Write(_options.SampleRate * 4);
-        writer.Write((short)4);
+        writer.Write(_options.SampleRate * channels * 2);
+        writer.Write((short)(channels * 2));
         writer.Write((short)16);
+        if (_options.ZChannel)
+        {
+            writer.Write((short)22);
+            writer.Write((short)16);
+            writer.Write(0x7); // front left, front right, front centre; never the LFE channel
+            writer.Write(new byte[] { 1, 0, 0, 0, 0, 0, 0x10, 0, 0x80, 0, 0, 0xAA, 0, 0x38, 0x9B, 0x71 }); // KSDATAFORMAT_SUBTYPE_PCM
+        }
+
         writer.Write("data"u8);
         writer.Write(dataLength);
         for (var i = 0; i < total; i++)
         {
-            var (x, y) = frame[i % frame.Count];
+            var (x, y, draw) = frame[i % frame.Count];
             writer.Write(ToPcm(x));
             writer.Write(ToPcm(y));
+            if (_options.ZChannel) writer.Write(ToPcm(draw ? 1 : -1));
         }
     }
 
     private static short ToPcm(double value) => (short)Math.Round(Math.Clamp(value, -1, 1) * short.MaxValue);
 
-    private List<(double X, double Y)> BuildFrame(VectorScene scene)
+    private List<(double X, double Y, bool Draw)> BuildFrame(VectorScene scene)
     {
         var lines = scene.Lines.Where(l => l.Points.Count > 0).ToList();
-        var frame = new List<(double, double)>();
+        var frame = new List<(double, double, bool)>();
         if (lines.Count == 0) return frame;
 
         var points = lines.SelectMany(l => l.Points).ToList();
@@ -75,7 +85,7 @@ public sealed class VectorSceneAudioWriter(VectorSceneAudioOptions options)
         var span = Math.Max(Math.Max(maxX - minX, maxY - minY), double.Epsilon);
         var centreX = (minX + maxX) / 2;
         var centreY = (minY + maxY) / 2;
-        (double, double) Map(VectorPoint p) => ((p.X - centreX) * 2 / span, -(p.Y - centreY) * 2 / span);
+        (double, double, bool) Map(VectorPoint p) => ((p.X - centreX) * 2 / span, -(p.Y - centreY) * 2 / span, true);
 
         var frameSamples = Math.Max(1, _options.SampleRate / _options.FramesPerSecond);
         var jumps = Math.Max(0, lines.Count - 1) * _options.JumpSamples;
@@ -93,7 +103,7 @@ public sealed class VectorSceneAudioWriter(VectorSceneAudioOptions options)
                 for (var j = 1; j <= _options.JumpSamples; j++)
                 {
                     var t = (double)j / (_options.JumpSamples + 1);
-                    frame.Add((last.Item1 + (start.Item1 - last.Item1) * t, last.Item2 + (start.Item2 - last.Item2) * t));
+                    frame.Add((last.Item1 + (start.Item1 - last.Item1) * t, last.Item2 + (start.Item2 - last.Item2) * t, false));
                 }
             }
 

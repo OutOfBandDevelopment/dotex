@@ -80,4 +80,33 @@ public sealed class VectorSceneAudioWriterTests
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new VectorSceneAudioWriter(new VectorSceneAudioOptions { Duration = TimeSpan.Zero }));
         Assert.ThrowsExactly<ArgumentNullException>(() => new VectorSceneAudioWriter(null!));
     }
+
+    [TestMethod]
+    public void Write_ZChannel_ExtensibleThreeChannelWavBlanksTheJumps()
+    {
+        var scene = new VectorScene(100, 100,
+        [
+            new VectorPolyline(1, "#000000", [new(10, 10), new(20, 10)]),
+            new VectorPolyline(1, "#000000", [new(80, 80), new(90, 80)]),
+        ]);
+        using var ms = new MemoryStream();
+        new VectorSceneAudioWriter(new VectorSceneAudioOptions { Duration = TimeSpan.FromMilliseconds(100), ZChannel = true }).Write(scene, ms);
+        var b = ms.ToArray();
+
+        Assert.AreEqual(0xFFFE, (ushort)BitConverter.ToInt16(b, 20));
+        Assert.AreEqual(3, BitConverter.ToInt16(b, 22));
+        Assert.AreEqual(7, BitConverter.ToInt32(b, 40), "channel mask is front left, right and centre, no LFE");
+        Assert.AreEqual(4800 * 6, BitConverter.ToInt32(b, 64));
+        Assert.AreEqual(68 + (4800 * 6), b.Length);
+
+        var draw = 0;
+        var blank = 0;
+        for (var i = 68; i < b.Length; i += 6)
+        {
+            var z = BitConverter.ToInt16(b, i + 4);
+            if (z > 0) draw++; else blank++;
+        }
+
+        Assert.IsTrue(draw > 0 && blank > 0, $"draw {draw}, blank {blank}");
+    }
 }

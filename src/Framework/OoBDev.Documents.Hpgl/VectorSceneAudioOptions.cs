@@ -17,6 +17,9 @@ public sealed class VectorSceneAudioOptions
     /// <summary>Samples spent moving between two polylines; a short jump is nearly invisible without a blanking track.</summary>
     public int JumpSamples { get; set; } = 4;
 
+    /// <summary>Adds a third blanking track (WAVE_FORMAT_EXTENSIBLE, front-centre, never LFE): +1 while drawing, -1 during jumps.</summary>
+    public bool ZChannel { get; set; }
+
     /// <summary>Checks the values and throws when one cannot produce a signal.</summary>
     /// <exception cref="ArgumentOutOfRangeException">A value is zero or negative.</exception>
     public void Validate()
