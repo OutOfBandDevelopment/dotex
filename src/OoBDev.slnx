@@ -64,6 +64,8 @@
     <Project Path="Extensions/OoBDev.AspNetCore.Cgi/OoBDev.AspNetCore.Cgi.csproj" />
     <Project Path="Extensions/OoBDev.AspNetCore.OData.Tests/OoBDev.AspNetCore.OData.Tests.csproj" />
     <Project Path="Extensions/OoBDev.AspNetCore.OData/OoBDev.AspNetCore.OData.csproj" />
+    <Project Path="Extensions/OoBDev.Communications.Web.Tests/OoBDev.Communications.Web.Tests.csproj" />
+    <Project Path="Extensions/OoBDev.Communications.Web/OoBDev.Communications.Web.csproj" />
     <Project Path="Extensions/OoBDev.EventSourcing.Web.Tests/OoBDev.EventSourcing.Web.Tests.csproj" />
     <Project Path="Extensions/OoBDev.EventSourcing.Web/OoBDev.EventSourcing.Web.csproj" />
     <Project Path="Extensions/OoBDev.Data.Vectors.DB.Tests/OoBDev.Data.Vectors.DB.Tests.csproj" />

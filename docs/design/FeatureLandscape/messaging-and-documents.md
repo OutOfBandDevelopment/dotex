@@ -54,7 +54,8 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Built:** delivery status tracking and the SES webhook (delivered, bounce, complaint, open, click) exist; 2026-11-16 added the suppression list (`ISuppressionList`, `SuppressingSendService`).
 - **Built 2026-11-16:** `DeliveryStatus.Complained`, recipients on `DeliveryStatusUpdate`, and `SuppressionStatusHandler` feed the list from permanent bounces and complaints.
 - **Built 2026-11-16:** durable list (`OoBDev.Communications.EntityFrameworkCore`) and signed RFC 8058 unsubscribe links (`UnsubscribeLinks`).
-- **Missing:** an unsubscribe HTTP endpoint in a host, SMS and push as further channels behind the same provider.
+- **Built 2026-11-19:** the unsubscribe HTTP endpoint (`OoBDev.Communications.Web`, `MapUnsubscribe`, POST one-click and a GET confirmation page).
+- **Missing:** SMS and push as further channels behind the same provider.
 
 ## TextTemplating, TemplateTools and DataEnhancement
 
