@@ -1,6 +1,6 @@
 # HP-GL stereo audio sink
 
-Status: **proposed design, written 2026-11-19 on the assumed answer A of Q20 (an output format of the Hpgl library, 48 kHz, fast jumps without a Z track); no code, unscheduled.** Request: [HP-GL vector display sink](../../features/request/2026-11-10-hpgl-vector-display-sink.md).
+Status: **proposed design, written 2026-11-19 on the assumed answer A of Q20 (an output format of the Hpgl library, 48 kHz, fast jumps without a Z track); built 2026-11-19 (`VectorSceneAudioWriter`, `VectorSceneAudioOptions`, 5 unit tests); the optional Z channel is not built.** Request: [HP-GL vector display sink](../../features/request/2026-11-10-hpgl-vector-display-sink.md).
 
 ## Contents
 

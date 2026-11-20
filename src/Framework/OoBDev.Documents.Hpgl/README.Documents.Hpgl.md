@@ -7,3 +7,7 @@ services.TryAddHpglConversion();
 ```
 
 References `OoBDev.Documents.Abstractions` only. Moved from `OoBDev.DevTerm.Core` ([migration plan](../../../docs/design/StreamTools/migration-plan.md)).
+
+## Audio output (oscilloscope X-Y)
+
+`VectorSceneAudioWriter` writes a `VectorScene` as a stereo 16-bit WAV (left X, right Y, scaled to -1..1, aspect kept). `VectorSceneAudioOptions` sets `SampleRate` (48000), `Duration` (10 s), `FramesPerSecond` (25) and `JumpSamples` (4). There is no blanking track, so jumps between lines are short interpolated runs. Design: [HpglAudioSink](../../../docs/design/HpglAudioSink/README.md).
