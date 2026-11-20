@@ -110,6 +110,21 @@ public static class ServiceCollectionExtensions
     }
 
     /// <summary>
+    /// Adds <see cref="ProblemDetailsExceptionHandler"/> and its options (<c>OoBDev:ProblemDetails</c>: <c>IncludeErrorLocation</c>).
+    /// Pair with <see cref="ApplicationBuilderExtensions.UseProblemDetailsExceptionHandler"/>.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configuration">The configuration holding the <c>OoBDev:ProblemDetails</c> section.</param>
+    /// <returns>The modified service collection.</returns>
+    public static IServiceCollection TryAddProblemDetailsExceptionHandler(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddValidatedOptions<ProblemDetailsExceptionHandlerOptions>(configuration, "OoBDev:ProblemDetails");
+        services.AddProblemDetails();
+        services.AddExceptionHandler<ProblemDetailsExceptionHandler>();
+        return services;
+    }
+
+    /// <summary>
     /// Adds role to application right mapping: validated options (<c>OoBDev:Authorization</c>), the configuration mapper,
     /// the claims transformation and the shared right checker.
     /// </summary>

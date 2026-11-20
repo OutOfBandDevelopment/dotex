@@ -52,7 +52,7 @@ Start where the code already has natural seams: the message queue providers (pub
 
 ## Relation to other practices
 
-Correlation identifiers tie into the `ProblemDetails` middleware ([HTTP API](./10-http-api-practices.md)); audit events ([security](./12-security-practices.md)) use the logging pipeline; retry and circuit state ([resilience](./14-resilience-practices.md)) are exposed as metrics. The `docs/todo.md` wish for error handling that returns the original error location is designed together with the correlation rule.
+Correlation identifiers tie into the `ProblemDetails` middleware ([HTTP API](./10-http-api-practices.md)); audit events ([security](./12-security-practices.md)) use the logging pipeline; retry and circuit state ([resilience](./14-resilience-practices.md)) are exposed as metrics. Unhandled exceptions are handled by `ProblemDetailsExceptionHandler` (`TryAddProblemDetailsExceptionHandler`, `UseProblemDetailsExceptionHandler`): the response carries the trace, correlation and request identifiers, and `OoBDev:ProblemDetails:IncludeErrorLocation` adds the original error location (off by default; development and test only).
 
 ---
 

@@ -19,6 +19,15 @@ public static class ApplicationBuilderExtensions
         => builder.UseMiddleware<QueryVerbMiddleware>();
 
     /// <summary>
+    /// Returns unhandled exceptions as RFC 9457 problem details with trace and correlation identifiers.
+    /// Call first, before <see cref="UseAspNetCoreExtensionMiddleware"/>, after <c>TryAddProblemDetailsExceptionHandler</c>.
+    /// </summary>
+    /// <param name="builder">The application builder.</param>
+    /// <returns>The application builder.</returns>
+    public static IApplicationBuilder UseProblemDetailsExceptionHandler(this IApplicationBuilder builder)
+        => builder.UseExceptionHandler();
+
+    /// <summary>
     /// Add custom middleware to ASP.Net to support these extensions
     /// <see cref="CorrelationInfoMiddleware"/>
     /// <see cref="CultureInfoMiddleware"/> 
