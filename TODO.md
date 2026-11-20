@@ -2,13 +2,13 @@
 
 > **Active work only.** The full work list is [BACKLOG.md](BACKLOG.md); finished work goes to [docs/changes/](docs/changes/README.md). Owner questions: [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md).
 
-**Last Updated:** 2026-11-19
+**Last Updated:** 2026-11-20
 
 Keep this file short (about 15 one-line items). When an item starts, move it here from the backlog; when it finishes, remove it here and from the backlog, record it in `docs/changes/`, and update the feature docs it touched.
 
 ## In progress
 
-- [x] Owner request 2026-11-19, "do everything you can do without question": work every item that needs no answer, assume the default where one exists. Left: the tracking audit via `work-backlog`. Waiting on answers: wish-list and roadmap triage (Q19), bake-off (Q4), Q5, Q12, Q24, plugin sandbox, hardware requests (Q13 to Q17).
+- [x] Owner request 2026-11-19, "do everything you can do without question": work every item that needs no answer, assume the default where one exists. Left: the tracking audit via `work-backlog`. Waiting on answers: wish-list and roadmap triage (Q19), bake-off (Q4), Q5, Q12, Q20 to Q22, Q24, plugin sandbox, hardware requests (Q13 to Q17).
 
 ## Next
 
