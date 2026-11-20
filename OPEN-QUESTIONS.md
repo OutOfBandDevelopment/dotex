@@ -23,3 +23,16 @@ Q1 decided that every relational store ships EF migrations per provider. Event s
 **Default:** B, starting with the right audit store (smallest, newest); nothing is created until you confirm.
 
 **Your answer:**
+
+### Q21 · 2026-11-20 · DevTerm · Should the Connection Editor's saved-profile list become the generated `List` control?
+
+The `List` control now renders in WPF, Avalonia, WinForms, Blazor and the Tui (single selection, add and delete as sibling buttons). The WPF Connection Editor's profile list does more: multi-select (delete selected, export selected), double-click to load, and Load, Refresh, export and import buttons beside it ([spec](docs/applications/devterm/specs/connection-editor.md)). Rebuilding it on the control changes behaviour and needs a multi-select design first.
+
+**Options**
+
+- A. (recommended) Keep the profile list hand-built (it is list management with commands, as the spec table already says) and close the backlog item; the `List` control serves single-select master-detail forms elsewhere.
+- B. Add a multi-select mode and double-click command to `ListControl` (model, view model, five renderers), then move the editor onto it: one vocabulary everywhere, a larger change touching every renderer.
+
+**Default:** A; the backlog item is closed with the reason recorded.
+
+**Your answer:**
