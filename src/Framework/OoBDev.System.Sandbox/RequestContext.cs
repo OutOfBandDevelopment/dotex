@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -78,6 +79,43 @@ public sealed class RequestContext
             .ToDictionary(c => c.Key, c => c.Value, StringComparer.Ordinal);
         var sortedRights = rights.Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).ToList();
         return new RequestContext(subject, tenant, pluginId, claims, sortedRights, issuedAt.ToUnixTimeSeconds(), issuedAt.Add(lifetime).ToUnixTimeSeconds(), traceId);
+    }
+
+    /// <summary>
+    /// Builds a context from the principal the host's token validator produced (the JWT bearer handler, or the STS adapter's result), never from the token.
+    /// The subject is the <c>sub</c> (or name identifier) claim; a principal without one is refused. The context ends at <paramref name="lifetime"/> or the
+    /// token's own <c>exp</c> claim, whichever is earlier, and an expired token is refused. <paramref name="rights"/> are the application rights the middleware
+    /// already translated from the roles.
+    /// </summary>
+    public static RequestContext FromPrincipal(ClaimsPrincipal principal, string tenant, string pluginId, IEnumerable<string> declaredClaims, IEnumerable<string> rights, TimeProvider time, TimeSpan lifetime, string traceId)
+    {
+        ArgumentNullException.ThrowIfNull(principal);
+        ArgumentNullException.ThrowIfNull(time);
+        if (principal.Identity?.IsAuthenticated != true)
+        {
+            throw new ArgumentException("The principal is not authenticated.", nameof(principal));
+        }
+
+        var subject = principal.FindFirst("sub")?.Value ?? principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(subject))
+        {
+            throw new ArgumentException("The principal has no subject claim.", nameof(principal));
+        }
+
+        var now = time.GetUtcNow();
+        if (long.TryParse(principal.FindFirst("exp")?.Value, NumberStyles.None, CultureInfo.InvariantCulture, out var exp))
+        {
+            var remaining = DateTimeOffset.FromUnixTimeSeconds(exp) - now;
+            if (remaining <= TimeSpan.Zero)
+            {
+                throw new ArgumentException("The token has expired.", nameof(principal));
+            }
+
+            lifetime = remaining < lifetime ? remaining : lifetime;
+        }
+
+        var claims = principal.Claims.GroupBy(c => c.Type, StringComparer.Ordinal).Select(g => new KeyValuePair<string, string>(g.Key, g.First().Value));
+        return Create(subject, tenant, pluginId, claims, declaredClaims, rights, now, lifetime, traceId);
     }
 
     /// <summary>True while <paramref name="now"/> is inside the validity window.</summary>

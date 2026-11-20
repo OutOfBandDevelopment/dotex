@@ -17,3 +17,7 @@ Throwaway proof of concept for the [sandboxed plugin host](../../../docs/design/
 ## Idle heartbeat sweep
 
 `PluginHost.Sweep(TimeSpan heartbeatTimeout)` ends idle instances past the idle timeout and sends a heartbeat to every other idle shared instance. One that does not answer in time is ended and removed from the pool, so the next `Start` launches a fresh process (the restart policy). A leased instance is never probed, because the stdio stream belongs to the caller; `PluginPool<T>.Sweep(Func<T, bool>)` is the generic form. Call it from the host's timer. The pool is locked while it asks, so keep the timeout short.
+
+## Request context from a validated principal
+
+`RequestContext.FromPrincipal(principal, tenant, pluginId, declaredClaims, rights, time, lifetime, traceId)` builds the context from the `ClaimsPrincipal` the host's token validator produced (the JWT bearer handler, or the STS adapter's result), never from the token. The subject is `sub` (or the name identifier); a principal that is anonymous, has no subject or carries an expired `exp` is refused with `ArgumentException`. The context ends at the lifetime or the token's `exp`, whichever is earlier, and only the claims the manifest declared are kept. `rights` are the application rights the role middleware already translated.
