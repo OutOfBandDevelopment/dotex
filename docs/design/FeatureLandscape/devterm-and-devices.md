@@ -69,4 +69,4 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Works with:** Transports (VISA-like access over USBTMC and sockets), DeviceDecoding.
 - **Known issues:** SCPI profiles depend on a researched manual per device (skill `device-manual`).
 - **Standards:** IEEE 488.2, SCPI-99, VXI-11 (RFC 1057 based) and HiSLIP for LAN instruments.
-- **Missing:** LXI discovery (mDNS, VXI-11 portmapper) and a NetworkDevices design with a project.
+- **Built:** VXI-11 portmapper LXI scan (`LxiDiscovery`, Framework) and mDNS, SSDP and USR bridge probes with a [NetworkDevices design](../NetworkDevices/README.md) (in DevTerm). **Missing:** a Framework home for the probes (Q25).

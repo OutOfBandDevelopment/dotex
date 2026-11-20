@@ -322,3 +322,16 @@ Requests: [audit attribute](docs/features/request/2026-01-20-audit-request-attri
 **Default:** C.
 
 **Your answer:**
+
+### Q25 (2026-11-19, NetworkDevices): should the network device probes move out of DevTerm into a Framework library?
+
+The probes (`INetworkDeviceProbe`, mDNS, SSDP, USR bridge, `NetworkDiscovery`) live in `src/Applications/DevTerm/OoBDev.DevTerm.Core/Configuration/Discovery/` and have no DevTerm-specific names. The VXI-11 portmapper scan is already Framework (`OoBDev.System.IO.Tcp.LxiDiscovery`). Rule `layering-and-migration-plans`: reusable code is Framework, and a move needs a confirmed plan.
+
+**Options**
+- A. Move them to a new Framework library `OoBDev.System.Net.Discovery` (namespace and project reference changes in DevTerm; plan written first) (recommended: other tools such as the file inventory CLI or a device registry can reuse them, and nothing there is host-bound).
+- B. Keep them in DevTerm until a second consumer exists.
+- C. Put them next to `LxiDiscovery` in `OoBDev.System.IO.Tcp`.
+
+**Default:** B.
+
+**Your answer:**
