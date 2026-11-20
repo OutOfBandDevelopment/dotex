@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\OoBDev.System.Sandbox\OoBDev.System.Sandbox.csproj" />
     <ProjectReference Include="..\OoBDev.System.Sandbox.Windows\OoBDev.System.Sandbox.Windows.csproj" />
+    <ProjectReference Include="..\OoBDev.System.Sandbox.Linux\OoBDev.System.Sandbox.Linux.csproj" />
   </ItemGroup>
 
 </Project>

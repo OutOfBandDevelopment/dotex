@@ -83,12 +83,17 @@ internal static class Program
     // A stand-in host: starts a sandboxed plugin (echo, or sleep when it should survive because echo ends when its stdin closes) (killOnClose per args[1]), writes its process id to args[2], then waits to be killed.
     private static int Caller(string[] args)
     {
+        var kill = args[1] == "kill";
+        if (OperatingSystem.IsLinux())
+        {
+            return LinuxCaller(args[2], kill);
+        }
+
         if (!OperatingSystem.IsWindows())
         {
             return 3;
         }
 
-        var kill = args[1] == "kill";
         var plugin = new SandboxedPlugin(typeof(Program).Assembly.Location, kill ? "echo" : "sleep", new JobLimits(MemoryMb: 256), killOnClose: kill);
         if (kill)
         {
@@ -96,6 +101,21 @@ internal static class Program
         }
 
         File.WriteAllText(args[2], plugin.ProcessId.ToString(global::System.Globalization.CultureInfo.InvariantCulture));
+        Thread.Sleep(Timeout.Infinite);
+        return 0;
+    }
+
+    // Linux stand-in host: bubblewrap's die-with-parent ends the sandbox when this process is killed; only the kill case exists there.
+    private static int LinuxCaller(string pidFile, bool kill)
+    {
+        if (!kill)
+        {
+            return 3;
+        }
+
+        using var plugin = new OoBDev.System.Sandbox.Linux.BubblewrapPlugin(typeof(Program).Assembly.Location, "echo");
+        plugin.Receive();
+        File.WriteAllText(pidFile, plugin.ProcessId.ToString(global::System.Globalization.CultureInfo.InvariantCulture));
         Thread.Sleep(Timeout.Infinite);
         return 0;
     }

@@ -65,6 +65,9 @@ public sealed class BubblewrapPlugin : ISandboxedPlugin
         }
     }
 
+    /// <summary>The process id of the bubblewrap process that holds the sandbox.</summary>
+    public int ProcessId => _process.Id;
+
     /// <inheritdoc />
     public int ExitCode => _process.ExitCode;
 
