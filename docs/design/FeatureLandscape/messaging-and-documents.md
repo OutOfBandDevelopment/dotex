@@ -87,4 +87,4 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Works with:** MessageQueuing, SharedFramework Complex Events (`OoBDev.ComplexEvents`), Search (projections).
 - **Known issues:** CQRS is draft only; MasterData has no code and no owner-confirmed scope.
 - **Standards:** CloudEvents 1.0, optimistic concurrency with expected sequence.
-- **Missing:** snapshotting, upcasting of old events, and GDPR erasure for append-only stores.
+- **Built:** snapshots (`ISnapshotable`, `SnapshotOptions`) and event upcasting (`IEventUpcaster`, `EventUpcastPipeline`). **Missing:** GDPR erasure for append-only stores.
