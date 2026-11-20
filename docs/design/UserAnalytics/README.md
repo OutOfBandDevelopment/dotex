@@ -1,6 +1,6 @@
 # User analytics (screen usage, URLs, timeouts)
 
-**Status:** the HTTP half (calls, timeouts, duration) is built as `UseHttpUsageMetrics()` in `OoBDev.AspNetCore.Mvc` (Unit tested); the screen-view endpoint is built as `MapScreenViews` (Unit tested), the front end call and the OpenTelemetry export wiring are not. **Last Updated:** 2026-11-20. Origin: owner wish list (`BACKLOG.md` section 8). Waiting on [Q28](../../../OPEN-QUESTIONS.md).
+**Status:** the HTTP half (calls, timeouts, duration) is built as `UseHttpUsageMetrics()` in `OoBDev.AspNetCore.Mvc` (Unit tested); the screen-view endpoint is built as `MapScreenViews` (Unit tested) and used by the example API and web app (the API list `OoBDev:Analytics:Screens` is checked against the router by a test). The OpenTelemetry export wiring is not. **Last Updated:** 2026-11-20. Origin: owner wish list (`BACKLOG.md` section 8). Waiting on [Q28](../../../OPEN-QUESTIONS.md).
 
 ## Requirements
 

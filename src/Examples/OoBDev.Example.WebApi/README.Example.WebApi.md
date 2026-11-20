@@ -61,6 +61,10 @@ Most controllers need a backing service. Start the Docker services from `contain
 
 When `OoBDev:RightAudit:ConnectionString` (SQL Server) is set, the API stores every right check (`TryAddEntityFrameworkRightAudit`, `AddRightAuditLog`), creates the table at start (`EnsureCreated`) and maps `GET /api/v1/right-audit` for the right `audit.read` (given to `admin`). Without it the endpoint is absent.
 
+## Usage analytics
+
+`UseHttpUsageMetrics()` counts calls and timeouts by route template, and `POST /api/v1/analytics/screen-views` (authenticated) counts the screens listed in `OoBDev:Analytics:Screens`; the web app posts each route change. Design: [UserAnalytics](../../../docs/design/UserAnalytics/README.md).
+
 ## Error handling
 
 Unhandled exceptions return RFC 9457 problem details with the trace, correlation and request identifiers (`ProblemDetailsExceptionHandler`, first in the pipeline). `appsettings.Development.json` sets `OoBDev:ProblemDetails:IncludeErrorLocation` so development responses name the original error location; other environments do not.

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { auth, authEnabled } from '../core/auth';
+import { trackScreen } from '../core/analytics';
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -53,3 +54,5 @@ router.beforeEach(async to => {
     return false;
   }
 });
+
+router.afterEach(to => trackScreen(to.path));

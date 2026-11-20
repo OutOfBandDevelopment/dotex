@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using OoBDev.AspNetCore.JwtAuthentication.OpenApi;
 using OoBDev.AspNetCore.EntityFrameworkCore;
 using OoBDev.AspNetCore.Mvc;
@@ -173,6 +174,10 @@ public static class Program
         OoBDev.AspNetCore.Cgi.ServiceCollectionExtensions.UseCgi(app);
 
         app.MapControllers();
+        var screens = app.Configuration.GetSection("OoBDev:Analytics:Screens").Get<string[]>();
+        if (screens is { Length: > 0 })
+            app.MapScreenViews(screens).RequireAuthorization();
+
         if (!string.IsNullOrWhiteSpace(app.Configuration["OoBDev:RightAudit:ConnectionString"]))
         {
             using (var scope = app.Services.CreateScope())
