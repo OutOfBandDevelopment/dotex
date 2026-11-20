@@ -59,7 +59,7 @@ public sealed class PluginHost : IDisposable
         var write = grant.Files.Where(f => f.Access == "rw").Select(f => f.Path).ToList();
         try
         {
-            var lease = _pool.Acquire(manifest.Id, grant.Hash, lifetime, () => Create(manifest.Id, grant, commandArguments, read, write, lifetime));
+            var lease = _pool.Acquire(manifest.Id, grant.Hash, lifetime, () => Create(manifest.Id, grant, commandArguments, read, write, lifetime, manifest.Limits));
             return new HostStart(HostRefusal.None, string.Empty, lease);
         }
         catch (TimeoutException)
@@ -75,7 +75,7 @@ public sealed class PluginHost : IDisposable
         grant.Files.All(f => manifest.Permissions.Files?.Any(r => r.Path == f.Path && (r.Access == f.Access || (r.Access == "rw" && f.Access == "ro"))) ?? false)
         && grant.Network.All(n => manifest.Permissions.Network?.Contains(n) ?? false);
 
-    private BrokeredPlugin Create(string pluginId, Grant grant, string commandArguments, List<string> read, List<string> write, PluginLifetime lifetime)
+    private BrokeredPlugin Create(string pluginId, Grant grant, string commandArguments, List<string> read, List<string> write, PluginLifetime lifetime, PluginLimits? limits)
     {
         InstanceHold? hold = null;
         if (lifetime == PluginLifetime.Shared)
@@ -86,6 +86,7 @@ public sealed class PluginHost : IDisposable
         try
         {
             var plugin = new BrokeredPlugin(pluginId, _launch(commandArguments, read, write), _broker, _contexts, hold);
+            plugin.RateLimiter = new MessageRateLimiter((limits ?? new PluginLimits()).EffectiveMsgPerSec);
             plugin.WaitReady();
             return plugin;
         }

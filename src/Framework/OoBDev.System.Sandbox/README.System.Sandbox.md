@@ -4,7 +4,7 @@ Throwaway proof of concept for the [sandboxed plugin host](../../../docs/design/
 
 ## Message rate
 
-`MessageRateLimiter` drops frames over a per-second limit and flags a sustained excess; set it on `BrokeredPlugin.RateLimiter`.
+`MessageRateLimiter` drops frames over a per-second limit and flags a sustained excess; `PluginHost` sets it on `BrokeredPlugin.RateLimiter` from the manifest `limits.msgPerSec` (default 200, ceiling 1000).
 
 ## Heartbeat
 

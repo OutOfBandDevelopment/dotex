@@ -10,7 +10,8 @@ namespace OoBDev.System.Sandbox;
 /// <param name="Entry">Map from platform to the relative executable path.</param>
 /// <param name="Permissions">What the plugin requests.</param>
 /// <param name="Files">Map from relative path to <c>sha256:</c> digest, covering every file of the package.</param>
-public sealed record PluginManifest(string Id, string Version, string Protocol, IReadOnlyDictionary<string, string> Entry, PluginPermissions Permissions, IReadOnlyDictionary<string, string> Files)
+/// <param name="Limits">Optional limits the plugin asks for.</param>
+public sealed record PluginManifest(string Id, string Version, string Protocol, IReadOnlyDictionary<string, string> Entry, PluginPermissions Permissions, IReadOnlyDictionary<string, string> Files, PluginLimits? Limits = null)
 {
     /// <summary>JSON options shared by the reader and the writer.</summary>
     public static JsonSerializerOptions Json { get; } = new(JsonSerializerDefaults.Web) { WriteIndented = true };
