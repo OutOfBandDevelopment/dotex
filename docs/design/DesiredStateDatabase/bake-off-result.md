@@ -31,7 +31,7 @@ Tools built from source with Go 1.27.1 into a scratch folder outside the reposit
 | S7 plan then apply | G: `--dry-run` text only | G: `--dry-run` text only | P: JSON plan file, `apply --plan` runs it |
 | S8 ordering | P: reordered | P: child-before-parent scripts are reordered | F: fails with `relation "a" does not exist`; the script order must already be dependency order |
 | S9 triggers, functions and views change | P: view and trigger created | P: a changed function body is replaced with `CREATE OR REPLACE`, unchanged objects are not touched | P: changed function body planned as a replace |
-| S10 extension and queue objects | n/r | P: `CREATE EXTENSION IF NOT EXISTS` applied once, a re-run plans nothing | n/r (the extension line was not reported in the plan output) |
+| S10 extension and queue objects | n/a (SQLite has no extensions) | P: `CREATE EXTENSION IF NOT EXISTS` applied once, a re-run plans nothing | n/r (the extension line was not reported in the plan output) |
 | S11 hand-edited drift | n/r | P: the drop of the extra column is skipped without the flag | F: drift column drop is planned without a flag |
 | S12 usable from .NET | G: exit code 2 with `--check` only | G: same, plan is text | P: JSON plan (`--output-json`) |
 
@@ -67,5 +67,5 @@ Provisional, to be confirmed by the owner:
 ## Not covered
 
 - Atlas: not run. The source build failed with Go 1.27.1 (a `golang.org/x/tools` constant overflow), and a download of the vendor binary was not approved in the session. Its licence and paid tiers are not assessed.
-- S4, S7, S11 and S12 on SQL Server, S10 for SQL Server and SQLite, S4 on PostgreSQL, and the fixture's function, trigger and extension objects.
+- S4, S7, S11 and S12 on SQL Server, S10 for SQL Server and pgschema, S4 on PostgreSQL, and the fixture's function, trigger and extension objects.
 - No weights or scores were computed; the table above is the raw record.
