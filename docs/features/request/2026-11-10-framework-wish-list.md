@@ -109,3 +109,18 @@ Original text (headings lowered by one level):
 * https://github.com/CycloneDX/cyclonedx-dotnet
 
 2026-11-11: triaged. Accepted as a backlog item: design first (`docs/patterns-discovery/06-design-document-standard.md`), no code until a consumer appears. Backlog: BACKLOG.md, SharedFramework requests.
+
+## Provisional triage (2026-11-19, nothing closed; Q19 decides which lines are wanted)
+
+| Line | Finding | Where it goes |
+|------|---------|---------------|
+| Event Scheduler (defaults, catch-up, cron or RRule) | designed | [ComplexEvents](../../design/ComplexEvents/README.md) open points |
+| Resource translation, use from the text engine | `LocalizedTemplateEngine` resolves `name.{culture}` (2026-11-16); key/culture value store not built | candidate for a design if still wanted |
+| Dependent-service health checks | `AddHealthChecks` and `HealthCheckPath` exist in `OoBDev.AspNetCore.Mvc`; per-dependency checks not audited | check against the adapters, then backlog or close |
+| Correlation id flow | `CorrelationInfoHttpPrepareRequestFeature` exists; end-to-end with `OoBDev.Telemetry` not audited | check, then close or backlog |
+| Example dotnet template set | `templates/` pack exists (`oobdev-capability`, `oobdev-adapter`, `oobdev-webapp`) | looks done; confirm and close |
+| Document management and conversion (blob normalisation, zip, markdown to html) | partly built (`OoBDev.Documents*`, DocumentToMarkdown) | [DocumentServices](../../design/DocumentServices/README.md) |
+| Chat box, notification preferences, bulk user and roles management, client event bus | not designed | keep open until wanted (Q19) |
+| DACPAC merge and extensions, MongoDB EF extensions | DACPAC tooling exists (`OoBDev.DacPacCompiler.Cli`); the rest not designed | [DesiredStateDatabase](../../design/DesiredStateDatabase/README.md) for DACPAC; others keep open |
+| Demo Kubernetes cluster, DAPR, design pattern examples | not designed | keep open until wanted (Q19) |
+| Known issues: date equals filter, data redaction in the query engine | not reproduced here | reproduce with a test first, then backlog |
