@@ -18,6 +18,7 @@ export async function mockApi(page: Page): Promise<void> {
     const path = url.pathname;
     const method = route.request().method();
 
+    if (path === '/api/v1/analytics/screen-views') return route.fulfill({ status: 204 });
     if (path === '/api/Ollama' && method === 'POST') return text(route, 'An embedding turns text into a list of numbers so similar meanings end up close together.');
     if (path === '/api/Ollama/Streamed') return json(route, ['An embedding ', 'turns text into ', 'numbers.']);
     if (path === '/api/Ollama/Completion') {
