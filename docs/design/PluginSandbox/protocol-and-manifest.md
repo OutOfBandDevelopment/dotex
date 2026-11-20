@@ -2,7 +2,7 @@
 
 [← Threat model](threat-model.md) · [↑ Overview](README.md)
 
-**Status:** Draft for owner review · **Date:** 2026-10-29
+**Status:** Signed off by the owner 2026-11-20 · **Date:** 2026-10-29
 
 Phase 1 design (REQ-009, REQ-002, REQ-006). The frame format described here is built and tested in the spike (`src/Spikes/OoBDev.Spike.PluginSandbox`, `FrameChannel`). It fixes what is on the wire and in the manifest so a plugin in any language can be written from this page. It is based on the proof-of-concept wire profile (`PROFILE.md` in `examples/plugin-sandbox-poc`), which carried five languages and the real host's 36 conformance checks unchanged, and it adds versioning, grants and a manifest schema. Decisions here are reversible until a launcher ships.
 

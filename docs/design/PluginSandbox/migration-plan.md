@@ -1,6 +1,6 @@
-# Plugin sandbox: migration plan (proposal, awaiting owner confirmation)
+# Plugin sandbox: migration plan (confirmed 2026-11-20)
 
-Status: proposed 2026-11-10. Rule `layering-and-migration-plans`: nothing moves until the owner confirms this table.
+Status: confirmed by the owner 2026-11-20 ("do these"); execution tracked in the backlog. Rule `layering-and-migration-plans`: the table below is the confirmed target.
 
 ## Question and answer
 

@@ -43,7 +43,7 @@ Findings from the first real run: `CreateProcessW` with an explicit environment 
 | REQ-006 signed packages | Shown | key distribution is not designed |
 | REQ-007 network off by default | Shown on both | none known |
 | REQ-008 Linux | Shown | macOS deferred |
-| REQ-010 sign-off | Owner decision | open |
+| REQ-010 sign-off | Owner decision | done 2026-11-20 |
 
 ## Still not built
 
@@ -52,7 +52,7 @@ Findings from the first real run: `CreateProcessW` with an explicit environment 
 - Message rate and heartbeat enforcement.
 - The request context is not tied to a token validator or RFC 8693.
 - macOS (deferred by the owner): `SeatbeltPlugin` and its profile text are covered by Unit tests on every OS, but the escape tests have never run on a Mac; `sandbox-exec` is deprecated, and there is no PID namespace or resource limit.
-- Library placement: [migration plan](migration-plan.md), awaiting the owner. The spikes stay in `src/OoBDev.Spikes.slnx` until it is confirmed and executed (owner, 2026-11-10).
+- Library placement: [migration plan](migration-plan.md), confirmed 2026-11-20. The spikes stay in `src/OoBDev.Spikes.slnx` until it is confirmed and executed (owner, 2026-11-10).
 
 ## Consequence for the sign-off
 

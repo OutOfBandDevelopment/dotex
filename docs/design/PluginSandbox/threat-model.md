@@ -2,7 +2,7 @@
 
 [← Architecture](architecture.md) · [↑ Overview](README.md) · [Protocol and manifest →](protocol-and-manifest.md)
 
-**Status:** Draft for owner review · **Date:** 2026-10-29
+**Status:** Signed off by the owner 2026-11-20 · **Date:** 2026-10-29
 
 Phase 0 deliverable (REQ-010). Sources: the proving-grounds proof of concept `examples/plugin-sandbox-poc` (read only; its `docs/poc/findings.md`, `escape-results.md` and `escape-matrix.json`), and the planning notes it copies. Nothing was compiled or run for this document; the proof-of-concept results below are its author's own, each from one machine per operating system.
 
@@ -130,4 +130,4 @@ Review notes:
 
 ## Sign-off
 
-REQ-010 asks for review before implementation. This document is the draft. The owner signs off by answering Q6 (placement) and confirming the gaps above, after which phase 1 (protocol and manifest schema) starts without launcher code.
+REQ-010 asked for review before implementation. The owner signed off on 2026-11-20 ("do these": threat model, protocol and manifest, layering plan). Gaps listed above stay as phase work, not as blockers; phase 1 and the library move proceed.

@@ -2,7 +2,7 @@
 
 [← Architecture](architecture.md) · [↑ Overview](README.md) · [Testing strategy →](testing-strategy.md)
 
-**Status:** Draft (intent only; fixed after the threat model) · **Date:** 2026-10-29
+**Status:** Draft (intent only; the threat model is signed off, so the API is fixed with the code) · **Date:** 2026-10-29
 
 ## Sketch
 
