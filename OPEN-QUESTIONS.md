@@ -10,59 +10,6 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ## Open
 
-### Q13 (2026-11-19, Devices, GPIB): which controller first, and is SRQ in scope?
-
-[Request](docs/features/request/2026-11-10-gpib-transport.md). Needs a controller on the bench before a design.
-
-**Options**
-- A. Serial-attached USB-GPIB adapter first, polling only (recommended: simplest to test; SRQ and VXI-11 follow).
-- B. VXI-11 gateway first (a Framework item the migration lists as open).
-- C. Your own adapter (no design exists).
-- D. Decline until a controller is attached.
-
-**Default:** none built; stays in the Devices ideas.
-
-**Your answer:**
-
-### Q14 (2026-11-19, Devices, LANC): spec first, and is a recorded exchange enough?
-
-[Request](docs/features/request/2026-11-10-lanc-frame-builder-and-transport.md). The bridge's serial format is not specified, and no camera is attached.
-
-**Options**
-- A. Build the frame builder from the published table, accept recorded-exchange tests until a camera is attached, and leave the transport until you provide the bridge format (recommended).
-- B. Wait for the bench.
-- C. Decline.
-
-**Default:** A is not started until you confirm.
-
-**Your answer:**
-
-### Q15 (2026-11-19, Devices, XBee): package, library and gateway form
-
-[Request](docs/features/request/2026-11-10-xbee-api-and-mqtt-gateway.md).
-
-**Options**
-- A. Own package `OoBDev.Digi.XBee`, frames written from the Digi documentation, first pass AT, transmit, receive and I/O sample; the MQTT gateway is a documented sample (recommended: no new third-party dependency, gateway stays optional).
-- B. Thin adapter over an existing NuGet XBee library.
-- C. Inside `OoBDev.System.IO.Ports`, gateway as a DevTerm plugin.
-
-**Default:** A for a design only; frames are testable without hardware.
-
-**Your answer:**
-
-### Q16 (2026-11-19, Devices, USB passthrough with Ser2NetWin): scope
-
-[Request](docs/features/request/2026-11-10-ser2netwin-usb-device-passthrough.md). Four open points: selection by USB id in the bridge configuration, where the container recipe lives, whether non-serial USB is out of scope, and whether the Greaseweazle case needs a bench pass first.
-
-**Options**
-- A. USB-id selection in the configuration, recipe in the Ser2NetWin docs only, non-serial USB out of scope, Greaseweazle claimed only after a bench pass (recommended: smallest honest claim).
-- B. As A, plus a helper image in the `containers` repository.
-- C. Also a USB/IP bridge.
-
-**Default:** A.
-
-**Your answer:**
-
 ### Q17 (2026-11-19, DevTerm, BYTECC bridge and BLE on Linux): is the hardware or machine available?
 
 Requests: [BYTECC](docs/features/request/2026-11-10-devterm-bytecc-usb-bridge.md) ("without the hardware, decline") and [BLE on Linux](docs/features/request/2026-11-10-devterm-ble-linux-macos.md) (macOS deferred, 2026-11-10).

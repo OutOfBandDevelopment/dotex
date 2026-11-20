@@ -1,6 +1,6 @@
 # Feature request: LANC frame builder and transport
 
-- **Status:** triaged
+- **Status:** declined (owner, 2026-11-19, Q14: no camera and no bridge format; not built)
 - **Requested by:** owner (notes repository project mapping, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/HardwareDevices/OoBDev.LanC`
