@@ -47,6 +47,15 @@
                 }
             </select>
             break;
+        case ListViewModel list:
+            <label>@list.Label</label>
+            <select size="5" disabled="@(!list.IsEnabled)" @onchange="e => list.SelectedItem = e.Value?.ToString()">
+                @foreach (var item in list.Items)
+                {
+                    <option value="@item" selected="@(string.Equals(list.SelectedItem, item, StringComparison.Ordinal))">@item</option>
+                }
+            </select>
+            break;
         case ButtonViewModel button:
             <button type="button" title="@button.ToolTip" disabled="@(!button.IsEnabled)" @onclick="() => button.Invoke.Execute(null)">@button.Label</button>
             break;
