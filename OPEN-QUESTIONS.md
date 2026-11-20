@@ -10,58 +10,6 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ## Open
 
-### Q9 (2026-11-19, Security, auth translation gateway): how is the gateway built, and does it live in dotex?
-
-[Request](docs/features/request/2026-11-10-auth-translation-gateway.md). Services understand only JWT (rule `owner-decisions`); the gateway converts other credentials at the edge. It holds secrets and mints tokens, so the shape matters before any design.
-
-**Options**
-- A. Build on YARP (forwarding is done) as a dotex library, inbound schemes in the order API key, client certificate, then RFC 8693 token exchange (recommended: it reuses the proxy that exists and follows your JWT-only rule).
-- B. A hand-written `HttpClient` gateway. More control, more code to secure.
-- C. A separate application that only references dotex.
-
-**Default:** A for the design document only; no code until a consumer appears.
-
-**Your answer:**
-
-### Q10 (2026-11-19, Consolidation, event, document and history stores): where do they live?
-
-[Request](docs/features/request/2026-11-10-event-document-history-stores.md). Open: separate package or inside `OoBDev.EventSourcing` and the message queue project; a LiteDB or LMDB-style second provider; whether the history store belongs here or with OpenTelemetry export.
-
-**Options**
-- A. Separate package family beside `OoBDev.EventSourcing`, history store split out as its own request, no second embedded provider yet (recommended: keeps the event-sourcing packages small and the request reviewable).
-- B. Inside `OoBDev.EventSourcing` with the history store included.
-- C. Decline; the existing SQLite, SQL Server and PostgreSQL stores are enough.
-
-**Default:** A for the design only.
-
-**Your answer:**
-
-### Q11 (2026-11-19, Consolidation, Postgres support): first-class target, and wait for the schema tool?
-
-[Request](docs/features/request/2026-11-10-postgres-support.md). `OoBDev.EventSourcing.Postgres`, the pgvector store and the query adapter already use PostgreSQL.
-
-**Options**
-- A. Close the request as covered by those packages and keep schema tooling in the desired-state request, which waits for its bake-off (Q4) (recommended: nothing separate is left to build).
-- B. Keep it open as a first-class target with its own test matrix.
-- C. Schema tooling target only.
-
-**Default:** A is proposed; the file stays in `request/` until you answer.
-
-**Your answer:**
-
-### Q12 (2026-11-19, Embeddings, container image): does dotex publish an embedding server image?
-
-[Request](docs/features/request/2026-11-11-embedding-container-and-client.md). The client speaks the OpenAI-compatible route and is built. No server in the stack or the catalog serves images.
-
-**Options**
-- A. No image: the client works with any compatible server, the stack's Ollama is the reference, and the image variant stays deferred (recommended: no new thing to maintain; the cosine comparison runs against Ollama).
-- B. Publish a small text and image embedding image from this repository (needs a model choice and licence check).
-- C. Keep it with the catalog application.
-
-**Default:** A; the request then closes once the Ollama comparison test passes.
-
-**Your answer:**
-
 ### Q13 (2026-11-19, Devices, GPIB): which controller first, and is SRQ in scope?
 
 [Request](docs/features/request/2026-11-10-gpib-transport.md). Needs a controller on the bench before a design.

@@ -1,6 +1,6 @@
 ﻿# Database work queue for restartable stages
 
-Status: **first slice built 2026-11-16** (Framework `OoBDev.WorkQueue` with the in-memory provider and stage workers, PostgreSQL adapter `OoBDev.PostgreSql.WorkQueue`; placement confirmed by the owner 2026-11-12, option A). Worker events built 2026-11-17 (`IWorkerEvents`, in-memory and PostgreSQL stores); the PGMQ reader was not taken (rows are the source of truth) and application stages stay in the catalog. Request: [database stage work queue](../../features/completed/2026-11-11-database-stage-work-queue.md). Related: [postgres support](../../features/request/2026-11-10-postgres-support.md).
+Status: **first slice built 2026-11-16** (Framework `OoBDev.WorkQueue` with the in-memory provider and stage workers, PostgreSQL adapter `OoBDev.PostgreSql.WorkQueue`; placement confirmed by the owner 2026-11-12, option A). Worker events built 2026-11-17 (`IWorkerEvents`, in-memory and PostgreSQL stores); the PGMQ reader was not taken (rows are the source of truth) and application stages stay in the catalog. Request: [database stage work queue](../../features/completed/2026-11-11-database-stage-work-queue.md). Related: [postgres support](../../features/completed/2026-11-10-postgres-support.md).
 
 ## Contents
 

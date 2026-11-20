@@ -1,6 +1,6 @@
 # Feature request: PostgreSQL support alongside the SQL Server pieces
 
-- **Status:** triaged
+- **Status:** done (owner, 2026-11-19, Q11: covered by `OoBDev.EventSourcing.Postgres`, the pgvector store and the query adapter; schema tooling stays in the desired-state request)
 - **Requested by:** owner (filed from the notes repository, `projects/postgres-backup-scheduling-spike` and `projects/dotex-consolidation/sqldef-evaluation`)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.DacFx` neighbours, data access and the SQL Service Broker tooling
