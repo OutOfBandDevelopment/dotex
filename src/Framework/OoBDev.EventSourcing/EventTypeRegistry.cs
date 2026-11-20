@@ -44,6 +44,11 @@ public class EventTypeRegistry
     }
 
     /// <summary>
+    /// Gets every registered event class by stored name.
+    /// </summary>
+    public IReadOnlyDictionary<string, Type> Types => _byName;
+
+    /// <summary>
     /// Gets what erasure does to an event type.
     /// </summary>
     /// <param name="name">The stored event type name.</param>

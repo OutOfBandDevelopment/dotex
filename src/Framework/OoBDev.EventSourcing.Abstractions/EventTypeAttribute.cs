@@ -14,4 +14,9 @@ public sealed class EventTypeAttribute(string name) : Attribute
     /// Gets the stored event type name.
     /// </summary>
     public string Name { get; } = name;
+
+    /// <summary>
+    /// Gets or sets the contract version; raise it with every breaking change of the payload.
+    /// </summary>
+    public int Version { get; init; } = 1;
 }

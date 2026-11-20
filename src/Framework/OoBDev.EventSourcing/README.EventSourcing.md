@@ -41,3 +41,7 @@ Mark an event class `[PersonalData("CustomerId", "Name", "Email")]` (subject pro
 ## Erasure entry point
 
 `IErasureEntryPoint.RequestAsync(subjectId, knownCopies)` is the one way to ask for erasure; the default `ErasureEntryPoint` appends the tombstone under a new request id and returns the id. A host puts its own right (`erasure.request`) in front of it; the compaction job does the blanking.
+
+## Schema registry
+
+`[EventType("name", Version = 2)]` versions the payload contract. `EventSchemaRegistry` (built over the `EventTypeRegistry`) exports a JSON Schema per type (`Describe()`), validates a payload with strict deserialization (`Validate(name, payload)`) and writes a snapshot (`ToSnapshot()`). Commit the snapshot; a test calls `EventSchemaBaseline.Verify(registry, snapshotJson)` and fails on a breaking change (removed, retyped or newly required property) without a higher `Version`, a lowered version, or a type that is no longer registered. `EventSchemaComparer.Compare` lists the property changes. Design: [schema-registry](../../../docs/design/CqrsEventSourcing/schema-registry.md).

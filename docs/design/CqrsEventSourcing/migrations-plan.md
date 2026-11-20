@@ -1,6 +1,6 @@
 # EF migration sets per database: migration plan
 
-**Status:** confirmed by the owner 2026-11-20 (Q27, option A). Built 2026-11-20: `OoBDev.Data.Migrations.Postgres` and `.Sqlite` with the right audit, suppressions and schedule sets, and the SQL Server project `OoBDev.Data.Schema.SqlServer` (dacpac, kept equal to the models by a Unit test). The example host stays on `EnsureCreated` (SQL Server, no EF migrations by design); the event schema registry is next.
+**Status:** done. Confirmed by the owner 2026-11-20 (Q27, option A). Built 2026-11-20: `OoBDev.Data.Migrations.Postgres` and `.Sqlite` with the right audit, suppressions and schedule sets, and the SQL Server project `OoBDev.Data.Schema.SqlServer` (dacpac, kept equal to the models by a Unit test). The example host stays on `EnsureCreated` (SQL Server, no EF migrations by design); the event schema registry is built too.
 **Decision (owner Q20, 2026-11-20):** one migrations project per database holding the sets of all the stores, one folder and one `MigrationsHistoryTable` per context; the event store keeps its provider projects; start with the right audit store. Layering rule: [layering-and-migration-plans](../../../.claude/rules/layering-and-migration-plans.md).
 
 [Architecture](architecture.md) · [Testing strategy](testing-strategy.md)
@@ -48,7 +48,7 @@ Messaging and template stores named in the backlog have no `DbContext` in the tr
 1. Right audit store: Postgres and Sqlite sets, tests against the Postgres container and in-memory Sqlite.
 2. Suppressions, then schedule.
 3. SQL Server dacpac project for the same tables.
-4. Event payload schema registry (versioned event contracts), after migrations.
+4. Event payload schema registry (built 2026-11-20, see [schema-registry](schema-registry.md)).
 
 ## Verification
 
