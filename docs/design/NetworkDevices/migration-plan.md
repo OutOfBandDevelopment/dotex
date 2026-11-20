@@ -1,6 +1,6 @@
 # Network device probes: migration plan (done 2026-11-20)
 
-Status: done 2026-11-20. The owner chose a new Framework library (Q25) and asked for the move on 2026-11-20 ("do these"); the table below is what was built, except the `LxiDiscovery` probe adapter, which is still open in the backlog (it needs a reference to `OoBDev.System.IO.Tcp`).
+Status: done 2026-11-20. The owner chose a new Framework library (Q25) and asked for the move on 2026-11-20 ("do these"); the table below is what was built, and the `LxiProbe` adapter lives in `OoBDev.System.IO.Tcp` (it references the discovery library).
 
 [← Overview](README.md)
 
