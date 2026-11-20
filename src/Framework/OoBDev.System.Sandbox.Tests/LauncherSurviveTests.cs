@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Runtime.Versioning;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.System.Sandbox.Linux;
 using OoBDev.System.Sandbox.MacOS;
 using OoBDev.System.Sandbox.Windows;
 
@@ -16,16 +15,14 @@ public sealed class LauncherSurviveTests
 
     [TestMethod]
     [TestCategory("Unit")]
-    [SupportedOSPlatform("linux")]
     [SupportedOSPlatform("macos")]
-    public void Start_SurviveOnLinuxAndMacOS_IsRefused()
+    public void Start_SurviveOnMacOS_IsRefused()
     {
         // Test
-        var linux = Assert.ThrowsExactly<NotSupportedException>(() => new LinuxSandboxLauncher("x.dll").Start("echo", surviveCaller: true));
         var mac = Assert.ThrowsExactly<NotSupportedException>(() => new MacOSSandboxLauncher("x.dll").Start("echo", surviveCaller: true));
 
         // Assert
-        TestContext.WriteLine($"{linux.Message} | {mac.Message}");
+        TestContext.WriteLine(mac.Message);
     }
 
     [TestMethod]

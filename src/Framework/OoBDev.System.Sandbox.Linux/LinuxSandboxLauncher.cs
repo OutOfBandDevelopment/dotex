@@ -18,5 +18,5 @@ public sealed class LinuxSandboxLauncher(string pluginAssembly) : ISandboxLaunch
 
     /// <inheritdoc />
     public ISandboxedPlugin Start(string commandArguments, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null, JobLimits? limits = null, bool surviveCaller = false) =>
-        surviveCaller ? throw new NotSupportedException("Survive needs the plugin pipe, not built on Linux yet.") : new BubblewrapPlugin(pluginAssembly, commandArguments, readDirectories, writeDirectories, limits: limits ?? new JobLimits(MemoryMb: 256));
+        new BubblewrapPlugin(pluginAssembly, commandArguments, readDirectories, writeDirectories, limits: limits ?? new JobLimits(MemoryMb: 256), surviveCaller: surviveCaller);
 }

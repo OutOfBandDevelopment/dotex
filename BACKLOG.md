@@ -66,7 +66,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 - [ ] **Harvest candidates** (D7): [open items await the owner](docs/migration/harvest-d7-comparison.md); candidate map in [harvest-candidates.md](docs/harvest-candidates.md)
 - [x] Plugin sandbox: migrated to `OoBDev.System.Sandbox*` (2026-11-20, [plan](docs/design/PluginSandbox/migration-plan.md)); Linux run in the `dotnet/sdk:10.0` container with bubblewrap: 107 passed, 17 skipped (the Windows-only ones); coverage on Windows: core 94%, Windows 93% (Linux project needs the container run, MacOS 26% and deferred); left: macOS.
   - Sandbox follow-ups (owner, 2026-11-10: macOS deferred; built 2026-11-20: rate limit, heartbeat check, manifest limits to the launchers, Survive option, see [changes](docs/changes/2026-11-20.md)):
-    - Survive: the Windows pieces and `ISandboxLauncher.Start(surviveCaller)` with `Detach()` are built (Linux and macOS refuse it); left are the watchdog and the Linux pipe. A hung plugin inside a call is ended by the wall-time limit, so no extra heartbeat (idle instances are probed by `Sweep(timeout)`).
+    - Survive: the Windows pieces and `ISandboxLauncher.Start(surviveCaller)` with `Detach()` are built (macOS refuses it; Linux works through a socket in a granted folder); left is the watchdog. A hung plugin inside a call is ended by the wall-time limit, so no extra heartbeat (idle instances are probed by `Sweep(timeout)`).
     - AppContainer profile deletion: folder rules are removed by `AppContainerLauncher.Revoke`; the launcher does not call it yet because running plugins may share a folder.
     - Deferred: `CrossPlatformEscapeTests` on a Mac, macOS limits and PID isolation.
 

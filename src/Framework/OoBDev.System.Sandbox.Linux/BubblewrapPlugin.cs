@@ -23,9 +23,10 @@ public sealed class BubblewrapPlugin : ISandboxedPlugin
     private readonly LinuxProcessWatcher? _watcher;
     private readonly JobLimits? _limits;
     private volatile int _hit;
+    private volatile bool _detached;
 
     /// <summary>Starts the plugin; the folders are bound at the same path inside the sandbox.</summary>
-    public BubblewrapPlugin(string pluginAssembly, string commandArguments, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null, FrameFlags flags = FrameFlags.Crc32 | FrameFlags.Hmac | FrameFlags.CounterSign, JobLimits? limits = null)
+    public BubblewrapPlugin(string pluginAssembly, string commandArguments, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null, FrameFlags flags = FrameFlags.Crc32 | FrameFlags.Hmac | FrameFlags.CounterSign, JobLimits? limits = null, bool surviveCaller = false)
     {
         var key = RandomNumberGenerator.GetBytes(32);
         var dll = pluginAssembly;
@@ -46,7 +47,7 @@ public sealed class BubblewrapPlugin : ISandboxedPlugin
             info.ArgumentList.Add(cpu.ToString(global::System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        foreach (var argument in Arguments(dll, dotnetRoot, Convert.ToHexString(key), flagText, readDirectories ?? [], writeDirectories ?? [], commandArguments, limits?.MemoryMb ?? 0))
+        foreach (var argument in Arguments(dll, dotnetRoot, Convert.ToHexString(key), flagText, readDirectories ?? [], writeDirectories ?? [], commandArguments, limits?.MemoryMb ?? 0, surviveCaller))
         {
             info.ArgumentList.Add(argument);
         }
@@ -96,17 +97,22 @@ public sealed class BubblewrapPlugin : ISandboxedPlugin
     }
 
     /// <summary>Builds the bubblewrap command line; public so a test can assert what is and is not mounted.</summary>
-    public static IReadOnlyList<string> Arguments(string dll, string dotnetRoot, string keyHex, string flags, IReadOnlyCollection<string> read, IReadOnlyCollection<string> write, string commandArguments, int memoryMb = 0)
+    public static IReadOnlyList<string> Arguments(string dll, string dotnetRoot, string keyHex, string flags, IReadOnlyCollection<string> read, IReadOnlyCollection<string> write, string commandArguments, int memoryMb = 0, bool surviveCaller = false)
     {
         var args = new List<string>
         {
-            "--unshare-all", "--die-with-parent", "--new-session", "--clearenv",
+            "--unshare-all", "--new-session", "--clearenv",
             "--ro-bind", "/usr", "/usr",
             "--symlink", "usr/lib", "/lib", "--symlink", "usr/lib64", "/lib64", "--symlink", "usr/bin", "/bin",
             "--proc", "/proc", "--dev", "/dev", "--tmpfs", "/tmp",
             "--setenv", "HOME", "/tmp", "--setenv", "TMPDIR", "/tmp", "--setenv", "DOTNET_ROOT", dotnetRoot, "--setenv", "DOTNET_NOLOGO", "1",
             "--setenv", SandboxEnvironment.KeyVariable, keyHex, "--setenv", SandboxEnvironment.FlagsVariable, flags,
         };
+
+        if (!surviveCaller)
+        {
+            args.Add("--die-with-parent");
+        }
 
         if (memoryMb > 0)
         {
@@ -154,7 +160,7 @@ public sealed class BubblewrapPlugin : ISandboxedPlugin
 
     private void End(LimitHit hit)
     {
-        if (!_process.HasExited)
+        if (!_detached && !_process.HasExited)
         {
             _hit = (int)hit;
         }
@@ -176,9 +182,24 @@ public sealed class BubblewrapPlugin : ISandboxedPlugin
         }
     }
 
+    /// <summary>Lets go of a plugin started with <c>surviveCaller</c>: the host stops watching it and closes its pipes while the plugin keeps running; reach it through a socket in a granted folder.</summary>
+    public void Detach()
+    {
+        _detached = true;
+        Dispose();
+    }
+
     /// <inheritdoc />
     public void Dispose()
     {
+        if (_detached)
+        {
+            _wall?.Dispose();
+            _watcher?.Dispose();
+            _process.Dispose();
+            return;
+        }
+
         if (!_process.HasExited)
         {
             _process.Kill(entireProcessTree: true);
