@@ -1,3 +1,4 @@
+using OoBDev.System.Sandbox.Windows;
 using System;
 using System.IO;
 using System.Net;
@@ -7,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.System.IO;
 
-namespace OoBDev.Spike.PluginSandbox.Tests;
+namespace OoBDev.System.Sandbox.Tests;
 
 /// <summary>
 /// Escape attempts from inside the AppContainer (REQ-001, REQ-005, REQ-007, REQ-008 on Windows). Each refusal has a positive control that
@@ -33,7 +34,7 @@ public sealed class EscapeTests
     [TestMethod]
     public void Echo_InsideTheContainer_FramesStillWork()
     {
-        using var plugin = new SandboxedPlugin("echo", new JobLimits(MemoryMb: 256));
+        using var plugin = new SandboxedPlugin(TestPlugin.Dll, "echo", new JobLimits(MemoryMb: 256));
 
         var ready = plugin.Receive();
         var sequence = plugin.Send(FrameType.Request, "echo", """{"n":3}""");
@@ -104,7 +105,7 @@ public sealed class EscapeTests
     [TestMethod]
     public void Limits_Memory_TheHostReportsMemory()
     {
-        using var plugin = new SandboxedPlugin("hog", new JobLimits(MemoryMb: 256));
+        using var plugin = new SandboxedPlugin(TestPlugin.Dll, "hog", new JobLimits(MemoryMb: 256));
 
         Assert.IsTrue(plugin.WaitForExit(60_000));
 
@@ -115,7 +116,7 @@ public sealed class EscapeTests
     [TestMethod]
     public void Limits_CpuTime_TheHostStopsAndReportsCpu()
     {
-        using var plugin = new SandboxedPlugin("spin", new JobLimits(MemoryMb: 256, CpuSeconds: 2));
+        using var plugin = new SandboxedPlugin(TestPlugin.Dll, "spin", new JobLimits(MemoryMb: 256, CpuSeconds: 2));
 
         Assert.IsTrue(plugin.WaitForExit(60_000));
 
@@ -125,7 +126,7 @@ public sealed class EscapeTests
     [TestMethod]
     public void Limits_WallTime_TheHostStopsAndReportsWall()
     {
-        using var plugin = new SandboxedPlugin("sleep", new JobLimits(MemoryMb: 256, WallSeconds: 2));
+        using var plugin = new SandboxedPlugin(TestPlugin.Dll, "sleep", new JobLimits(MemoryMb: 256, WallSeconds: 2));
 
         Assert.IsTrue(plugin.WaitForExit(60_000));
 
@@ -135,7 +136,7 @@ public sealed class EscapeTests
     [TestMethod]
     public void Limits_PluginWithinItsLimits_ReportsNone()
     {
-        using var plugin = new SandboxedPlugin("echo", new JobLimits(MemoryMb: 256, CpuSeconds: 30, WallSeconds: 60));
+        using var plugin = new SandboxedPlugin(TestPlugin.Dll, "echo", new JobLimits(MemoryMb: 256, CpuSeconds: 30, WallSeconds: 60));
 
         plugin.Receive();
         plugin.Send(FrameType.Shutdown, "lifecycle.shutdown", "{}");
@@ -146,13 +147,13 @@ public sealed class EscapeTests
 
     private static bool Outside(string kind, string target)
     {
-        using var plugin = new PluginProcess($"probe {kind} \"{target}\"", 256);
+        using var plugin = new PluginProcess(TestPlugin.Dll, $"probe {kind} \"{target}\"", 256);
         return Allowed(plugin.Receive());
     }
 
     private static bool Inside(string kind, string target, JobLimits limits, string[]? read = null, string[]? write = null)
     {
-        using var plugin = new SandboxedPlugin($"probe {kind} \"{target}\"", limits, read, write);
+        using var plugin = new SandboxedPlugin(TestPlugin.Dll, $"probe {kind} \"{target}\"", limits, read, write);
         return Allowed(plugin.Receive());
     }
 

@@ -1,6 +1,7 @@
+using OoBDev.System.Sandbox.MacOS;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace OoBDev.Spike.PluginSandbox.Tests;
+namespace OoBDev.System.Sandbox.Tests;
 
 /// <summary>The macOS Seatbelt profile is plain text, so its rules are checked on every OS. Whether macOS enforces them is only known from a run on a Mac.</summary>
 [TestCategory("Unit")]

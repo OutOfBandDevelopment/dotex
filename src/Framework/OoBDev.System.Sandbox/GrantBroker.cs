@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>
 /// Enforces the grants on every resource request (REQ-003, REQ-004, REQ-007). The plugin has no network of its own, so a host call goes

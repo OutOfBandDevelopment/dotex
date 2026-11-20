@@ -1,4 +1,4 @@
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>The application rights a caller's context must carry for a brokered operation, on top of the plugin's own grant.</summary>
 public static class BrokerRights

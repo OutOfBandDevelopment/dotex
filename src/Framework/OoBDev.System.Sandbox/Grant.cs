@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>The subset of a manifest's requests that a person approved (REQ-002), with who and when.</summary>
 public sealed record Grant(string PluginId, IReadOnlyList<FilePermission> Files, IReadOnlyList<NetworkPermission> Network, string ApprovedBy, DateTimeOffset ApprovedAt)

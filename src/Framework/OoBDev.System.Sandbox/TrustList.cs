@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>The publisher keys the host trusts, by key id. A package signed by any other key is refused.</summary>
 public sealed class TrustList

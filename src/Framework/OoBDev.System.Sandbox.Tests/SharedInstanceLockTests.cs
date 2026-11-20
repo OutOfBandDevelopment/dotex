@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace OoBDev.Spike.PluginSandbox.Tests;
+namespace OoBDev.System.Sandbox.Tests;
 
 /// <summary>The named mutex of a shared plugin instance (REQ-011), including across processes.</summary>
 [TestClass]
@@ -53,7 +53,7 @@ public sealed class SharedInstanceLockTests
     {
         var name = SharedInstanceLock.Name("t-" + Guid.NewGuid().ToString("N"), "g");
         var file = Path.Combine(Path.GetTempPath(), $"mutex-{Guid.NewGuid():N}.held");
-        var dll = typeof(SharedInstanceLock).Assembly.Location;
+        var dll = TestPlugin.Dll;
         using var holder = Process.Start(new ProcessStartInfo("dotnet", $"\"{dll}\" holdmutex \"{name}\" \"{file}\"") { UseShellExecute = false, CreateNoWindow = true })!;
         Assert.IsTrue(SpinWait.SpinUntil(() => File.Exists(file) && new FileInfo(file).Length > 0, TimeSpan.FromSeconds(30)), "The other process holds the mutex.");
 

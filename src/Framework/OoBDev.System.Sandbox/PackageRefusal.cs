@@ -1,4 +1,4 @@
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>Why a package was refused (REQ-006).</summary>
 public enum PackageRefusal

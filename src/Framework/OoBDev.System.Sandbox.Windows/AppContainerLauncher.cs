@@ -9,7 +9,7 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 using Microsoft.Win32.SafeHandles;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox.Windows;
 
 /// <summary>
 /// Starts a process inside a Windows AppContainer with no capabilities, so it has no network access and can read and write
@@ -19,7 +19,7 @@ namespace OoBDev.Spike.PluginSandbox;
 [SupportedOSPlatform("windows")]
 public static partial class AppContainerLauncher
 {
-    private const string _profileName = "OoBDev.Spike.PluginSandbox";
+    private const string _profileName = "OoBDev.System.Sandbox.Windows";
     private static readonly object _profileLock = new();
     private const uint _extendedStartupInfoPresent = 0x00080000;
     private const uint _createSuspended = 0x00000004;

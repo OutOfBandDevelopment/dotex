@@ -5,7 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text.Json;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>Verifies a package folder before install (REQ-006): trusted key, valid signature, every file present, unchanged and listed.</summary>
 public sealed class PackageVerifier(TrustList trust)

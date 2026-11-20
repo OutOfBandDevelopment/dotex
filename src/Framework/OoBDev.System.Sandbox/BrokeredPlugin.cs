@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>
 /// A running plugin whose file and network requests are answered by the host. The sandbox gives the plugin no direct access at all; every

@@ -1,4 +1,4 @@
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>Why <see cref="PluginHost"/> would not start a plugin.</summary>
 public enum HostRefusal

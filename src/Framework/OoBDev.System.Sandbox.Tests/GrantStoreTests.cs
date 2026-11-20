@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.System.IO;
 
-namespace OoBDev.Spike.PluginSandbox.Tests;
+namespace OoBDev.System.Sandbox.Tests;
 
 /// <summary>Grants and the audit trail survive a restart (REQ-002: stored and auditable).</summary>
 [TestCategory("Unit")]

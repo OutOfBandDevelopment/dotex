@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>Splits a launcher command string into arguments.</summary>
 public static class CommandLine

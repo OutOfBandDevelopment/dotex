@@ -1,6 +1,6 @@
 using System;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>A frame broke the wire rules; the host's reaction is to disconnect and kill the plugin.</summary>
 public sealed class FrameViolation : Exception

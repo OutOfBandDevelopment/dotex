@@ -20,8 +20,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OoBDev.Spike.PluginSandbox\OoBDev.Spike.PluginSandbox.csproj" />
-    <ProjectReference Include="..\..\Framework\OoBDev.System\OoBDev.System.csproj" />
+    <ProjectReference Include="..\OoBDev.System.Sandbox\OoBDev.System.Sandbox.csproj" />
+    <ProjectReference Include="..\OoBDev.System.Sandbox.Windows\OoBDev.System.Sandbox.Windows.csproj" />
+    <ProjectReference Include="..\OoBDev.System.Sandbox.Linux\OoBDev.System.Sandbox.Linux.csproj" />
+    <ProjectReference Include="..\OoBDev.System.Sandbox.MacOS\OoBDev.System.Sandbox.MacOS.csproj" />
+    <ProjectReference Include="..\OoBDev.System.Sandbox.Plugin\OoBDev.System.Sandbox.Plugin.csproj" />
+    <ProjectReference Include="..\OoBDev.System\OoBDev.System.csproj" />
     <Using Include="OoBDev.System.Sandbox" />
   </ItemGroup>
+
 </Project>

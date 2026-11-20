@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox.Windows;
 
 /// <summary>A Windows job object: kills its processes when closed and caps each process's memory (phase 2 launcher proof).</summary>
 [SupportedOSPlatform("windows")]

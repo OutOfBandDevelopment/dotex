@@ -1,7 +1,8 @@
+using OoBDev.System.Sandbox.Windows;
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace OoBDev.Spike.PluginSandbox.Tests;
+namespace OoBDev.System.Sandbox.Tests;
 
 /// <summary>REQ-011 with a real sandboxed process: shared leases use one process, a bound lease ends the process on dispose.</summary>
 [TestCategory("Integration")]
@@ -17,7 +18,7 @@ public sealed class LifetimeTests
         }
     }
 
-    private static SandboxedPlugin Start() => new("echo", new JobLimits(MemoryMb: 256));
+    private static SandboxedPlugin Start() => new(TestPlugin.Dll, "echo", new JobLimits(MemoryMb: 256));
 
     private static bool Gone(int pid)
     {

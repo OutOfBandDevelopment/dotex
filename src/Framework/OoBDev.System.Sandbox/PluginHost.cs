@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>
 /// The path from a package on disk to a running, brokered plugin: verify the signed package, require the owner's approved grant, take the
@@ -18,7 +18,7 @@ public sealed class PluginHost : IDisposable
     private readonly Func<string, IReadOnlyCollection<string>, IReadOnlyCollection<string>, ISandboxedPlugin> _launch;
     private readonly PluginPool<BrokeredPlugin> _pool;
 
-    /// <summary>Creates a host; <paramref name="launch"/> starts a sandboxed plugin from a command line and the read and write folders (normally <see cref="SandboxLauncher.Start"/>).</summary>
+    /// <summary>Creates a host; <paramref name="launch"/> starts a sandboxed plugin from a command line and the read and write folders (normally <see cref="ISandboxLauncher.Start"/>).</summary>
     public PluginHost(PackageVerifier verifier, GrantStore grants, GrantBroker broker, ContextBroker contexts, TimeProvider time, TimeSpan idleTimeout, Func<string, IReadOnlyCollection<string>, IReadOnlyCollection<string>, ISandboxedPlugin> launch)
     {
         _verifier = verifier ?? throw new ArgumentNullException(nameof(verifier));

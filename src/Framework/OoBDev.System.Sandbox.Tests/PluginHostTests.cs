@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.System.IO;
 
-namespace OoBDev.Spike.PluginSandbox.Tests;
+namespace OoBDev.System.Sandbox.Tests;
 
 /// <summary>
 /// The whole chain on the platform's real sandbox: signed package, owner grant, mutex, launch, and a plugin that can do nothing itself and asks
@@ -43,9 +43,9 @@ public sealed class PluginHostTests
     [TestInitialize]
     public void RequireSandbox()
     {
-        if (!SandboxLauncher.IsAvailable)
+        if (!TestLauncher.Instance.IsAvailable)
         {
-            Assert.Inconclusive($"{SandboxLauncher.Mechanism} is not available on this machine.");
+            Assert.Inconclusive($"{TestLauncher.Instance.Mechanism} is not available on this machine.");
         }
     }
 
@@ -212,6 +212,6 @@ public sealed class PluginHostTests
         }
 
         manifest = template;
-        return new PluginHost(new PackageVerifier(trust), _grants, new GrantBroker(_grants, _network), _contexts, TimeProvider.System, TimeSpan.FromMinutes(1), SandboxLauncher.Start);
+        return new PluginHost(new PackageVerifier(trust), _grants, new GrantBroker(_grants, _network), _contexts, TimeProvider.System, TimeSpan.FromMinutes(1), TestLauncher.Start);
     }
 }

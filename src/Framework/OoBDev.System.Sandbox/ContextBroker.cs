@@ -2,7 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Linq;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>
 /// The host's copy of the contexts it issued. A plugin presents only an id; the broker decides from its own stored copy, so a plugin

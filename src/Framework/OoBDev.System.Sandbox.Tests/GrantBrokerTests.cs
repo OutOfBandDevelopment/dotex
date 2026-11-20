@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace OoBDev.Spike.PluginSandbox.Tests;
+namespace OoBDev.System.Sandbox.Tests;
 
 /// <summary>The grant store and broker (REQ-002, REQ-003, REQ-004, REQ-007): approved subset only, refusals logged, exact hosts.</summary>
 [TestCategory("Unit")]

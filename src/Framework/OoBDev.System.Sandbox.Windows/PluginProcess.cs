@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Runtime.Versioning;
 using System.Security.Cryptography;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox.Windows;
 
 /// <summary>Launches this assembly as a plugin in a limited job and speaks the framed protocol with it.</summary>
 [SupportedOSPlatform("windows")]
@@ -14,19 +14,19 @@ public sealed class PluginProcess : IDisposable
     private readonly FrameChannel _channel;
 
     /// <summary>Starts the plugin in <paramref name="mode"/> with a per-process <paramref name="memoryMb"/> cap.</summary>
-    public PluginProcess(string mode, int memoryMb, FrameFlags flags = FrameFlags.Crc32 | FrameFlags.Hmac | FrameFlags.CounterSign)
+    public PluginProcess(string pluginAssembly, string mode, int memoryMb, FrameFlags flags = FrameFlags.Crc32 | FrameFlags.Hmac | FrameFlags.CounterSign)
     {
         _job = new JobObject(memoryMb);
         var key = RandomNumberGenerator.GetBytes(32);
-        var info = new ProcessStartInfo("dotnet", $"\"{typeof(PluginProcess).Assembly.Location}\" {mode}")
+        var info = new ProcessStartInfo("dotnet", $"\"{pluginAssembly}\" {mode}")
         {
             RedirectStandardInput = true,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
         };
-        info.Environment[Program.KeyVariable] = Convert.ToHexString(key);
-        info.Environment[Program.FlagsVariable] = ((byte)flags).ToString();
+        info.Environment[SandboxEnvironment.KeyVariable] = Convert.ToHexString(key);
+        info.Environment[SandboxEnvironment.FlagsVariable] = ((byte)flags).ToString();
         _process = Process.Start(info) ?? throw new InvalidOperationException("could not start the plugin");
         _job.Assign(_process);
         _channel = new FrameChannel(_process.StandardOutput.BaseStream, _process.StandardInput.BaseStream, flags, key);

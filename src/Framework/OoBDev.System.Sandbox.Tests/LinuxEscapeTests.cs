@@ -1,3 +1,5 @@
+using OoBDev.System.Sandbox.Linux;
+using OoBDev.System.Sandbox.Windows;
 using System;
 using System.IO;
 using System.Linq;
@@ -7,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.System.IO;
 
-namespace OoBDev.Spike.PluginSandbox.Tests;
+namespace OoBDev.System.Sandbox.Tests;
 
 /// <summary>
 /// Escape attempts from inside bubblewrap (REQ-008 on Linux). They end Inconclusive anywhere but Linux with bwrap installed; run them in the
@@ -45,7 +47,7 @@ public sealed class LinuxEscapeTests
     [TestMethod]
     public void Echo_InsideBubblewrap_FramesStillWork()
     {
-        using var plugin = new BubblewrapPlugin("echo");
+        using var plugin = new BubblewrapPlugin(TestPlugin.Dll, "echo");
 
         var ready = plugin.Receive();
         var sequence = plugin.Send(FrameType.Request, "echo", """{"n":3}""");
@@ -115,7 +117,7 @@ public sealed class LinuxEscapeTests
 
     private static bool Probe(string kind, string target, bool sandboxed, string[]? read = null, string[]? write = null)
     {
-        using ISandboxedPlugin plugin = sandboxed ? new BubblewrapPlugin($"probe {kind} {target}", read, write) : new PlainPlugin($"probe {kind} {target}");
+        using ISandboxedPlugin plugin = sandboxed ? new BubblewrapPlugin(TestPlugin.Dll, $"probe {kind} {target}", read, write) : new PlainPlugin(TestPlugin.Dll, $"probe {kind} {target}");
         var frame = plugin.Receive();
         Assert.AreEqual("probe.result", frame.Topic);
         using var document = frame.ParseJson();

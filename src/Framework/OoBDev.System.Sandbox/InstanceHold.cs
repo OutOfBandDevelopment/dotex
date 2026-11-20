@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>
 /// Holds a cross-process named mutex for as long as it lives. A mutex belongs to the thread that took it, so a dedicated thread takes and releases it,

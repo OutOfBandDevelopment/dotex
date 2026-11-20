@@ -4,7 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox.Linux;
 
 /// <summary>
 /// Polls /proc for the plugin's process tree: counts the plugin's own processes (the bubblewrap supervisors and the shell are not counted),
@@ -137,9 +137,9 @@ public sealed class LinuxProcessWatcher : IDisposable
             }
         }
 
-        Interlocked.Exchange(ref _cpuTicks, Math.Max(Interlocked.Read(ref _cpuTicks), ticks));
-        Interlocked.Exchange(ref _peakKilobytes, Math.Max(Interlocked.Read(ref _peakKilobytes), kilobytes));
-        PeakProcesses = Math.Max(PeakProcesses, count);
+        Interlocked.Exchange(ref _cpuTicks, global::System.Math.Max(Interlocked.Read(ref _cpuTicks), ticks));
+        Interlocked.Exchange(ref _peakKilobytes, global::System.Math.Max(Interlocked.Read(ref _peakKilobytes), kilobytes));
+        PeakProcesses = global::System.Math.Max(PeakProcesses, count);
         if (_limits.MaxProcesses > 0 && count > _limits.MaxProcesses)
         {
             _stop = true;

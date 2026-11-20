@@ -5,7 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text.Json;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>
 /// Builds a signed package folder: hashes every file, writes <c>manifest.json</c> and a detached <c>manifest.sig</c> (ECDSA P-256 over the

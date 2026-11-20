@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>
 /// The binary wire between host and plugin (protocol-and-manifest.md, "Framing and encoding"). All integers are little-endian and packed.

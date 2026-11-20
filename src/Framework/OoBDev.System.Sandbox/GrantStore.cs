@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>
 /// Holds the approved grants and the audit trail. Given a file path it persists both (grants rewritten atomically, audit appended as JSON lines) and reloads them; the files are not yet encrypted or access-protected. A grant can only be a

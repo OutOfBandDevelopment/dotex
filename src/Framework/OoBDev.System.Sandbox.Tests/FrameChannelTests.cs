@@ -4,7 +4,7 @@ using System.IO;
 using System.Security.Cryptography;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace OoBDev.Spike.PluginSandbox.Tests;
+namespace OoBDev.System.Sandbox.Tests;
 
 /// <summary>The versioned frame header, CRC-32, HMAC, sequence counters and counter-signed replies, over in-memory streams.</summary>
 [TestCategory("Unit")]
@@ -286,7 +286,7 @@ public sealed class FrameChannelTests
         public override int Read(byte[] buffer, int offset, int count)
         {
             var bytes = source.GetBuffer();
-            var available = (int)Math.Min(count, source.Length - _position);
+            var available = (int)global::System.Math.Min(count, source.Length - _position);
             Array.Copy(bytes, _position, buffer, offset, available);
             _position += available;
             return available;

@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace OoBDev.Spike.PluginSandbox.Tests;
+namespace OoBDev.System.Sandbox.Tests;
 
 /// <summary>REQ-011 caller death with a real process tree: a stand-in host starts a sandboxed plugin and is then killed.</summary>
 [TestCategory("Integration")]
@@ -20,7 +20,7 @@ public sealed class CallerDeathTests
         }
     }
 
-    private static string Dll => typeof(SandboxedPlugin).Assembly.Location;
+    private static string Dll => TestPlugin.Dll;
 
     private static bool Exists(int pid)
     {

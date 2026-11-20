@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>A caller's hold on a plugin instance; disposing it releases the hold.</summary>
 /// <typeparam name="T">The plugin type.</typeparam>

@@ -27,7 +27,7 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 ## 3. Test infrastructure
 
-- [ ] `LxiDiscovery` as an `INetworkDeviceProbe` adapter so the detect list takes LXI from one registration (needs a reference from the adapter to `OoBDev.System.IO.Tcp`; see the [migration plan](docs/design/NetworkDevices/migration-plan.md)).
+- [ ] LXI in the detect list: `LxiProbe` (an `INetworkDeviceProbe` in `OoBDev.System.IO.Tcp`) exists since 2026-11-20; left: pass it to `NetworkDiscovery` where the Connection Editor builds its detect list and drop the separate `LxiDeviceScanner` call ([plan](docs/design/NetworkDevices/migration-plan.md)).
 - [ ] Integration coverage gaps: Azure runs on emulators only (Azurite, Service Bus emulator, no Azure licence); Moto now covers SQS, SES and S3 (`OoBDev.Amazon.S3`).
 - [ ] Integration suite under 5 minutes: met on 2026-11-19 with `scripts/ci/warm-up-integration.ps1` (5 min 3 s, stack down, build included; about 7 min 50 s before), see [suite-timing.md](docs/architecture/testing/integration/suite-timing.md
 - [ ] Service Bus emulator restarts fail against a SQL Server volume an earlier emulator run initialised (`Cannot create file SbGatewayDatabase.mdf`, seen 2026-11-19 after the warm-up): options: a dedicated `servicebus-sql` service removed with the emulator (tmpfs does not suit SQL Server), or the harness dropping the Sb databases before it starts the emulator; so a second run works without `docker volume rm oobd-test-sqlserver-data`. Re-checked 2026-11-19: restarting the emulator twice against the same used SQL volume worked (and after a SQL restart), so only the first start next to a fresh SQL start failed; parked until it recurs.

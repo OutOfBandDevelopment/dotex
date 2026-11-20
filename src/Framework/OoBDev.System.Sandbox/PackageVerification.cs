@@ -1,4 +1,4 @@
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>The outcome of <see cref="PackageVerifier.Verify"/>.</summary>
 /// <param name="Refusal">None when the package is accepted.</param>

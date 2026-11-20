@@ -7,7 +7,7 @@ using System.Runtime.Versioning;
 using System.Security.Cryptography;
 using System.Threading;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox.Windows;
 
 /// <summary>
 /// Runs this assembly as a plugin in an AppContainer (no network, no files beyond its grants, explicit environment, three inherited
@@ -25,11 +25,11 @@ public sealed class SandboxedPlugin : ISandboxedPlugin
     private volatile int _limitHit;
 
     /// <summary>Starts the plugin; <paramref name="killOnClose"/> false lets it outlive the process that started it (Survive). <paramref name="readDirectories"/> and <paramref name="writeDirectories"/> are the only folders it can reach besides the system and its own assembly folder.</summary>
-    public SandboxedPlugin(string commandArguments, JobLimits limits, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null, FrameFlags flags = FrameFlags.Crc32 | FrameFlags.Hmac | FrameFlags.CounterSign, bool killOnClose = true)
+    public SandboxedPlugin(string pluginAssembly, string commandArguments, JobLimits limits, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null, FrameFlags flags = FrameFlags.Crc32 | FrameFlags.Hmac | FrameFlags.CounterSign, bool killOnClose = true)
     {
         ArgumentNullException.ThrowIfNull(limits);
         _limits = limits;
-        var assemblyDirectory = Path.GetDirectoryName(typeof(SandboxedPlugin).Assembly.Location)!;
+        var assemblyDirectory = Path.GetDirectoryName(pluginAssembly)!;
         AppContainerLauncher.Grant(assemblyDirectory, write: false);
         foreach (var directory in readDirectories ?? [])
         {
@@ -59,12 +59,12 @@ public sealed class SandboxedPlugin : ISandboxedPlugin
             ["DOTNET_ROOT"] = dotnetRoot,
             ["DOTNET_CLI_HOME"] = scratch,
             ["DOTNET_NOLOGO"] = "1",
-            [Program.KeyVariable] = Convert.ToHexString(key),
-            [Program.FlagsVariable] = ((byte)flags).ToString(),
+            [SandboxEnvironment.KeyVariable] = Convert.ToHexString(key),
+            [SandboxEnvironment.FlagsVariable] = ((byte)flags).ToString(),
         };
 
         _job = new JobObject(limits, killOnClose);
-        var commandLine = $"\"{dotnet}\" \"{typeof(SandboxedPlugin).Assembly.Location}\" {commandArguments}";
+        var commandLine = $"\"{dotnet}\" \"{pluginAssembly}\" {commandArguments}";
         _launched = AppContainerLauncher.Start(dotnet, commandLine, assemblyDirectory, environment, _job);
         _process = new NativeProcess(_launched.Process);
         _channel = new FrameChannel(_launched.Output, _launched.Input, flags, key);

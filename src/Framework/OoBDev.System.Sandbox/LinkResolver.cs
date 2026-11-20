@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>Resolves symbolic links, junctions and mount-point links in every part of a path, so a link inside a granted folder cannot lead the broker outside it.</summary>
 public static class LinkResolver

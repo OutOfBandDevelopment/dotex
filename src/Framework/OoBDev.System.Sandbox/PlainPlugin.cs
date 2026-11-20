@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>
 /// Runs the plugin as an ordinary child process with the host's environment and rights. It exists as the positive control for the escape tests
@@ -16,7 +16,7 @@ public sealed class PlainPlugin : ISandboxedPlugin
     private readonly FrameChannel _channel;
 
     /// <summary>Starts <paramref name="commandArguments"/> with no isolation.</summary>
-    public PlainPlugin(string commandArguments, FrameFlags flags = FrameFlags.Crc32 | FrameFlags.Hmac | FrameFlags.CounterSign)
+    public PlainPlugin(string pluginAssembly, string commandArguments, FrameFlags flags = FrameFlags.Crc32 | FrameFlags.Hmac | FrameFlags.CounterSign)
     {
         var key = RandomNumberGenerator.GetBytes(32);
         var dotnetRoot = Path.GetFullPath(Path.Combine(RuntimeEnvironment.GetRuntimeDirectory(), "..", "..", ".."));
@@ -27,14 +27,14 @@ public sealed class PlainPlugin : ISandboxedPlugin
             RedirectStandardError = true,
             UseShellExecute = false,
         };
-        info.ArgumentList.Add(typeof(PlainPlugin).Assembly.Location);
+        info.ArgumentList.Add(pluginAssembly);
         foreach (var part in CommandLine.Split(commandArguments))
         {
             info.ArgumentList.Add(part);
         }
 
-        info.Environment[Program.KeyVariable] = Convert.ToHexString(key);
-        info.Environment[Program.FlagsVariable] = ((byte)flags).ToString(global::System.Globalization.CultureInfo.InvariantCulture);
+        info.Environment[SandboxEnvironment.KeyVariable] = Convert.ToHexString(key);
+        info.Environment[SandboxEnvironment.FlagsVariable] = ((byte)flags).ToString(global::System.Globalization.CultureInfo.InvariantCulture);
         _process = Process.Start(info) ?? throw new InvalidOperationException("could not start the plugin");
         _channel = new FrameChannel(_process.StandardOutput.BaseStream, _process.StandardInput.BaseStream, flags, key);
     }

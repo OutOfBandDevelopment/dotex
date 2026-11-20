@@ -1,4 +1,4 @@
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>Why the broker refused a plugin's context id.</summary>
 public enum ContextRefusal

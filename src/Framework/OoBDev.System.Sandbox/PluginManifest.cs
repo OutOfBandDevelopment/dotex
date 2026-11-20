@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>The manifest of a plugin package (<c>protocol-and-manifest.md</c>, Table 9), reduced to the fields the signing and grant spike needs.</summary>
 /// <param name="Id">Plain name: letters, digits, dash, underscore and dot.</param>

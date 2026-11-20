@@ -6,14 +6,13 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text.Json;
 using System.Threading;
+using OoBDev.System.Sandbox.Windows;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox.Plugin;
 
 /// <summary>The plugin side: <c>echo</c> answers requests, <c>oversize</c> sends a bad length, <c>hog</c> allocates until the job kills it.</summary>
 internal static class Program
 {
-    internal const string KeyVariable = "PLUGIN_FRAME_KEY";
-    internal const string FlagsVariable = "PLUGIN_FRAME_FLAGS";
 
     private static int Main(string[] args)
     {
@@ -28,7 +27,7 @@ internal static class Program
             case "oversize":
                 var header = new byte[FrameChannel.HeaderSize];
                 header[0] = FrameChannel.Version;
-                header[1] = byte.Parse(Environment.GetEnvironmentVariable(FlagsVariable) ?? "0");
+                header[1] = byte.Parse(Environment.GetEnvironmentVariable(SandboxEnvironment.FlagsVariable) ?? "0");
                 header[4] = 0x00;
                 header[5] = 0x00;
                 header[6] = 0x20;
@@ -90,7 +89,7 @@ internal static class Program
         }
 
         var kill = args[1] == "kill";
-        var plugin = new SandboxedPlugin(kill ? "echo" : "sleep", new JobLimits(MemoryMb: 256), killOnClose: kill);
+        var plugin = new SandboxedPlugin(typeof(Program).Assembly.Location, kill ? "echo" : "sleep", new JobLimits(MemoryMb: 256), killOnClose: kill);
         if (kill)
         {
             plugin.Receive();
@@ -175,8 +174,8 @@ internal static class Program
             detail = ex.GetType().Name;
         }
 
-        var flags = (FrameFlags)byte.Parse(Environment.GetEnvironmentVariable(FlagsVariable) ?? "0");
-        var key = Environment.GetEnvironmentVariable(KeyVariable) is { } hex ? Convert.FromHexString(hex) : null;
+        var flags = (FrameFlags)byte.Parse(Environment.GetEnvironmentVariable(SandboxEnvironment.FlagsVariable) ?? "0");
+        var key = Environment.GetEnvironmentVariable(SandboxEnvironment.KeyVariable) is { } hex ? Convert.FromHexString(hex) : null;
         var channel = new FrameChannel(input, output, flags, key);
         channel.Send(FrameType.Event, "probe.result", JsonSerializer.Serialize(new { kind, allowed, detail }));
         return 0;
@@ -185,8 +184,8 @@ internal static class Program
     // A plugin that can do nothing itself: it forwards read, write and fetch requests to the host broker and returns the answer, and "whoami" returns the request context the host sent.
     private static int Brokered(Stream input, Stream output)
     {
-        var flags = (FrameFlags)byte.Parse(Environment.GetEnvironmentVariable(FlagsVariable) ?? "0");
-        var key = Environment.GetEnvironmentVariable(KeyVariable) is { } hex ? Convert.FromHexString(hex) : null;
+        var flags = (FrameFlags)byte.Parse(Environment.GetEnvironmentVariable(SandboxEnvironment.FlagsVariable) ?? "0");
+        var key = Environment.GetEnvironmentVariable(SandboxEnvironment.KeyVariable) is { } hex ? Convert.FromHexString(hex) : null;
         var channel = new FrameChannel(input, output, flags, key);
         channel.Send(FrameType.Event, "lifecycle.ready", """{"id":"brokered","version":"1.0.0"}""");
         var context = "{}";
@@ -237,8 +236,8 @@ internal static class Program
 
     private static int Echo(Stream input, Stream output)
     {
-        var flags = (FrameFlags)byte.Parse(Environment.GetEnvironmentVariable(FlagsVariable) ?? "0");
-        var key = Environment.GetEnvironmentVariable(KeyVariable) is { } hex ? Convert.FromHexString(hex) : null;
+        var flags = (FrameFlags)byte.Parse(Environment.GetEnvironmentVariable(SandboxEnvironment.FlagsVariable) ?? "0");
+        var key = Environment.GetEnvironmentVariable(SandboxEnvironment.KeyVariable) is { } hex ? Convert.FromHexString(hex) : null;
         var channel = new FrameChannel(input, output, flags, key);
         channel.Send(FrameType.Event, "lifecycle.ready", """{"id":"spike","version":"1.0.0"}""");
         try

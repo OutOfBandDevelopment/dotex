@@ -1,4 +1,4 @@
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>The outcome of <see cref="PluginHost.Start"/>: a lease on the plugin, or the reason there is none.</summary>
 /// <param name="Refusal">None when started.</param>

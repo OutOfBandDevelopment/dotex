@@ -7,7 +7,7 @@ using System.Runtime.Versioning;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox.MacOS;
 
 /// <summary>
 /// Runs this assembly as a plugin under the macOS Seatbelt sandbox (<c>/usr/bin/sandbox-exec</c>) with a generated profile: no network, no file
@@ -24,10 +24,10 @@ public sealed class SeatbeltPlugin : ISandboxedPlugin
     private readonly FrameChannel _channel;
 
     /// <summary>Starts the plugin under <c>sandbox-exec</c>.</summary>
-    public SeatbeltPlugin(string commandArguments, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null, FrameFlags flags = FrameFlags.Crc32 | FrameFlags.Hmac | FrameFlags.CounterSign)
+    public SeatbeltPlugin(string pluginAssembly, string commandArguments, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null, FrameFlags flags = FrameFlags.Crc32 | FrameFlags.Hmac | FrameFlags.CounterSign)
     {
         var key = RandomNumberGenerator.GetBytes(32);
-        var dll = typeof(SeatbeltPlugin).Assembly.Location;
+        var dll = pluginAssembly;
         var dotnetRoot = Path.GetFullPath(Path.Combine(RuntimeEnvironment.GetRuntimeDirectory(), "..", "..", ".."));
         var scratch = Directory.CreateTempSubdirectory("plugin-").FullName;
         var write = new List<string>(writeDirectories ?? []) { scratch };
@@ -53,8 +53,8 @@ public sealed class SeatbeltPlugin : ISandboxedPlugin
         info.Environment["DOTNET_ROOT"] = dotnetRoot;
         info.Environment["DOTNET_NOLOGO"] = "1";
         info.Environment["DOTNET_CLI_HOME"] = scratch;
-        info.Environment[Program.KeyVariable] = Convert.ToHexString(key);
-        info.Environment[Program.FlagsVariable] = ((byte)flags).ToString(global::System.Globalization.CultureInfo.InvariantCulture);
+        info.Environment[SandboxEnvironment.KeyVariable] = Convert.ToHexString(key);
+        info.Environment[SandboxEnvironment.FlagsVariable] = ((byte)flags).ToString(global::System.Globalization.CultureInfo.InvariantCulture);
         _process = Process.Start(info) ?? throw new InvalidOperationException("could not start the plugin");
         _channel = new FrameChannel(_process.StandardOutput.BaseStream, _process.StandardInput.BaseStream, flags, key);
     }

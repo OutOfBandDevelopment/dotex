@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using Microsoft.Win32.SafeHandles;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox.Windows;
 
 /// <summary>Wait, exit code, CPU time and kill on the process handle the launcher already owns, since <c>Process.GetProcessById</c> cannot read the exit code of a process it did not start.</summary>
 [SupportedOSPlatform("windows")]

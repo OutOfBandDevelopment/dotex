@@ -297,6 +297,12 @@
     <Project Path="Framework/OoBDev.ComplexEvents/OoBDev.ComplexEvents.csproj" />
     <Project Path="Framework/OoBDev.Security.OAuthClient.Abstractions/OoBDev.Security.OAuthClient.Abstractions.csproj" />
     <Project Path="Framework/OoBDev.Security.OAuthClient.Tests/OoBDev.Security.OAuthClient.Tests.csproj" />
+    <Project Path="Framework/OoBDev.System.Sandbox/OoBDev.System.Sandbox.csproj" />
+    <Project Path="Framework/OoBDev.System.Sandbox.Windows/OoBDev.System.Sandbox.Windows.csproj" />
+    <Project Path="Framework/OoBDev.System.Sandbox.Linux/OoBDev.System.Sandbox.Linux.csproj" />
+    <Project Path="Framework/OoBDev.System.Sandbox.MacOS/OoBDev.System.Sandbox.MacOS.csproj" />
+    <Project Path="Framework/OoBDev.System.Sandbox.Plugin/OoBDev.System.Sandbox.Plugin.csproj" />
+    <Project Path="Framework/OoBDev.System.Sandbox.Tests/OoBDev.System.Sandbox.Tests.csproj" />
     <Project Path="Framework/OoBDev.Security.OAuthClient/OoBDev.Security.OAuthClient.csproj" />
     <Project Path="Extensions/OoBDev.Security.OAuthClient.Windows/OoBDev.Security.OAuthClient.Windows.csproj" />
     <Project Path="Extensions/OoBDev.Security.OAuthClient.Windows.Tests/OoBDev.Security.OAuthClient.Windows.Tests.csproj" />

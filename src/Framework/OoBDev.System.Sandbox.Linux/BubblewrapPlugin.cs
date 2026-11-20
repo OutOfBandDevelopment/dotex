@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Security.Cryptography;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox.Linux;
 
 /// <summary>
 /// Runs this assembly as a plugin under bubblewrap on Linux (REQ-008): new user, PID, IPC, UTS and network namespaces (so no network),
@@ -25,10 +25,10 @@ public sealed class BubblewrapPlugin : ISandboxedPlugin
     private volatile int _hit;
 
     /// <summary>Starts the plugin; the folders are bound at the same path inside the sandbox.</summary>
-    public BubblewrapPlugin(string commandArguments, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null, FrameFlags flags = FrameFlags.Crc32 | FrameFlags.Hmac | FrameFlags.CounterSign, JobLimits? limits = null)
+    public BubblewrapPlugin(string pluginAssembly, string commandArguments, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null, FrameFlags flags = FrameFlags.Crc32 | FrameFlags.Hmac | FrameFlags.CounterSign, JobLimits? limits = null)
     {
         var key = RandomNumberGenerator.GetBytes(32);
-        var dll = typeof(BubblewrapPlugin).Assembly.Location;
+        var dll = pluginAssembly;
         var dotnetRoot = Path.GetFullPath(Path.Combine(RuntimeEnvironment.GetRuntimeDirectory(), "..", "..", ".."));
         var cpu = limits?.CpuSeconds ?? 0;
         var info = new ProcessStartInfo(cpu > 0 ? "/bin/sh" : "bwrap")
@@ -102,7 +102,7 @@ public sealed class BubblewrapPlugin : ISandboxedPlugin
             "--symlink", "usr/lib", "/lib", "--symlink", "usr/lib64", "/lib64", "--symlink", "usr/bin", "/bin",
             "--proc", "/proc", "--dev", "/dev", "--tmpfs", "/tmp",
             "--setenv", "HOME", "/tmp", "--setenv", "TMPDIR", "/tmp", "--setenv", "DOTNET_ROOT", dotnetRoot, "--setenv", "DOTNET_NOLOGO", "1",
-            "--setenv", Program.KeyVariable, keyHex, "--setenv", Program.FlagsVariable, flags,
+            "--setenv", SandboxEnvironment.KeyVariable, keyHex, "--setenv", SandboxEnvironment.FlagsVariable, flags,
         };
 
         if (memoryMb > 0)
