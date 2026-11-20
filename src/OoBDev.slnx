@@ -285,6 +285,8 @@
     <Project Path="Framework/OoBDev.Communications.Tests/OoBDev.Communications.Tests.csproj" />
     <Project Path="Framework/OoBDev.Communications/OoBDev.Communications.csproj" />
     <Project Path="Framework/OoBDev.ComplexEvents.Abstractions/OoBDev.ComplexEvents.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.ComplexEvents.EntityFrameworkCore.Tests/OoBDev.ComplexEvents.EntityFrameworkCore.Tests.csproj" />
+    <Project Path="Framework/OoBDev.ComplexEvents.EntityFrameworkCore/OoBDev.ComplexEvents.EntityFrameworkCore.csproj" />
     <Project Path="Framework/OoBDev.ComplexEvents.Tests/OoBDev.ComplexEvents.Tests.csproj" />
     <Project Path="Framework/OoBDev.ComplexEvents/OoBDev.ComplexEvents.csproj" />
     <Project Path="Framework/OoBDev.DacFx.Abstractions/OoBDev.DacFx.Abstractions.csproj" />
