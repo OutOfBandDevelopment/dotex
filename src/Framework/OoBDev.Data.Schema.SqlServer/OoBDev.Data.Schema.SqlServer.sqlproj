@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.Build.Sql/2.1.0">
+
+	<PropertyGroup>
+		<Name>OoBDev.Data.Schema.SqlServer</Name>
+		<DSP>Microsoft.Data.Tools.Schema.Sql.Sql160DatabaseSchemaProvider</DSP>
+		<ModelCollation>1033,CI</ModelCollation>
+	</PropertyGroup>
+
+</Project>

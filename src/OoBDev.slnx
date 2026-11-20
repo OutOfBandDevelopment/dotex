@@ -315,6 +315,7 @@
     <Project Path="Framework/OoBDev.Data.Migrations.Postgres/OoBDev.Data.Migrations.Postgres.csproj" />
     <Project Path="Framework/OoBDev.Data.Migrations.Sqlite/OoBDev.Data.Migrations.Sqlite.csproj" />
     <Project Path="Framework/OoBDev.Data.Migrations.Tests/OoBDev.Data.Migrations.Tests.csproj" />
+    <Project Path="Framework/OoBDev.Data.Schema.SqlServer/OoBDev.Data.Schema.SqlServer.sqlproj" />
     <Project Path="Framework/OoBDev.Devices.TestUtilities/OoBDev.Devices.TestUtilities.csproj" />
     <Project Path="Framework/OoBDev.Devices.TestUtilities.Tests/OoBDev.Devices.TestUtilities.Tests.csproj" />
     <Project Path="Framework/OoBDev.Tui.TestUtilities/OoBDev.Tui.TestUtilities.csproj" />
