@@ -232,7 +232,7 @@ public sealed class FrameChannel
         {
             var mac = Mac(content, ack != 0 ? answeredMac : []);
             frame.Write(mac);
-            if (ack == 0)
+            if (ack == 0 && type is FrameType.Request or FrameType.Heartbeat)
             {
                 if (_sentMacs.Count >= _maxUnanswered)
                 {

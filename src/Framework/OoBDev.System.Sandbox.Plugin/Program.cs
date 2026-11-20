@@ -237,6 +237,18 @@ internal static class Program
                     continue;
                 }
 
+                if (op == "flood")
+                {
+                    for (var i = 0; i < 300; i++)
+                    {
+                        channel.Send(FrameType.Event, "noise", "{}");
+                        Thread.Sleep(10);
+                    }
+
+                    channel.Reply(message, FrameType.Response, global::System.Text.Encoding.UTF8.GetBytes("{}"));
+                    continue;
+                }
+
                 var topic = op switch
                 {
                     "read" => "broker.file.read",

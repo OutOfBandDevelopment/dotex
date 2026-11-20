@@ -40,6 +40,25 @@ public sealed class FrameChannelTests
     }
 
     [TestMethod]
+    public void Send_ManyOneWayEvents_AreNeverCountedAsUnanswered()
+    {
+        var (sender, _, _) = Pair();
+
+        for (var i = 0; i < 200; i++)
+        {
+            sender.Send(FrameType.Event, "noise", "{}");
+        }
+
+        Assert.ThrowsExactly<InvalidOperationException>(() =>
+        {
+            for (var i = 0; i < 65; i++)
+            {
+                sender.Send(FrameType.Request, _topic, _request);
+            }
+        });
+    }
+
+    [TestMethod]
     public void Header_IsPackedWithVersionFlagsTypeFormatLengthSequenceAndTopic()
     {
         var (sender, _, wire) = Pair();

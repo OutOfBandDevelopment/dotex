@@ -72,6 +72,23 @@ public sealed class PluginHostTests
     }
 
     [TestMethod]
+    public void Call_PluginFloodsFrames_IsStoppedAfterSustainedWindowsOverTheRate()
+    {
+        using var package = _temp.GetTempDirectory();
+        using var granted = _temp.GetTempDirectory();
+        using var host = Host(package, granted.DirectoryPath, "ro", out _);
+        using var start = host.Start(package.DirectoryPath, "brokered", PluginLifetime.Bound).Lease!;
+        var limiter = new MessageRateLimiter(5, 2);
+        start.Plugin.RateLimiter = limiter;
+
+        var failure = Assert.ThrowsExactly<InvalidOperationException>(() => Call(start, new { op = "flood" }));
+
+        Assert.IsTrue(failure.Message.Contains("message rate", StringComparison.Ordinal), failure.Message);
+        Assert.IsTrue(limiter.Sustained);
+        Assert.IsTrue(limiter.Dropped > 0);
+    }
+
+    [TestMethod]
     public void Call_WriteIntoReadOnlyFolder_IsRefusedAndReadWriteWorks()
     {
         using var package = _temp.GetTempDirectory();
