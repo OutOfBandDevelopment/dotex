@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace OoBDev.System.Sandbox;
@@ -16,6 +17,7 @@ public interface ISandboxLauncher
     /// <param name="readDirectories">Folders the plugin may read.</param>
     /// <param name="writeDirectories">Folders the plugin may read and write.</param>
     /// <param name="limits">Process limits; null means the launcher's default.</param>
+    /// <param name="surviveCaller">True lets the plugin outlive the process that started it (call <see cref="ISandboxedPlugin.Detach"/> to let go); only Windows supports it so far, the others throw <see cref="NotSupportedException"/>.</param>
     /// <returns>The running plugin.</returns>
-    ISandboxedPlugin Start(string commandArguments, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null, JobLimits? limits = null);
+    ISandboxedPlugin Start(string commandArguments, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null, JobLimits? limits = null, bool surviveCaller = false);
 }

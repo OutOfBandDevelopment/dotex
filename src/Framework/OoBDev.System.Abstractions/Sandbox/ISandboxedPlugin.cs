@@ -22,4 +22,7 @@ public interface ISandboxedPlugin : IDisposable
 
     /// <summary>Waits up to <paramref name="milliseconds"/> for the plugin to end.</summary>
     bool WaitForExit(int milliseconds);
+
+    /// <summary>Lets go of a plugin started with <c>surviveCaller</c>: the host stops watching it and closes its handles while the plugin keeps running for a later caller.</summary>
+    void Detach() => throw new NotSupportedException("This launcher cannot detach a plugin.");
 }

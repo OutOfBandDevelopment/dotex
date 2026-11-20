@@ -17,6 +17,6 @@ public sealed class MacOSSandboxLauncher(string pluginAssembly) : ISandboxLaunch
     public bool IsAvailable => OperatingSystem.IsMacOS() && File.Exists("/usr/bin/sandbox-exec");
 
     /// <inheritdoc />
-    public ISandboxedPlugin Start(string commandArguments, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null, JobLimits? limits = null) =>
-        new SeatbeltPlugin(pluginAssembly, commandArguments, readDirectories, writeDirectories);
+    public ISandboxedPlugin Start(string commandArguments, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null, JobLimits? limits = null, bool surviveCaller = false) =>
+        surviveCaller ? throw new NotSupportedException("Survive is not built on macOS.") : new SeatbeltPlugin(pluginAssembly, commandArguments, readDirectories, writeDirectories);
 }
