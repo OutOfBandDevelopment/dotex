@@ -75,6 +75,13 @@ public sealed class FormBinding : IDisposable
         return OptionItems(source) is { } items ? [.. items.Select(i => i is null ? string.Empty : Format(i))] : null;
     }
 
+    private static string? PickSource(UiControl control) => control switch
+    {
+        ChoiceControl { OptionsSource: { } choices } => choices,
+        ListControl { ItemsSource: { } items } => items,
+        _ => null,
+    };
+
     private IEnumerable<object?>? OptionItems(string source)
     {
         var property = Source.GetType().GetProperty(source, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
@@ -119,7 +126,7 @@ public sealed class FormBinding : IDisposable
         }
 
         var type = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-        if (control is ChoiceControl { OptionsSource: { } source } && !IsScalar(type) && !IsStringCollection(type))
+        if (PickSource(control) is { } source && !IsScalar(type) && !IsStringCollection(type))
         {
             // An object-valued pick (a detected device): the row's text is the item's display text, and the model gets the item itself.
             var match = OptionItems(source)?.FirstOrDefault(item => item is not null && string.Equals(Format(item), text, StringComparison.Ordinal));

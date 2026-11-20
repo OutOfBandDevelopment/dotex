@@ -28,6 +28,12 @@ public sealed class FormFieldAttribute : Attribute
 
     public ChoiceStyle ChoiceStyle { get; set; } = ChoiceStyle.Dropdown;
 
+    /// <summary>For a list: the <c>ICommand</c> property that adds an item (it becomes a button beside the list).</summary>
+    public string? AddCommand { get; set; }
+
+    /// <summary>For a list: the <c>ICommand</c> property that deletes the selected item.</summary>
+    public string? DeleteCommand { get; set; }
+
     /// <summary>A property (or control id) whose value decides whether this field is shown — see <see cref="UiCondition"/>.</summary>
     public string? VisibleWhen { get; set; }
 

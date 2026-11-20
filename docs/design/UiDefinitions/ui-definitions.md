@@ -86,6 +86,7 @@ fields:
 - `ChoiceControl` — one of a fixed set of named options, either as a dropdown or a radio group (a
   `Style` field picks which — a small option count reads better as radio buttons, e.g. a color
   preset or a connection mode; a longer list reads better as a dropdown, e.g. a sound track name).
+- `ListControl` (built 2026-11-19, owner Q6) — a list of items with one selected, the master half of a master-detail view (saved profiles). `Id` is the model property holding the selected item, `ItemsSource` the property listing items (re-read on refresh), `AddCommand` and `DeleteCommand` the ids of button controls. The detail is the form generated for the selected item; the host places it beside the list. A form field declares it with `[FormField(Kind = FormFieldKind.List, OptionsFrom, AddCommand, DeleteCommand)]`; `FormBinding.SetText` writes the chosen item itself. Renderers (view-model factory, Tui, Blazor, WPF) are still to do.
 - `TextFieldControl` — free text (e.g. an IP address, a hostname), or, with an optional
   `Constraint: ValueConstraint?`, a typed value with a data type and bounds (see "Values and
   widgets" below).
