@@ -9,3 +9,7 @@ Throwaway proof of concept for the [sandboxed plugin host](../../../docs/design/
 ## Heartbeat
 
 `PluginHeartbeat.Check(plugin, timeout)` sends a heartbeat and disposes a plugin that does not answer in time.
+
+## Persisted grants
+
+`new GrantStore(TimeProvider.System, path)` loads the approved grants from `path` and rewrites the file atomically on every approval or revoke; the audit trail is appended as JSON lines to `path + ".audit"`. Pass the same store to `GrantBroker` and `PluginHost`, so a plugin approved in one run keeps its grants in the next and a revoke stays revoked after a restart. Without a path the store lives in memory only. The files are not yet encrypted or access-protected.
