@@ -9,6 +9,9 @@ const probes = (): Probe[] => [
   { name: 'AsyncAPI document', method: 'GET', path: '/asyncapi/all.json', to: '/developer/events' },
   { name: 'Embeddings (MiniLM)', method: 'GET', path: '/api/AllMiniLM?text=ping', to: '/ai/embeddings' },
   { name: 'Templates', method: 'POST', path: '/api/TextTemplate/SupportedTemplates', to: '/content/templates' },
+  { name: 'Vector store collections', method: 'GET', path: '/api/VectorStore/collections', to: '/utilities/vectors' },
+  { name: 'Runtime and configuration', method: 'GET', path: '/api/Operations/info', to: '/operations/info' },
+  { name: 'Endpoint rights', method: 'GET', path: '/api/Rights/endpoints', to: '/identity/rights' },
   { name: 'Current user', method: 'GET', path: '/api/User/claims', to: '/identity/me' },
 ].map(p => ({ ...p, method: p.method as 'GET' | 'POST', status: null, ms: null }));
 
