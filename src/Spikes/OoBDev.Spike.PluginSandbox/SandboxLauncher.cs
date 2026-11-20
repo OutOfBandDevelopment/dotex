@@ -10,7 +10,7 @@ public static class SandboxLauncher
     public static string Mechanism => OperatingSystem.IsWindows() ? "AppContainer + job object" : OperatingSystem.IsLinux() ? "bubblewrap" : OperatingSystem.IsMacOS() ? "Seatbelt" : "none";
 
     /// <summary>True when the sandbox for this platform can run here (on Linux it needs bubblewrap installed).</summary>
-    public static bool IsAvailable => OperatingSystem.IsWindows() || OperatingSystem.IsMacOS() && System.IO.File.Exists("/usr/bin/sandbox-exec") || OperatingSystem.IsLinux() && System.IO.File.Exists("/usr/bin/bwrap");
+    public static bool IsAvailable => OperatingSystem.IsWindows() || OperatingSystem.IsMacOS() && global::System.IO.File.Exists("/usr/bin/sandbox-exec") || OperatingSystem.IsLinux() && global::System.IO.File.Exists("/usr/bin/bwrap");
 
     /// <summary>Starts the plugin with only the given folders reachable (read-only and read-write).</summary>
     public static ISandboxedPlugin Start(string commandArguments, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null)

@@ -1,6 +1,6 @@
 using System;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>A plugin process on any platform, speaking the framed protocol over stdio; the launcher behind it decides how it is isolated.</summary>
 public interface ISandboxedPlugin : IDisposable

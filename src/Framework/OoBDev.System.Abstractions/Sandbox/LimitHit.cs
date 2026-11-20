@@ -1,4 +1,4 @@
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>Which limit ended a plugin, as reported by the host.</summary>
 public enum LimitHit

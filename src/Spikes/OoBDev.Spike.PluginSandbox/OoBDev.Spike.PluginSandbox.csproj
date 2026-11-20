@@ -11,5 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.IO.Hashing" />
+    <ProjectReference Include="..\..\Framework\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
+    <Using Include="OoBDev.System.Sandbox" />
   </ItemGroup>
 </Project>

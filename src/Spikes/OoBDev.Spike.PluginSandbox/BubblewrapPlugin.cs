@@ -38,12 +38,12 @@ public sealed class BubblewrapPlugin : ISandboxedPlugin
             RedirectStandardError = true,
             UseShellExecute = false,
         };
-        var flagText = ((byte)flags).ToString(System.Globalization.CultureInfo.InvariantCulture);
+        var flagText = ((byte)flags).ToString(global::System.Globalization.CultureInfo.InvariantCulture);
         if (cpu > 0)
         {
             info.ArgumentList.Add("-c");
             info.ArgumentList.Add("ulimit -t \"$0\"; exec bwrap \"$@\"");
-            info.ArgumentList.Add(cpu.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            info.ArgumentList.Add(cpu.ToString(global::System.Globalization.CultureInfo.InvariantCulture));
         }
 
         foreach (var argument in Arguments(dll, dotnetRoot, Convert.ToHexString(key), flagText, readDirectories ?? [], writeDirectories ?? [], commandArguments, limits?.MemoryMb ?? 0))
@@ -107,7 +107,7 @@ public sealed class BubblewrapPlugin : ISandboxedPlugin
 
         if (memoryMb > 0)
         {
-            args.AddRange(["--setenv", "DOTNET_GCHeapHardLimit", ((long)memoryMb * 1024 * 1024).ToString("X", System.Globalization.CultureInfo.InvariantCulture)]);
+            args.AddRange(["--setenv", "DOTNET_GCHeapHardLimit", ((long)memoryMb * 1024 * 1024).ToString("X", global::System.Globalization.CultureInfo.InvariantCulture)]);
         }
 
         var bound = new HashSet<string>(StringComparer.Ordinal) { "/usr" };

@@ -1,6 +1,6 @@
 using System;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>Optional protections a frame carries. The host fixes the required set for a session, and a frame missing one is a violation.</summary>
 [Flags]

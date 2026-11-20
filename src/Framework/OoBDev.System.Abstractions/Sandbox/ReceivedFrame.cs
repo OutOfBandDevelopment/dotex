@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.Json;
 
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>A verified frame with its header fields and payload bytes.</summary>
 public sealed class ReceivedFrame

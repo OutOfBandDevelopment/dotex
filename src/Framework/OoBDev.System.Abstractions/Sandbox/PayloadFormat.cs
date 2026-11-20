@@ -1,4 +1,4 @@
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>How the payload bytes are to be read. The transport never interprets the content beyond checking the declared format.</summary>
 public enum PayloadFormat : byte

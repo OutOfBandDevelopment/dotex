@@ -1,4 +1,4 @@
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>What a frame is. Values are wire constants and never change within a major version.</summary>
 public enum FrameType : byte

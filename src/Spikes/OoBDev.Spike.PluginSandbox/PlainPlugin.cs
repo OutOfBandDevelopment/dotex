@@ -34,7 +34,7 @@ public sealed class PlainPlugin : ISandboxedPlugin
         }
 
         info.Environment[Program.KeyVariable] = Convert.ToHexString(key);
-        info.Environment[Program.FlagsVariable] = ((byte)flags).ToString(System.Globalization.CultureInfo.InvariantCulture);
+        info.Environment[Program.FlagsVariable] = ((byte)flags).ToString(global::System.Globalization.CultureInfo.InvariantCulture);
         _process = Process.Start(info) ?? throw new InvalidOperationException("could not start the plugin");
         _channel = new FrameChannel(_process.StandardOutput.BaseStream, _process.StandardInput.BaseStream, flags, key);
     }

@@ -1,4 +1,4 @@
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>How a plugin instance relates to its callers (REQ-011).</summary>
 public enum PluginLifetime

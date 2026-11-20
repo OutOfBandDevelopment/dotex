@@ -126,7 +126,7 @@ internal static class Program
                     var parts = target.Split(':');
                     using (var client = new TcpClient())
                     {
-                        allowed = client.ConnectAsync(parts[0], int.Parse(parts[1], System.Globalization.CultureInfo.InvariantCulture)).Wait(3000) && client.Connected;
+                        allowed = client.ConnectAsync(parts[0], int.Parse(parts[1], global::System.Globalization.CultureInfo.InvariantCulture)).Wait(3000) && client.Connected;
                     }
 
                     detail = "connect";
@@ -145,8 +145,8 @@ internal static class Program
 
                 case "pids":
                     var count = Directory.GetDirectories("/proc").Count(path => int.TryParse(Path.GetFileName(path), out _));
-                    allowed = count > int.Parse(target, System.Globalization.CultureInfo.InvariantCulture);
-                    detail = count.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                    allowed = count > int.Parse(target, global::System.Globalization.CultureInfo.InvariantCulture);
+                    detail = count.ToString(global::System.Globalization.CultureInfo.InvariantCulture);
                     break;
 
                 case "env":
@@ -210,7 +210,7 @@ internal static class Program
                 var op = document.RootElement.GetProperty("op").GetString();
                 if (op == "whoami")
                 {
-                    channel.Reply(message, FrameType.Response, System.Text.Encoding.UTF8.GetBytes(context));
+                    channel.Reply(message, FrameType.Response, global::System.Text.Encoding.UTF8.GetBytes(context));
                     continue;
                 }
 

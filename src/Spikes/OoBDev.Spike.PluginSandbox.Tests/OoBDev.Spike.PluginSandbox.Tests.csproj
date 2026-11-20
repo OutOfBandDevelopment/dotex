@@ -22,5 +22,6 @@
   <ItemGroup>
     <ProjectReference Include="..\OoBDev.Spike.PluginSandbox\OoBDev.Spike.PluginSandbox.csproj" />
     <ProjectReference Include="..\..\Framework\OoBDev.System\OoBDev.System.csproj" />
+    <Using Include="OoBDev.System.Sandbox" />
   </ItemGroup>
 </Project>

@@ -54,7 +54,7 @@ public sealed class SeatbeltPlugin : ISandboxedPlugin
         info.Environment["DOTNET_NOLOGO"] = "1";
         info.Environment["DOTNET_CLI_HOME"] = scratch;
         info.Environment[Program.KeyVariable] = Convert.ToHexString(key);
-        info.Environment[Program.FlagsVariable] = ((byte)flags).ToString(System.Globalization.CultureInfo.InvariantCulture);
+        info.Environment[Program.FlagsVariable] = ((byte)flags).ToString(global::System.Globalization.CultureInfo.InvariantCulture);
         _process = Process.Start(info) ?? throw new InvalidOperationException("could not start the plugin");
         _channel = new FrameChannel(_process.StandardOutput.BaseStream, _process.StandardInput.BaseStream, flags, key);
     }

@@ -1,4 +1,4 @@
-namespace OoBDev.Spike.PluginSandbox;
+namespace OoBDev.System.Sandbox;
 
 /// <summary>The resource limits for one plugin (REQ-005). Zero means no limit.</summary>
 /// <param name="MemoryMb">Per-process memory cap, enforced by the job object.</param>

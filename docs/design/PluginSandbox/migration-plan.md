@@ -27,3 +27,7 @@ Does the sandbox need one assembly per platform? No: the spike runs on Windows a
 
 - Whether Linux and macOS share one `Sandbox.Unix` package (both are `Process` plus a wrapper command). Recommendation: keep them separate, they share no code beyond `CommandLine`.
 - The spikes stay in `src/OoBDev.Spikes.slnx` until this plan is confirmed and executed (owner, 2026-11-10).
+
+## Execution log
+
+- 2026-11-20, stage 1: `ISandboxedPlugin`, `JobLimits`, `LimitHit`, `PluginLifetime`, `FrameType`, `FrameFlags`, `ReceivedFrame` and `PayloadFormat` (needed by `ReceivedFrame`) moved to `OoBDev.System.Abstractions/Sandbox` (namespace `OoBDev.System.Sandbox`), `ISandboxLauncher` added; the spike references them and its 110 tests pass (14 skipped, Linux and macOS). Next: the core `OoBDev.System.Sandbox` project, then the platform packages and the plugin entry project (launchers need the plugin assembly path as a parameter instead of `typeof(...).Assembly.Location`).
