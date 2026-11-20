@@ -43,7 +43,7 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Known issues:** diagrams crashed the PlantUML server until `fork` was replaced by `split` (fixed 2026-11-11); ranking quality is not measured.
 - **Standards:** none formal; BM25 plus vector fusion (reciprocal rank fusion) is the usual pattern.
 - **Built 2026-11-16:** `RelevanceMetrics` (recall at k, reciprocal rank, mean reciprocal rank) in OoBDev.Search to score a query set; the query set itself is per project.
-- **Missing:** access filters tied to ApplicationRights so search never leaks documents.
+- **Built 2026-11-19:** `AccessFilteredSearchProvider` and `IItemAccessPolicy` (post-filter of hits by a caller-supplied policy; one page, no cursor). **Missing:** a ready policy that maps item ids to ApplicationRights, and filter push-down into the stores.
 
 ## LlmCodeGen and ContractParser
 

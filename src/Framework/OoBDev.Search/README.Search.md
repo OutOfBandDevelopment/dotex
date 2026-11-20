@@ -56,3 +56,7 @@ Not built yet: the keyword (OpenSearch) and vector providers, the SQL-kind provi
 ## Vector search provider
 
 `VectorSearchProvider(IVectorStore, IEmbeddingProvider)` is an `ISearchProvider` over nearest neighbours: the query vector is `Anchor.NearVector`, else the embedding of `Anchor.NearText` or the request text. It supports no filters (a store holds none), no cursor and no like-item anchor, and an empty query returns no hits. Use it as a source of `HybridSearchProvider`.
+
+## Access filtering
+
+`AccessFilteredSearchProvider(inner, IItemAccessPolicy, overFetch = 3)` wraps any `ISearchProvider` (keyword, vector, hybrid) and drops the hits the caller may not read, so search never reveals a document the caller could not open. The policy (`IItemAccessPolicy.FilterReadableAsync`, batch by item id) is the application's: for example it maps item ids to `[ApplicationRight]` checks or to the owning record's access rule. The inner provider is asked for `PageSize * overFetch` hits so a page can still fill; the result is one page with no cursor, like the hybrid provider. Counts or facets from the inner provider are not filtered, so do not expose them without a policy-aware source.
