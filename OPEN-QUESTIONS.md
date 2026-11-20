@@ -10,14 +10,17 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ## Open
 
-### Q24 (2026-11-19, MetadataQuery): are snapshot sources and the anchor store wanted, and with which transport?
+### Q24 (2026-11-19, MetadataQuery): do you want "search by description" and cached snapshots in the query engine?
 
-[Design](docs/design/MetadataQuery/README.md#not-in-the-first-slice). Left open: snapshot sources and text anchors (the catalog's caching), and the GraphQL and OData transports. The design has no requirements for the first, and the second waits on the transport evaluation.
+[Design](docs/design/MetadataQuery/README.md#not-in-the-first-slice). Two ideas were left out of the first slice:
+
+- **Text anchor**: today "find rows similar to row 42" works. A text anchor would let a caller say "find rows similar to the words *red barn at sunset*". The engine would turn those words into numbers with an embedding model, then rank by closeness. It needs an embedder at query time.
+- **Snapshot source**: keep a saved copy of a query result so repeat requests are quick. It is a cache. No screen needs it yet.
 
 **Options**
-- A. Drop snapshot sources and the anchor store until a consumer shows a measured need; take the transports up in the HTTP query evaluation (recommended: caching without a consumer is guesswork, and `Candidates` already covers the vector case).
-- B. Port the catalog's anchor store now as an optional cache project (needs you to name which catalog code is the reference).
-- C. Keep them listed as is.
+- A. Drop both until a screen needs them (recommended: no consumer, and a cache without measurements is guesswork).
+- B. Build text anchors only (adds an embedder dependency to the query engine).
+- C. Leave them listed as they are.
 
 **Default:** C.
 
