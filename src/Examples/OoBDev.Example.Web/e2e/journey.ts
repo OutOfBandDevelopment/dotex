@@ -34,5 +34,7 @@ export interface Journey {
   problems: Problem[];
   /** Needs the real stack (identity provider); skipped when the API is mocked. */
   liveOnly?: boolean;
+  /** The steps depend on the seeded mock data (a name, a user, a sent message), so a live run skips the journey; the mock run stays the guide source (owner Q8, 2026-11-19). */
+  mockOnly?: boolean;
   steps: Step[];
 }

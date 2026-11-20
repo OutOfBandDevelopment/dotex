@@ -707,6 +707,7 @@ export const journeys: Journey[] = [
   },
   {
     id: 'see-who-you-are',
+    mockOnly: true,
     title: 'See the claims on your token',
     persona: 'A developer checking authentication',
     goal: 'Read the claims the API sees for the current user.',
@@ -799,6 +800,7 @@ export const journeys: Journey[] = [
   },
   {
     id: 'watch-the-queues',
+    mockOnly: true,
     title: 'See the queue channels and received messages',
     persona: 'A developer checking the message queue wiring',
     goal: 'Confirm which provider and queue each channel uses and whether this host receives from it.',
@@ -883,6 +885,7 @@ export const journeys: Journey[] = [
   },
   {
     id: 'check-your-rights',
+    mockOnly: true,
     title: 'Check which rights an endpoint needs',
     persona: 'A developer working out why an API call is refused',
     goal: 'See the access each endpoint needs and check the current user against a right.',
@@ -960,6 +963,7 @@ export const journeys: Journey[] = [
   },
   {
     id: 'browse-users-and-roles',
+    mockOnly: true,
     title: 'Browse users and roles',
     persona: 'An administrator checking who can do what',
     goal: 'See the realm users with their roles and the application rights those roles grant.',
@@ -994,6 +998,7 @@ export const journeys: Journey[] = [
   },
   {
     id: 'server-driven-ui',
+    mockOnly: true,
     title: 'Render a panel from a server-supplied definition',
     persona: 'A developer who wants one UI contract for every front end',
     goal: 'Open a UI definition and watch the host decide which controls show, enable and validate.',
