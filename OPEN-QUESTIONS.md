@@ -10,58 +10,6 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ## Open
 
-### Q5 (2026-11-19, Documents, OCR golden sample): which scanned documents are the golden sample?
-
-The OCR request asks for a golden sample run that records text accuracy with host and date ([design](docs/design/DocumentToMarkdown/README.md#testing-strategy)). The Docling client, regions and language hint are built, but a real accuracy figure needs scanned pages with known text, and the repository holds none (the Integration test uses a text-layer PDF, which does not exercise OCR).
-
-**Options**
-- A. You name two or three scans (and their correct text) from the storage catalog; they go under a DevLocal fixtures folder and the test records accuracy (recommended: real documents give a meaningful figure).
-- B. Generate synthetic scans (rendered text, rotated and noised) in the test. No private files, but the figure only measures easy pages.
-- C. Skip the golden test and drop that acceptance line.
-
-**Default:** B is not started; the request stays open on this line only.
-
-**Your answer:**
-
-### Q6 (2026-11-19, DevTerm UiDefinitions, saved-profile list): how should a list of saved items be expressed in a UiDefinition?
-
-The Connection Editor fields are generated from a definition, but the saved-profile list (select, add, delete) and the zip row are still hand-written XAML. A list with select, add and delete is a master-detail view, not a single-value control kind ([language shape](docs/design/DevTermParity/ui-language-later.md)).
-
-**Options**
-- A. Add one `List` control kind: items bound to a collection, a selected item, and add and delete commands; the detail is the existing form bound to the selected item (recommended: smallest addition, reuses the form renderer and stays host-neutral for Blazor, WPF and Tui).
-- B. Keep master-detail as a layout of two definitions (a list definition and a form definition) that hosts compose. No new control kind, but each host repeats the wiring.
-- C. Leave the profile list as hand-written XAML and document it as an accepted exception.
-
-**Default:** C stays; nothing is built until you answer.
-
-**Your answer:**
-
-### Q7 (2026-11-19, DevTerm, Ebyte E810 config editor): is an E810-DTU on the bench so a fresh capture can be taken?
-
-The Ebyte `IDeviceConfigEditor` is the next step after the first WPF device panel, but the [protocol notes](docs/protocols/ebyte-e810-dtu-config-protocol.md) are a working hypothesis from old captures (one byte-count discrepancy was found by walking a single capture), and a decoder built on them could not be tested against the device.
-
-**Options**
-- A. You connect the E810-DTU and I capture the UDP port 1901 exchanges, verify the field table, then build the editor and a Hardware test (recommended: the notes say to verify against a fresh capture).
-- B. Build the editor from the notes with a fake device only and mark it unverified until a capture exists.
-- C. Drop the editor; configure the device with the vendor tool.
-
-**Default:** B is not started; the item stays in BACKLOG section DevTerm.
-
-**Your answer:**
-
-### Q8 (2026-11-19, Example web, live journeys): how should the mock-only journey expectations run against the live host?
-
-Of 28 Playwright journeys, 20 pass against the live Example AppHost as user `grace`; the other 8 assert mock data (a signed-out `Unauthenticated` result, the name Ada Lovelace, a user `ann`, a message sent earlier). The guides and screenshots come from the mocked run, so changing an expectation changes the guide ([details](docs/design/example-ui/apphost-live-journeys.md)).
-
-**Options**
-- A. Mark each such journey (or step) as mock-only and skip it live; the mock run stays the guide source (recommended: smallest change, keeps the guides deterministic, and the live run still covers the other 20).
-- B. Give each journey a live variant with its own expectations (more coverage, doubles the maintenance of those 8).
-- C. Seed the live host so it matches the mock data (user `ann`, a sent message, sign in as `ada`); the journeys then run unchanged but the realm and host carry test-only data.
-
-**Default:** A is not started until you answer; the item stays in BACKLOG.
-
-**Your answer:**
-
 ### Q9 (2026-11-19, Security, auth translation gateway): how is the gateway built, and does it live in dotex?
 
 [Request](docs/features/request/2026-11-10-auth-translation-gateway.md). Services understand only JWT (rule `owner-decisions`); the gateway converts other credentials at the edge. It holds secrets and mints tokens, so the shape matters before any design.
