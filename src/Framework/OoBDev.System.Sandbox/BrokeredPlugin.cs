@@ -30,6 +30,9 @@ public sealed class BrokeredPlugin : IDisposable
     /// <summary>The manifest id.</summary>
     public string PluginId { get; }
 
+    /// <summary>When set, frames over its limit are dropped and a sustained excess ends the call with an <see cref="InvalidOperationException"/>.</summary>
+    public MessageRateLimiter? RateLimiter { get; set; }
+
     /// <summary>Waits for the ready event the plugin sends when it starts.</summary>
     public ReceivedFrame WaitReady() => _plugin.Receive();
 
@@ -49,6 +52,16 @@ public sealed class BrokeredPlugin : IDisposable
             while (true)
             {
                 var frame = _plugin.Receive();
+                if (RateLimiter is { } limiter && !limiter.Allow())
+                {
+                    if (limiter.Sustained)
+                    {
+                        throw new InvalidOperationException("The plugin kept sending over its message rate and was stopped.");
+                    }
+
+                    continue;
+                }
+
                 if (frame.Type == FrameType.Response && frame.Ack == sequence)
                 {
                     return frame.Text;
