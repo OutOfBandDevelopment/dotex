@@ -50,3 +50,16 @@ The Data access screen (missing-screens.md, "Read-only guard design") would run 
 **Default:** A, built only after you confirm; the screen stays unbuilt meanwhile.
 
 **Your answer:**
+
+### Q26 · 2026-11-20 · Sandbox · What is the "Survive watchdog"?
+
+The sandbox follow-up list says "left is the watchdog" for Survive. Survive itself works (Windows AppContainer pipe, Linux socket, `surviveCaller`, `Detach()`), a hung call is ended by the wall-time limit and idle instances by `Sweep(timeout)`. It is not stated what the watchdog must watch.
+
+**Options**
+
+- A. (recommended) Drop it: a surviving plugin ends itself when no host reconnects within its window (the `survive` plugin already does), and `Sweep` covers hosts that do reconnect; close the item.
+- B. A host-side watchdog that lists surviving plugins (pid file in a granted folder) and kills those older than a limit after a host restart: more code, needs a pid registry.
+
+**Default:** A; the backlog line loses "left is the watchdog".
+
+**Your answer:**
