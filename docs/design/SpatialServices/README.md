@@ -1,6 +1,6 @@
 # Spatial services (geocoding)
 
-Status: **proposed design, written 2026-11-19 on the assumed answer A of Q19 (waits for a consumer; Bing Maps dropped because it is being retired); no code.** Request: [spatial services](../../features/request/2026-11-10-spatial-services.md). Epic 3 of [SharedFramework](../SharedFramework/README.md).
+Status: **proposed design, written 2026-11-19 on the assumed answer A of Q19 (waits for a consumer; Bing Maps dropped because it is being retired); abstractions and the Census adapter built 2026-11-19 (5 unit tests); other adapters, cache decorator and fallback chain not built.** Request: [spatial services](../../features/request/2026-11-10-spatial-services.md). Epic 3 of [SharedFramework](../SharedFramework/README.md).
 
 ## Contents
 
