@@ -64,6 +64,36 @@ public sealed class FormViewTests
     private static global::System.Collections.Generic.IEnumerable<T> All<T>(Control root)
         where T : Control => root.Controls.Cast<Control>().SelectMany(c => All<T>(c)).Concat(root.Controls.OfType<T>());
 
+    public sealed class ProfileModel
+    {
+        public global::System.Collections.Generic.List<string> Saved { get; } = ["bench", "lab"];
+
+        [FormField(Kind = FormFieldKind.List, OptionsFrom = nameof(Saved))]
+        public string? Selected { get; set; }
+    }
+
+    [TestMethod]
+    public void List_SelectItem_WritesTheModel()
+    {
+        // Stage
+        var model = new ProfileModel();
+        var view = new FormView(new FormViewModel(FormDefinitionGenerator.Generate(model, "m"), new FormBinding(model))) { Dock = DockStyle.Fill };
+        var host = new Form { Width = 500, Height = 500, StartPosition = FormStartPosition.Manual, Location = new global::System.Drawing.Point(-3000, -3000), ShowInTaskbar = false };
+        host.Controls.Add(view);
+        host.Show();
+        Application.DoEvents();
+
+        // Test
+        var box = (ListBox)view.Editors["Selected"];
+        var rows = box.Items.Count;
+        box.SelectedItem = "lab";
+        host.Dispose();
+
+        // Assert
+        Assert.AreEqual(2, rows);
+        Assert.AreEqual("lab", model.Selected);
+    }
+
     [TestMethod]
     public void Render_Form_HidesTheConditionalRowUntilToggled()
     {

@@ -103,6 +103,7 @@ public sealed class FormView : UserControl
         ChoiceViewModel choice => ChoiceEditor(choice),
         IndicatorViewModel indicator => IndicatorEditor(indicator),
         ButtonViewModel button => ButtonEditor(button),
+        ListViewModel list => ListEditor(list),
         TextViewModel { IsSlider: true } slider => SliderEditor(slider),
         TextViewModel text => TextEditor(text),
         _ => new Label { Text = row.Label, AutoSize = true },
@@ -143,6 +144,29 @@ public sealed class FormView : UserControl
             combo.SelectedItem = choice.PickedOption;
         });
         return combo;
+    }
+
+    private ListBox ListEditor(ListViewModel list)
+    {
+        var box = new ListBox { Height = 100, Width = 240 };
+        box.SelectedIndexChanged += (_, _) =>
+        {
+            if (!_updating && box.SelectedItem is string picked)
+            {
+                list.SelectedItem = picked;
+            }
+        };
+        Follow(list, () =>
+        {
+            if (!list.Items.SequenceEqual(box.Items.Cast<string>(), StringComparer.Ordinal))
+            {
+                box.Items.Clear();
+                box.Items.AddRange([.. list.Items]);
+            }
+
+            box.SelectedItem = list.SelectedItem;
+        });
+        return box;
     }
 
     private Label IndicatorEditor(IndicatorViewModel indicator)

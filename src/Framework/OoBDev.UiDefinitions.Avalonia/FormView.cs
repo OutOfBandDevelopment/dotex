@@ -67,6 +67,11 @@ public static class FormView
                 var list = new ItemsControl { ItemTemplate = new FuncDataTemplate<ChoiceOptionViewModel>((_, _) => Option()) };
                 list.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(ChoiceViewModel.OptionItems)));
                 return list;
+            case ListViewModel:
+                var listBox = new ListBox { MinHeight = 80, MaxHeight = 160, Width = 240 };
+                listBox.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(ListViewModel.Items)));
+                listBox.Bind(global::Avalonia.Controls.Primitives.SelectingItemsControl.SelectedItemProperty, new Binding(nameof(ListViewModel.SelectedItem), BindingMode.TwoWay));
+                return listBox;
             case ButtonViewModel:
                 var button = new global::Avalonia.Controls.Button();
                 button.Bind(ContentControl.ContentProperty, new Binding(nameof(ControlViewModel.Label)));

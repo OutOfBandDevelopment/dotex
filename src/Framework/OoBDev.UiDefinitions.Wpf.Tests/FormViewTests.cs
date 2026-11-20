@@ -72,6 +72,31 @@ public sealed class FormViewTests
         }
     }
 
+    public sealed class ProfileModel
+    {
+        public List<string> Saved { get; } = ["bench", "lab"];
+
+        [FormField(Kind = FormFieldKind.List, OptionsFrom = nameof(Saved))]
+        public string? Selected { get; set; }
+    }
+
+    [STATestMethod]
+    public void Render_ListControl_ShowsItemsAndWritesTheSelection()
+    {
+        // Stage
+        var model = new ProfileModel();
+        using var form = new FormViewModel(FormDefinitionGenerator.Generate(model, "m"), new FormBinding(model));
+        var view = Render(form);
+
+        // Test
+        var box = Descendants<ListBox>(view).Single();
+        box.SelectedItem = "lab";
+
+        // Assert
+        Assert.AreEqual(2, box.Items.Count);
+        Assert.AreEqual("lab", model.Selected);
+    }
+
     [STATestMethod]
     public void Render_Form_ShowsToggleRadiosAndChecks()
     {

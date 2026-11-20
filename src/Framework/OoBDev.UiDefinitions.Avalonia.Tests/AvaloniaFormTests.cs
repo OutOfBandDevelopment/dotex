@@ -44,6 +44,31 @@ public sealed class AvaloniaFormTests
 
     private void Shot(Window window, string step) => Screenshots.Save(TestContext, window, step);
 
+    public sealed class ProfileModel
+    {
+        public global::System.Collections.Generic.List<string> Saved { get; } = ["bench", "lab"];
+
+        [FormField(Kind = FormFieldKind.List, OptionsFrom = nameof(Saved))]
+        public string? Selected { get; set; }
+    }
+
+    [TestMethod]
+    public void Render_ListControl_ShowsItemsAndWritesTheSelection()
+    {
+        _session.Dispatch(() =>
+        {
+            var model = new ProfileModel();
+            var window = new Window { Width = 400, Height = 300, Content = FormView.Create(new FormViewModel(FormDefinitionGenerator.Generate(model, "m"), new FormBinding(model))) };
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            var box = window.GetVisualDescendants().OfType<ListBox>().Single();
+            box.SelectedItem = "lab";
+            Dispatcher.UIThread.RunJobs();
+            Assert.AreEqual(2, box.ItemCount);
+            Assert.AreEqual("lab", model.Selected);
+        }, default).GetAwaiter().GetResult();
+    }
+
     [TestMethod]
     public void Render_Form_ShowsControlsAndHidesConditionalRow()
     {

@@ -91,6 +91,14 @@
             </TextBlock>
         </DataTemplate>
 
+        <DataTemplate DataType="{x:Type vm:ListViewModel}">
+            <ListBox ItemsSource="{Binding Items}"
+                     SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                     IsEnabled="{Binding IsEnabled}"
+                     ToolTip="{Binding Description}"
+                     MinHeight="80" MaxHeight="160" MaxWidth="320" HorizontalAlignment="Left" />
+        </DataTemplate>
+
         <DataTemplate DataType="{x:Type vm:ButtonViewModel}">
             <Button Content="{Binding Label}"
                     Command="{Binding Invoke}"
