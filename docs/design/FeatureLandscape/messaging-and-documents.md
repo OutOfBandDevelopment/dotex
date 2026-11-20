@@ -55,7 +55,7 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Built 2026-11-16:** `DeliveryStatus.Complained`, recipients on `DeliveryStatusUpdate`, and `SuppressionStatusHandler` feed the list from permanent bounces and complaints.
 - **Built 2026-11-16:** durable list (`OoBDev.Communications.EntityFrameworkCore`) and signed RFC 8058 unsubscribe links (`UnsubscribeLinks`).
 - **Built 2026-11-19:** the unsubscribe HTTP endpoint (`OoBDev.Communications.Web`, `MapUnsubscribe`, POST one-click and a GET confirmation page).
-- **Missing:** SMS and push as further channels behind the same provider.
+- **Built:** SMS (`ISmsMessage`, Twilio adapter). **Missing:** push notifications (FCM, APNs) as a channel; needs a vendor decision.
 
 ## TextTemplating, TemplateTools and DataEnhancement
 
