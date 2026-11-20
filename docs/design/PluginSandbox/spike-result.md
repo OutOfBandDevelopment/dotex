@@ -47,7 +47,7 @@ Findings from the first real run: `CreateProcessW` with an explicit environment 
 
 ## Still not built
 
-- AppContainer profile and ACL cleanup (the Windows API calls are hand-written). The Windows launcher already creates the process suspended, assigns it to the job and then resumes it (`AppContainerLauncher`), so there is no unlimited window.
+- AppContainer profile deletion (the Windows API calls are hand-written; `AppContainerLauncher.Revoke` removes the folder rules, 2026-11-20). The Windows launcher already creates the process suspended, assigns it to the job and then resumes it (`AppContainerLauncher`), so there is no unlimited window.
 - A Survive transport (a named pipe that outlives the caller; the reconnect registry has the token rules only) and Linux versions of the caller-death and pool lifetime tests.
 - Message rate and heartbeat enforcement.
 - The request context is built from a validated principal (`RequestContext.FromPrincipal`, 2026-11-20); RFC 8693 exchange stays with the STS.
