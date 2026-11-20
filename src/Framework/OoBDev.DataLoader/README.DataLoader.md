@@ -7,4 +7,4 @@ var loader = new Loader([new CsvRowReader(), new JsonRowReader()], handlers, new
 var report = await loader.LoadAsync(stream, "csv", new LoadOptions { Duplicates = DuplicatePolicy.Replace }, ct);
 ```
 
-CSV supports a header row and quoted fields (commas, doubled quotes, line breaks); JSON is an array of flat objects. Handlers run in ascending `Priority`. Not built yet: the EF Core sink (`OoBDev.DataLoader.EntityFrameworkCore`), batched transactions, and DI registration. Design: [DataLoader](../../../docs/design/DataLoader/README.md).
+CSV supports a header row and quoted fields (commas, doubled quotes, line breaks); JSON is an array of flat objects. Handlers run in ascending `Priority`. `services.TryAddDataLoader()` registers both readers and `ILoader` (register an `IRowSink` and handlers yourself). Not built yet: the EF Core sink (`OoBDev.DataLoader.EntityFrameworkCore`) and batched transactions. Design: [DataLoader](../../../docs/design/DataLoader/README.md).
