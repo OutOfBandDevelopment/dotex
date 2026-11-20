@@ -6,7 +6,7 @@ namespace OoBDev.FileInventory.Cli;
 /// <summary>file-inventory: scan a folder and list duplicate files.</summary>
 internal static class Program
 {
-    private static async System.Threading.Tasks.Task<int> Main(string[] args)
+    private static async global::System.Threading.Tasks.Task<int> Main(string[] args)
     {
         using var cts = new CancellationTokenSource();
         Console.CancelKeyPress += (_, e) => { e.Cancel = true; cts.Cancel(); };

@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using OoBDev.IO.Inventory;
+using OoBDev.IO.Inventory.Images;
 
 namespace OoBDev.FileInventory.Cli;
 
@@ -15,7 +16,9 @@ public static class InventoryCommand
     public const string Usage = """
         file-inventory scan --root <folder> [--follow-links true]
         Hashes every file under the folder (a fast hash first), confirms equal-size equal-hash files with SHA-512 and prints the duplicate groups.
-        Exit code 0 no duplicates, 1 duplicates found, 2 error.
+        file-inventory images --root <folder> [--max-distance 5]
+        Hashes every image (dHash) and prints groups of near-duplicate images.
+        Exit code 0 nothing found, 1 duplicates found, 2 error.
         """;
 
     /// <summary>Runs one command line.</summary>
@@ -27,7 +30,7 @@ public static class InventoryCommand
     public static async Task<int> RunAsync(string[] args, TextWriter output, TextWriter error, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(args);
-        if (args.Length == 0 || args[0] != "scan")
+        if (args.Length == 0 || args[0] is not ("scan" or "images"))
         {
             await error.WriteLineAsync(Usage).ConfigureAwait(false);
             return 2;
@@ -39,6 +42,20 @@ public static class InventoryCommand
         {
             await error.WriteLineAsync("--root must name an existing folder.").ConfigureAwait(false);
             return 2;
+        }
+
+        if (args[0] == "images")
+        {
+            var (nearGroups, skipped) = new NearDuplicateFinder().Scan(root, int.TryParse(config["max-distance"], out var distance) ? distance : 5, cancellationToken);
+            foreach (var (path, reason) in skipped) await error.WriteLineAsync($"skipped {path}: {reason}").ConfigureAwait(false);
+            for (var i = 0; i < nearGroups.Count; i++)
+            {
+                await output.WriteLineAsync($"near-duplicate group {i + 1}: {nearGroups[i].Count} images").ConfigureAwait(false);
+                foreach (var path in nearGroups[i]) await output.WriteLineAsync($"  {path}").ConfigureAwait(false);
+            }
+
+            await output.WriteLineAsync($"{nearGroups.Count} near-duplicate group(s), skipped {skipped.Count}").ConfigureAwait(false);
+            return nearGroups.Count == 0 ? 0 : 1;
         }
 
         var store = new InMemoryInventoryStore();

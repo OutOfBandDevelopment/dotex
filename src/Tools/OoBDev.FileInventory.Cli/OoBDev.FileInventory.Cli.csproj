@@ -20,6 +20,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\Framework\OoBDev.IO.Inventory\OoBDev.IO.Inventory.csproj" />
+		<ProjectReference Include="..\..\Framework\OoBDev.IO.Inventory.Images\OoBDev.IO.Inventory.Images.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -48,6 +48,32 @@ public sealed class InventoryCommandTests
     }
 
     [TestMethod]
+    public async Task Images_TwoCopiesOfOnePicture_PrintsTheGroupAndExitsOne()
+    {
+        using var dir = new TempFileFactory(null!).GetTempDirectory();
+        using var bitmap = new SkiaSharp.SKBitmap(200, 150);
+        using (var canvas = new SkiaSharp.SKCanvas(bitmap))
+        {
+            canvas.Clear(SkiaSharp.SKColors.White);
+            using var paint = new SkiaSharp.SKPaint { Color = SkiaSharp.SKColors.Black };
+            canvas.DrawRect(0, 0, 60, 150, paint);
+            canvas.DrawRect(120, 75, 80, 75, paint);
+        }
+
+        using var image = SkiaSharp.SKImage.FromBitmap(bitmap);
+        var bytes = image.Encode(SkiaSharp.SKEncodedImageFormat.Png, 100).ToArray();
+        await File.WriteAllBytesAsync(Path.Combine(dir.DirectoryPath, "one.png"), bytes, TestContext.CancellationToken);
+        await File.WriteAllBytesAsync(Path.Combine(dir.DirectoryPath, "two.png"), bytes, TestContext.CancellationToken);
+        using var output = new StringWriter();
+
+        var code = await InventoryCommand.RunAsync(["images", "--root", dir.DirectoryPath], output, new StringWriter(), CancellationToken.None);
+        TestContext.WriteLine(output.ToString());
+
+        Assert.AreEqual(1, code);
+        StringAssert.Contains(output.ToString(), "near-duplicate group 1: 2 images");
+    }
+
+    [TestMethod]
     public async Task Run_BadArguments_ExitsTwoWithUsage()
     {
         using var error = new StringWriter();
