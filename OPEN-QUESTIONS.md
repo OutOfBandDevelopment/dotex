@@ -24,3 +24,17 @@ Q20 decided the shape (one migrations project per database, history table per co
 **Default:** none; no projects are created until you confirm (creating projects is not reversible cheaply).
 
 **Your answer:**
+
+### Q28 · 2026-11-20 · Observability · User analytics: aggregate only, or per user?
+
+The wish list asks for user analytics (screen usage, URLs, timeouts). The proposal in [docs/design/UserAnalytics](docs/design/UserAnalytics/README.md) counts aggregates only. Per-user usage (who opened which screen) would need consent and an erasure path.
+
+**Options**
+
+- A. (recommended) Aggregate counters only, tagged by route template and screen name, exported with OpenTelemetry. No personal data, so no consent or erasure work; matches the "keep cardinality low" rule.
+- B. Aggregate plus per-user events stored in the audit store, with erasure through `IErasureEntryPoint`. More useful for support, but adds privacy duties.
+- C. Hold: do not build analytics.
+
+**Default:** A, built when it is next in order (reversible, no personal data).
+
+**Your answer:**
