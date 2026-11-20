@@ -78,7 +78,6 @@ public static class Program
             });
 
         ConfigureVectorsAndModels(builder);
-        ConfigureRightAudit(builder);
         builder.Services.AddTransient<OoBDev.WebApi.Services.TemplateCatalog>();
         builder.Services.Configure<OoBDev.WebApi.Models.QueueChannelsOptions>(builder.Configuration.GetSection("MessageQueue"));
         builder.Services.AddTransient<OoBDev.WebApi.Services.QueueChannelCatalog>();
@@ -98,6 +97,7 @@ public static class Program
         );
 
         services.TryAddRoleRightMapping(builder.Configuration);
+        ConfigureRightAudit(builder);
         builder.Services.AddControllers();
 
         // CGI programs (see cgi-src/ and README.Example.WebApi.md); their {program}.openapi.json files appear in the "all" OpenAPI document
