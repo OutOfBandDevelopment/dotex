@@ -270,13 +270,34 @@ internal static class Program
         }
     }
 
+    // CurrentUserOnly opens the process token for a default ACL, which an AppContainer token refuses, so the ACL names the user explicitly.
+    private static NamedPipeServerStream CreateSurvivePipe(string name)
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            return new NamedPipeServerStream(name, PipeDirection.InOut, 1, PipeTransmissionMode.Byte, PipeOptions.CurrentUserOnly);
+        }
+
+        var security = new global::System.IO.Pipes.PipeSecurity();
+        security.AddAccessRule(new global::System.IO.Pipes.PipeAccessRule(global::System.Security.Principal.WindowsIdentity.GetCurrent().User!, global::System.IO.Pipes.PipeAccessRights.ReadWrite, global::System.Security.AccessControl.AccessControlType.Allow));
+        try
+        {
+            return global::System.IO.Pipes.NamedPipeServerStreamAcl.Create(name, PipeDirection.InOut, 1, PipeTransmissionMode.Byte, PipeOptions.None, 0, 0, security);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            // An AppContainer may only create pipes in its own namespace; the host reaches it with AppContainerLauncher.PluginPipeName.
+            return global::System.IO.Pipes.NamedPipeServerStreamAcl.Create("LOCAL\\" + name, PipeDirection.InOut, 1, PipeTransmissionMode.Byte, PipeOptions.None, 0, 0, security);
+        }
+    }
+
     private static int Survive(string[] args)
     {
         var flags = (FrameFlags)byte.Parse(Environment.GetEnvironmentVariable(SandboxEnvironment.FlagsVariable) ?? "0");
         var window = TimeSpan.FromSeconds(double.Parse(args[2], global::System.Globalization.CultureInfo.InvariantCulture));
         for (var session = 1; ; session++)
         {
-            using var pipe = new NamedPipeServerStream(args[1], PipeDirection.InOut, 1, PipeTransmissionMode.Byte, PipeOptions.CurrentUserOnly);
+            using var pipe = CreateSurvivePipe(args[1]);
             using var timeout = new CancellationTokenSource(window);
             try
             {

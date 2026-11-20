@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -99,6 +100,11 @@ public static partial class AppContainerLauncher
         security.AddAccessRule(new FileSystemAccessRule(ContainerSid(), rights, InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow));
         info.SetAccessControl(security);
     }
+
+    /// <summary>The name a host outside the container uses to reach a pipe the plugin created as <c>LOCAL\name</c>: an AppContainer can only create pipes in its own namespace.</summary>
+    /// <param name="name">The pipe name without the <c>LOCAL\</c> prefix.</param>
+    public static string PluginPipeName(string name) =>
+        $"Sessions\\{Process.GetCurrentProcess().SessionId}\\AppContainerNamedObjects\\{ContainerSid().Value}\\{name}";
 
     /// <summary>Removes every access rule the container holds on <paramref name="directory"/> (what <see cref="Grant"/> added); returns true when a rule was removed. Call it when no running plugin needs the folder any more.</summary>
     public static bool Revoke(string directory)

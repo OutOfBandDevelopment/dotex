@@ -23,6 +23,7 @@ public sealed class SandboxedPlugin : ISandboxedPlugin
     private readonly Thread _watcher;
     private readonly JobLimits _limits;
     private volatile int _limitHit;
+    private volatile bool _detached;
 
     /// <summary>Starts the plugin; <paramref name="killOnClose"/> false lets it outlive the process that started it (Survive). <paramref name="readDirectories"/> and <paramref name="writeDirectories"/> are the only folders it can reach besides the system and its own assembly folder.</summary>
     public SandboxedPlugin(string pluginAssembly, string commandArguments, JobLimits limits, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null, FrameFlags flags = FrameFlags.Crc32 | FrameFlags.Hmac | FrameFlags.CounterSign, bool killOnClose = true)
@@ -137,10 +138,20 @@ public sealed class SandboxedPlugin : ISandboxedPlugin
         return exited;
     }
 
+    /// <summary>Lets go of a plugin started with <c>killOnClose</c> false: the host stops watching it and closes its handles, and the plugin keeps running for a later caller (Survive).</summary>
+    public void Detach()
+    {
+        _detached = true;
+        Dispose();
+    }
+
     /// <inheritdoc />
     public void Dispose()
     {
-        Kill();
+        if (!_detached)
+        {
+            Kill();
+        }
 
         _watcher.Join();
         _launched.Dispose();
@@ -152,6 +163,11 @@ public sealed class SandboxedPlugin : ISandboxedPlugin
         var clock = Stopwatch.StartNew();
         while (!_process.WaitForExit(50))
         {
+            if (_detached)
+            {
+                return;
+            }
+
             if (_limits.WallSeconds > 0 && clock.Elapsed.TotalSeconds >= _limits.WallSeconds)
             {
                 End(LimitHit.Wall);
