@@ -239,4 +239,4 @@ environment:
 
 ## integration-test-desktop-client
 
-A public client with PKCE (S256) and the loopback redirect `http://127.0.0.1:*`, used by `OoBDev.Security.OAuthClient.Tests` (`KeycloakSignInTests`). The realm is imported only into an empty volume: after adding a client, remove `oobd-test-keycloak-data` so the next start imports it.
+A public client with PKCE (S256), the device authorization grant and the loopback redirect `http://127.0.0.1:*`, used by `OoBDev.Security.OAuthClient.Tests` (`KeycloakSignInTests`). The realm is imported only into an empty volume: after adding a client, remove `oobd-test-keycloak-data` so the next start imports it.

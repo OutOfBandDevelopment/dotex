@@ -76,10 +76,13 @@ public sealed class PublicOAuthClient : IOAuthClient
         if (endpoints.DeviceAuthorization is null)
             throw new OAuthException("unsupported_grant_type", "The provider does not offer the device authorization endpoint.");
 
+        var verifier = Pkce.CreateVerifier();
         using var response = await _http.PostAsync(endpoints.DeviceAuthorization, Form(new Dictionary<string, string>
         {
             ["client_id"] = _options.ClientId,
             ["scope"] = string.Join(' ', _options.Scopes),
+            ["code_challenge"] = Pkce.ChallengeFor(verifier),
+            ["code_challenge_method"] = "S256",
         }), cancellationToken).ConfigureAwait(false);
         var body = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         using var document = JsonDocument.Parse(body);
@@ -108,6 +111,7 @@ public sealed class PublicOAuthClient : IOAuthClient
                 {
                     ["grant_type"] = "urn:ietf:params:oauth:grant-type:device_code",
                     ["device_code"] = deviceCode,
+                    ["code_verifier"] = verifier,
                     ["client_id"] = _options.ClientId,
                 }, null, cancellationToken).ConfigureAwait(false);
                 await SaveAsync(tokens, cancellationToken).ConfigureAwait(false);

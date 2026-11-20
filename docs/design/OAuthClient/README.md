@@ -72,7 +72,7 @@ TokenCache --> OAuthClient : refresh
 ## Testing strategy
 
 - Unit: PKCE verifier and challenge against the RFC 7636 vectors; discovery parsing; token endpoint calls with a fake `HttpMessageHandler` (code exchange, refresh, device polling with `authorization_pending` and `slow_down`); cache skew, concurrent refresh sharing one call, `invalid_grant` clearing; the loopback listener accepting a state-checked redirect and rejecting a wrong state.
-- Integration (`[IntegrationTestMethod("oobd-test-keycloak")]`): the real flows against the Keycloak container of the test stack (code flow driven with `HttpClient` through the login form, device flow approved through the admin API).
+- Integration (`[IntegrationTestMethod("oobd-test-keycloak")]`): the real flows against the Keycloak container of the test stack (code flow driven with `HttpClient` through the login form, device flow approved by posting the login form of the verification page; both with PKCE, built and run 2026-11-20).
 - DPAPI store: Windows-only Unit tests (round trip and delete).
 - Coverage target 80% or more for the Framework library.
 
