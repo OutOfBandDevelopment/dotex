@@ -95,6 +95,8 @@ var api = builder.AddProject<OoBDev_Example_WebApi>("example-api", options => op
     .WithEnvironment("ConnectionStrings__EmbeddingSentenceTransformer", vectorDb)
     // The vector store provider reads its own options section; without it the API falls back to the in-memory store.
     .WithEnvironment("SqlVectorStoreOptions__ConnectionString", vectorDb)
+    // The right audit trail screen needs the durable store; without this the endpoint is not mapped and the screen says "not configured".
+    .WithEnvironment("OoBDev__RightAudit__ConnectionString", vectorDb)
     .WaitFor(vectorDb)
     .WaitFor(ollama)
     .WaitFor(redis)
