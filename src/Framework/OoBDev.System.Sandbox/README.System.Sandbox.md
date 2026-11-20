@@ -21,3 +21,7 @@ Throwaway proof of concept for the [sandboxed plugin host](../../../docs/design/
 ## Request context from a validated principal
 
 `RequestContext.FromPrincipal(principal, tenant, pluginId, declaredClaims, rights, time, lifetime, traceId)` builds the context from the `ClaimsPrincipal` the host's token validator produced (the JWT bearer handler, or the STS adapter's result), never from the token. The subject is `sub` (or the name identifier); a principal that is anonymous, has no subject or carries an expired `exp` is refused with `ArgumentException`. The context ends at the lifetime or the token's `exp`, whichever is earlier, and only the claims the manifest declared are kept. `rights` are the application rights the role middleware already translated.
+
+## Survive transport
+
+`SurviveConnection(pipeName, sessionKey, flags, timeout)` is the caller's side of a plugin that outlives its caller. The plugin listens on a named pipe opened with `CurrentUserOnly`; each connection begins with the new 32-byte session key (from `ReconnectRegistry`), then frames flow with sequences restarting at 1, and the plugin announces `lifecycle.reconnected` with the session number. With no caller inside the reconnect window the plugin exits. The launchers do not create Survive jobs yet.

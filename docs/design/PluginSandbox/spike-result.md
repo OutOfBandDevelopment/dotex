@@ -48,7 +48,7 @@ Findings from the first real run: `CreateProcessW` with an explicit environment 
 ## Still not built
 
 - AppContainer profile deletion (the Windows API calls are hand-written; `AppContainerLauncher.Revoke` removes the folder rules, 2026-11-20). The Windows launcher already creates the process suspended, assigns it to the job and then resumes it (`AppContainerLauncher`), so there is no unlimited window.
-- A Survive transport (a named pipe that outlives the caller; the reconnect registry has the token rules only) and Linux versions of the caller-death and pool lifetime tests.
+- Survive: `SurviveConnection` (same-user named pipe, new session key per connection) is built and tested with the unsandboxed test plugin; the launcher side (job without kill-on-close, a pipe ACL for an AppContainer plugin, the watchdog) is not wired.
 - Message rate and heartbeat enforcement.
 - The request context is built from a validated principal (`RequestContext.FromPrincipal`, 2026-11-20); RFC 8693 exchange stays with the STS.
 - macOS (deferred by the owner): `SeatbeltPlugin` and its profile text are covered by Unit tests on every OS, but the escape tests have never run on a Mac; `sandbox-exec` is deprecated, and there is no PID namespace or resource limit.

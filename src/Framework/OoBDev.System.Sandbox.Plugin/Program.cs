@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text.Json;
@@ -41,6 +42,9 @@ internal static class Program
 
             case "caller":
                 return Caller(args);
+
+            case "survive":
+                return Survive(args);
 
             case "holdmutex":
                 return HoldMutex(args);
@@ -251,6 +255,46 @@ internal static class Program
         catch (FrameViolation)
         {
             return 3;
+        }
+    }
+
+    private static int Survive(string[] args)
+    {
+        var flags = (FrameFlags)byte.Parse(Environment.GetEnvironmentVariable(SandboxEnvironment.FlagsVariable) ?? "0");
+        var window = TimeSpan.FromSeconds(double.Parse(args[2], global::System.Globalization.CultureInfo.InvariantCulture));
+        for (var session = 1; ; session++)
+        {
+            using var pipe = new NamedPipeServerStream(args[1], PipeDirection.InOut, 1, PipeTransmissionMode.Byte, PipeOptions.CurrentUserOnly);
+            using var timeout = new CancellationTokenSource(window);
+            try
+            {
+                pipe.WaitForConnectionAsync(timeout.Token).GetAwaiter().GetResult();
+            }
+            catch (OperationCanceledException)
+            {
+                return 0;
+            }
+
+            var key = new byte[32];
+            pipe.ReadExactly(key);
+            var channel = new FrameChannel(pipe, pipe, flags, key);
+            channel.Send(FrameType.Event, "lifecycle.reconnected", "{\"session\":" + session + "}");
+            try
+            {
+                while (true)
+                {
+                    var message = channel.Read();
+                    if (message.Type == FrameType.Shutdown)
+                    {
+                        return 0;
+                    }
+
+                    channel.Reply(message, FrameType.Response, message.Payload);
+                }
+            }
+            catch (Exception e) when (e is EndOfStreamException or IOException or FrameViolation)
+            {
+            }
         }
     }
 
