@@ -76,6 +76,28 @@ public sealed class PluginPool<T>(TimeProvider time, TimeSpan idleTimeout) : IDi
         }
     }
 
+    /// <summary>
+    /// Ends idle instances as <see cref="Sweep()"/> does, and asks every other idle shared instance whether it is healthy; one that is not is ended and removed,
+    /// so the next <see cref="Acquire"/> starts a fresh process (the restart policy). Leased instances are never probed: their stream belongs to the caller.
+    /// The pool is locked while it asks.
+    /// </summary>
+    public int Sweep(Func<T, bool> healthy)
+    {
+        ArgumentNullException.ThrowIfNull(healthy);
+        var ended = Sweep();
+        lock (_gate)
+        {
+            var hung = _shared.Where(p => p.Value.Leases == 0 && !healthy(p.Value.Plugin)).ToList();
+            foreach (var pair in hung)
+            {
+                _shared.Remove(pair.Key);
+                pair.Value.Plugin.Dispose();
+            }
+
+            return ended + hung.Count;
+        }
+    }
+
     /// <summary>Ends every shared instance.</summary>
     public void Dispose()
     {

@@ -35,6 +35,9 @@ public sealed class PluginHost : IDisposable
     /// <summary>Ends shared instances idle past the timeout; call on a timer.</summary>
     public int Sweep() => _pool.Sweep();
 
+    /// <summary>Ends idle shared instances, and also those idle ones that do not answer a heartbeat within <paramref name="heartbeatTimeout"/>; the next start launches a fresh process.</summary>
+    public int Sweep(TimeSpan heartbeatTimeout) => _pool.Sweep(plugin => plugin.IsResponsive(heartbeatTimeout));
+
     /// <summary>Verifies and starts the package, or says why not. <paramref name="commandArguments"/> is the plugin's entry command line.</summary>
     public HostStart Start(string packageDirectory, string commandArguments, PluginLifetime lifetime)
     {

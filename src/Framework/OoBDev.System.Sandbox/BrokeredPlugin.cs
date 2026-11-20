@@ -36,6 +36,9 @@ public sealed class BrokeredPlugin : IDisposable
     /// <summary>Waits for the ready event the plugin sends when it starts.</summary>
     public ReceivedFrame WaitReady() => _plugin.Receive();
 
+    /// <summary>Whether the plugin answers a heartbeat within <paramref name="timeout"/>; a plugin that does not is disposed. Call only while no <c>Call</c> is running.</summary>
+    public bool IsResponsive(TimeSpan timeout) => PluginHeartbeat.Check(_plugin, timeout);
+
     /// <summary>
     /// Runs one request for <paramref name="context"/>: the plugin first receives the context, then the request, and may ask the host for
     /// files and network on the way. Returns the plugin's response payload. One call at a time per instance.

@@ -116,4 +116,44 @@ public sealed class PluginPoolTests
 
         Assert.IsTrue(lease.Plugin.Disposed);
     }
+
+    [TestMethod]
+    public void SweepHealthy_UnhealthyIdleInstance_IsEndedAndNextAcquireStartsAFreshOne()
+    {
+        // Stage
+        using var pool = new PluginPool<Fake>(new FixedTime(_start), TimeSpan.FromHours(1));
+        var first = pool.Acquire("p", "g", PluginLifetime.Shared, () => new Fake());
+        var hung = first.Plugin;
+        first.Dispose();
+
+        // Test
+        var ended = pool.Sweep(_ => false);
+        using var second = pool.Acquire("p", "g", PluginLifetime.Shared, () => new Fake());
+
+        // Assert
+        Assert.AreEqual(1, ended);
+        Assert.IsTrue(hung.Disposed);
+        Assert.AreNotSame(hung, second.Plugin);
+    }
+
+    [TestMethod]
+    public void SweepHealthy_LeasedInstance_IsNeverProbed()
+    {
+        // Stage
+        using var pool = new PluginPool<Fake>(new FixedTime(_start), TimeSpan.FromHours(1));
+        using var lease = pool.Acquire("p", "g", PluginLifetime.Shared, () => new Fake());
+        var probed = 0;
+
+        // Test
+        var ended = pool.Sweep(_ =>
+        {
+            probed++;
+            return false;
+        });
+
+        // Assert
+        Assert.AreEqual(0, ended);
+        Assert.AreEqual(0, probed);
+        Assert.IsFalse(lease.Plugin.Disposed);
+    }
 }
