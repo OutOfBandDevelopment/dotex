@@ -300,6 +300,8 @@
     <Project Path="Framework/OoBDev.Documents.Markdown/OoBDev.Documents.Markdown.csproj" />
     <Project Path="Framework/OoBDev.Documents.Hpgl.Tests/OoBDev.Documents.Hpgl.Tests.csproj" />
     <Project Path="Framework/OoBDev.Documents.Hpgl/OoBDev.Documents.Hpgl.csproj" />
+    <Project Path="Framework/OoBDev.DataLoader.Tests/OoBDev.DataLoader.Tests.csproj" />
+    <Project Path="Framework/OoBDev.DataLoader/OoBDev.DataLoader.csproj" />
     <Project Path="Framework/OoBDev.IO.Inventory.Tests/OoBDev.IO.Inventory.Tests.csproj" />
     <Project Path="Framework/OoBDev.IO.Inventory/OoBDev.IO.Inventory.csproj" />
     <Project Path="Framework/OoBDev.Documents.ExternalTools.Tests/OoBDev.Documents.ExternalTools.Tests.csproj" />
