@@ -56,3 +56,7 @@ Most controllers need a backing service. Start the Docker services from `contain
 ## Tests
 
 `OoBDev.Example.WebApi.Tests` (Unit) calls the controllers directly with mocked services: `CommunicationsController` (send accepted, provider rejection to a 502 problem, enqueue) and `WebhooksController` (raw body, headers, query and clock reach `IReceiveService`; 204, 404 and 400 mapping).
+
+## Right audit trail
+
+When `OoBDev:RightAudit:ConnectionString` (SQL Server) is set, the API stores every right check (`TryAddEntityFrameworkRightAudit`, `AddRightAuditLog`), creates the table at start (`EnsureCreated`) and maps `GET /api/v1/right-audit` for the right `audit.read` (given to `admin`). Without it the endpoint is absent.

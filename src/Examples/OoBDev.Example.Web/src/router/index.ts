@@ -26,6 +26,7 @@ export const router = createRouter({
     { path: '/utilities/server-ui', component: () => import('../pages/ServerUiPage.vue'), meta: { crumbs: ['Utilities', 'Server-driven UI'] } },
     { path: '/ai/images', component: () => import('../pages/ImagesPage.vue'), meta: { crumbs: ['AI', 'Image labels'] } },
     { path: '/ai/model-compare', component: () => import('../pages/ModelComparePage.vue'), meta: { crumbs: ['AI', 'Model compare'] } },
+    { path: '/operations/right-audit', component: () => import('../pages/RightAuditPage.vue'), meta: { crumbs: ['Operations', 'Right audit trail'] } },
     { path: '/operations/telemetry', component: () => import('../pages/TelemetryPage.vue'), meta: { crumbs: ['Operations', 'Telemetry'] } },
     { path: '/ai/ollama', component: () => import('../pages/OllamaPage.vue'), meta: { crumbs: ['AI', 'Ollama'] } },
     { path: '/ai/groq', component: () => import('../pages/GroqPage.vue'), meta: { crumbs: ['AI', 'Groq cloud'] } },

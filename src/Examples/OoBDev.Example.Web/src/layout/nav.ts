@@ -25,7 +25,7 @@ export const navGroups: NavGroup[] = [
     { label: 'Webhooks', to: '/messaging/webhooks' },
   ] },
   { title: 'Identity and security', items: [{ label: 'Current user', to: '/identity/me' }, { label: 'Rights and roles', to: '/identity/rights' }, { label: 'Users and roles', to: '/identity/directory' }] },
-  { title: 'Operations', items: [{ label: 'Runtime and configuration', to: '/operations/info' }, { label: 'Telemetry', to: '/operations/telemetry' } ] },
+  { title: 'Operations', items: [{ label: 'Runtime and configuration', to: '/operations/info' }, { label: 'Right audit trail', to: '/operations/right-audit' }, { label: 'Telemetry', to: '/operations/telemetry' } ] },
   { title: 'Developer', items: [
     { label: 'CGI programs', to: '/developer/cgi' },
     { label: 'API reference', to: '/developer/api' },

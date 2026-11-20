@@ -15,6 +15,7 @@ Each screen lists its purpose, the API it binds to, its commands and a mockup. "
 - [Templates](#templates)
 - [Current user](#current-user)
 - [Search](#search)
+- [Right audit trail](#right-audit-trail)
 - [Remaining screens](#remaining-screens)
 
 ## Screen index
@@ -45,6 +46,7 @@ Each screen lists its purpose, the API it binds to, its commands and a mockup. "
 | Security helpers | `/utilities/toolbox` | hash, HMAC, TOTP endpoints | Exists inside the Toolbox page |
 | Operations | `/operations/info` | `api/Operations/info` (runtime facts, masked configuration) | Exists |
 | Telemetry | `/operations/telemetry` | Aspire dashboard link and its telemetry API | Exists (added beyond this design) |
+| Right audit trail | `/operations/right-audit` | `GET /api/v1/right-audit` (right `audit.read`; mapped only when `OoBDev:RightAudit:ConnectionString` is set) | Exists (2026-11-20) |
 | Model compare | `/ai/model-compare` | embedding models side by side | Exists (added beyond this design) |
 | Text tools | `/utilities/text` | XPath over JSON, YAML, HTML and XML, Markdown | Exists |
 
@@ -228,6 +230,27 @@ Purpose: lexical, semantic and hybrid search over indexed content, with a list-a
 ```
 
 *Figure 8 — Search*
+
+## Right audit trail
+
+Purpose: let an auditor ask who was denied what and when. Binds to `GET /api/v1/right-audit` (subject, result, most entries; newest first). The endpoint exists only when the host has a durable trail (`OoBDev:RightAudit:ConnectionString`, SQL Server); a 404 shows the "not configured" note instead of a table. Commands: `RefreshAuditCommand`.
+
+```plantuml
+@startsalt
+{+
+  <b>Right audit trail
+  Subject: "grace      " Result: ^any^ Most: "100" [ Refresh ]
+  ----
+  {#
+    Time (UTC) | Subject | Rights | Result
+    2026-11-20T15:02:11Z | grace | cache.manage | Allowed
+    2026-11-20T15:01:40Z | ada | audit.read | Forbidden
+  }
+}
+@endsalt
+```
+
+*Figure 9 — Right audit trail*
 
 ## Remaining screens
 

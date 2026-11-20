@@ -26,3 +26,7 @@ The SPA is on `http://localhost:8088` (`EXAMPLE_PORT_WEB`).
 - Sign-in uses `oidc-client-ts` (authorization code with PKCE) when `VITE_OIDC_AUTHORITY` is set; otherwise calls are anonymous. Tokens are kept in memory only.
 - Errors from the API are RFC 9457 problem details (`src/core/http.ts`).
 - Add a screen: view-model, page, route in `src/router`, entry in `src/layout/nav.ts`.
+
+## Right audit trail
+
+`/operations/right-audit` lists the API's durable right checks with subject and result filters (right `audit.read`); a 404 from the API shows "not configured". Unit tests: `RightAudit.test.ts`. Not run in a browser against a live SQL Server.
