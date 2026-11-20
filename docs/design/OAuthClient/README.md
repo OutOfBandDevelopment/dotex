@@ -1,6 +1,6 @@
 # OAuth client (desktop sign-in and refresh tokens)
 
-Status: designed 2026-11-18, not built. Owner answer 2026-11-17 (Q2): a host-free Framework library `OoBDev.Security.OAuthClient`, with a Windows DPAPI secret store as a leaf in Extensions. The project layout waits for the owner's confirmation of the [migration plan](migration-plan.md) (rule `layering-and-migration-plans`).
+Status: library built 2026-11-20 (abstractions, `OoBDev.Security.OAuthClient`, 16 Unit tests); the class is `PublicOAuthClient` because the analyzer forbids a type named like its namespace. Open: the Windows DPAPI store leaf and Keycloak Integration tests. Owner answer 2026-11-17 (Q2): a host-free Framework library, with a Windows DPAPI secret store as a leaf in Extensions; layout confirmed 2026-11-19.
 
 ## Contents
 

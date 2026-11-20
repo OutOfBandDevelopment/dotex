@@ -295,6 +295,9 @@
     <Project Path="Framework/OoBDev.ComplexEvents.EntityFrameworkCore/OoBDev.ComplexEvents.EntityFrameworkCore.csproj" />
     <Project Path="Framework/OoBDev.ComplexEvents.Tests/OoBDev.ComplexEvents.Tests.csproj" />
     <Project Path="Framework/OoBDev.ComplexEvents/OoBDev.ComplexEvents.csproj" />
+    <Project Path="Framework/OoBDev.Security.OAuthClient.Abstractions/OoBDev.Security.OAuthClient.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.Security.OAuthClient.Tests/OoBDev.Security.OAuthClient.Tests.csproj" />
+    <Project Path="Framework/OoBDev.Security.OAuthClient/OoBDev.Security.OAuthClient.csproj" />
     <Project Path="Framework/OoBDev.DacFx.Abstractions/OoBDev.DacFx.Abstractions.csproj" />
     <Project Path="Framework/OoBDev.DacFx.Tests/OoBDev.DacFx.Tests.csproj" />
     <Project Path="Framework/OoBDev.DacFx/OoBDev.DacFx.csproj" />
