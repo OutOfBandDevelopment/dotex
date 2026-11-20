@@ -35,6 +35,16 @@ Tools built from source with Go 1.27.1 into a scratch folder outside the reposit
 | S11 hand-edited drift | n/r | P: the drop of the extra column is skipped without the flag | F: drift column drop is planned without a flag |
 | S12 usable from .NET | G: exit code 2 with `--check` only | G: same, plan is text | P: JSON plan (`--output-json`) |
 
+**Table 2 — sqldef `mssqldef` 3.11.30 on SQL Server (container, 20-table fixture without views)**
+
+| Scenario | Result |
+| --- | --- |
+| S1 | P |
+| S2 | P |
+| S3 add column | P |
+| S5 drop table | P: skipped without `--enable-drop` |
+| S6 narrow `nvarchar(50)` to `nvarchar(5)` | F: planned with no hazard note; the generated `ALTER COLUMN ... NOT NULL DEFAULT` is not valid T-SQL (plan only, not applied) |
+
 ## Findings
 
 - sqldef is safer by default: every drop is skipped unless `--enable-drop`. Its plan is plain SQL text, so a wrapper reads exit codes and parses nothing richer.
@@ -49,11 +59,11 @@ Provisional, to be confirmed by the owner:
 
 - **PostgreSQL:** buy with gaps. Wrap sqldef for the safe default or pgschema for the JSON plan; either way layer 2 adds a drop gate and a narrowing/rewrite check on the plan.
 - **SQLite:** buy with gaps (sqldef); renames and type changes need a custom step.
-- **SQL Server:** unchanged, DacFx stays the baseline (sqldef `mssqldef` built but not run).
+- **SQL Server:** DacFx stays the baseline; `mssqldef` passes S1 to S3 and S5 but emitted an invalid `ALTER COLUMN` with a default for S6, so it is not a replacement.
 - **Oracle:** unchanged (Q5).
 
 ## Not covered
 
 - Atlas: not run. The source build failed with Go 1.27.1 (a `golang.org/x/tools` constant overflow), and a download of the vendor binary was not approved in the session. Its licence and paid tiers are not assessed.
-- SQL Server (`mssqldef` against the SQL Server container), S8 to S10, S4 on PostgreSQL, and the fixture's function, trigger and extension objects.
+- S4, S7, S11 and S12 on SQL Server, S8 to S10, S4 on PostgreSQL, and the fixture's function, trigger and extension objects.
 - No weights or scores were computed; the table above is the raw record.
