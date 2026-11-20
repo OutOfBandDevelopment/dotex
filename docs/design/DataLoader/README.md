@@ -1,6 +1,6 @@
 # Data loader (ETL)
 
-Status: **proposed design, written 2026-11-19 on the assumed answer A of Q18 (library only, no CLI, stands alone until the MasterData design needs it); core built 2026-11-19 (`OoBDev.DataLoader`: pipeline, CSV and JSON readers, in-memory sink, 8 unit tests, `TryAddDataLoader`); the EF Core sink and batching are not built.** Request: [data loader](../../features/request/2026-11-10-data-loader-etl.md). Epic 5 of [SharedFramework](../SharedFramework/README.md); related: [MasterData](../MasterData/README.md).
+Status: **proposed design, written 2026-11-19 on the assumed answer A of Q18 (library only, no CLI, stands alone until the MasterData design needs it); core built 2026-11-19 (`OoBDev.DataLoader`: pipeline, CSV and JSON readers, in-memory sink, 8 unit tests, `TryAddDataLoader`); the EF Core sink is built 2026-11-19 (`OoBDev.DataLoader.EntityFrameworkCore`, JSON-column table, 3 Simulate tests on SQLite); batching is not built.** Request: [data loader](../../features/request/2026-11-10-data-loader-etl.md). Epic 5 of [SharedFramework](../SharedFramework/README.md); related: [MasterData](../MasterData/README.md).
 
 ## Contents
 
