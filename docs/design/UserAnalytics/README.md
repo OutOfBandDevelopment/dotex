@@ -25,4 +25,4 @@ Unit: a `MeterListener` observes the counters for a fake request and for a timeo
 
 ## Open
 
-See Q28 in `OPEN-QUESTIONS.md`: whether per-user usage (who used what) is wanted, which carries privacy duties (consent, erasure).
+Decided (owner Q28, 2026-11-20, option A): aggregate counters only, no per-user usage data; per-user events would need a new decision with a consent and erasure design.
