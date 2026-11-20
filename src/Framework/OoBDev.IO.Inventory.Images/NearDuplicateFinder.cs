@@ -15,7 +15,7 @@ public sealed class NearDuplicateFinder
     /// <param name="hashes">Path and hash pairs.</param>
     /// <param name="maxDistance">Largest differing-bit count that still counts as near (about 5 for resized copies).</param>
     /// <returns>Groups of two or more paths, each sorted.</returns>
-    public IReadOnlyList<IReadOnlyList<string>> Group(IReadOnlyList<(string Path, ulong Hash)> hashes, int maxDistance)
+    public IReadOnlyList<IReadOnlyList<string>> Group(IReadOnlyList<(string Path, long Hash)> hashes, int maxDistance)
     {
         ArgumentNullException.ThrowIfNull(hashes);
         var parent = Enumerable.Range(0, hashes.Count).ToArray();
@@ -45,7 +45,7 @@ public sealed class NearDuplicateFinder
     public (IReadOnlyList<IReadOnlyList<string>> Groups, IReadOnlyList<(string Path, string Reason)> Skipped) Scan(string root, int maxDistance, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrEmpty(root);
-        var hashes = new List<(string, ulong)>();
+        var hashes = new List<(string, long)>();
         var skipped = new List<(string, string)>();
         var options = new EnumerationOptions { RecurseSubdirectories = true, IgnoreInaccessible = true, AttributesToSkip = FileAttributes.ReparsePoint };
         foreach (var path in Directory.EnumerateFiles(root, "*", options).Where(p => _extensions.Contains(Path.GetExtension(p))))

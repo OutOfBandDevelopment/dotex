@@ -74,7 +74,7 @@ public sealed class NearDuplicateFinderTests
     [TestMethod]
     public void Group_SingleLinkage_ChainsNearHashes()
     {
-        var groups = new NearDuplicateFinder().Group([("a", 0UL), ("b", 0b11UL), ("c", 0b1111UL), ("z", ulong.MaxValue)], 2);
+        var groups = new NearDuplicateFinder().Group([("a", 0L), ("b", 0b11L), ("c", 0b1111L), ("z", -1L)], 2);
 
         Assert.AreEqual(1, groups.Count);
         CollectionAssert.AreEqual(new[] { "a", "b", "c" }, (global::System.Collections.ICollection)groups[0]);

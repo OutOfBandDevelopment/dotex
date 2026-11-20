@@ -1,6 +1,6 @@
 # File inventory and duplicate detection
 
-Status: **proposed design, written 2026-11-19 on the assumed answer A of Q20 (library plus a tool in `src/Tools`; a fast non-cryptographic hash first and SHA-512 to confirm; shared interfaces only); library built 2026-11-19 (`OoBDev.IO.Inventory`, 4 unit tests); the `src/Tools` CLI built 2026-11-19 (`OoBDev.FileInventory.Cli`, 3 unit tests); the perceptual image phase built 2026-11-19 (`OoBDev.IO.Inventory.Images`, dHash near-duplicates, 3 unit tests; embedding matching not wired).** Request: [file inventory and deduplication](../../features/request/2026-11-10-file-inventory-and-deduplication.md).
+Status: **proposed design, written 2026-11-19 on the assumed answer A of Q20 (library plus a tool in `src/Tools`; a fast non-cryptographic hash first and SHA-512 to confirm; shared interfaces only); library built 2026-11-19 (`OoBDev.IO.Inventory`, 4 unit tests); the `src/Tools` CLI built 2026-11-19 (`OoBDev.FileInventory.Cli`, 3 unit tests); the perceptual image phase built 2026-11-19 (`OoBDev.IO.Inventory.Images`, dHash near-duplicates reusing `OoBDev.Imaging.Analysis`, 3 unit tests; embedding matching not wired).** Request: [file inventory and deduplication](../../features/request/2026-11-10-file-inventory-and-deduplication.md).
 
 ## Contents
 
