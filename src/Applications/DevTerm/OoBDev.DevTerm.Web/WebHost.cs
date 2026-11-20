@@ -305,7 +305,7 @@ public static class WebHost
         app.MapGet("/api/discover", async (HttpContext context, int? seconds) =>
         {
             var listenFor = TimeSpan.FromSeconds(Math.Clamp(seconds ?? 3, 1, 10));
-            var hits = await NetworkDiscovery.CreateDefault().DiscoverAsync(listenFor, context.RequestAborted).ConfigureAwait(false);
+            var hits = await LxiDeviceScanner.CreateDiscovery().DiscoverAsync(listenFor, context.RequestAborted).ConfigureAwait(false);
             return Results.Json(hits.Select(h => new { address = h.Address, port = h.Port, transport = h.Transport, kind = h.Kind, name = h.DisplayName, source = h.Source, hostname = h.Hostname }));
         }).WithSummary("Network devices found by the LXI, mDNS and SSDP probes (?seconds=1..10, default 3)");
 

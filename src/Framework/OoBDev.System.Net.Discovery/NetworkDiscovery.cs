@@ -12,7 +12,10 @@ public sealed class NetworkDiscovery(IEnumerable<INetworkDeviceProbe> probes)
     private readonly IReadOnlyList<INetworkDeviceProbe> _probes = [.. probes];
 
     /// <summary>The probes dev-term ships: mDNS, SSDP and the USR-TCP232 bridge sweep.</summary>
-    public static NetworkDiscovery CreateDefault() => new([new MdnsProbe(), new SsdpProbe(), new UsrBridgeProbe()]);
+    public static NetworkDiscovery CreateDefault() => new(DefaultProbes());
+
+    /// <summary>The probes of <see cref="CreateDefault"/>, for a caller that adds its own (for example the LXI probe, which lives in the TCP library).</summary>
+    public static IReadOnlyList<INetworkDeviceProbe> DefaultProbes() => [new MdnsProbe(), new SsdpProbe(), new UsrBridgeProbe()];
 
     public async Task<IReadOnlyList<NetworkDeviceHit>> DiscoverAsync(TimeSpan listenFor, CancellationToken cancellationToken = default)
     {
