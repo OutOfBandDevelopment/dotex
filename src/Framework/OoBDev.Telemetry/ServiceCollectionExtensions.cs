@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System;
@@ -79,6 +80,12 @@ public static class ServiceCollectionExtensions
             tracing.AddProcessor(sp => sp.GetRequiredService<UserTelemetryProcessor>());
             if (exportOtlp)
                 tracing.AddOtlpExporter(o => Apply(o, options, "v1/traces"));
+        });
+        otel.WithMetrics(metrics =>
+        {
+            metrics.AddMeter(options.Meters);
+            if (exportOtlp)
+                metrics.AddOtlpExporter((o, _) => Apply(o, options, "v1/metrics"));
         });
         otel.WithLogging(logging =>
         {

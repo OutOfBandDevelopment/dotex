@@ -31,4 +31,10 @@ public class OpenTelemetryOptions
     /// Gets or sets the names of the <see cref="global::System.Diagnostics.ActivitySource"/> instances to collect spans from.
     /// </summary>
     public string[] Sources { get; set; } = [];
+
+    /// <summary>
+    /// Gets or sets the names of the <see cref="global::System.Diagnostics.Metrics.Meter"/> instances to collect metrics from
+    /// (for example <c>OoBDev.AspNetCore.Mvc</c> for <c>UseHttpUsageMetrics</c>). Metrics are exported over OTLP only when an endpoint is configured.
+    /// </summary>
+    public string[] Meters { get; set; } = [];
 }
