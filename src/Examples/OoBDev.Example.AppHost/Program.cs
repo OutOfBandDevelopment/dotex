@@ -115,9 +115,9 @@ api.WithEnvironment("Telemetry__DashboardUrl", dashboardUrl)
     .WithEnvironment("Telemetry__PublicUrl", dashboardUrl)
     .WithEnvironment("Telemetry__ApiKey", builder.Configuration["AppHost:DashboardApiKey"] ?? "")
     .WithEnvironment("OpenTelemetryOptions__ServiceName", "example-api")
-    .WithEnvironment("OpenTelemetryOptions__Sources__0", "Microsoft.AspNetCore");
+    .WithEnvironment("OpenTelemetryOptions__Sources__0", "Microsoft.AspNetCore")
     .WithEnvironment("OpenTelemetryOptions__Meters__0", "OoBDev.AspNetCore.Mvc")
-    .WithEnvironment("OpenTelemetryOptions__Meters__1", "OoBDev.AspNetCore.Mvc.Ui")
+    .WithEnvironment("OpenTelemetryOptions__Meters__1", "OoBDev.AspNetCore.Mvc.Ui");
 
 foreach (var queue in new[] { "ExampleMessageProvider", "EmailMessageModel" })
 {
