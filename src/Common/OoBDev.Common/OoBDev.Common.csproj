@@ -40,6 +40,7 @@
     <ProjectReference Remove="..\..\Framework\**\OoBDev.*.Windows.csproj" />
     <ProjectReference Remove="..\..\Extensions\**\OoBDev.*.net481.csproj" />
     <ProjectReference Remove="..\..\Extensions\**\OoBDev.*.Windows.Forms.csproj" />
+    <ProjectReference Remove="..\..\Extensions\**\OoBDev.*.Windows.csproj" />
 	</ItemGroup>
 	
 	<ItemGroup>

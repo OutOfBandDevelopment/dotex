@@ -1,5 +1,7 @@
 using OoBDev.AspNetCore.JwtAuthentication.OpenApi;
+using OoBDev.AspNetCore.EntityFrameworkCore;
 using OoBDev.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OoBDev.Common;
 using OoBDev.Common.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -76,6 +78,7 @@ public static class Program
             });
 
         ConfigureVectorsAndModels(builder);
+        ConfigureRightAudit(builder);
         builder.Services.AddTransient<OoBDev.WebApi.Services.TemplateCatalog>();
         builder.Services.Configure<OoBDev.WebApi.Models.QueueChannelsOptions>(builder.Configuration.GetSection("MessageQueue"));
         builder.Services.AddTransient<OoBDev.WebApi.Services.QueueChannelCatalog>();
@@ -102,6 +105,17 @@ public static class Program
         OoBDev.AspNetCore.Cgi.ServiceCollectionExtensions.TryAddCgiServices(services, builder.Configuration, "OoBDev:Cgi");
         OoBDev.AspNetCore.Cgi.OpenApi.ServiceCollectionExtensions.TryAddCgiOpenApi(services, builder.Configuration, "OoBDev:Cgi:OpenApi");
 
+    }
+
+    // The durable right-check trail, only when OoBDev:RightAudit:ConnectionString is set (SQL Server); the screen says "not configured" otherwise.
+    private static void ConfigureRightAudit(WebApplicationBuilder builder)
+    {
+        var connectionString = builder.Configuration["OoBDev:RightAudit:ConnectionString"];
+        if (string.IsNullOrWhiteSpace(connectionString))
+            return;
+
+        builder.Services.TryAddEntityFrameworkRightAudit(builder.Configuration, (_, options) => options.UseSqlServer(connectionString));
+        builder.Services.AddRightAuditLog();
     }
 
     private static void ConfigureVectorsAndModels(WebApplicationBuilder builder)
@@ -154,5 +168,12 @@ public static class Program
         OoBDev.AspNetCore.Cgi.ServiceCollectionExtensions.UseCgi(app);
 
         app.MapControllers();
+        if (!string.IsNullOrWhiteSpace(app.Configuration["OoBDev:RightAudit:ConnectionString"]))
+        {
+            using (var scope = app.Services.CreateScope())
+            using (var context = scope.ServiceProvider.GetRequiredService<IDbContextFactory<RightAuditDbContext>>().CreateDbContext())
+                context.Database.EnsureCreated();
+            app.MapRightAuditQuery(["audit.read"]);
+        }
     }
 }
