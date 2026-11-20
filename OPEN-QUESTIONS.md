@@ -335,3 +335,16 @@ The probes (`INetworkDeviceProbe`, mDNS, SSDP, USR bridge, `NetworkDiscovery`) l
 **Default:** B.
 
 **Your answer:**
+
+### Q26 (2026-11-19, DevTerm): is a Blazor front end for DevTerm wanted, and as a separate application or inside the example web app?
+
+[Request](docs/features/request/2026-11-10-devterm-dockable-layout-and-blazor-frontend.md). The WPF dockable layout is built; the Blazor half is open. It is a layering and application-boundary choice, so no code starts without an answer (rule `layering-and-migration-plans`).
+
+**Options**
+- A. Defer until a web user for DevTerm exists; the generated-form language already keeps the view models host-neutral (recommended: no consumer yet, nothing to rework later).
+- B. A separate `OoBDev.DevTerm.Web` Blazor application under `src/Applications/DevTerm`, reusing `DevTerm.Core`.
+- C. Pages inside the example web app.
+
+**Default:** A.
+
+**Your answer:**
