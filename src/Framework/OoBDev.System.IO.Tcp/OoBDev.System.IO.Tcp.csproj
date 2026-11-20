@@ -10,6 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
     <ProjectReference Include="..\OoBDev.System.IO.Pipelines\OoBDev.System.IO.Pipelines.csproj" />
+    <ProjectReference Include="..\OoBDev.System.Net.Discovery\OoBDev.System.Net.Discovery.csproj" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Options" />
     <PackageReference Include="System.IO.Ports" />
