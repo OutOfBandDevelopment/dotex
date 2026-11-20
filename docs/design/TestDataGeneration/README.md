@@ -1,6 +1,6 @@
 # Procedural test data generation
 
-Status: **proposed design, written 2026-11-19 on the assumed answer A of Q19 (no `Bogus` dependency; unscheduled until a consumer appears); no code.** Request: [procedural test data generation](../../features/request/2026-11-10-procedural-test-data-generation.md). Epic 9 of [SharedFramework](../SharedFramework/README.md).
+Status: **proposed design, written 2026-11-19 on the assumed answer A of Q19 (no `Bogus` dependency; unscheduled until a consumer appears); core built 2026-11-19 (`OoBDev.Generations`: `Generator`, four attributes, interface proxy, 6 unit tests); builder hooks, null probability, DI registration and the Abstractions split are not built.** Request: [procedural test data generation](../../features/request/2026-11-10-procedural-test-data-generation.md). Epic 9 of [SharedFramework](../SharedFramework/README.md).
 
 ## Contents
 
