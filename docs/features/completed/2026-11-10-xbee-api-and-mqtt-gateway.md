@@ -1,6 +1,6 @@
 # Feature request: XBee API-mode frames and an XBee-to-MQTT gateway
 
-- **Status:** triaged
+- **Status:** done (library built 2026-11-19, [change](../../changes/2026-11-19.md#xbee-api-frames-package); the MQTT gateway is a documented sample in the package readme, decision Q15)
 - **Requested by:** owner (notes repository project mapping, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/HardwareDevices` (new `OoBDev.Digi.XBee`) and `OoBDev.System.IO.Mqtt`
