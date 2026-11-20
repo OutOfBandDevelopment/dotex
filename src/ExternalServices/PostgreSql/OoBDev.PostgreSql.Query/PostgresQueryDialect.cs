@@ -50,6 +50,9 @@ public sealed class PostgresQueryDialect : IQueryDialect
     public string VectorDistance(string column, string anchor) => $"(({column}) <=> ({anchor}))";
 
     /// <inheritdoc />
+    public string VectorFromText(string parameter) => $"CAST({parameter} AS vector)";
+
+    /// <inheritdoc />
     public string ContainsPattern(string text) =>
         "%" + text.Replace("\\", "\\\\", StringComparison.Ordinal).Replace("%", "\\%", StringComparison.Ordinal).Replace("_", "\\_", StringComparison.Ordinal) + "%";
 }

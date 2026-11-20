@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using OoBDev.AI;
 
 namespace OoBDev.Query.Metadata;
 
@@ -21,6 +22,7 @@ namespace OoBDev.Query.Metadata;
 /// <param name="options">The options.</param>
 /// <param name="logger">The logger.</param>
 /// <param name="authorizer">Checks the right a kind names; without one such kinds answer 403.</param>
+/// <param name="embedder">Embeds the words of a <c>near</c> text anchor; without one such a request answers 400.</param>
 public sealed partial class QueryEngine(
     KindRegistry registry,
     IQueryDialect dialect,
@@ -28,7 +30,8 @@ public sealed partial class QueryEngine(
     CursorCodec cursors,
     IOptions<QueryMetadataOptions> options,
     ILogger<QueryEngine> logger,
-    IQueryAuthorizer? authorizer = null)
+    IQueryAuthorizer? authorizer = null,
+    IEmbeddingProvider? embedder = null)
 {
     /// <summary>The kinds this engine answers for.</summary>
     public KindRegistry Registry => registry;
@@ -45,6 +48,8 @@ public sealed partial class QueryEngine(
         var kind = registry.Get(request.From);
         if (kind.Right.Length > 0 && authorizer?.IsAllowed(kind.Right) != true)
             throw new QueryException($"Kind '{kind.Name}' needs the right '{kind.Right}'.", 403);
+
+        request = await EmbedAnchorAsync(request, cancellationToken).ConfigureAwait(false);
 
         if (request.Shape == "graph")
             return await GraphAsync(kind, request, started, cancellationToken).ConfigureAwait(false);
@@ -80,6 +85,16 @@ public sealed partial class QueryEngine(
         var elapsed = (long)Stopwatch.GetElapsedTime(started).TotalMilliseconds;
         Ran(logger, kind.Name, request.Shape, elapsed);
         return new QueryResult<IReadOnlyDictionary<string, object?>> { Kind = kind.Name, Shape = request.Shape, Rows = page, Next = next, Count = count, ElapsedMs = elapsed };
+    }
+
+    private async Task<QueryRequest> EmbedAnchorAsync(QueryRequest request, CancellationToken cancellationToken)
+    {
+        if (request.Near is not { Text: { Length: > 0 } text, Vector: null } near)
+            return request;
+        if (embedder is null)
+            throw new QueryException("A text anchor needs an embedding provider; none is configured. Use ref (a row key) instead, or register an IEmbeddingProvider.");
+        var embedding = await embedder.GenerateEmbeddingAsync(text, null, cancellationToken).ConfigureAwait(false);
+        return request with { Near = near with { Vector = embedding.ToArray() } };
     }
 
     /// <summary>Runs a request and maps the rows to the kind's row class.</summary>

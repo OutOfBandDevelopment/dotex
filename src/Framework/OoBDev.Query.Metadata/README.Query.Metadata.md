@@ -61,6 +61,8 @@ The text form `photos tag:beach by -taken top 60 count` (`QueryText.Parse`) and 
 
 ## Near (spaces)
 
+**Text anchor.** `near { "space": "similar", "text": "red barn at sunset" }` (text form `near similar about "red barn at sunset" max 0.4`) embeds the words with the registered `IEmbeddingProvider` and ranks by closeness; without a provider the request answers 400. The words never reach the SQL.
+
 `[Space(name, metric)]` declares how a kind measures closeness. `SpaceMetric.Haversine` takes two numeric facets (`A` latitude, `B` longitude) and a request position, and gives kilometres. `SpaceMetric.Cosine` joins an embedding table as `sv` (`Table`, `IdColumn`, `VectorColumn`, `IdType`) and gives the cosine distance to the vector stored for the anchor row `ref`. `Candidates = n` takes the nearest n rows from the embedding table first so a vector index can answer (filters then apply to that pool, and paging covers the pool only). `DefaultMax` limits the distance when the request gives none. A request names `near: { space, ref | lat + lon, max }` (text: `near geo:51.5,-0.1 max 25`, `near similar:42`); the rows get a `distance` column, sort by it by default (`sort: ["distance"]` also works) and page with the usual cursor. `IQueryDialect.Haversine` and `VectorDistance` give the SQL; the PostgreSQL dialect uses the `<=>` operator, so the pgvector extension must be on the connection's search path.
 
 ## Not built yet

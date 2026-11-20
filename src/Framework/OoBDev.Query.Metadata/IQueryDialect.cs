@@ -71,4 +71,9 @@ public interface IQueryDialect
     /// <param name="anchor">An expression that yields the anchor vector.</param>
     /// <returns>The distance expression.</returns>
     string VectorDistance(string column, string anchor);
+
+    /// <summary>An expression that turns a bound vector text such as <c>[0.1,0.2]</c> into the database vector type; the default returns the placeholder unchanged.</summary>
+    /// <param name="parameter">The placeholder holding the vector text.</param>
+    /// <returns>The vector expression.</returns>
+    string VectorFromText(string parameter) => parameter;
 }

@@ -24,6 +24,9 @@ public class PostgresQueryUnitTests
     public void NotLike_UsesNotIlike() => StringAssert.Contains(_dialect.NotLike("x", "@p0"), "NOT ILIKE");
 
     [TestMethod]
+    public void VectorFromText_CastsTheBoundTextToVector() => Assert.AreEqual("CAST(@p0 AS vector)", _dialect.VectorFromText("@p0"));
+
+    [TestMethod]
     public void In_UsesAny() => Assert.AreEqual("x = ANY(@p0)", _dialect.In("x", "@p0"));
 
     [TestMethod]
