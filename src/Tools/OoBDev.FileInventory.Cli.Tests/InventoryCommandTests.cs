@@ -1,6 +1,10 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.AI;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.System.IO;
 
@@ -84,5 +88,46 @@ public sealed class InventoryCommandTests
         using var error2 = new StringWriter();
         Assert.AreEqual(2, await InventoryCommand.RunAsync(["scan", "--root", Path.Combine(Path.GetTempPath(), "does-not-exist-" + global::System.Guid.NewGuid().ToString("N"))], new StringWriter(), error2, CancellationToken.None));
         StringAssert.Contains(error2.ToString(), "--root");
+    }
+
+    private sealed class FakeEmbedder : IEmbeddingGenerator<DataContent, Embedding<float>>
+    {
+        public Task<GeneratedEmbeddings<Embedding<float>>> GenerateAsync(IEnumerable<DataContent> values, EmbeddingGenerationOptions? options = null, CancellationToken cancellationToken = default) =>
+            Task.FromResult(new GeneratedEmbeddings<Embedding<float>>(values.Select(v => new Embedding<float>(v.Data.Span[0] == 1 ? new float[] { 1, 0 } : new float[] { 0, 1 })).ToList()));
+
+        public object? GetService(Type serviceType, object? serviceKey = null) => null;
+
+        public void Dispose()
+        {
+        }
+    }
+
+    [TestMethod]
+    public async Task Images_WithEmbeddings_GroupsBySimilarVectors()
+    {
+        // Stage
+        using var dir = new TempFileFactory(null!).GetTempDirectory();
+        await File.WriteAllBytesAsync(Path.Combine(dir.DirectoryPath, "one.png"), [1], TestContext.CancellationToken);
+        await File.WriteAllBytesAsync(Path.Combine(dir.DirectoryPath, "two.png"), [1], TestContext.CancellationToken);
+        await File.WriteAllBytesAsync(Path.Combine(dir.DirectoryPath, "other.png"), [2], TestContext.CancellationToken);
+        using var output = new StringWriter();
+
+        // Test
+        var code = await InventoryCommand.RunAsync(["images", "--root", dir.DirectoryPath, "--embeddings", "dinov2"], output, new StringWriter(), CancellationToken.None, _ => Task.FromResult<IEmbeddingGenerator<DataContent, Embedding<float>>>(new FakeEmbedder()));
+        TestContext.WriteLine(output.ToString());
+
+        // Assert
+        Assert.AreEqual(1, code);
+        StringAssert.Contains(output.ToString(), "near-duplicate group 1: 2 images");
+    }
+
+    [TestMethod]
+    public async Task Images_UnknownEmbeddings_ExitsTwo()
+    {
+        using var dir = new TempFileFactory(null!).GetTempDirectory();
+
+        var code = await InventoryCommand.RunAsync(["images", "--root", dir.DirectoryPath, "--embeddings", "nope"], new StringWriter(), new StringWriter(), CancellationToken.None);
+
+        Assert.AreEqual(2, code);
     }
 }

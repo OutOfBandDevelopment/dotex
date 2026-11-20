@@ -21,6 +21,8 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\Framework\OoBDev.IO.Inventory\OoBDev.IO.Inventory.csproj" />
 		<ProjectReference Include="..\..\Framework\OoBDev.IO.Inventory.Images\OoBDev.IO.Inventory.Images.csproj" />
+		<ProjectReference Include="..\..\ExternalServices\Onnx\OoBDev.Onnx.ImageEmbeddings.Skia\OoBDev.Onnx.ImageEmbeddings.Skia.csproj" />
+		<ProjectReference Include="..\..\ExternalServices\Vision\OoBDev.Vision.Dinov2Small\OoBDev.Vision.Dinov2Small.csproj" />
 	</ItemGroup>
 
 </Project>
