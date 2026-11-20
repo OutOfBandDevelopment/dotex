@@ -1,6 +1,6 @@
 # Feature request: DevTerm BYTECC BT-UP01 USB-over-network bridge (research)
 
-- **Status:** triaged
+- **Status:** declined (owner, 2026-11-19, Q17: no hardware)
 - **Requested by:** owner (retire dev-term, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Applications/DevTerm`, research

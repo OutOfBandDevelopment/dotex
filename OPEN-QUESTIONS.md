@@ -10,58 +10,6 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ## Open
 
-### Q17 (2026-11-19, DevTerm, BYTECC bridge and BLE on Linux): is the hardware or machine available?
-
-Requests: [BYTECC](docs/features/request/2026-11-10-devterm-bytecc-usb-bridge.md) ("without the hardware, decline") and [BLE on Linux](docs/features/request/2026-11-10-devterm-ble-linux-macos.md) (macOS deferred, 2026-11-10).
-
-**Options**
-- A. Decline BYTECC (move to `rejected/`) and park Linux BLE until a Linux machine with a BLE adapter is available (recommended).
-- B. You have both: say which and when.
-- C. Keep both open as they are.
-
-**Default:** C; nothing moves.
-
-**Your answer:**
-
-### Q18 (2026-11-19, SharedFramework, complex events and data loader): relation to your own material and to MasterData
-
-Requests: [complex events](docs/features/request/2026-11-10-complex-events-and-scheduling.md) (overlaps your `event-sourcing` and `sync-mesh` material; copying needs your say-so; is `ComplexEvents.DatabaseExtensions` wanted?) and [data loader](docs/features/request/2026-11-10-data-loader-etl.md) (wait for the MasterData design, Epic 5? CLI wanted?).
-
-**Options**
-- A. Complex events: design only, separate from event sourcing, no database project; data loader: stand alone, library only, no CLI (recommended: smallest designs; both wait for a consumer to build).
-- B. Fold complex events into `OoBDev.EventSourcing` and the data loader into MasterData.
-- C. Decline both.
-
-**Default:** A for the design documents.
-
-**Your answer:**
-
-### Q19 (2026-11-19, SharedFramework, remaining entries): which wish-list, roadmap, spatial and test-data lines are still wanted?
-
-Requests: [wish list](docs/features/request/2026-11-10-framework-wish-list.md), [roadmap lines](docs/features/request/2026-11-10-roadmap-open-items.md) (workflow engine, rules engine, DAPR, S3 and other blob stores, SMS, Teams, Slack), [spatial services](docs/features/request/2026-11-10-spatial-services.md) (vendors; Bing Maps is being retired), [test data generation](docs/features/request/2026-11-10-procedural-test-data-generation.md) (own or `Bogus`), [reference designs](docs/features/request/2026-11-10-reference-designs.md) (the patterns-discovery blueprint under another name?).
-
-**Options**
-- A. Close the wish list and roadmap as stale except lines you name; spatial waits for a consumer and drops Bing; test data uses the CSV utility project, no `Bogus`; reference designs closes as covered by the blueprint (recommended: most are old and unowned).
-- B. Keep every line open.
-- C. Answer line by line (say which).
-
-**Default:** B (nothing closes).
-
-**Your answer:**
-
-### Q20 (2026-11-19, Documents and files): scope of file inventory and the HP-GL audio sink
-
-Requests: [file inventory](docs/features/request/2026-11-10-file-inventory-and-deduplication.md) (library only or also a CLI; default hash; share interfaces with the NAS catalog or keep its scanner) and [HP-GL stereo audio sink](docs/features/request/2026-11-10-hpgl-vector-display-sink.md) (own project or an output format of the Hpgl library; sample rate and blanking).
-
-**Options**
-- A. Inventory: library plus a tool in `src/Tools`, fast non-cryptographic hash first and SHA-512 to confirm, shared interfaces only; audio sink: an output format of the Hpgl library, 48 kHz, fast jumps without a Z track (recommended).
-- B. Inventory library only; audio sink as its own project with an optional Z channel.
-- C. Decline both.
-
-**Default:** A for design only; both stay unscheduled.
-
-**Your answer:**
-
 ### Q21 (2026-11-19, Identity and DevTerm design): claims pipeline and control-module schema
 
 Requests: [claims enhancement](docs/features/request/2026-11-10-claims-enhancement-and-user-session.md) (is a pipeline needed beyond `IClaimsTransformation`, which `TryAddRoleRightMapping` now uses?) and [SCPI control-module schema](docs/features/request/2026-11-10-devterm-scpi-control-module-schema.md) (do JSON profile panels cover enough?).

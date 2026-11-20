@@ -1,6 +1,6 @@
 # Reference designs (common entity patterns)
 
-Status: **proposed catalogue, written 2026-11-19 (Q19 default B: nothing closes); no code.** Request: [reference designs](../../features/request/2026-11-10-reference-designs.md). Q19 asks whether this is only the [patterns-discovery blueprint](../../patterns-discovery/README.md) under another name; this catalogue differs by naming entities, states and rights, not project layout.
+Status: **proposed catalogue, written 2026-11-19 (Q19 default B: nothing closes); no code.** Request: [reference designs](../../features/rejected/2026-11-10-reference-designs.md). Q19 asks whether this is only the [patterns-discovery blueprint](../../patterns-discovery/README.md) under another name; this catalogue differs by naming entities, states and rights, not project layout.
 
 ## Contents
 

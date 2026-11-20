@@ -1,6 +1,6 @@
 # Feature request: procedural test data generation
 
-- **Status:** triaged
+- **Status:** declined (owner, 2026-11-19, Q19: closed as stale; test data uses the CSV utility project, reference designs are covered by the patterns blueprint; reopen a line by filing a new request)
 - **Requested by:** owner (SharedFramework comparison, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Framework` (test utilities and generation library)
