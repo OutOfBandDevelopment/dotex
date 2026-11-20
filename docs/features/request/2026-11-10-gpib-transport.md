@@ -1,6 +1,6 @@
 # Feature request: GPIB (IEEE-488) transport for SCPI instruments
 
-- **Status:** triaged
+- **Status:** triaged (on hold 2026-11-19, owner: no GPIB interface on the bench; build when one is available)
 - **Requested by:** owner (notes repository project mapping, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Framework` (new transport, next to `OoBDev.System.IO.UsbTmc` and `OoBDev.System.IO.Tcp`) and `OoBDev.Scpi`
