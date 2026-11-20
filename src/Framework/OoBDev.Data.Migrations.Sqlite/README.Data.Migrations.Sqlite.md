@@ -7,6 +7,8 @@ EF Core migration sets for the OoBDev stores on Sqlite. One migrations project p
 | Context | Folder | History table |
 |---------|--------|---------------|
 | `RightAuditDbContext` (`OoBDev.AspNetCore.EntityFrameworkCore`) | `Migrations/RightAudit` | `__EFMigrationsHistory_RightAudit` |
+| `SuppressionsDbContext` (`OoBDev.Communications.EntityFrameworkCore`) | `Migrations/Suppressions` | `__EFMigrationsHistory_Suppressions` |
+| `ScheduleDbContext` (`OoBDev.ComplexEvents.EntityFrameworkCore`) | `Migrations/Schedule` | `__EFMigrationsHistory_Schedule` |
 
 ## Use
 
@@ -18,7 +20,7 @@ await using var db = await factory.CreateDbContextAsync();
 await db.Database.MigrateAsync();
 ```
 
-`UseRightAuditMigrations` sets the migrations assembly and the history table. Add a migration after a model change from this folder:
+`UseRightAuditMigrations`, `UseSuppressionsMigrations` and `UseScheduleMigrations` set the migrations assembly and the history table. Add a migration after a model change from this folder:
 
 ```
 dotnet ef migrations add <Name> -o Migrations/RightAudit --context RightAuditDbContext

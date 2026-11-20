@@ -1,6 +1,6 @@
 # EF migration sets per database: migration plan
 
-**Status:** confirmed by the owner 2026-11-20 (Q27, option A). Built 2026-11-20: `OoBDev.Data.Migrations.Postgres` and `.Sqlite` with the right audit set (step 1 of the order below); suppressions, schedule and the dacpac are not built.
+**Status:** confirmed by the owner 2026-11-20 (Q27, option A). Built 2026-11-20: `OoBDev.Data.Migrations.Postgres` and `.Sqlite` with the right audit, suppressions and schedule sets (steps 1 and 2 of the order below); the SQL Server dacpac is not built.
 **Decision (owner Q20, 2026-11-20):** one migrations project per database holding the sets of all the stores, one folder and one `MigrationsHistoryTable` per context; the event store keeps its provider projects; start with the right audit store. Layering rule: [layering-and-migration-plans](../../../.claude/rules/layering-and-migration-plans.md).
 
 [Architecture](architecture.md) · [Testing strategy](testing-strategy.md)

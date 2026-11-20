@@ -20,6 +20,8 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.AspNetCore.EntityFrameworkCore\OoBDev.AspNetCore.EntityFrameworkCore.csproj" />
+		<ProjectReference Include="..\OoBDev.Communications.EntityFrameworkCore\OoBDev.Communications.EntityFrameworkCore.csproj" />
+		<ProjectReference Include="..\OoBDev.ComplexEvents.EntityFrameworkCore\OoBDev.ComplexEvents.EntityFrameworkCore.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -15,4 +15,22 @@ public static class DbContextOptionsBuilderExtensions
         => options.UseNpgsql(connectionString, b => b
             .MigrationsAssembly(typeof(MigrationsGlobals).Assembly.GetName().Name)
             .MigrationsHistoryTable(MigrationsGlobals.RightAuditHistoryTable));
+
+    /// <summary>Configures the suppressions context for Postgres with its migrations assembly and its own history table.</summary>
+    /// <param name="options">The options builder of <c>SuppressionsDbContext</c>.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <returns>The options builder.</returns>
+    public static DbContextOptionsBuilder UseSuppressionsMigrations(this DbContextOptionsBuilder options, string connectionString)
+        => options.UseNpgsql(connectionString, b => b
+            .MigrationsAssembly(typeof(MigrationsGlobals).Assembly.GetName().Name)
+            .MigrationsHistoryTable(MigrationsGlobals.SuppressionsHistoryTable));
+
+    /// <summary>Configures the schedule context for Postgres with its migrations assembly and its own history table.</summary>
+    /// <param name="options">The options builder of <c>ScheduleDbContext</c>.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <returns>The options builder.</returns>
+    public static DbContextOptionsBuilder UseScheduleMigrations(this DbContextOptionsBuilder options, string connectionString)
+        => options.UseNpgsql(connectionString, b => b
+            .MigrationsAssembly(typeof(MigrationsGlobals).Assembly.GetName().Name)
+            .MigrationsHistoryTable(MigrationsGlobals.ScheduleHistoryTable));
 }
