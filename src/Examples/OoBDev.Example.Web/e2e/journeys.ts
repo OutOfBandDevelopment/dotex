@@ -908,6 +908,42 @@ export const journeys: Journey[] = [
     ],
   },
   {
+    id: 'review-the-right-audit-trail',
+    title: 'Review the right audit trail',
+    persona: 'An operator looking into a refused call',
+    goal: 'See which right checks the API allowed or refused, and narrow the list to the refusals.',
+    start: '/operations/right-audit',
+    prerequisites: ['The example API runs with OoBDev:RightAudit:ConnectionString set.', 'The signed-in user holds the audit.read right.'],
+    features: ['OoBDev.AspNetCore.Abstractions (`IApplicationRightChecker`)', 'OoBDev.AspNetCore.EntityFrameworkCore (`TryAddEntityFrameworkRightAudit`)'],
+    why: 'Answer "who was refused, and for which right" from the durable trail, without reading logs.',
+    problems: [
+      { symptom: 'The screen says Not configured', cause: 'The host has no audit connection string, so the endpoint is not mapped', fix: 'Set OoBDev:RightAudit:ConnectionString (SQL Server) and restart the API' },
+      { symptom: 'The screen shows 403', cause: 'Your token has no role that maps to audit.read', fix: 'Ask for a role that is translated to audit.read' },
+    ],
+    steps: [
+      {
+        title: 'Read the trail',
+        narrative: 'Every right check is listed newest first with who asked, the rights and the result.',
+        expect: ['Both checks are listed, the allowed one and the forbidden one.'],
+        run: async page => {
+          await expect(page.locator('table.grid')).toContainText('ann');
+          await expect(page.locator('table.grid')).toContainText('Forbidden');
+        },
+      },
+      {
+        title: 'Show only the refusals',
+        narrative: 'Choose Forbidden as the result and refresh to narrow the list.',
+        expect: ['Only the forbidden check remains.'],
+        run: async page => {
+          await page.getByLabel('Result').selectOption('Forbidden');
+          await press(page, 'Refresh');
+          await expect(page.locator('table.grid')).toContainText('bob');
+          await expect(page.locator('table.grid')).not.toContainText('Allowed');
+        },
+      },
+    ],
+  },
+  {
     id: 'browse-users-and-roles',
     title: 'Browse users and roles',
     persona: 'An administrator checking who can do what',

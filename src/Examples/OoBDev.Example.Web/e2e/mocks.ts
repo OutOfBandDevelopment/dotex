@@ -53,6 +53,11 @@ export async function mockApi(page: Page): Promise<void> {
       ]);
     }
     if (path === '/api/Rights/endpoints') return json(route, [{ method: 'GET', route: '/api/Cache', access: 'anonymous', rights: [] }, { method: 'GET', route: '/api/Rights/protected', access: 'rights', rights: ['rights.demo'] }, { method: 'GET', route: '/api/User/claims', access: 'authenticated', rights: [] }]);
+    if (path === '/api/v1/right-audit') {
+      const rows = [{ at: '2026-11-20T09:00:00Z', subject: 'ann', rights: 'docs.read', result: 'Allowed' }, { at: '2026-11-20T08:59:00Z', subject: 'bob', rights: 'identity.read', result: 'Forbidden' }];
+      const wanted = new URL(route.request().url()).searchParams.get('result');
+      return json(route, wanted ? rows.filter(r => r.result === wanted) : rows);
+    }
     if (path === '/api/Rights/check') return json(route, { required: ['rights.demo'], held: [], result: 'Unauthenticated' });
     if (path === '/api/Identity/users') return json(route, [{ id: '1', userName: 'ann', email: 'ann@example.test', displayName: 'Ann Lee', enabled: true, roles: ['editor'], rights: ['docs.read'] }]);
     if (path === '/api/Identity/roles') return json(route, [{ name: 'editor', rights: ['docs.read'] }, { name: 'viewer', rights: [] }]);

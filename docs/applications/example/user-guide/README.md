@@ -36,5 +36,6 @@ Step-by-step guides with screenshots, one per user journey. They are regenerated
 | [Run a CGI program](run-a-cgi-program.md) | A developer checking the CGI hosting | Pick a program the host can start and see its answer. |
 | [Send a webhook to a channel](send-a-webhook.md) | A developer testing inbound provider calls | Post a provider call to a channel and see how the host answers. |
 | [Check which rights an endpoint needs](check-your-rights.md) | A developer working out why an API call is refused | See the access each endpoint needs and check the current user against a right. |
+| [Review the right audit trail](review-the-right-audit-trail.md) | An operator looking into a refused call | See which right checks the API allowed or refused, and narrow the list to the refusals. |
 | [Browse users and roles](browse-users-and-roles.md) | An administrator checking who can do what | See the realm users with their roles and the application rights those roles grant. |
 | [Render a panel from a server-supplied definition](server-driven-ui.md) | A developer who wants one UI contract for every front end | Open a UI definition and watch the host decide which controls show, enable and validate. |
