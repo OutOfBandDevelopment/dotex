@@ -5,4 +5,5 @@ Phase two of the [file inventory](../../../docs/design/FileInventory/README.md):
 - `ImageHasher.DHash(stream)` decodes with SkiaSharp and uses the framework dHash (`OoBDev.Imaging.Analysis.Bursts.DHash`, Pillow-compatible), so inventory and burst-ranking hashes are the same; `Distance` counts differing bits.
 - `NearDuplicateFinder.Scan(root, maxDistance, ct)` hashes png, jpg, gif, bmp and webp files under a folder, skips unreadable ones (returned with the reason) and groups images within the distance (single linkage; about 5 for resized copies). `Group` does the grouping on precomputed hashes.
 - `EmbeddingMatcher.Group(vectors, minSimilarity)` groups caller-supplied embedding vectors by cosine similarity (single linkage), so it needs no ONNX dependency; feed it vectors from the [image embedder](../../../docs/design/ImageEmbeddings/README.md).
+- `EmbeddingScanner(generator).ScanAsync(root, minSimilarity, ct)` embeds each image with any `IEmbeddingGenerator<DataContent, Embedding<float>>` (the ONNX image embedder fits) and groups with `EmbeddingMatcher`.
 - Read-only: nothing is moved or deleted.
