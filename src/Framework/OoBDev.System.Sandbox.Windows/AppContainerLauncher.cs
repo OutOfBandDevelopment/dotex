@@ -100,6 +100,22 @@ public static partial class AppContainerLauncher
         info.SetAccessControl(security);
     }
 
+    /// <summary>Removes every access rule the container holds on <paramref name="directory"/> (what <see cref="Grant"/> added); returns true when a rule was removed. Call it when no running plugin needs the folder any more.</summary>
+    public static bool Revoke(string directory)
+    {
+        var info = new DirectoryInfo(directory);
+        var security = info.GetAccessControl();
+        var sid = ContainerSid();
+        var held = security.GetAccessRules(true, false, typeof(SecurityIdentifier)).Cast<FileSystemAccessRule>().Any(r => r.IdentityReference.Equals(sid));
+        if (held)
+        {
+            security.PurgeAccessRules(sid);
+            info.SetAccessControl(security);
+        }
+
+        return held;
+    }
+
     /// <summary>Starts <paramref name="commandLine"/> in the container, suspended, assigns it to <paramref name="job"/>, then lets it run.</summary>
     public static Launched Start(string applicationPath, string commandLine, string workingDirectory, IReadOnlyDictionary<string, string> environment, JobObject job)
     {
