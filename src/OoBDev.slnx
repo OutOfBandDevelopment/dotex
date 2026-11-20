@@ -316,6 +316,8 @@
     <Project Path="Framework/OoBDev.Generations.Tests/OoBDev.Generations.Tests.csproj" />
     <Project Path="Framework/OoBDev.Generations/OoBDev.Generations.csproj" />
     <Project Path="Framework/OoBDev.SpatialServices.Abstractions/OoBDev.SpatialServices.Abstractions.csproj" />
+    <Project Path="Framework/OoBDev.IO.Inventory.Images.Tests/OoBDev.IO.Inventory.Images.Tests.csproj" />
+    <Project Path="Framework/OoBDev.IO.Inventory.Images/OoBDev.IO.Inventory.Images.csproj" />
     <Project Path="Framework/OoBDev.IO.Inventory.Tests/OoBDev.IO.Inventory.Tests.csproj" />
     <Project Path="Framework/OoBDev.IO.Inventory/OoBDev.IO.Inventory.csproj" />
     <Project Path="Framework/OoBDev.Documents.ExternalTools.Tests/OoBDev.Documents.ExternalTools.Tests.csproj" />
