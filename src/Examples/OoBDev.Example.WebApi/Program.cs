@@ -160,6 +160,7 @@ public static class Program
         }
 
         app.UseProblemDetailsExceptionHandler();
+        app.UseHttpUsageMetrics();
         app.UseHttpsRedirection();
 
         app.UseAllCommonMiddleware(

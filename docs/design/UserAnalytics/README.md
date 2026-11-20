@@ -1,6 +1,6 @@
 # User analytics (screen usage, URLs, timeouts)
 
-**Status:** proposed, not built. **Last Updated:** 2026-11-20. Origin: owner wish list (`BACKLOG.md` section 8). Waiting on [Q28](../../../OPEN-QUESTIONS.md).
+**Status:** the HTTP half (calls, timeouts, duration) is built as `UseHttpUsageMetrics()` in `OoBDev.AspNetCore.Mvc` (Unit tested); the screen-view endpoint is not built. **Last Updated:** 2026-11-20. Origin: owner wish list (`BACKLOG.md` section 8). Waiting on [Q28](../../../OPEN-QUESTIONS.md).
 
 ## Requirements
 
