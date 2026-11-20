@@ -44,8 +44,6 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
   - [ ] The queue receive monitor shows nothing until a channel has its receiver enabled (all example channels set `DisableReceiver`). Example config only: enabling it makes the host need a running RabbitMQ at startup, so it stays off until the example gets a compose-backed profile (2026-11-19 decision: leave).
 
 - [x] **CQRS and event sourcing library** (decided 2026-11-11): built and covered (Abstractions, stores, relay, aggregates, projections, upcasting, snapshots, EF Core packages, CloudEvents mapper, pgmq adapter). The CloudEvents HTTP edge (`OoBDev.EventSourcing.Web`) was built 2026-11-16. Design and coverage: [CqrsEventSourcing](docs/design/CqrsEventSourcing/testing-strategy.md#coverage).
-- [ ] Live run of the example inbox poll against SMTP4Dev IMAP (port 143): send a mail, check mail, confirm it is listed once ([plan](docs/design/example-ui/plan.md) Phase 6).
-
 ## 5. Code quality backlog
 
 A clean rebuild after the 2026-11-06 pass reports no analyzer warnings (218 before). Analyzers are wired from `src/Directory.Build.props` (`OoBDev.Analyzers` OOB0001 to OOB0003, NetAnalyzers Recommended, Meziantou); `Tools`, `Examples` and `Applications` are exempt from MA0004, and `Tools` and `Examples` from MA0048, in `src/.editorconfig`.

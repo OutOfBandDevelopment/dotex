@@ -216,7 +216,7 @@ Checklist (tick as work lands):
   - [x] Framework side: `IPollableChannelProvider`, `ReceiveService.PollAsync` and the MailKit IMAP provider exist with unit tests; the example configures an `inbox` channel (`mailkit-imap`)
   - [x] API: `POST api/Communications/inbox/poll?max=` (right `communications.receive`, 404 problem when the channel is missing or not pollable, 502 problem when the mail server fails); 4 Unit tests
   - [x] Screen: an Inbox section on `/messaging/communications` (Check mail, list of sender, subject and preview), view-model test, mocked journey step and regenerated guide
-  - [ ] Live run against SMTP4Dev IMAP (port 143) not done; tracked in BACKLOG
+  - [x] Live run against SMTP4Dev IMAP: Integration test `MailKitImapPollIntegrationTests` (send over SMTP, poll, acknowledge, poll again) passes; it found that smtp4dev rejects the `UNDELETED` search criterion, so the poll searches unseen mail only
 
 ## 6. Open questions
 
