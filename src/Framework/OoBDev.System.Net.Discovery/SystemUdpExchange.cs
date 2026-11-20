@@ -7,7 +7,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OoBDev.DevTerm.Configuration.Discovery;
+namespace OoBDev.System.Net.Discovery;
 
 /// <summary>Sends from every up, non-loopback IPv4 adapter (multicast and broadcast leave through one interface at a time).</summary>
 public sealed class SystemUdpExchange : IUdpExchange

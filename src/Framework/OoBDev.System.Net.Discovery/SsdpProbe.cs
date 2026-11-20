@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OoBDev.DevTerm.Configuration.Discovery;
+namespace OoBDev.System.Net.Discovery;
 
 /// <summary>
 /// SSDP / UPnP: a multicast <c>M-SEARCH</c> to <c>239.255.255.250:1900</c>; every responder becomes a hit whose port is the one in its

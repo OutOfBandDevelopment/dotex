@@ -4,7 +4,7 @@
 > **Owner questions:** [OPEN-QUESTIONS.md](./OPEN-QUESTIONS.md) · **New to this project?** Read [CLAUDE.md](./CLAUDE.md) first.
 > **Other repositories to harvest from:** [docs/harvest-candidates.md](docs/harvest-candidates.md)
 
-**Last Updated:** 2026-11-19
+**Last Updated:** 2026-11-20
 
 GitHub is no longer the primary repository (local bare repo `origin`), so nothing here waits on GitHub Actions. Keep items to one short line; detail lives in the linked feature doc (rule `work-tracking`).
 
@@ -27,6 +27,8 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 
 ## 3. Test infrastructure
 
+- [ ] DevTerm `CommittedSchemas_MatchWhatTheModelGenerates` fails: the committed `device-manifest.schema.json` is stale (found 2026-11-20); run `OoBDev.DevTerm.Schemas` and commit the result.
+- [ ] `LxiDiscovery` as an `INetworkDeviceProbe` adapter so the detect list takes LXI from one registration (needs a reference from the adapter to `OoBDev.System.IO.Tcp`; see the [migration plan](docs/design/NetworkDevices/migration-plan.md)).
 - [ ] Integration coverage gaps: Azure runs on emulators only (Azurite, Service Bus emulator, no Azure licence); Moto now covers SQS, SES and S3 (`OoBDev.Amazon.S3`).
 - [ ] Integration suite under 5 minutes: met on 2026-11-19 with `scripts/ci/warm-up-integration.ps1` (5 min 3 s, stack down, build included; about 7 min 50 s before), see [suite-timing.md](docs/architecture/testing/integration/suite-timing.md
 - [ ] Service Bus emulator restarts fail against a SQL Server volume an earlier emulator run initialised (`Cannot create file SbGatewayDatabase.mdf`, seen 2026-11-19 after the warm-up): options: a dedicated `servicebus-sql` service removed with the emulator (tmpfs does not suit SQL Server), or the harness dropping the Sb databases before it starts the emulator; so a second run works without `docker volume rm oobd-test-sqlserver-data`. Re-checked 2026-11-19: restarting the emulator twice against the same used SQL volume worked (and after a SQL restart), so only the first start next to a fresh SQL start failed; parked until it recurs.
@@ -109,7 +111,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 - [ ] dev-term future plans, not in dev-term today and not needed to call the migration complete (owner, 2026-10-30) ([TODO and BACKLOG snapshots](docs/applications/devterm/source/BACKLOG.md)): BLE backends for Linux and macOS; UDP transport and the EByte E810-DTU config protocol (needs a fresh capture); HP-GL, PostScript and PCL presenters and SVG in the Tui; declarative SCPI control-module schema and DE-5000 bench pass; out-of-process plugins and the control channel (with the plugin sandbox below); the rest is listed in the snapshot linked above.
 - [ ] DevTerm decided UX work (decided 2026-10-13, detail in the [dev-term snapshot](docs/applications/devterm/source/BACKLOG.md) and the linked designs); checked against the code 2026-11-11: UDP and TCP listeners, raster export (`VectorSceneRasterizer`), plugin zip install, skip silence, note edit and delete, XML conversion and network discovery are built and the log checkpoint markers are built (2026-11-12) and `Utf8Presenter` snapshots its half-read character:
   - expression picker per channel in the Tui Manifest Editor: the Tui's whole-list Channels picker already edits each channel's expression segment with validation, so a per-row Pick would need dynamic fields in the generic `OoBDev.UiDefinitions.Tui` form renderer; build it only if the owner wants it (WPF has it since 2026-11-09; see [expression-picker.md](docs/applications/devterm/specs/expression-picker.md)).
-  - Network device discovery (decided 2026-11-19, owner Q25: the probes move to a new Framework library `OoBDev.System.Net.Discovery`; [migration plan](docs/design/NetworkDevices/migration-plan.md) awaits confirmation before any project is created): the Detect button and one row per device with badges are built; the EByte and USR UDP probes need a fresh capture. In-app config editors for network bridges ([proposal](docs/design/NetworkDevices/network-device-config-editors.md)).
+  - Network device discovery (decided 2026-11-19, owner Q25: the probes now live in `OoBDev.System.Net.Discovery`, 2026-11-20; the `LxiDiscovery` probe adapter is open): the Detect button and one row per device with badges are built; the EByte and USR UDP probes need a fresh capture. In-app config editors for network bridges ([proposal](docs/design/NetworkDevices/network-device-config-editors.md)).
 - [ ] DevTerm leftovers beyond the list above:
   - Dockable MDI layout in WPF: built (AvalonDock, `DockLayout` saves and restores XML, tested); the Blazor front end is the existing separate app `OoBDev.DevTerm.Web` (owner, 2026-11-19, Q26), so what is left of the [request](docs/features/request/2026-11-10-devterm-dockable-layout-and-blazor-frontend.md) is a dockable layout in its pages (needs a design first).
   - Read-write control channel and out-of-process plugins over a named pipe and a localhost web service (with the plugin sandbox item); research notes such as the BYTECC BT-UP01 bridge.

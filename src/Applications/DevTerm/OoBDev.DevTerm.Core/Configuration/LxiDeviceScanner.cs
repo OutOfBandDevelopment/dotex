@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using OoBDev.DevTerm.Configuration.Discovery;
+using OoBDev.System.Net.Discovery;
 using OoBDev.System.IO.Tcp;
 
 namespace OoBDev.DevTerm.Configuration;

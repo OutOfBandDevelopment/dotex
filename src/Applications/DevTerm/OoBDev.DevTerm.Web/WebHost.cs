@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using System.Security.Cryptography.X509Certificates;
 using OoBDev.DevTerm.Configuration;
-using OoBDev.DevTerm.Configuration.Discovery;
+using OoBDev.System.Net.Discovery;
 using OoBDev.UiDefinitions;
 using Scalar.AspNetCore;
 namespace OoBDev.DevTerm.Web;

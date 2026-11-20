@@ -1,6 +1,6 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.DevTerm.Configuration.Discovery;
+using OoBDev.System.Net.Discovery;
 using OoBDev.System.IO.Tcp;
 
 namespace OoBDev.DevTerm.Configuration.Tests;

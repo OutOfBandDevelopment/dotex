@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OoBDev.DevTerm.Configuration.Discovery;
-namespace OoBDev.DevTerm.Configuration.Tests;
+using OoBDev.System.Net.Discovery;
+
+namespace OoBDev.System.Net.Discovery.Tests;
 
 [TestClass]
 [TestCategory("Unit")]

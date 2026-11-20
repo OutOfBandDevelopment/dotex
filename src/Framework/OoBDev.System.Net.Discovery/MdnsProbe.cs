@@ -5,7 +5,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OoBDev.DevTerm.Configuration.Discovery;
+namespace OoBDev.System.Net.Discovery;
 
 /// <summary>
 /// mDNS / DNS-SD: asks <c>224.0.0.251:5353</c> for the service types dev-term cares about and turns each answered instance

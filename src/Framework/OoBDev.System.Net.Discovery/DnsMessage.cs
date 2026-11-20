@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OoBDev.DevTerm.Configuration.Discovery;
+namespace OoBDev.System.Net.Discovery;
 
 /// <summary>The few bytes of DNS (RFC 1035) mDNS service discovery needs: build a PTR query, decode the answer. Never throws on malformed input.</summary>
 public static class DnsMessage

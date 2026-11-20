@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OoBDev.DevTerm.Configuration.Discovery;
+namespace OoBDev.System.Net.Discovery;
 
 /// <summary>A single way of finding network devices (see docs/design/NetworkDevices/network-device-discovery.md).</summary>
 public interface INetworkDeviceProbe

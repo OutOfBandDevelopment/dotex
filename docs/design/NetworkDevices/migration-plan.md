@@ -1,6 +1,6 @@
-# Network device probes: migration plan (proposal, awaiting owner confirmation)
+# Network device probes: migration plan (done 2026-11-20)
 
-Status: proposed 2026-11-19 after the owner chose a new Framework library (Q25). Rule `layering-and-migration-plans`: no project is created until the owner confirms this table.
+Status: done 2026-11-20. The owner chose a new Framework library (Q25) and asked for the move on 2026-11-20 ("do these"); the table below is what was built, except the `LxiDiscovery` probe adapter, which is still open in the backlog (it needs a reference to `OoBDev.System.IO.Tcp`).
 
 [← Overview](README.md)
 

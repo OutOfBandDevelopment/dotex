@@ -18,6 +18,7 @@
     <ProjectReference Include="..\..\..\Framework\OoBDev.System.IO.Brokers\OoBDev.System.IO.Brokers.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.System.IO.Mqtt\OoBDev.System.IO.Mqtt.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.System.IO.Tcp\OoBDev.System.IO.Tcp.csproj" />
+    <ProjectReference Include="..\..\..\Framework\OoBDev.System.Net.Discovery\OoBDev.System.Net.Discovery.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.System.IO.Bluetooth\OoBDev.System.IO.Bluetooth.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.System.IO.Ports\OoBDev.System.IO.Ports.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.System.IO.UsbHids\OoBDev.System.IO.UsbHids.csproj" />

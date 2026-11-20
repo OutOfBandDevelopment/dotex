@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OoBDev.DevTerm.Configuration.Discovery;
+namespace OoBDev.System.Net.Discovery;
 
 /// <summary>
 /// Finds USR-TCP232 serial-to-Ethernet bridges. The bridge sends no announcement (a UDP search broadcast got no
@@ -39,7 +39,7 @@ public sealed partial class UsrBridgeProbe : INetworkDeviceProbe
     public async Task<IReadOnlyList<NetworkDeviceHit>> ProbeAsync(TimeSpan listenFor, CancellationToken cancellationToken = default)
     {
         using var throttle = new SemaphoreSlim(64);
-        var timeout = TimeSpan.FromMilliseconds(Math.Clamp(listenFor.TotalMilliseconds / 3, 300, 1500));
+        var timeout = TimeSpan.FromMilliseconds(global::System.Math.Clamp(listenFor.TotalMilliseconds / 3, 300, 1500));
         var hits = await Task.WhenAll(_candidates().Select(async host =>
         {
             await throttle.WaitAsync(cancellationToken).ConfigureAwait(false);

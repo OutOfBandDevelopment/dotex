@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace OoBDev.DevTerm.Configuration.Discovery;
+namespace OoBDev.System.Net.Discovery;
 
 /// <summary>One physical device: every service discovery found at one address, shown as a row with a badge per service.</summary>
 /// <param name="Address">Dotted IPv4 address shared by the services.</param>

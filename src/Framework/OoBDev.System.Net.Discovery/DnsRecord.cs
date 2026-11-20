@@ -1,4 +1,4 @@
-﻿namespace OoBDev.DevTerm.Configuration.Discovery;
+﻿namespace OoBDev.System.Net.Discovery;
 
 /// <summary>One resource record from a DNS answer, decoded for the types DNS-SD needs.</summary>
 /// <param name="Name">The owner name.</param>

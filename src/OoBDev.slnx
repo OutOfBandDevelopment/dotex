@@ -384,6 +384,8 @@
     <Project Path="Framework/OoBDev.System.IO.Mqtt.Tests/OoBDev.System.IO.Mqtt.Tests.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Mqtt/OoBDev.System.IO.Mqtt.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Tcp/OoBDev.System.IO.Tcp.csproj" />
+    <Project Path="Framework/OoBDev.System.Net.Discovery.Tests/OoBDev.System.Net.Discovery.Tests.csproj" />
+    <Project Path="Framework/OoBDev.System.Net.Discovery/OoBDev.System.Net.Discovery.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Ports.Bridge.Tests/OoBDev.System.IO.Ports.Bridge.Tests.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Ports.Bridge/OoBDev.System.IO.Ports.Bridge.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Ports.Tests/OoBDev.System.IO.Ports.Tests.csproj" />

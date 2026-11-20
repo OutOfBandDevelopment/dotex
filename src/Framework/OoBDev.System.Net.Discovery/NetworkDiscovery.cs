@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OoBDev.DevTerm.Configuration.Discovery;
+namespace OoBDev.System.Net.Discovery;
 
 /// <summary>Runs every probe in parallel and merges the answers into one list ordered by address.</summary>
 public sealed class NetworkDiscovery(IEnumerable<INetworkDeviceProbe> probes)
