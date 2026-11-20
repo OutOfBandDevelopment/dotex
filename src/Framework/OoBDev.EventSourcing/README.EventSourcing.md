@@ -37,3 +37,7 @@ Mark an event class `[PersonalData("CustomerId", "Name", "Email")]` (subject pro
 ## CloudEvents ingress
 
 `CloudEventsIngressHandler` is an `IMessageQueueHandler<EventsChannel, string>`: register it with the queue provider's handler registration and any queue can feed a stream with CloudEvents 1.0 JSON. The event keeps its stream and sequence; a message that does not follow the stream's last sequence throws, so the queue retries or dead-letters it. Set `OoBDev:EventSourcing:Relay:CloudEventsSource` and the relay publishes CloudEvents JSON instead of `EventRecord`, so the same handler type reads what another instance sends. An HTTP endpoint (Q-CQRS-EDGE) is not built.
+
+## Erasure entry point
+
+`IErasureEntryPoint.RequestAsync(subjectId, knownCopies)` is the one way to ask for erasure; the default `ErasureEntryPoint` appends the tombstone under a new request id and returns the id. A host puts its own right (`erasure.request`) in front of it; the compaction job does the blanking.

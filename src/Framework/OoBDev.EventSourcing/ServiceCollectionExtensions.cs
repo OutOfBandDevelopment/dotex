@@ -43,6 +43,7 @@ public static class ServiceCollectionExtensions
                 ?? throw new InvalidOperationException("The selected event store cannot rewrite payloads, so erasure is not available."),
             sp.GetRequiredService<EventTypeRegistry>(),
             sp.GetServices<ISubjectErasureHandler>()));
+        services.TryAddTransient<IErasureEntryPoint>(sp => new ErasureEntryPoint(sp.GetRequiredService<ErasureService>()));
         services.TryAddSingleton<EventUpcastPipeline>();
         services.TryAddTransient(sp => new ProjectionRunner(
             sp.GetRequiredKeyedService<IEventStore>(EventSourcingGlobals.EventStoreSelectedKey),
