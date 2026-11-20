@@ -5,3 +5,7 @@ Throwaway proof of concept for the [sandboxed plugin host](../../../docs/design/
 ## Message rate
 
 `MessageRateLimiter` drops frames over a per-second limit and flags a sustained excess; set it on `BrokeredPlugin.RateLimiter`.
+
+## Heartbeat
+
+`PluginHeartbeat.Check(plugin, timeout)` sends a heartbeat and disposes a plugin that does not answer in time.

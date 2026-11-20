@@ -14,6 +14,7 @@ public sealed class PlainPlugin : ISandboxedPlugin
 {
     private readonly Process _process;
     private readonly FrameChannel _channel;
+    private bool _disposed;
 
     /// <summary>Starts <paramref name="commandArguments"/> with no isolation.</summary>
     public PlainPlugin(string pluginAssembly, string commandArguments, FrameFlags flags = FrameFlags.Crc32 | FrameFlags.Hmac | FrameFlags.CounterSign)
@@ -60,6 +61,12 @@ public sealed class PlainPlugin : ISandboxedPlugin
     /// <inheritdoc />
     public void Dispose()
     {
+        if (_disposed)
+        {
+            return;
+        }
+
+        _disposed = true;
         if (!_process.HasExited)
         {
             _process.Kill(entireProcessTree: true);
