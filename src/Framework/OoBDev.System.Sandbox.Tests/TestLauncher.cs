@@ -13,6 +13,6 @@ internal static class TestLauncher
         : OperatingSystem.IsLinux() ? new LinuxSandboxLauncher(TestPlugin.Dll)
         : new MacOSSandboxLauncher(TestPlugin.Dll);
 
-    public static ISandboxedPlugin Start(string commandArguments, IReadOnlyCollection<string>? read = null, IReadOnlyCollection<string>? write = null) =>
-        Instance.Start(commandArguments, read, write);
+    public static ISandboxedPlugin Start(string commandArguments, IReadOnlyCollection<string>? read = null, IReadOnlyCollection<string>? write = null, JobLimits? limits = null) =>
+        Instance.Start(commandArguments, read, write, limits);
 }

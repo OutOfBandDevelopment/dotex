@@ -212,6 +212,6 @@ public sealed class PluginHostTests
         }
 
         manifest = template;
-        return new PluginHost(new PackageVerifier(trust), _grants, new GrantBroker(_grants, _network), _contexts, TimeProvider.System, TimeSpan.FromMinutes(1), TestLauncher.Start);
+        return new PluginHost(new PackageVerifier(trust), _grants, new GrantBroker(_grants, _network), _contexts, TimeProvider.System, TimeSpan.FromMinutes(1), (args, read, write, limits) => TestLauncher.Start(args, read, write, limits));
     }
 }

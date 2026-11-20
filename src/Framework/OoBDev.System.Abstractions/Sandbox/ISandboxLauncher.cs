@@ -15,6 +15,7 @@ public interface ISandboxLauncher
     /// <param name="commandArguments">The plugin command line, after the plugin assembly.</param>
     /// <param name="readDirectories">Folders the plugin may read.</param>
     /// <param name="writeDirectories">Folders the plugin may read and write.</param>
+    /// <param name="limits">Process limits; null means the launcher's default.</param>
     /// <returns>The running plugin.</returns>
-    ISandboxedPlugin Start(string commandArguments, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null);
+    ISandboxedPlugin Start(string commandArguments, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null, JobLimits? limits = null);
 }

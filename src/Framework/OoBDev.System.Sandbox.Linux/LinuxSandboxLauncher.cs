@@ -17,6 +17,6 @@ public sealed class LinuxSandboxLauncher(string pluginAssembly) : ISandboxLaunch
     public bool IsAvailable => OperatingSystem.IsLinux() && File.Exists("/usr/bin/bwrap");
 
     /// <inheritdoc />
-    public ISandboxedPlugin Start(string commandArguments, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null) =>
-        new BubblewrapPlugin(pluginAssembly, commandArguments, readDirectories, writeDirectories, limits: new JobLimits(MemoryMb: 256));
+    public ISandboxedPlugin Start(string commandArguments, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null, JobLimits? limits = null) =>
+        new BubblewrapPlugin(pluginAssembly, commandArguments, readDirectories, writeDirectories, limits: limits ?? new JobLimits(MemoryMb: 256));
 }

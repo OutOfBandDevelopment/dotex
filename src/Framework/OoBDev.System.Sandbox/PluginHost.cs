@@ -15,11 +15,11 @@ public sealed class PluginHost : IDisposable
     private readonly GrantStore _grants;
     private readonly GrantBroker _broker;
     private readonly ContextBroker _contexts;
-    private readonly Func<string, IReadOnlyCollection<string>, IReadOnlyCollection<string>, ISandboxedPlugin> _launch;
+    private readonly Func<string, IReadOnlyCollection<string>, IReadOnlyCollection<string>, JobLimits, ISandboxedPlugin> _launch;
     private readonly PluginPool<BrokeredPlugin> _pool;
 
     /// <summary>Creates a host; <paramref name="launch"/> starts a sandboxed plugin from a command line and the read and write folders (normally <see cref="ISandboxLauncher.Start"/>).</summary>
-    public PluginHost(PackageVerifier verifier, GrantStore grants, GrantBroker broker, ContextBroker contexts, TimeProvider time, TimeSpan idleTimeout, Func<string, IReadOnlyCollection<string>, IReadOnlyCollection<string>, ISandboxedPlugin> launch)
+    public PluginHost(PackageVerifier verifier, GrantStore grants, GrantBroker broker, ContextBroker contexts, TimeProvider time, TimeSpan idleTimeout, Func<string, IReadOnlyCollection<string>, IReadOnlyCollection<string>, JobLimits, ISandboxedPlugin> launch)
     {
         _verifier = verifier ?? throw new ArgumentNullException(nameof(verifier));
         _grants = grants ?? throw new ArgumentNullException(nameof(grants));
@@ -85,7 +85,7 @@ public sealed class PluginHost : IDisposable
 
         try
         {
-            var plugin = new BrokeredPlugin(pluginId, _launch(commandArguments, read, write), _broker, _contexts, hold);
+            var plugin = new BrokeredPlugin(pluginId, _launch(commandArguments, read, write, (limits ?? new PluginLimits()).ToJobLimits()), _broker, _contexts, hold);
             plugin.RateLimiter = new MessageRateLimiter((limits ?? new PluginLimits()).EffectiveMsgPerSec);
             plugin.WaitReady();
             return plugin;

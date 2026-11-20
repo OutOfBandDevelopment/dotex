@@ -19,4 +19,20 @@ public sealed class PluginLimitsTests
         // Assert
         Assert.AreEqual(expected, limits.EffectiveMsgPerSec);
     }
+
+    [TestCategory("Unit")]
+    [TestMethod]
+    public void ToJobLimits_AskedAndUnasked_AreClampedAndDefaulted()
+    {
+        // Stage
+        var asked = new PluginLimits(MemoryMb: 4096, MaxProcesses: 500, CpuSeconds: 10, WallSeconds: 99999);
+
+        // Test
+        var clamped = asked.ToJobLimits();
+        var defaults = new PluginLimits().ToJobLimits();
+
+        // Assert
+        Assert.AreEqual(new JobLimits(1024, 64, 10, 3600), clamped);
+        Assert.AreEqual(new JobLimits(256, 0, 0, 0), defaults);
+    }
 }

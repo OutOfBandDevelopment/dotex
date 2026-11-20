@@ -16,6 +16,6 @@ public sealed class WindowsSandboxLauncher(string pluginAssembly) : ISandboxLaun
     public bool IsAvailable => OperatingSystem.IsWindows();
 
     /// <inheritdoc />
-    public ISandboxedPlugin Start(string commandArguments, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null) =>
-        new SandboxedPlugin(pluginAssembly, commandArguments, new JobLimits(MemoryMb: 256), readDirectories, writeDirectories);
+    public ISandboxedPlugin Start(string commandArguments, IReadOnlyCollection<string>? readDirectories = null, IReadOnlyCollection<string>? writeDirectories = null, JobLimits? limits = null) =>
+        new SandboxedPlugin(pluginAssembly, commandArguments, limits ?? new JobLimits(MemoryMb: 256), readDirectories, writeDirectories);
 }
