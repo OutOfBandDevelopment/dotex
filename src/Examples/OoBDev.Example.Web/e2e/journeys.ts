@@ -1075,4 +1075,38 @@ export const journeys: Journey[] = [
       },
     ],
   },
+  {
+    id: 'schedule-a-message',
+    title: 'Schedule a message',
+    persona: 'A developer trying the scheduling building block',
+    goal: 'Schedule a message for later, see it wait, and take it back before it is due.',
+    start: '/messaging/schedule',
+    prerequisites: ['The API runs with its hosted services on (not DISABLE_HOSTING=true).', 'The signed-in user holds the schedule.use right (the admin role).'],
+    features: ['OoBDev.ComplexEvents (`IScheduleStore`, `ScheduleRunner`)', 'OoBDev.ComplexEvents.Hosting (`ScheduleHost`)'],
+    why: 'Show a due-time event store with a hosted runner: items are leased so two instances never run the same one, and registering the same key again moves the due time.',
+    problems: [
+      { symptom: 'The item never moves to Fired', cause: 'The API runs with DISABLE_HOSTING=true, so no runner polls the store', fix: 'Start the API without that variable' },
+      { symptom: 'Item refused', cause: 'The key is empty or the delay is outside 0 to 3600 seconds', fix: 'Enter a key and a delay in range' },
+    ],
+    steps: [
+      {
+        title: 'Schedule it',
+        narrative: 'Give the item a key, a delay and a message, then press Schedule.',
+        expect: ['The item is listed under Pending with its due time.', 'Earlier items that already ran are listed under Fired.'],
+        run: async page => {
+          await press(page, 'Schedule');
+          await expect(page.getByLabel('Pending')).toContainText('Stand up and stretch');
+        },
+      },
+      {
+        title: 'Take it back',
+        narrative: 'Remove drops a pending item before it is due, so it never fires.',
+        expect: ['The Pending list is empty again.'],
+        run: async page => {
+          await press(page, 'Remove');
+          await expect(page.getByText('Nothing is waiting.')).toBeVisible();
+        },
+      },
+    ],
+  },
 ];

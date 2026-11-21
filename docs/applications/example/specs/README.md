@@ -40,3 +40,4 @@ Acceptance criteria for each journey. The same journeys run as Playwright tests.
 | [Review the right audit trail](review-the-right-audit-trail.md) | 2 | `/operations/right-audit` |
 | [Browse users and roles](browse-users-and-roles.md) | 2 | `/identity/directory` |
 | [Render a panel from a server-supplied definition](server-driven-ui.md) | 3 | `/utilities/server-ui` |
+| [Schedule a message](schedule-a-message.md) | 2 | `/messaging/schedule` |

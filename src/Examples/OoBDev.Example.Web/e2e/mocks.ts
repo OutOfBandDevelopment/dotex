@@ -13,6 +13,7 @@ const vector = (seed: number) => Array.from({ length: 384 }, (_, i) => Math.sin(
  */
 export async function mockApi(page: Page): Promise<void> {
   let turn = 0;
+  const scheduled: { key: string; dueAt: string; message: string; firedAt: string | null }[] = [];
   await page.route(/\/(api|Document|openapi|asyncapi|cgi-bin|webhooks)\//, async route => {
     const url = new URL(route.request().url());
     const path = url.pathname;
@@ -95,6 +96,11 @@ export async function mockApi(page: Page): Promise<void> {
     if (path === '/api/TextTemplate/Preview') return text(route, '<h1>Hello Ada</h1><p>Your order 1042 has shipped.</p>');
     if (path.startsWith('/api/TextTemplate/Apply')) return text(route, '<h1>Hello Ada</h1><p>Your order 1042 has shipped.</p>');
     if (path === '/api/DataAccess/query') return json(route, { columns: ['name', 'create_date'], rows: [['master', '2003-04-08 09:13:36'], ['model', '2003-04-08 09:13:36'], ['msdb', '2025-04-19 08:37:53'], ['tempdb', '2026-11-20 08:00:00']], truncated: false, elapsedMs: 4 });
+    if (path === '/api/Schedule' || path.startsWith('/api/Schedule/')) {
+      if (method === 'POST') scheduled.push({ key: 'reminder-1', dueAt: '2026-11-20T08:00:10+00:00', message: 'Stand up and stretch', firedAt: null });
+      if (method === 'DELETE') scheduled.length = 0;
+      return json(route, { pending: scheduled, fired: [{ key: 'backup-check', dueAt: '2026-11-20T07:59:00+00:00', message: 'Check last night\'s backup', firedAt: '2026-11-20T07:59:01+00:00' }] });
+    }
     if (path === '/api/Communications/inbox/poll') return json(route, [{ messageId: 'm-1', from: 'grace@example.test', to: ['ada@example.test'], subject: 'Re: Your order has shipped', preview: 'Thanks, it arrived today.', timestamp: '2026-11-20T09:30:00Z' }]);
     if (path.startsWith('/api/Communications/')) return text(route, 'Mail accepted');
     if (path === '/api/MessageQueueing/channels') return json(route, [{ channel: 'EmailMessageModel', provider: 'rabbit-mq', queueName: 'email-receive', hostName: 'localhost', receiverEnabled: false }, { channel: 'ExampleMessageProvider', provider: 'rabbit-mq', queueName: 'email-receive', hostName: 'localhost', receiverEnabled: false }]);

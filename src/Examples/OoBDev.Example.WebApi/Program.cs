@@ -85,6 +85,18 @@ public static class Program
         builder.Services.Configure<OoBDev.WebApi.Models.DataAccessOptions>(builder.Configuration.GetSection("OoBDev:DataAccess"));
         builder.Services.AddTransient<OoBDev.WebApi.Services.ReadOnlyQueryRunner>();
         builder.Services.AddTransient<OoBDev.WebApi.Services.QueueChannelCatalog>();
+        builder.Services.AddSingleton<OoBDev.WebApi.Services.ScheduleDemo>();
+        if (!disableHosting)
+        {
+            // registered first so the runner callback resolves the one ScheduleDemo of the host (TryAdd then keeps it)
+            builder.Services.AddSingleton<Func<OoBDev.ComplexEvents.ScheduleItem, global::System.Threading.CancellationToken, global::System.Threading.Tasks.Task>>(
+                sp => sp.GetRequiredService<OoBDev.WebApi.Services.ScheduleDemo>().RunAsync);
+            OoBDev.ComplexEvents.Hosting.ServiceCollectionExtensions.TryAddScheduleHosting(
+                builder.Services,
+                static (_, _) => global::System.Threading.Tasks.Task.CompletedTask,
+                o => o.PollInterval = TimeSpan.FromSeconds(2));
+        }
+
         builder.Services.AddSingleton<OoBDev.WebApi.Services.ReceivedMessageLog>();
         builder.Services.AddTransient<OoBDev.WebApi.Services.CgiProgramCatalog>();
         builder.Services.AddSingleton<OoBDev.WebApi.Services.EndpointRightCatalog>();

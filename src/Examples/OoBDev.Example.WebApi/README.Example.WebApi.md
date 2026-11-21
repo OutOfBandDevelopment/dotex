@@ -72,3 +72,5 @@ Unhandled exceptions return RFC 9457 problem details with the trace, correlation
 ## Data access (read-only query runner)
 
 `POST api/DataAccess/query` (right `data.query`, admin role) runs one SELECT on the instance named by `OoBDev:DataAccess:ConnectionString` (`MaxRows` 200 and `TimeoutSeconds` 15 by default); it answers 404 until a connection string is set. Layers: `SelectOnlyGuard` (ScriptDom, one SELECT only), the `ApplicationIntent=ReadOnly` connection, the row cap and timeout, and above all a login that can only read. Point it at a test or reporting instance, never live data. The Vue page is `/data/access`.
+
+`GET/POST api/Schedule` and `DELETE api/Schedule/{key}` (right `schedule.use`, admin role) schedule a text message through `OoBDev.ComplexEvents`; the hosted `ScheduleHost` (poll every 2 s, off with `DISABLE_HOSTING=true`) hands each due item to `ScheduleDemo`, which keeps the pending and fired lists because `IScheduleStore` has no listing. The store is the in-memory one, so a restart empties it. The web screen is `/messaging/schedule`.

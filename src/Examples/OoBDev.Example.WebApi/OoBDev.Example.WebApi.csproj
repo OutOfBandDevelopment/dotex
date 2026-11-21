@@ -25,6 +25,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Common\OoBDev.Common.Complete\OoBDev.Common.Complete.csproj" />
     <ProjectReference Include="..\..\Framework\OoBDev.DacFx\OoBDev.DacFx.csproj" />
+    <ProjectReference Include="..\..\Framework\OoBDev.ComplexEvents.Hosting\OoBDev.ComplexEvents.Hosting.csproj" />
     <ProjectReference Include="..\..\Framework\OoBDev.Identity.Jws\OoBDev.Identity.Jws.csproj" />
     <ProjectReference Include="..\..\Framework\OoBDev.UiDefinitions\OoBDev.UiDefinitions.csproj" />
     <ProjectReference Include="..\..\Extensions\OoBDev.AspNetCore.Cgi\OoBDev.AspNetCore.Cgi.csproj" />

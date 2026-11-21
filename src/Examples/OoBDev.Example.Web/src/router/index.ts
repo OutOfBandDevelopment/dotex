@@ -42,6 +42,7 @@ export const router = createRouter({
     { path: '/identity/directory', component: () => import('../pages/IdentityDirectoryPage.vue'), meta: { crumbs: ['Identity and security', 'Users and roles'], requiresAuth: true } },
     { path: '/developer/cgi', component: () => import('../pages/CgiPage.vue'), meta: { crumbs: ['Developer', 'CGI programs'] } },
     { path: '/messaging/webhooks', component: () => import('../pages/WebhooksPage.vue'), meta: { crumbs: ['Messaging', 'Webhooks'] } },
+    { path: '/messaging/schedule', component: () => import('../pages/SchedulePage.vue'), meta: { crumbs: ['Messaging', 'Schedule'] } },
     { path: '/developer/api', component: () => import('../pages/ExternalLinkPage.vue'), props: { title: 'API reference', href: '/scalar' }, meta: { crumbs: ['Developer', 'API reference'] } },
     { path: '/developer/events', component: () => import('../pages/ExternalLinkPage.vue'), props: { title: 'Event reference', href: '/asyncapi/all' }, meta: { crumbs: ['Developer', 'Event reference'] } },
   ],

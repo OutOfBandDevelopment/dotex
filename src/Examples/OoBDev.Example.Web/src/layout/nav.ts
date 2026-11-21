@@ -23,6 +23,7 @@ export const navGroups: NavGroup[] = [
     { label: 'Communications', to: '/messaging/communications' },
     { label: 'Queues', to: '/messaging/queues' },
     { label: 'Webhooks', to: '/messaging/webhooks' },
+    { label: 'Schedule', to: '/messaging/schedule' },
   ] },
   { title: 'Identity and security', items: [{ label: 'Current user', to: '/identity/me' }, { label: 'Rights and roles', to: '/identity/rights' }, { label: 'Users and roles', to: '/identity/directory' }] },
   { title: 'Operations', items: [{ label: 'Runtime and configuration', to: '/operations/info' }, { label: 'Right audit trail', to: '/operations/right-audit' }, { label: 'Telemetry', to: '/operations/telemetry' } ] },
