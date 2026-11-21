@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace OoBDev.WebApi.Models;
 
 /// <summary>An address to look up.</summary>
@@ -7,7 +5,7 @@ namespace OoBDev.WebApi.Models;
 /// <param name="City">City.</param>
 /// <param name="Region">State or region.</param>
 /// <param name="PostalCode">Postal code.</param>
-public sealed record GeocodeRequestModel([property: Required] string Line1, string? City = null, string? Region = null, string? PostalCode = null);
+public sealed record GeocodeRequestModel(string Line1, string? City = null, string? Region = null, string? PostalCode = null);
 
 /// <summary>The outcome of a lookup.</summary>
 /// <param name="Matched">Whether the service found the address.</param>
