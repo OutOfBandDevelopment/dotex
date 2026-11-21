@@ -70,6 +70,6 @@ Provisional, to be confirmed by the owner:
 
 ## Not covered
 
-- Atlas: not run. The source build failed with Go 1.27.1 (a `golang.org/x/tools` constant overflow), and the download of the vendor binary was refused by the session permission check (2026-11-20), so it stays open on Q29. Its licence and paid tiers are not assessed.
+- Atlas: not run. The source build failed with Go 1.27.1 (a `golang.org/x/tools` constant overflow), and the download of the vendor binary was refused by the session permission check (2026-11-20), the owner approved the binary download on 2026-11-21, so the Atlas run is next. Its licence and paid tiers are not assessed.
 - S12 on SQL Server (exit codes seen only), S10 for SQL Server, and the fixture's function, trigger and extension objects.
 - No weights or scores were computed; the table above is the raw record.

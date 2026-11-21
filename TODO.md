@@ -8,7 +8,7 @@ Keep this file short (about 15 one-line items). When an item starts, move it her
 
 ## In progress
 
-- [x] Owner request 2026-11-19, "do everything you can do without question": work every item that needs no answer, assume the default where one exists. Left: nothing unblocked; audit ran 2026-11-20. Waiting: Q29 (Atlas download, refused by the permission check), Q30 (more screens; default taken, Schedule and Address lookup built).
+- [x] Owner request 2026-11-19, "do everything you can do without question": work every item that needs no answer, assume the default where one exists. Owner answers 2026-11-21: Atlas binary download approved (run the Atlas scenarios, outside the repo); screens A (complex events, spatial, data loading).
 
 ## Next
 
