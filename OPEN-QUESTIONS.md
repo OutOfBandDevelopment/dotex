@@ -39,17 +39,3 @@ The bake-off run ([result](docs/design/DesiredStateDatabase/bake-off-result.md#n
 **Default:** A, one screen at a time, starting with complex events.
 
 **Your answer:**
-
-### Q31 · 2026-11-20 · Example app · What "dacpac build and diff" means on the Data access screen
-
-The backlog line asks for a dacpac build and diff half beside the read-only query runner. `OoBDev.DacFx` builds a dacpac for a SQL CLR assembly (`DacPacBuilder`) and validates one (`DacPacValidator`); it has no schema diff. The schema-as-code work has since moved to `OoBDev.Data.Schema.SqlServer` (a SQL project dacpac) and the desired-state bake-off (sqlpackage and other tools).
-
-**Options**
-
-- A. Drop the half: the example shows the query runner only; builds and diffs stay in the CLI tools (`DacPacCompiler`) and the bake-off docs (recommended: the screen would run a build and a schema compare on a server, which the read-only runner deliberately avoids, and the CLI already does both).
-- B. Build-only: a page that builds a CLR-assembly dacpac from an uploaded assembly through `DacPacBuilder` and lists its contents (no database access).
-- C. Build and diff: option B plus a sqlpackage drift report against a configured test instance (needs sqlpackage in the API image and a write-capable login).
-
-**Default:** A.
-
-**Your answer:**

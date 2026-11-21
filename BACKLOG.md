@@ -59,7 +59,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 
 ### Waiting on the owner
 
-- [ ] Example Data access screen, dacpac build and diff half: waits on Q31 (the read-only query runner is built 2026-11-20); a live pass with a real read-only login is also not done.
+- [ ] Example Data access screen: a live pass with a real read-only login is not done (the dacpac half is dropped, Q31 option A, see [missing-screens](docs/design/example-ui/missing-screens.md)).
 - [ ] Example screens still planned under Q30 (default A): spatial lookup waits for `OoBDev.SpatialServices` (distance); a geocode-only page would send typed addresses to the public Census service, so it is held until the owner confirms (Q30). Data loading and code generation wait for their libraries ([missing-screens](docs/design/example-ui/missing-screens.md)).
 - [ ] **Harvest candidates** (D7): [open items await the owner](docs/migration/harvest-d7-comparison.md); candidate map in [harvest-candidates.md](docs/harvest-candidates.md)
 - [x] Plugin sandbox: migrated to `OoBDev.System.Sandbox*` (2026-11-20, [plan](docs/design/PluginSandbox/migration-plan.md)); Linux run in the `dotnet/sdk:10.0` container with bubblewrap: 107 passed, 17 skipped (the Windows-only ones); coverage on Windows: core 94%, Windows 93% (Linux project needs the container run, MacOS 26% and deferred); left: macOS.
