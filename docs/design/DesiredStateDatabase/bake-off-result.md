@@ -25,7 +25,7 @@ Tools built from source with Go 1.27.1 into a scratch folder outside the reposit
 | S1 apply to an empty database | P | P | P (41 statements, one transaction) |
 | S2 second run changes nothing | P | P | P ("No changes detected") |
 | S3 add column, index, view | P (exact steps) | P (exact steps) | P (the index step carries a progress query, noisy) |
-| S4 rename a column | G: drop and add; the `@renamed` annotation was not honoured in my one attempt | n/r | n/r |
+| S4 rename a column | G: drop and add; the `@renamed` annotation was not honoured in my one attempt | G: without an annotation `ADD COLUMN ... NOT NULL` (fails on a populated table) plus a skipped drop; with `/* @renamed from=full_name */` it plans `RENAME COLUMN` (P) | n/r |
 | S5 drop column or table | P: skipped without `--enable-drop` | P: skipped without `--enable-drop` | F: `DROP TABLE ... CASCADE` is planned with no flag (the approval prompt of `apply` is the only gate) |
 | S6 narrow a type | F: no change detected (SQLite types) | F: `ALTER COLUMN TYPE varchar(5)` applied with no hazard note | G: planned with `USING` cast, no hazard note |
 | S7 plan then apply | G: `--dry-run` text only | G: `--dry-run` text only | P: JSON plan file, `apply --plan` runs it |
@@ -71,5 +71,5 @@ Provisional, to be confirmed by the owner:
 ## Not covered
 
 - Atlas: not run. The source build failed with Go 1.27.1 (a `golang.org/x/tools` constant overflow), and the download of the vendor binary was refused by the session permission check (2026-11-20), so it stays open on Q29. Its licence and paid tiers are not assessed.
-- S12 on SQL Server (exit codes seen only), S10 for SQL Server and pgschema, S4 on PostgreSQL, and the fixture's function, trigger and extension objects.
+- S12 on SQL Server (exit codes seen only), S10 for SQL Server and pgschema, S4 on pgschema, and the fixture's function, trigger and extension objects.
 - No weights or scores were computed; the table above is the raw record.
