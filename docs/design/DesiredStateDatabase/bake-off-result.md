@@ -25,13 +25,13 @@ Tools built from source with Go 1.27.1 into a scratch folder outside the reposit
 | S1 apply to an empty database | P | P | P (41 statements, one transaction) |
 | S2 second run changes nothing | P | P | P ("No changes detected") |
 | S3 add column, index, view | P (exact steps) | P (exact steps) | P (the index step carries a progress query, noisy) |
-| S4 rename a column | G: drop and add; the `@renamed` annotation was not honoured in my one attempt | G: without an annotation `ADD COLUMN ... NOT NULL` (fails on a populated table) plus a skipped drop; with `/* @renamed from=full_name */` it plans `RENAME COLUMN` (P) | n/r |
+| S4 rename a column | G: drop and add; the `@renamed` annotation was not honoured in my one attempt | G: without an annotation `ADD COLUMN ... NOT NULL` (fails on a populated table) plus a skipped drop; with `/* @renamed from=full_name */` it plans `RENAME COLUMN` (P) | F: plans `DROP COLUMN` then `ADD COLUMN` (the column data is lost), no rename hint was found |
 | S5 drop column or table | P: skipped without `--enable-drop` | P: skipped without `--enable-drop` | F: `DROP TABLE ... CASCADE` is planned with no flag (the approval prompt of `apply` is the only gate) |
 | S6 narrow a type | F: no change detected (SQLite types) | F: `ALTER COLUMN TYPE varchar(5)` applied with no hazard note | G: planned with `USING` cast, no hazard note |
 | S7 plan then apply | G: `--dry-run` text only | G: `--dry-run` text only | P: JSON plan file, `apply --plan` runs it |
 | S8 ordering | P: reordered | P: child-before-parent scripts are reordered | F: fails with `relation "a" does not exist`; the script order must already be dependency order |
 | S9 triggers, functions and views change | P: view and trigger created | P: a changed function body is replaced with `CREATE OR REPLACE`, unchanged objects are not touched | P: changed function body planned as a replace |
-| S10 extension and queue objects | n/a (SQLite has no extensions) | P: `CREATE EXTENSION IF NOT EXISTS` applied once, a re-run plans nothing | n/r (the extension line was not reported in the plan output) |
+| S10 extension and queue objects | n/a (SQLite has no extensions) | P: `CREATE EXTENSION IF NOT EXISTS` applied once, a re-run plans nothing | F: a desired `CREATE EXTENSION IF NOT EXISTS pgcrypto` is not planned ("No changes detected"), so extensions stay outside the tool |
 | S11 hand-edited drift | n/r | P: the drop of the extra column is skipped without the flag | F: drift column drop is planned without a flag |
 | S12 usable from .NET | G: exit code 2 with `--check` only | G: same, plan is text | P: JSON plan (`--output-json`) |
 
@@ -71,5 +71,5 @@ Provisional, to be confirmed by the owner:
 ## Not covered
 
 - Atlas: not run. The source build failed with Go 1.27.1 (a `golang.org/x/tools` constant overflow), and the download of the vendor binary was refused by the session permission check (2026-11-20), so it stays open on Q29. Its licence and paid tiers are not assessed.
-- S12 on SQL Server (exit codes seen only), S10 for SQL Server and pgschema, S4 on pgschema, and the fixture's function, trigger and extension objects.
+- S12 on SQL Server (exit codes seen only), S10 for SQL Server, and the fixture's function, trigger and extension objects.
 - No weights or scores were computed; the table above is the raw record.
