@@ -41,3 +41,4 @@ How to verify each feature and what to do when it fails. Generated from the same
 | [Browse users and roles](browse-users-and-roles.md) | Sign-in is configured and the signed-in user holds the identity.read right. The Keycloak service account has the view-users and view-realm roles. |
 | [Render a panel from a server-supplied definition](server-driven-ui.md) | The example API is running. |
 | [Schedule a message](schedule-a-message.md) | The API runs with its hosted services on (not DISABLE_HOSTING=true). The signed-in user holds the schedule.use right (the admin role). |
+| [Look up an address](look-up-an-address.md) | The API can reach the public US Census geocoder. The signed-in user holds the geocode.use right (the admin role). |

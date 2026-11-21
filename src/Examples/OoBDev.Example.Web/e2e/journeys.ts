@@ -1109,4 +1109,29 @@ export const journeys: Journey[] = [
       },
     ],
   },
+  {
+    id: 'look-up-an-address',
+    title: 'Look up an address',
+    persona: 'A developer trying the spatial services',
+    goal: 'Find the coordinates of a US address.',
+    start: '/data/geocode',
+    prerequisites: ['The API can reach the public US Census geocoder.', 'The signed-in user holds the geocode.use right (the admin role).'],
+    features: ['OoBDev.SpatialServices (`ILocationServices`)', 'OoBDev.Census.Geocoding (`CensusLocationServices`)'],
+    why: 'Show the location contract behind one provider; the same call works with any other provider registered for it.',
+    problems: [
+      { symptom: 'No match for an address that exists', cause: 'The Census service matches US street addresses only, and it is rate limited', fix: 'Check the street, city and ZIP, then retry a little later' },
+      { symptom: 'Forbidden', cause: 'The user lacks the geocode.use right', fix: 'Sign in with the admin role' },
+    ],
+    steps: [
+      {
+        title: 'Look it up',
+        narrative: 'The sample White House address is filled in; press Look up.',
+        expect: ['The matched address, latitude, longitude and match quality are shown.'],
+        run: async page => {
+          await press(page, 'Look up');
+          await expect(page.getByLabel('Result')).toContainText('38.8977');
+        },
+      },
+    ],
+  },
 ];

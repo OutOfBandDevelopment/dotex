@@ -41,3 +41,4 @@ Acceptance criteria for each journey. The same journeys run as Playwright tests.
 | [Browse users and roles](browse-users-and-roles.md) | 2 | `/identity/directory` |
 | [Render a panel from a server-supplied definition](server-driven-ui.md) | 3 | `/utilities/server-ui` |
 | [Schedule a message](schedule-a-message.md) | 2 | `/messaging/schedule` |
+| [Look up an address](look-up-an-address.md) | 1 | `/data/geocode` |

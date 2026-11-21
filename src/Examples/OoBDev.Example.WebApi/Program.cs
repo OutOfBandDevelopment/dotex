@@ -85,6 +85,7 @@ public static class Program
         builder.Services.Configure<OoBDev.WebApi.Models.DataAccessOptions>(builder.Configuration.GetSection("OoBDev:DataAccess"));
         builder.Services.AddTransient<OoBDev.WebApi.Services.ReadOnlyQueryRunner>();
         builder.Services.AddTransient<OoBDev.WebApi.Services.QueueChannelCatalog>();
+        OoBDev.Census.Geocoding.ServiceCollectionExtensions.TryAddCensusGeocoding(builder.Services);
         builder.Services.AddSingleton<OoBDev.WebApi.Services.ScheduleDemo>();
         if (!disableHosting)
         {
