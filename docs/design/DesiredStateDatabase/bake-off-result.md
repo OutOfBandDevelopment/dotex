@@ -45,6 +45,10 @@ Tools built from source with Go 1.27.1 into a scratch folder outside the reposit
 | S5 drop table | P: skipped without `--enable-drop` |
 | S8 out-of-order scripts | P: reordered |
 | S9 view and trigger | P: created, a re-run changes nothing, a changed trigger is replaced with `CREATE OR ALTER` |
+| S4 rename a column | G: without an annotation it plans `ADD` of the new column and a skipped `DROP` of the old (data stays in the old column); with `/* @renamed from=FullName */` it plans `sp_rename` (P) |
+| S7 plan then apply | G: `--dry-run` prints SQL text only; `--check` exits 2 when changes are pending |
+| S11 hand-added column | P: the drop is skipped without `--enable-drop`, `--check` exits 2 |
+| S2 second run (small two-table fixture with inline named primary keys) | F: every run re-plans dropping and re-adding the primary keys and the foreign key, so `--check` never reports a clean database (the 20-table fixture above was clean); not resolved |
 | S6 narrow `nvarchar(50)` to `nvarchar(5)` | F: planned with no hazard note; the generated `ALTER COLUMN ... NOT NULL DEFAULT` is not valid T-SQL (plan only, not applied) |
 
 ## Findings
@@ -66,6 +70,6 @@ Provisional, to be confirmed by the owner:
 
 ## Not covered
 
-- Atlas: not run. The source build failed with Go 1.27.1 (a `golang.org/x/tools` constant overflow), and a download of the vendor binary was not approved in the session. Its licence and paid tiers are not assessed.
-- S4, S7, S11 and S12 on SQL Server, S10 for SQL Server and pgschema, S4 on PostgreSQL, and the fixture's function, trigger and extension objects.
+- Atlas: not run. The source build failed with Go 1.27.1 (a `golang.org/x/tools` constant overflow), and the download of the vendor binary was refused by the session permission check (2026-11-20), so it stays open on Q29. Its licence and paid tiers are not assessed.
+- S12 on SQL Server (exit codes seen only), S10 for SQL Server and pgschema, S4 on PostgreSQL, and the fixture's function, trigger and extension objects.
 - No weights or scores were computed; the table above is the raw record.
