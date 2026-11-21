@@ -8,7 +8,7 @@ Keep this file short (about 15 one-line items). When an item starts, move it her
 
 ## In progress
 
-- [x] Owner request 2026-11-19, "do everything you can do without question": work every item that needs no answer, assume the default where one exists. Left: nothing unblocked; the close-out audit ran 2026-11-20. Waiting on an answer: Q29 (Atlas download for the bake-off).
+- [x] Owner request 2026-11-19, "do everything you can do without question": work every item that needs no answer, assume the default where one exists. Left: nothing unblocked; the close-out audit ran 2026-11-20. Waiting on an answer: Q29 (Atlas download for the bake-off), Q30 (more example screens; default taken, the Schedule screen is built), Q31 (dacpac half of Data access).
 
 ## Next
 
