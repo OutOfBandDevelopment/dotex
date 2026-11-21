@@ -11,3 +11,17 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ## Open
 
+
+### Q29 · 2026-11-20 · Database tooling · Atlas for the bake-off
+
+The bake-off run ([result](docs/design/DesiredStateDatabase/bake-off-result.md#not-covered)) could not include Atlas: building it from source fails with Go 1.27.1 (a `golang.org/x/tools` constant overflow). May I fetch a binary to a scratch folder outside the repository to run it?
+
+**Options**
+
+- A. Download the vendor's Atlas community binary (Apache 2.0 edition) into a scratch folder and run the scenarios (recommended: the quickest way to finish the comparison, nothing enters the repository, the licence is checked before use).
+- B. Build Atlas with an older Go toolchain that Go downloads on demand (same kind of download, slower, keeps the build from source).
+- C. Drop Atlas from the comparison and decide between sqldef and pgschema on the recorded results (no download; the buy-or-build verdict then covers two candidates).
+
+**Default:** C until you answer (nothing is downloaded).
+
+**Your answer:**
