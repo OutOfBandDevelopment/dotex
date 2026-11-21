@@ -25,3 +25,17 @@ The bake-off run ([result](docs/design/DesiredStateDatabase/bake-off-result.md#n
 **Default:** C until you answer (nothing is downloaded).
 
 **Your answer:**
+
+### Q30 · 2026-11-20 · Example app · Screens for framework areas the plan does not cover
+
+[missing-screens.md](docs/design/example-ui/missing-screens.md#framework-areas-the-plan-does-not-mention) lists framework features with no screen: complex events and schedules, spatial lookup (Census geocoding), data loading, server-driven UI definitions, query over HTTP. The review says each is an owner decision. Which should the example app show?
+
+**Options**
+
+- A. Build the screens for the libraries that exist now: complex events, spatial lookup and data loading (recommended: the example exists to show the framework; each is a small read-mostly page, a screen can be deleted later, and nothing touches live data).
+- B. Build only complex events, the one with a hosted service and EF store.
+- C. None; the example stays at the current pages and the libraries are shown in their own readmes.
+
+**Default:** A, one screen at a time, starting with complex events.
+
+**Your answer:**
