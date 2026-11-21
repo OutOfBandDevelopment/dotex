@@ -11,3 +11,5 @@ SQL project (`Microsoft.Build.Sql`) that builds `OoBDev.Data.Schema.SqlServer.da
 The scripts are generated from the models (`Database.GenerateCreateScript()` with the SqlServer provider). `OoBDev.Data.Migrations.Tests` (`SqlServerSchemaTests`, Unit) fails when a script no longer matches its model; regenerate with `REGENERATE_SQL_SCHEMA=1 dotnet test src/Framework/OoBDev.Data.Migrations.Tests --filter "FullyQualifiedName~SqlServerSchema"`.
 
 Build: `dotnet build src/Framework/OoBDev.Data.Schema.SqlServer` (the dacpac lands in `bin/Debug`). Not a NuGet package.
+
+Deploy check (2026-11-20): `sqlpackage /Action:Publish` of the built dacpac into a new database on the `oobd-test-sqlserver` container (run from the `dotnet/sdk:10.0` image on `oobd-integration-test-net`, because the Windows `sqlpackage` 170 tool failed to start on this host) created `RightAudit`, `Suppressions` and `ComplexEventSchedule`; the throwaway database was dropped afterwards.
