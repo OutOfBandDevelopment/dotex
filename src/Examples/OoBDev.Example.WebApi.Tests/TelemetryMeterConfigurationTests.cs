@@ -34,4 +34,27 @@ public class TelemetryMeterConfigurationTests
             new[] { HttpUsageMetricsMiddleware.MeterName, ScreenViewEndpointRouteBuilderExtensions.MeterName },
             meters);
     }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public void AppSettings_Sources_ListTheServerAndHttpClientSources()
+    {
+        // Stage
+        var file = Path.Combine(FindExampleFolder(), "appsettings.json");
+
+        // Test
+        var sources = new ConfigurationBuilder().AddJsonFile(file).Build().GetSection("OpenTelemetryOptions:Sources").Get<string[]>() ?? [];
+        TestContext.WriteLine($"Configured sources: {string.Join(", ", sources)}");
+
+        // Assert: without these the dashboard receives logs and metrics but no request traces
+        CollectionAssert.IsSubsetOf(new[] { "Microsoft.AspNetCore", "System.Net.Http" }, sources);
+    }
+
+    private static string FindExampleFolder()
+    {
+        var dir = new DirectoryInfo(AppContext.BaseDirectory);
+        while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "OoBDev.Example.WebApi", "appsettings.json")))
+            dir = dir.Parent;
+        return dir is null ? throw new InvalidOperationException("OoBDev.Example.WebApi/appsettings.json not found.") : Path.Combine(dir.FullName, "OoBDev.Example.WebApi");
+    }
 }
