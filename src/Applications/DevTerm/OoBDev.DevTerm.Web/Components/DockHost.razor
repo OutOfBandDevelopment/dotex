@@ -26,12 +26,25 @@ else
     <div class="dock-root" data-dock>
         <DockNodeView Node="_layout.Root" Layout="_layout" Events="_events" />
     </div>
-    <p><button type="button" @onclick="ResetAsync">Reset layout</button></p>
+    <p><button type="button" @onclick="ResetAsync">Reset layout</button> <button type="button" data-export @onclick="ExportLayout">Export</button> <button type="button" data-import @onclick="ImportAsync">Import</button></p>
+    <textarea rows="6" aria-label="Layout JSON" data-layout-json @bind="_text"></textarea>
+    @if (_note is not null) { <p class="note" data-note>@_note</p> }
 }
 
 @code {
     private DockLayout? _layout;
     private string? _dragging;
+    private string _text = "";
+    private string? _note;
+
+    private void ExportLayout() { _text = _layout!.ToJson(); _note = "Layout exported to the box."; }
+
+    private async Task ImportAsync()
+    {
+        var loaded = DockLayout.Load(_text, Ids);
+        _note = loaded.ToJson() == DockLayout.Default(Ids).ToJson() && _text.Trim() != _layout!.ToJson() ? "Not a valid layout; the default was applied." : "Layout imported.";
+        await ChangeAsync(loaded);
+    }
     private DockEvents _events = default!;
 
     protected override void OnInitialized() => _events = new DockEvents(
