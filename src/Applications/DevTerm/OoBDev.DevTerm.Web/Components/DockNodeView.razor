@@ -4,9 +4,17 @@
     <div class="dock-split" style="flex-direction:@(split.Direction == "column" ? "column" : "row")">
         @for (var i = 0; i < split.Children.Count; i++)
         {
-            <div class="dock-cell" style="flex:@split.Ratios[i].ToString("0.####", global::System.Globalization.CultureInfo.InvariantCulture) 1 0">
-                <DockNodeView Node="split.Children[i]" OnActivate="OnActivate" OnClose="OnClose" />
+            var index = i;
+            <div class="dock-cell" style="flex:@split.Ratios[index].ToString("0.####", global::System.Globalization.CultureInfo.InvariantCulture) 1 0">
+                <DockNodeView Node="split.Children[index]" Layout="Layout" Events="Events" />
             </div>
+            @if (index < split.Children.Count - 1)
+            {
+                <div class="dock-splitter">
+                    <button type="button" aria-label="Grow first" data-grow="@index" @onclick="() => Events.Resize(split, index, 0.05)">&lt;</button>
+                    <button type="button" aria-label="Grow second" data-shrink="@index" @onclick="() => Events.Resize(split, index, -0.05)">&gt;</button>
+                </div>
+            }
         }
     </div>
 }
@@ -18,11 +26,18 @@ else if (Node is DockPane pane)
             {
                 var panel = DockPanels.All.First(p => p.Id == id);
                 var active = id == pane.Active;
-                <span class="dock-tab" aria-selected="@(active ? "true" : "false")">
-                    <button type="button" role="tab" data-tab="@id" @onclick="() => OnActivate.InvokeAsync(id)">@panel.Title</button>
-                    <button type="button" class="dock-close" aria-label="Close @panel.Title" data-close="@id" @onclick="() => OnClose.InvokeAsync(id)">x</button>
+                <span class="dock-tab" draggable="true" aria-selected="@(active ? "true" : "false")" @ondragstart="() => Events.Drag(id)">
+                    <button type="button" role="tab" data-tab="@id" @onclick="() => Events.Activate(id)">@panel.Title</button>
+                    <button type="button" class="dock-close" aria-label="Close @panel.Title" data-close="@id" @onclick="() => Events.Close(id)">x</button>
                 </span>
             }
+        </div>
+        <div class="dock-drops" aria-label="Drop targets">
+            <span class="dock-drop" data-drop="tab" @ondragover:preventDefault @ondrop="() => Events.Drop(pane, null, false)">here</span>
+            <span class="dock-drop" data-drop="left" @ondragover:preventDefault @ondrop='() => Events.Drop(pane, "row", true)'>left</span>
+            <span class="dock-drop" data-drop="right" @ondragover:preventDefault @ondrop='() => Events.Drop(pane, "row", false)'>right</span>
+            <span class="dock-drop" data-drop="top" @ondragover:preventDefault @ondrop='() => Events.Drop(pane, "column", true)'>top</span>
+            <span class="dock-drop" data-drop="bottom" @ondragover:preventDefault @ondrop='() => Events.Drop(pane, "column", false)'>bottom</span>
         </div>
         <div class="dock-body">
             @if (pane.Active is not null)
@@ -37,9 +52,9 @@ else if (Node is DockPane pane)
     /// <summary>The node to draw.</summary>
     [Parameter, EditorRequired] public DockNode Node { get; set; } = default!;
 
-    /// <summary>Raised with the panel id when a tab is chosen.</summary>
-    [Parameter] public EventCallback<string> OnActivate { get; set; }
+    /// <summary>The layout that holds the node.</summary>
+    [Parameter, EditorRequired] public DockLayout Layout { get; set; } = default!;
 
-    /// <summary>Raised with the panel id when a tab is closed.</summary>
-    [Parameter] public EventCallback<string> OnClose { get; set; }
+    /// <summary>What the tree can do to the layout.</summary>
+    [Parameter, EditorRequired] public DockEvents Events { get; set; } = default!;
 }

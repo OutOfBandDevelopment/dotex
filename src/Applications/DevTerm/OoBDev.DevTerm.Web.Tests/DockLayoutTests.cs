@@ -91,4 +91,16 @@ public class DockLayoutTests
         var layout = DockLayout.Default(_ids).Activate("monitor");
         Assert.AreEqual("monitor", ((DockPane)layout.Root).Active);
     }
+
+    [TestMethod]
+    [TestCategory("Unit")]
+    public void IndexOf_FindsPanesAndSplitsByReference()
+    {
+        var layout = DockLayout.Default(_ids).Split("monitor", 0, "row", before: false);
+        var split = (DockSplit)layout.Root;
+        Assert.AreEqual(0, layout.IndexOf(split));
+        Assert.AreEqual(0, layout.IndexOf(split.Children[0]));
+        Assert.AreEqual(1, layout.IndexOf(split.Children[1]));
+        Assert.AreEqual(-1, layout.IndexOf(new DockPane(["x"])));
+    }
 }

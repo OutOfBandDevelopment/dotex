@@ -112,6 +112,14 @@ public sealed record DockLayout(int Version, DockNode Root)
         return pruned is null ? this : this with { Root = pruned };
     }
 
+    /// <summary>The depth-first index of a pane or split in this tree (panes and splits are numbered separately), found by reference; -1 when absent.</summary>
+    /// <param name="node">A node of this layout.</param>
+    public int IndexOf(DockNode node)
+    {
+        var count = 0;
+        return Find(Root, node, node is DockPane, ref count) ? count : -1;
+    }
+
     /// <summary>Makes a tab the active one in the pane that holds it.</summary>
     /// <param name="panelId">The panel to show.</param>
     public DockLayout Activate(string panelId) =>
@@ -125,6 +133,32 @@ public sealed record DockLayout(int Version, DockNode Root)
         var count = 0;
         var root = Map(Root, n => n is DockSplit s && count++ == splitIndex && ratios.Count == s.Children.Count ? s with { Ratios = Normalise(ratios) } : n);
         return this with { Root = root };
+    }
+
+    private static bool Find(DockNode at, DockNode target, bool panes, ref int count)
+    {
+        if (ReferenceEquals(at, target))
+        {
+            return true;
+        }
+
+        if (at is DockPane == panes)
+        {
+            count++;
+        }
+
+        if (at is DockSplit s)
+        {
+            foreach (var child in s.Children)
+            {
+                if (Find(child, target, panes, ref count))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private static IEnumerable<string> Collect(DockNode node) => node switch

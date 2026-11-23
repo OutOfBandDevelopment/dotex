@@ -12,6 +12,9 @@
     .dock-tabs { display: flex; flex-wrap: wrap; background: #1c232b; }
     .dock-tab { display: inline-flex; border-right: 1px solid #38424f; }
     .dock-tab[aria-selected=true] { background: #2a3440; }
+    .dock-splitter { display: flex; flex-direction: column; justify-content: center; }
+    .dock-drops { display: flex; gap: 2px; font-size: 11px; }
+    .dock-drop { flex: 1; text-align: center; border: 1px dashed #38424f; color: #8a96a3; }
     .dock-body { overflow: auto; padding: 8px; flex: 1; }
 </style>
 @if (_layout is null)
@@ -21,13 +24,58 @@
 else
 {
     <div class="dock-root" data-dock>
-        <DockNodeView Node="_layout.Root" OnActivate="ActivateAsync" OnClose="CloseAsync" />
+        <DockNodeView Node="_layout.Root" Layout="_layout" Events="_events" />
     </div>
     <p><button type="button" @onclick="ResetAsync">Reset layout</button></p>
 }
 
 @code {
     private DockLayout? _layout;
+    private string? _dragging;
+    private DockEvents _events = default!;
+
+    protected override void OnInitialized() => _events = new DockEvents(
+        id => Apply(l => l.Activate(id)),
+        id => Apply(l => l.Close(id)),
+        id => _dragging = id,
+        Drop,
+        Resize);
+
+    private void Drop(DockPane pane, string? direction, bool before)
+    {
+        var id = _dragging;
+        _dragging = null;
+        if (id is null) { return; }
+        Apply(l =>
+        {
+            var at = l.IndexOf(pane);
+            if (at < 0) { return l; }
+            return direction is null ? l.Move(id, at) : l.Split(id, at, direction, before);
+        });
+    }
+
+    private void Resize(DockSplit split, int child, double delta) => Apply(l =>
+    {
+        var at = l.IndexOf(split);
+        if (at < 0) { return l; }
+        var ratios = split.Ratios.ToArray();
+        ratios[child] += delta;
+        ratios[child + 1] -= delta;
+        return l.Resize(at, ratios);
+    });
+
+    private async void Apply(Func<DockLayout, DockLayout> change)
+    {
+        try
+        {
+            await ChangeAsync(change(_layout!));
+            StateHasChanged();
+        }
+        catch (Exception)
+        {
+            // A closed circuit has nothing left to update.
+        }
+    }
 
     private static IReadOnlyCollection<string> Ids => [.. DockPanels.All.Select(p => p.Id)];
 
@@ -40,9 +88,6 @@ else
         }
     }
 
-    private Task ActivateAsync(string id) => ChangeAsync(_layout!.Activate(id));
-
-    private Task CloseAsync(string id) => ChangeAsync(_layout!.Close(id));
 
     private Task ResetAsync() => ChangeAsync(DockLayout.Default(Ids));
 
