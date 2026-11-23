@@ -10,6 +10,7 @@
 - [Results](#results)
 - [Findings](#findings)
 - [Decision per engine](#decision-per-engine)
+- [Atlas on PostgreSQL](#atlas-on-postgresql)
 - [Not covered](#not-covered)
 
 ## Setup
@@ -68,8 +69,26 @@ Provisional, to be confirmed by the owner:
 - **SQL Server:** DacFx stays the baseline; `mssqldef` passes S1 to S3 and S5 but emitted an invalid `ALTER COLUMN` with a default for S6, so it is not a replacement.
 - **Oracle:** unchanged (Q5).
 
+## Atlas on PostgreSQL
+
+Atlas v1.4.2 canary (the vendor `latest` Windows binary, downloaded 2026-11-23 into a scratch folder, run without `atlas login`), against `oobd-test-postgres` with two throwaway databases (the target, and the `--dev-url` database Atlas needs to normalise the desired schema). Fixture: the small customer and orders tables of the other runs.
+
+| Scenario | Result |
+|----------|--------|
+| S1 apply to an empty database | Pass: both tables created in dependency order. |
+| S2 run again | Pass: "Schema is synced, no changes to be made", exit 0. |
+| S3 add column and index | Pass: exactly those two statements. With a view in the script it fails: "views are available to logged-in users only". |
+| S4 rename column | Fail: `DROP COLUMN` then `ADD COLUMN` (data lost), no rename annotation; the diagnostics for it need `atlas login`. |
+| S5 drop column and table | Fail: planned with no destructive flag (a `--auto-approve` apply would run it); only the login-gated diagnostics warn. |
+| S7 plan, then apply | Partial: `schema diff` prints the SQL and `--dry-run` plans, but apply re-plans (no saved plan file in this edition). |
+| S10 extension | Fail: "extensions are available to logged-in users only". |
+| S11 drift | Detected, and the hand-added column is planned for dropping without a gate. |
+| S12 machine output | Pass: the JSON format option gives the plan and the applied statements. |
+
+**Licence:** the free binary refuses views and extensions (S3 with a view, S9, S10) without an Atlas account login, and its data-loss diagnostics are login-gated. That breaks the REQ-008 rule "no paid feature needed for S1 to S9", so Atlas is removed as a candidate. The choice stays between sqldef and pgschema.
+
 ## Not covered
 
-- Atlas: not run. The source build failed with Go 1.27.1 (a `golang.org/x/tools` constant overflow), and the download of the vendor binary was refused by the session permission check (2026-11-20), the owner approved the binary download on 2026-11-21, so the Atlas run is next. Its licence and paid tiers are not assessed.
+- Atlas: run on PostgreSQL only (2026-11-23), see [Atlas on PostgreSQL](#atlas-on-postgresql). SQLite and SQL Server were not run with it, and its EULA text and paid tiers are not assessed beyond what the errors showed.
 - S12 on SQL Server (exit codes seen only), S10 for SQL Server, and the fixture's function, trigger and extension objects.
 - No weights or scores were computed; the table above is the raw record.
