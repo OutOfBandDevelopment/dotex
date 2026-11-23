@@ -1,6 +1,6 @@
 # Feature request: document packaging and document store
 
-- **Status:** triaged
+- **Status:** done (ZIP packager, document store, key generator, validation hook, resolver and directory packing built 2026-11-23, [change](../../changes/2026-11-23.md))
 - **Requested by:** owner (SharedFramework comparison, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.Documents*` (Epic 6 Documents)

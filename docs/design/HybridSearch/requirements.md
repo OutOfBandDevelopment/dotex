@@ -25,7 +25,7 @@
 ## Non-goals
 
 - Re-ranking from user behaviour (the neural re-ranker in the overview is an idea, not planned work).
-- Document storage, conversion, packaging and authorization; they have their own designs ([document packaging request](../../features/request/2026-11-10-document-packaging-and-store.md), claims in the identity design).
+- Document storage, conversion, packaging and authorization; they have their own designs ([document packaging request](../../features/completed/2026-11-10-document-packaging-and-store.md), claims in the identity design).
 - Choosing an embedding model; the embedders live in `OoBDev.Onnx.*` and `OoBDev.Ollama`.
 
 ## Requirements

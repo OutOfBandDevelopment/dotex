@@ -58,7 +58,7 @@ Writes a local audio file; no network. Set the playback level low first.
 
 Origin: notes repository `projects/osci-render-client` and `OoBDev.Documents.Hpgl`. Low priority.
 
-2026-11-17: rewritten from an osci-render TCP sink to a stereo audio signal (owner). Not built; to be scheduled later.
+2026-11-17: rewritten from an osci-render TCP sink to a stereo audio signal (owner). 2026-11-19: the WAV writer is built; only the scope bench check is open.
 
 2026-11-11: triaged. Accepted as a backlog idea with no design yet. Backlog: BACKLOG.md, Devices ideas.
 
