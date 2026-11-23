@@ -8,3 +8,5 @@ var report = await loader.LoadAsync(stream, "csv", new LoadOptions { Duplicates 
 ```
 
 CSV supports a header row and quoted fields (commas, doubled quotes, line breaks); JSON is an array of flat objects. Handlers run in ascending `Priority`. `services.TryAddDataLoader()` registers both readers and `ILoader` (register an `IRowSink` and handlers yourself). `LoadOptions.BatchSize` above 1 writes through an `IBatchRowSink` (the EF Core sink in `OoBDev.DataLoader.EntityFrameworkCore` implements it: one context and one save per batch). Design: [DataLoader](../../../docs/design/DataLoader/README.md).
+
+Lookups: `LookupHandler(priority, ILookupSource, keyColumn, targetColumn, required)` resolves a column through `DictionaryLookupSource` (table, optional comparer) or `DelegateLookupSource` (a query supplied by the host) and rejects an empty or unknown key when required.

@@ -55,7 +55,7 @@ public enum DuplicatePolicy { Skip, Replace, Fail }
 ## Rules
 
 - Handlers run in ascending `Priority`; a handler that rejects a row ends its pipeline.
-- Lookup by alternative key is a handler, not a sink feature.
+- Lookup by alternative key is a handler, not a sink feature: `LookupHandler` takes an `ILookupSource` (`DictionaryLookupSource` for a fixed table, `DelegateLookupSource` for a host query by property or query) and writes the found value into a target column; a required lookup rejects an empty or unknown key.
 - The sink writes in batches, one transaction per batch; a failed batch is reported and the next continues unless `StopOnError` is set.
 
 ## Testing strategy
