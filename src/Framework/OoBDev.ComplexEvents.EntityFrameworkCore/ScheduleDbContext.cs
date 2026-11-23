@@ -9,9 +9,19 @@ public sealed class ScheduleDbContext(DbContextOptions<ScheduleDbContext> option
     /// <summary>The scheduled items.</summary>
     public DbSet<ScheduleRow> Schedule => Set<ScheduleRow>();
 
+    /// <summary>The last run of each recurring schedule.</summary>
+    public DbSet<LastRunRow> LastRuns => Set<LastRunRow>();
+
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<LastRunRow>(e =>
+        {
+            e.ToTable("ComplexEventLastRun");
+            e.HasKey(x => x.Key);
+            e.Property(x => x.Key).HasMaxLength(200);
+        });
+
         modelBuilder.Entity<ScheduleRow>(e =>
         {
             e.ToTable("ComplexEventSchedule");
