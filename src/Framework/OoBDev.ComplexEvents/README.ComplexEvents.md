@@ -7,3 +7,5 @@
 Failure hook: pass an `IScheduleFailureHandler` to `ScheduleRunner` (or register one for `ScheduleHost`) to dead-letter an item after its last attempt.
 
 Recurring runs: `RecurringScheduler` (a set of `RecurringSchedule`s plus an `ILastRunStore`) is picked up by `ScheduleHost` when registered: it registers missed and upcoming occurrences on start from the recorded last run, and after each run records it and registers the next. `InMemoryLastRunStore` loses the record on restart.
+
+Event Hubs: `EventHubPublisher` serializes an event as JSON and publishes it through an `IEventHubClient` tagged with the event type name; `EventHubConsumer` reads the hub and dispatches each message to the handlers of its type (types given at construction; unknown or malformed messages are counted in `Skipped`). `InMemoryEventHubClient` is the fake; the Azure client is in `OoBDev.Microsoft.Azure.EventHub`.

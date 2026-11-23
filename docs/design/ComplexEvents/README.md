@@ -1,6 +1,6 @@
 # Complex events and scheduling
 
-Status: **proposed design, written 2026-11-19 on the assumed answer A of Q18; in-process core built 2026-11-19 (dispatcher, in-memory store, runner; 6 unit tests); EF Core schedule store built 2026-11-19 (`OoBDev.ComplexEvents.EntityFrameworkCore`, 5 Simulate tests on SQLite); hosted service built 2026-11-19 (`OoBDev.ComplexEvents.Hosting`, 3 unit tests); Event Hubs not built.** Request: [complex events, scheduling and Event Hubs](../../features/request/2026-11-10-complex-events-and-scheduling.md). Epic 8 of [SharedFramework](../SharedFramework/README.md).
+Status: **proposed design, written 2026-11-19 on the assumed answer A of Q18; in-process core built 2026-11-19 (dispatcher, in-memory store, runner; 6 unit tests); EF Core schedule store built 2026-11-19 (`OoBDev.ComplexEvents.EntityFrameworkCore`, 5 Simulate tests on SQLite); hosted service built 2026-11-19 (`OoBDev.ComplexEvents.Hosting`, 3 unit tests); Event Hubs built 2026-11-23 (`IEventHubClient`, publisher, consumer, in-memory fake, `OoBDev.Microsoft.Azure.EventHub`; no live or emulator test).** Request: [complex events, scheduling and Event Hubs](../../features/request/2026-11-10-complex-events-and-scheduling.md). Epic 8 of [SharedFramework](../SharedFramework/README.md).
 
 ## Contents
 

@@ -20,6 +20,7 @@
     <PackageVersion Include="Azure.Identity" Version="1.21.0" />
     <PackageVersion Include="Neo4j.Driver" Version="5.28.3" />
     <PackageVersion Include="Azure.Search.Documents" Version="11.7.0" />
+    <PackageVersion Include="Azure.Messaging.EventHubs" Version="5.12.2" />
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.21.0" />
     <PackageVersion Include="Azure.Storage.Blobs" Version="12.30.1" />
     <PackageVersion Include="Azure.Storage.Queues" Version="12.28.1" />

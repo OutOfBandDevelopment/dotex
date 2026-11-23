@@ -169,6 +169,8 @@
     <Project Path="ExternalServices/Neo4j/OoBDev.Neo4j/OoBDev.Neo4j.csproj" />
     <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Azure.AISearch.Tests/OoBDev.Microsoft.Azure.AISearch.Tests.csproj" />
     <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Azure.AISearch/OoBDev.Microsoft.Azure.AISearch.csproj" />
+    <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Azure.EventHub.Tests/OoBDev.Microsoft.Azure.EventHub.Tests.csproj" />
+    <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Azure.EventHub/OoBDev.Microsoft.Azure.EventHub.csproj" />
     <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Azure.ServiceBus.Tests/OoBDev.Microsoft.Azure.ServiceBus.Tests.csproj" />
     <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Azure.ServiceBus/OoBDev.Microsoft.Azure.ServiceBus.csproj" />
     <Project Path="ExternalServices/Microsoft/OoBDev.Microsoft.Azure.StorageAccount.Tests/OoBDev.Microsoft.Azure.StorageAccount.Tests.csproj" />
