@@ -1,6 +1,6 @@
 # Feature request: Basic Stamp tokenizer and detokenizer
 
-- **Status:** triaged
+- **Status:** declined for now (owner, 2026-11-23): no consumer; was on hold since 2026-11-12. If resumed: BS2 family, format from a third-party reference such as `pbasic` or `stampy` after a licence check
 - **Requested by:** owner (open gap found reviewing the migration, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.System` (`Retro` or a new microcontroller area)
