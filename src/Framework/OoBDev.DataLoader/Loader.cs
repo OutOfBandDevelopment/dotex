@@ -26,67 +26,27 @@ public sealed class Loader(IEnumerable<IRowReader> readers, IEnumerable<IPipelin
         var reader = _readers.FirstOrDefault(r => string.Equals(r.Format, format, StringComparison.OrdinalIgnoreCase))
             ?? throw new NotSupportedException($"No reader for format \"{format}\"");
 
-        int read = 0, written = 0, replaced = 0, skipped = 0;
-        var errors = new List<RowError>();
-        var batch = _sink is IBatchRowSink && options.BatchSize > 1 ? new List<RowContext>(options.BatchSize) : null;
-
-        async Task<bool> FlushAsync()
+        var run = new Run(_sink, options, cancellationToken);
+        await foreach (var sourceRow in reader.ReadAsync(source, cancellationToken).ConfigureAwait(false))
         {
-            var rows = batch!;
-            if (rows.Count == 0) return false;
-            var results = await ((IBatchRowSink)_sink).WriteBatchAsync(rows, options.Duplicates, cancellationToken).ConfigureAwait(false);
-            var failed = false;
-            for (var i = 0; i < rows.Count; i++)
-            {
-                switch (results[i])
-                {
-                    case WriteResult.Written: written++; break;
-                    case WriteResult.Replaced: replaced++; break;
-                    case WriteResult.Skipped: skipped++; break;
-                    default:
-                        errors.Add(new RowError(rows[i].Line, "Duplicate row"));
-                        failed = true;
-                        break;
-                }
-            }
-
-            rows.Clear();
-            return failed && options.StopOnError;
-        }
-
-        await foreach (var source_row in reader.ReadAsync(source, cancellationToken).ConfigureAwait(false))
-        {
-            read++;
-            var row = new RowContext(source_row.Line, new Dictionary<string, string?>(source_row.Values, StringComparer.OrdinalIgnoreCase));
+            run.Read++;
+            var row = new RowContext(sourceRow.Line, new Dictionary<string, string?>(sourceRow.Values, StringComparer.OrdinalIgnoreCase));
             var rejected = await RunHandlersAsync(row, cancellationToken).ConfigureAwait(false);
             if (rejected is not null)
             {
-                errors.Add(new RowError(row.Line, rejected));
+                run.Errors.Add(new RowError(row.Line, rejected));
                 if (options.StopOnError) break;
                 continue;
             }
 
-            if (batch is not null)
+            if (await run.AcceptAsync(row).ConfigureAwait(false))
             {
-                batch.Add(row);
-                if (batch.Count >= options.BatchSize && await FlushAsync().ConfigureAwait(false)) return new LoadReport(read, written, replaced, skipped, errors);
-                continue;
-            }
-
-            switch (await _sink.WriteAsync(row, options.Duplicates, cancellationToken).ConfigureAwait(false))
-            {
-                case WriteResult.Written: written++; break;
-                case WriteResult.Replaced: replaced++; break;
-                case WriteResult.Skipped: skipped++; break;
-                default:
-                    errors.Add(new RowError(row.Line, "Duplicate row"));
-                    if (options.StopOnError) return new LoadReport(read, written, replaced, skipped, errors);
-                    break;
+                return run.Report();
             }
         }
 
-        if (batch is not null) await FlushAsync().ConfigureAwait(false);
-        return new LoadReport(read, written, replaced, skipped, errors);
+        await run.FinishAsync().ConfigureAwait(false);
+        return run.Report();
     }
 
     private async Task<string?> RunHandlersAsync(RowContext row, CancellationToken cancellationToken)
@@ -98,5 +58,67 @@ public sealed class Loader(IEnumerable<IRowReader> readers, IEnumerable<IPipelin
         }
 
         return null;
+    }
+
+    private sealed class Run(IRowSink sink, LoadOptions options, CancellationToken cancellationToken)
+    {
+        private readonly List<RowContext>? _batch = sink is IBatchRowSink && options.BatchSize > 1 ? new List<RowContext>(options.BatchSize) : null;
+        private int _written, _replaced, _skipped;
+
+        public int Read { get; set; }
+
+        public List<RowError> Errors { get; } = [];
+
+        public LoadReport Report() => new(Read, _written, _replaced, _skipped, Errors);
+
+        public async Task FinishAsync()
+        {
+            if (_batch is not null)
+            {
+                await FlushAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <returns>True when the load must stop.</returns>
+        public async Task<bool> AcceptAsync(RowContext row)
+        {
+            if (_batch is not null)
+            {
+                _batch.Add(row);
+                return _batch.Count >= options.BatchSize && await FlushAsync().ConfigureAwait(false);
+            }
+
+            var result = await sink.WriteAsync(row, options.Duplicates, cancellationToken).ConfigureAwait(false);
+            return Count(result, row.Line) && options.StopOnError;
+        }
+
+        private async Task<bool> FlushAsync()
+        {
+            var rows = _batch!;
+            if (rows.Count == 0) return false;
+            var results = await ((IBatchRowSink)sink).WriteBatchAsync(rows, options.Duplicates, cancellationToken).ConfigureAwait(false);
+            var failed = false;
+            for (var i = 0; i < rows.Count; i++)
+            {
+                failed |= Count(results[i], rows[i].Line);
+            }
+
+            rows.Clear();
+            return failed && options.StopOnError;
+        }
+
+        /// <returns>True when the result was a duplicate error.</returns>
+        private bool Count(WriteResult result, int line)
+        {
+            switch (result)
+            {
+                case WriteResult.Written: _written++; return false;
+                case WriteResult.Replaced: _replaced++; return false;
+                case WriteResult.Skipped: _skipped++; return false;
+                default:
+                    Errors.Add(new RowError(line, "Duplicate row"));
+                    return true;
+            }
+        }
     }
 }

@@ -82,7 +82,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 
     - [data loader](docs/features/request/2026-11-10-data-loader-etl.md) (decided Q18: library only, no CLI) (core and EF sink built 2026-11-19)
       - [ ] Open: lookups by property or query, master data provider, `DocumentUpload` and `GetTextData` from the source (decide with the MasterData design).
-      - [ ] Open: master data provider, `DocumentUpload` and `GetTextData` from the source (decide with the MasterData design); `Loader.LoadAsync` is 67 lines (MA0051), split it.
+      - [ ] Open: master data provider, `DocumentUpload` and `GetTextData` from the source (decide with the MasterData design).
 
     - [test data generation](docs/features/rejected/2026-11-10-procedural-test-data-generation.md) (core built 2026-11-19)
     - [document packaging](docs/features/completed/2026-11-10-document-packaging-and-store.md) (ZIP packager, document store, key generator and content validation hook built 2026-11-23, and the resolver by request reference built 2026-11-23; directory packing built 2026-11-23; passwords are out of scope, so the request is done).
