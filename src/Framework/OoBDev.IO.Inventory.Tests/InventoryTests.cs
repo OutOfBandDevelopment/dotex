@@ -69,6 +69,28 @@ public sealed class InventoryTests
     }
 
     [TestMethod]
+    public async Task Scan_ReadOnlyFiles_CompletesAndLeavesThemReadOnly()
+    {
+        using var root = NewRoot();
+        var file = Path.Combine(root.DirectoryPath, "a", "x.txt");
+        File.WriteAllText(file, "locked");
+        File.SetAttributes(file, FileAttributes.ReadOnly);
+        try
+        {
+            var report = await new FileScanner(new InMemoryInventoryStore()).ScanAsync(root.DirectoryPath, false, CancellationToken.None);
+            TestContext.WriteLine($"scanned {report.Scanned}, hashed {report.Hashed}, skipped {report.Skipped.Count}");
+
+            Assert.AreEqual(1, report.Hashed);
+            Assert.AreEqual(0, report.Skipped.Count);
+            Assert.IsTrue(File.GetAttributes(file).HasFlag(FileAttributes.ReadOnly));
+        }
+        finally
+        {
+            File.SetAttributes(file, FileAttributes.Normal);
+        }
+    }
+
+    [TestMethod]
     public async Task Scan_ChangedFile_IsRehashed()
     {
         using var root = NewRoot();

@@ -1,6 +1,6 @@
 # Feature request: File inventory and duplicate detection (exact and near-duplicate images)
 
-- **Status:** triaged
+- **Status:** done (library, CLI, dHash and embedding phases built 2026-11-19 and 2026-11-20; read-only root test 2026-11-23, [change](../../changes/2026-11-23.md))
 - **Requested by:** owner (filed from the notes repository, `projects/applications/nas-storage-catalog` and `second-shooter-photo-library.md`)
 - **Date:** 2026-11-10
 - **Area:** new, near `OoBDev.Onnx.ImageEmbeddings`, `OoBDev.Documents` and the blob container request

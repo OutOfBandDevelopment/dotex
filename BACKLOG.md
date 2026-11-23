@@ -81,7 +81,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
       - [ ] Open: Event Hubs adapter and client (no emulator, waits for a consumer); a `ScheduleAt` attribute (only `ComplexEventHandlerAttribute` exists); catch-up policy and last-run time; cron recurrence; dead-letter publish on failure (design open points).
 
     - [data loader](docs/features/request/2026-11-10-data-loader-etl.md) (decided Q18: library only, no CLI) (core and EF sink built 2026-11-19)
-      - [ ] Open: an Integration test of the EF sink against the SQL Server container (acceptance criterion 3; the tests run on SQLite only); batching; lookups by property or query, master data provider, `DocumentUpload` and `GetTextData` from the source (decide with the MasterData design).
+      - [ ] Open: batching (the SQL Server Integration test is built 2026-11-23); lookups by property or query, master data provider, `DocumentUpload` and `GetTextData` from the source (decide with the MasterData design).
 
     - [spatial services](docs/features/request/2026-11-10-spatial-services.md) (Q19: waits for a consumer, Bing dropped) (contract and Census adapter built 2026-11-19)
       - [ ] Open: Google Maps adapter (Bing dropped); waits for a consumer (Q19).
@@ -90,8 +90,6 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
     - [document packaging](docs/features/completed/2026-11-10-document-packaging-and-store.md) (ZIP packager, document store, key generator and content validation hook built 2026-11-23, and the resolver by request reference built 2026-11-23; directory packing built 2026-11-23; passwords are out of scope, so the request is done).
   - Consolidation: [auth translation gateway](docs/features/request/2026-11-10-auth-translation-gateway.md) (decided 2026-11-19, owner Q9: a YARP-based dotex library, inbound API key then client certificate then RFC 8693; design only until a consumer appears)
     - [event, document and history stores](docs/features/request/2026-11-10-event-document-history-stores.md) (decided Q10: separate package family beside EventSourcing, history store its own request, no second embedded provider yet), embedding server image (Q12: none; the client works with any OpenAI-compatible server, the stack's Ollama is the reference)
-    - [file inventory](docs/features/request/2026-11-10-file-inventory-and-deduplication.md) (confirmed 2026-11-19, owner Q20: library plus a tool in `src/Tools`) (library, CLI and dHash image phase built 2026-11-19; embedding matcher built 2026-11-20 (vectors supplied by the caller; `EmbeddingScanner` embeds a folder with any generator); CLI `images` command built)
-      - [ ] Open: a test that a read-only root scans (acceptance criterion 4); refresh the design status line (it still says embedding matching is not wired).
 
     - [Postgres support](docs/features/completed/2026-11-10-postgres-support.md), and the 2026-11-11 storage and photo-library requests.
   - Database tooling and plugins: [desired-state database tooling](docs/features/request/2026-10-28-desired-state-database-tooling.md) (bake-off, Q4), [sandboxed plugin host](docs/features/request/2026-10-28-plugin-sandbox.md) (the sandbox item above).
