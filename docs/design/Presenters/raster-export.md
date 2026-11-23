@@ -12,7 +12,7 @@ Decided 2026-10-13: raster export (PNG, JPG) is a core service that every front 
 
 ## Problem
 
-Today the only renderable content is HP-GL, and `HpglToSvgConverter` parses and writes SVG in one pass, so nothing else can reuse the parse. The WPF and Tui front ends cannot show or save a bitmap without each owning a renderer. PostScript and PCL go through external tools (`StreamCaptureConverter`), which already produce PNG and need no part of this.
+Today the only renderable content is HP-GL, and `HpglToSvgConverter` parses and writes SVG in one pass, so nothing else can reuse the parse. The WPF and Tui front ends cannot show or save a bitmap without each owning a renderer. PostScript and PCL can go through external tools (`StreamCaptureConverter`) and, since 2026-11-23, through `PostScriptSceneParser` and `PclSceneParser` (line work only: paths, colour and matrix for PostScript, the HP-GL/2 segments for PCL) into the same scene, SVG and raster writers (internal conversion mode).
 
 ## Design
 
