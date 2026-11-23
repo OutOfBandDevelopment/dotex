@@ -31,6 +31,19 @@ public static class StreamCapturePreview
             return Decode(VectorSceneRasterizer.Rasterize(scene, HpglPreviewWidthPixels), kind.DisplayName, out message);
         }
 
+        if (kind.Format is StreamContentFormat.PostScript or StreamContentFormat.Pcl)
+        {
+            IVectorSceneParser parser = kind.Format == StreamContentFormat.PostScript ? new PostScriptSceneParser() : new PclSceneParser();
+            var drawn = parser.Parse(capture.Capture.Data);
+            if (drawn.Lines.Count == 0)
+            {
+                message = $"No line work found in this {kind.DisplayName}; text and raster content are not drawn. The captured bytes were saved as-is.";
+                return null;
+            }
+
+            return Decode(VectorSceneRasterizer.Rasterize(drawn, HpglPreviewWidthPixels), kind.DisplayName, out message);
+        }
+
         if (!kind.IsNativeImage)
         {
             message = $"Preview not available yet for {kind.DisplayName}; the captured bytes were saved as-is.";

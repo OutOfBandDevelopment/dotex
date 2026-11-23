@@ -1,6 +1,6 @@
 # Feature request: DevTerm rendering presenters and raster export service
 
-- **Status:** triaged
+- **Status:** done (raster export, PostScript and PCL scene parsers, WPF preview of all three; [change](../../changes/2026-11-23.md))
 - **Requested by:** owner (retire dev-term, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Applications/DevTerm` (presenters, Stream Monitor)
