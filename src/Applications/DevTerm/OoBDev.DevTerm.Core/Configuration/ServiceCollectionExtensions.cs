@@ -9,6 +9,7 @@ using OoBDev.System.IO.Brokers;
 using OoBDev.System.IO.Bluetooth;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using OoBDev.DevTerm.Hosting;
 using OoBDev.Telemetry;
@@ -191,6 +192,13 @@ public static class ServiceCollectionExtensions
     {
         var directory = PluginLoader.ResolveDirectory(cliOptions.Plugins);
         var results = PluginLoader.LoadAll(directory, services);
+        if (cliOptions.Transport is { Length: > 0 } selected
+            && services.Where(d => d.ServiceType == typeof(PluginTransport)).Select(d => (PluginTransport)d.ImplementationInstance!)
+                .FirstOrDefault(t => string.Equals(t.Name, selected, StringComparison.OrdinalIgnoreCase)) is { } chosen)
+        {
+            services.AddTransient<IDeviceAdapter>(_ => chosen.Create());
+        }
+
         services.AddSingleton<IReadOnlyList<PluginLoadResult>>(results);
         PublishInstrumentProviders(services);
         return services;

@@ -1,0 +1,11 @@
+{
+  "name": "ps-echo",
+  "version": "1.0.0",
+  "contract": 1,
+  "process": {
+    "kind": "transport",
+    "command": "pwsh",
+    "arguments": [ "-NoProfile", "-File", "{folder}/echo.ps1" ],
+    "replyTimeoutMs": 10000
+  }
+}

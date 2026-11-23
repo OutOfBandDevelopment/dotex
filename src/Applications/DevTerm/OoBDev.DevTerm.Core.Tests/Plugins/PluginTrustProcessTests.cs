@@ -17,6 +17,8 @@ namespace OoBDev.DevTerm.Tests;
 [TestClass]
 public sealed class PluginTrustProcessTests
 {
+    public required TestContext TestContext { get; set; }
+
     [TestMethod]
     public Task AnApprovedPythonPlugin_FoundByTheLoader_RendersThroughTheCatalog() =>
         RunApprovedExampleAsync("python", "python", "--version", "shout.py", "py-shout", ["{folder}/shout.py"], 10000, "HELLO");
@@ -64,6 +66,51 @@ public sealed class PluginTrustProcessTests
             await lazy.FlushAsync();
 
             CollectionAssert.AreEqual(new[] { expected }, lines);
+        }
+        finally
+        {
+            PluginTrust.Approver = null;
+            Environment.SetEnvironmentVariable(DevTermHome.EnvironmentVariable, previous);
+        }
+    }
+
+    [TestMethod]
+    public async Task AnApprovedTransportPlugin_FoundByTheLoader_IsChosenByTheTransportOption()
+    {
+        ToolProbe.RequireOrSkip("pwsh", "-NoProfile -Command exit");
+        var root = new DirectoryInfo(AppContext.BaseDirectory);
+        while (root is not null && !File.Exists(Path.Combine(root.FullName, "GitVersion.yml")))
+        {
+            root = root.Parent;
+        }
+
+        using var homeFolder = new TempDirectoryHandle();
+        var home = homeFolder.DirectoryPath;
+        var previous = Environment.GetEnvironmentVariable(DevTermHome.EnvironmentVariable);
+        var folder = Path.Combine(home, "plugins", "ps-echo");
+        Directory.CreateDirectory(folder);
+        try
+        {
+            Environment.SetEnvironmentVariable(DevTermHome.EnvironmentVariable, home);
+            var example = Path.Combine(root!.FullName, "examples", "devterm", "powershell", "out-of-process-transport");
+            foreach (var file in new[] { "echo.ps1", PluginManifest.FileName })
+            {
+                File.Copy(Path.Combine(example, file), Path.Combine(folder, file));
+            }
+
+            PluginTrust.Approver = new AlwaysApprover();
+            var services = new ServiceCollection();
+            OoBDev.DevTerm.Configuration.ServiceCollectionExtensions.AddPlugins(services, new OoBDev.DevTerm.Configuration.CliOptions { Transport = "PS-Echo", Plugins = Path.Combine(home, "plugins") });
+            await using var provider = services.BuildServiceProvider();
+
+            await using var adapter = provider.GetRequiredService<IDeviceAdapter>();
+            await adapter.OpenAsync(TestContext.CancellationToken);
+            await adapter.Output.WriteAsync(Encoding.ASCII.GetBytes("hi"), TestContext.CancellationToken);
+            var read = await adapter.Input.ReadAsync(TestContext.CancellationToken).AsTask().WaitAsync(TimeSpan.FromSeconds(15), TestContext.CancellationToken);
+
+            Assert.AreEqual("hi", Encoding.ASCII.GetString(read.Buffer.ToArray()));
+            Assert.AreEqual("plugin://ps-echo", adapter.Path);
+            Assert.AreEqual(0, provider.GetServices<IPresenter>().Count());
         }
         finally
         {

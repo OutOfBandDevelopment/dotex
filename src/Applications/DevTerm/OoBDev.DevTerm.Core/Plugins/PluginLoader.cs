@@ -108,12 +108,20 @@ public static class PluginLoader
         var request = new PluginApprovalRequest(manifest.Name, manifest.Version, root, string.Join(' ', new[] { command }.Concat(arguments)), PluginHash.Compute(root));
         if (!PluginTrust.Authorise(request))
         {
-            LivePlugins.AddPending(new PendingPlugin(request, command, arguments, TimeSpan.FromMilliseconds(Math.Clamp(process.ReplyTimeoutMs, 100, 60000))));
+            LivePlugins.AddPending(new PendingPlugin(request, command, arguments, TimeSpan.FromMilliseconds(Math.Clamp(process.ReplyTimeoutMs, 100, 60000)), process.Kind.ToLowerInvariant()));
             return new(folder, manifest.Name, false, $"needs your approval to run: {request.CommandLine}");
         }
 
         var timeout = TimeSpan.FromMilliseconds(Math.Clamp(process.ReplyTimeoutMs, 100, 60000));
-        services.AddTransient<IPresenter>(_ => new LazyExternalPresenter(manifest.Name, command, arguments, timeout));
+        if (string.Equals(process.Kind, "transport", StringComparison.OrdinalIgnoreCase))
+        {
+            services.AddSingleton(new PluginTransport(manifest.Name, () => new ExternalProcessAdapter(manifest.Name, command, arguments, timeout)));
+        }
+        else
+        {
+            services.AddTransient<IPresenter>(_ => new LazyExternalPresenter(manifest.Name, command, arguments, timeout));
+        }
+
         return new(folder, manifest.Name, true, $"approved {manifest.Name} {manifest.Version} (runs: {request.CommandLine}).");
     }
 

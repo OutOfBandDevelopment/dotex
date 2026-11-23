@@ -18,8 +18,11 @@ The sandboxed host that now implements the isolation (grants, brokered access, l
   stays silent, exits, or answers malformed JSON is marked faulted (`FaultReason`) and renders nothing from then on;
   the session and the other presenters carry on. A failed handshake throws from `StartAsync`.
 - stderr is the plugin's own log and is drained so it can never block the child.
-- Today only presenters are covered (`ExternalProcessPresenter : IPresenter`). Transports and device modules over the
-  same protocol are not designed.
+- Presenters are `ExternalProcessPresenter : IPresenter`. A manifest `process.kind` of `transport` makes the same kind of child a
+  transport (`ExternalProcessAdapter : IDeviceAdapter`, path `plugin://{name}`), chosen with `--transport {name}`. Host to plugin:
+  `hello`, `open`, `{"type":"write","hex":"..."}`, `close`. Plugin to host: `{"type":"opened"}` (answers `open` within the reply
+  timeout), `{"type":"data","hex":"..."}` (input bytes), `{"type":"error","message":"..."}` and `{"type":"closed"}`. Silence,
+  an exit or a bad line faults the adapter. Example: `examples/devterm/powershell/out-of-process-transport/`. Device modules are not designed.
 
 ```plantuml
 @startuml
@@ -72,7 +75,8 @@ bytes), `examples/go/out-of-process-plugin/` (reverses text); each folder has a 
 - [x] `plugin.json` discovery of out-of-process plugins in `PluginLoader` (a `process` entry instead of an `assembly`; 2026-10-03)
 - [x] Attach-to-a-running-session variant: any program can use the control pipe or loopback HTTP channel (`examples/python/control-channel-client/`, 2026-10-07)
 - [ ] Sandboxed launch of `process` plugins ([sandboxed-launch](sandboxed-launch.md), waits for Q31)
-- [ ] Transport and device-module variants
+- [x] Transport variant (`kind: transport`, 2026-11-23)
+- [ ] Device-module variant
 - [x] TUI in-app approval prompt: the TUI starts first, asks in a dialog, and an approved plugin goes live at once through `LivePlugins` (2026-10-09; WPF asks after its window loads, and the web host has a /plugins page)
 - [x] Review or revoke remembered approvals from the CLI: `--listapprovals true`, `--forgetplugin <name>` (2026-10-09)
 - [x] TUI/WPF Device > Plugin approvals...: lists them and walks them one at a time: forget, keep, stop (2026-10-09)
