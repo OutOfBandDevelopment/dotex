@@ -4,7 +4,7 @@
 > **Owner questions:** [OPEN-QUESTIONS.md](./OPEN-QUESTIONS.md) · **New to this project?** Read [CLAUDE.md](./CLAUDE.md) first.
 > **Other repositories to harvest from:** [docs/harvest-candidates.md](docs/harvest-candidates.md)
 
-**Last Updated:** 2026-11-20
+**Last Updated:** 2026-11-23
 
 GitHub is no longer the primary repository (local bare repo `origin`), so nothing here waits on GitHub Actions. Keep items to one short line; detail lives in the linked feature doc (rule `work-tracking`).
 
