@@ -61,3 +61,5 @@ Tests: `ScanningBlobContainerTests`.
 ## Document store
 
 `IDocumentStore.StoreAsync(content)` validates the document with `IValidateContent` (default `BypassContentValidation`; throw `InvalidContentException` to refuse, and nothing is stored), names it with `IDocumentKeyGenerator` (default `yyyy/MM/{guid}{ext}` in UTC from `TimeProvider`) and writes it to the registered `IBlobContainer`; `ReadAsync(key)` returns it or null. The validator may read the stream: the store rewinds a seekable stream afterwards. Register the container yourself (`IBlobContainer`); `TryAddDocumentServices` adds the rest.
+
+`IDocumentResolver` does the same by container name through `IBlobContainerFactory`: `StoreAsync(container, content)` returns a `DocumentReference(Container, Key)` that a request can carry instead of the bytes, and `ResolveAsync(reference)` reads it back (null when missing).

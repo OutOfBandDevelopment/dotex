@@ -34,6 +34,7 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IDocumentKeyGenerator, DocumentKeyGenerator>();
         services.TryAddSingleton<IValidateContent, BypassContentValidation>();
         services.TryAddTransient<IDocumentStore, DocumentStore>();
+        services.TryAddTransient<IDocumentResolver, DocumentResolver>();
 
         services.TryAddTransient<IBlobContainerFactory, BlobContainerFactory>();
         services.TryAddTransient(typeof(IBlobContainer<>), typeof(WrappedBlobContainer<>));
