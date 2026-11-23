@@ -71,6 +71,7 @@ bytes), `examples/go/out-of-process-plugin/` (reverses text); each folder has a 
 - [x] Go example run through the host (go 1.27.1, 2026-10-03)
 - [x] `plugin.json` discovery of out-of-process plugins in `PluginLoader` (a `process` entry instead of an `assembly`; 2026-10-03)
 - [x] Attach-to-a-running-session variant: any program can use the control pipe or loopback HTTP channel (`examples/python/control-channel-client/`, 2026-10-07)
+- [ ] Sandboxed launch of `process` plugins ([sandboxed-launch](sandboxed-launch.md), waits for Q31)
 - [ ] Transport and device-module variants
 - [x] TUI in-app approval prompt: the TUI starts first, asks in a dialog, and an approved plugin goes live at once through `LivePlugins` (2026-10-09; WPF asks after its window loads, and the web host has a /plugins page)
 - [x] Review or revoke remembered approvals from the CLI: `--listapprovals true`, `--forgetplugin <name>` (2026-10-09)

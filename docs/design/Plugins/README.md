@@ -6,6 +6,7 @@ Two designs cover plugins and they belong together: this folder is the plugin mo
 
 - [plugin-model.md](plugin-model.md) - plugin contracts, packaging and discovery, isolation and versioning, built-in versus plugin
 - [plugin-contributed-panels.md](plugin-contributed-panels.md) - plugins that contribute control panels and menu entries
+- [sandboxed-launch.md](sandboxed-launch.md) - proposed: run `process` plugins through the sandbox launchers (Q31)
 - [out-of-process-plugins.md](out-of-process-plugins.md) - plugins in any language hosted in a child process; the isolation itself is the [sandboxed plugin host](../PluginSandbox/architecture.md)
 
 ## How the two fit
