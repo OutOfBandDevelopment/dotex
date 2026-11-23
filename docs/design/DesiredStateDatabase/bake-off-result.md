@@ -47,6 +47,7 @@ Tools built from source with Go 1.27.1 into a scratch folder outside the reposit
 | S8 out-of-order scripts | P: reordered |
 | S9 view and trigger | P: created, a re-run changes nothing, a changed trigger is replaced with `CREATE OR ALTER` |
 | S4 rename a column | G: without an annotation it plans `ADD` of the new column and a skipped `DROP` of the old (data stays in the old column); with `/* @renamed from=FullName */` it plans `sp_rename` (P) |
+| S12 usable from .NET | G (2026-11-23): `--check` exits 2 when changes are pending, 1 on a syntax error or failed login, `--apply` exits 0; the plan is SQL text only (no JSON), so a wrapper reads the exit code and treats the text as a log |
 | S7 plan then apply | G: `--dry-run` prints SQL text only; `--check` exits 2 when changes are pending |
 | S11 hand-added column | P: the drop is skipped without `--enable-drop`, `--check` exits 2 |
 | S2 second run (small two-table fixture with inline named primary keys) | F: every run re-plans dropping and re-adding the primary keys and the foreign key, so `--check` never reports a clean database (the 20-table fixture above was clean); not resolved |
@@ -90,5 +91,5 @@ Atlas v1.4.2 canary (the vendor `latest` Windows binary, downloaded 2026-11-23 i
 ## Not covered
 
 - Atlas: run on PostgreSQL only (2026-11-23), see [Atlas on PostgreSQL](#atlas-on-postgresql). SQLite and SQL Server were not run with it, and its EULA text and paid tiers are not assessed beyond what the errors showed.
-- S12 on SQL Server (exit codes seen only), S10 for SQL Server, and the fixture's function, trigger and extension objects.
+- S10 for SQL Server and the fixture's function, trigger and extension objects.
 - No weights or scores were computed; the table above is the raw record.
