@@ -413,6 +413,25 @@ services:
       - ./moto-init:/init:ro
     restart: "no"
 
+  # The emulator keeps its own SQL Server with no volume, so a restart never meets databases an earlier run initialised
+  # (`Cannot create file SbGatewayDatabase.mdf` against the shared sql-server volume).
+  servicebus-sql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: oobd-test-servicebus-sql
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${SQL_SA_PASSWORD:-IntegrationTest123!}
+      - MSSQL_PID=Developer
+    networks:
+      - integration-test-net
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "${SQL_SA_PASSWORD:-IntegrationTest123!}", "-Q", "SELECT 1", "-C"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+      start_interval: 1s
+
   servicebus-emulator:
     image: mcr.microsoft.com/azure-messaging/servicebus-emulator:latest
     container_name: oobd-test-servicebus
@@ -422,12 +441,12 @@ services:
       - integration-test-net
     environment:
       - ACCEPT_EULA=Y
-      - SQL_SERVER=oobd-test-sqlserver
+      - SQL_SERVER=oobd-test-servicebus-sql
       - MSSQL_SA_PASSWORD=${SQL_SA_PASSWORD:-IntegrationTest123!}
     volumes:
       - ./servicebus-config/Config.json:/ServiceBus_Emulator/ConfigFiles/Config.json:ro
     depends_on:
-      sql-server:
+      servicebus-sql:
         condition: service_healthy
     # deploy:
     #   resources:
