@@ -1,6 +1,6 @@
 # Feature request: spatial services (address geocoding with Census, Google Maps and Bing Maps)
 
-- **Status:** triaged
+- **Status:** done (contract, Census and Google adapters, geo math built 2026-11-19 to 2026-11-23, [change](../../changes/2026-11-23.md); Bing dropped by Q19)
 - **Requested by:** owner (SharedFramework comparison, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Framework` (abstractions) and `src/ExternalServices/<Vendor>` (adapters)
