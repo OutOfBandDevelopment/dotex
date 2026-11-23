@@ -81,7 +81,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
       - [ ] Open: Event Hubs adapter and client (no emulator, waits for a consumer); last-run time persisted by the hosted service (the `RecurringSchedule` catch-up logic is built); dead-letter publish on failure (design open points).
 
     - [data loader](docs/features/request/2026-11-10-data-loader-etl.md) (decided Q18: library only, no CLI) (core and EF sink built 2026-11-19)
-      - [ ] Open: batching (the SQL Server Integration test is built 2026-11-23); lookups by property or query, master data provider, `DocumentUpload` and `GetTextData` from the source (decide with the MasterData design).
+      - [ ] Open: lookups by property or query, master data provider, `DocumentUpload` and `GetTextData` from the source (decide with the MasterData design).
 
     - [spatial services](docs/features/request/2026-11-10-spatial-services.md) (Q19: waits for a consumer, Bing dropped) (contract and Census adapter built 2026-11-19)
       - [ ] Open: Google Maps adapter (Bing dropped); waits for a consumer (Q19).

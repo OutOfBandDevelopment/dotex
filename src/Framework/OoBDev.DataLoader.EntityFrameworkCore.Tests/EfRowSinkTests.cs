@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -61,5 +62,38 @@ public sealed class EfRowSinkTests
 
         Assert.AreEqual(2, report.Written);
         Assert.AreEqual(1, report.Skipped);
+    }
+
+    [TestMethod]
+    public async Task Load_BatchedCsv_MatchesRowByRowAndWritesInBatches()
+    {
+        var services = new ServiceCollection();
+        services.TryAddDataLoader();
+        var sink = new EfRowSink(database.Factory, "people", "id");
+        services.AddSingleton<IRowSink>(sink);
+        using var provider = services.BuildServiceProvider();
+        using var csv = new MemoryStream(Encoding.UTF8.GetBytes("id,name\n1,Ann\n2,Bo\n1,Dup\n3,Cy\n4,Di\n"));
+
+        var report = await provider.GetRequiredService<ILoader>().LoadAsync(csv, "csv", new LoadOptions { BatchSize = 2 }, CancellationToken.None);
+        TestContext.WriteLine($"read={report.Read} written={report.Written} skipped={report.Skipped}");
+
+        Assert.AreEqual(5, report.Read);
+        Assert.AreEqual(4, report.Written);
+        Assert.AreEqual(1, report.Skipped);
+        Assert.AreEqual("Ann", (await sink.GetAsync("1", CancellationToken.None))!["name"]);
+        Assert.AreEqual("Di", (await sink.GetAsync("4", CancellationToken.None))!["name"]);
+    }
+
+    [TestMethod]
+    public async Task WriteBatch_ReplaceWithRepeatInBatch_LastRowWins()
+    {
+        var sink = new EfRowSink(database.Factory, "people", "id");
+        await sink.WriteAsync(Row("1", "Ann"), DuplicatePolicy.Skip, CancellationToken.None);
+
+        var results = await sink.WriteBatchAsync([Row("1", "Bo"), Row("2", "Cy"), Row("2", "Di")], DuplicatePolicy.Replace, CancellationToken.None);
+
+        CollectionAssert.AreEqual(new[] { WriteResult.Replaced, WriteResult.Written, WriteResult.Replaced }, results.ToArray());
+        Assert.AreEqual("Bo", (await sink.GetAsync("1", CancellationToken.None))!["name"]);
+        Assert.AreEqual("Di", (await sink.GetAsync("2", CancellationToken.None))!["name"]);
     }
 }

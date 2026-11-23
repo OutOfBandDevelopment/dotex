@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace OoBDev.DataLoader.EntityFrameworkCore;
 /// <param name="factory">Creates a context per call.</param>
 /// <param name="dataset">The dataset name.</param>
 /// <param name="keyColumn">The column that identifies a row.</param>
-public sealed class EfRowSink(IDbContextFactory<LoadedRowsDbContext> factory, string dataset, string keyColumn) : IRowSink
+public sealed class EfRowSink(IDbContextFactory<LoadedRowsDbContext> factory, string dataset, string keyColumn) : IBatchRowSink
 {
     /// <inheritdoc />
     public async ValueTask<WriteResult> WriteAsync(RowContext row, DuplicatePolicy policy, CancellationToken cancellationToken)
@@ -42,6 +43,44 @@ public sealed class EfRowSink(IDbContextFactory<LoadedRowsDbContext> factory, st
                     return WriteResult.Duplicate;
             }
         }
+    }
+
+    /// <inheritdoc />
+    public async ValueTask<IReadOnlyList<WriteResult>> WriteBatchAsync(IReadOnlyList<RowContext> rows, DuplicatePolicy policy, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(rows);
+        var keys = rows.Select(r => r.Values.TryGetValue(keyColumn, out var k) ? k ?? string.Empty : string.Empty).ToArray();
+        var results = new WriteResult[rows.Count];
+        var db = await factory.CreateDbContextAsync(cancellationToken).ConfigureAwait(false);
+        await using (db.ConfigureAwait(false))
+        {
+            var distinct = keys.Distinct().ToArray();
+            var tracked = await db.Rows.Where(x => x.Dataset == dataset && distinct.Contains(x.Key)).ToDictionaryAsync(x => x.Key, cancellationToken).ConfigureAwait(false);
+            for (var i = 0; i < rows.Count; i++)
+            {
+                var json = JsonSerializer.Serialize(rows[i].Values);
+                if (!tracked.TryGetValue(keys[i], out var existing))
+                {
+                    var added = new LoadedRow { Dataset = dataset, Key = keys[i], ValuesJson = json };
+                    db.Rows.Add(added);
+                    tracked[keys[i]] = added;
+                    results[i] = WriteResult.Written;
+                }
+                else if (policy == DuplicatePolicy.Replace)
+                {
+                    existing.ValuesJson = json;
+                    results[i] = WriteResult.Replaced;
+                }
+                else
+                {
+                    results[i] = policy == DuplicatePolicy.Skip ? WriteResult.Skipped : WriteResult.Duplicate;
+                }
+            }
+
+            await db.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        return results;
     }
 
     /// <summary>Reads a stored row back.</summary>

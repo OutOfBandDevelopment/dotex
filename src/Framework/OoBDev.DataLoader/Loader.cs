@@ -28,6 +28,32 @@ public sealed class Loader(IEnumerable<IRowReader> readers, IEnumerable<IPipelin
 
         int read = 0, written = 0, replaced = 0, skipped = 0;
         var errors = new List<RowError>();
+        var batch = _sink is IBatchRowSink && options.BatchSize > 1 ? new List<RowContext>(options.BatchSize) : null;
+
+        async Task<bool> FlushAsync()
+        {
+            var rows = batch!;
+            if (rows.Count == 0) return false;
+            var results = await ((IBatchRowSink)_sink).WriteBatchAsync(rows, options.Duplicates, cancellationToken).ConfigureAwait(false);
+            var failed = false;
+            for (var i = 0; i < rows.Count; i++)
+            {
+                switch (results[i])
+                {
+                    case WriteResult.Written: written++; break;
+                    case WriteResult.Replaced: replaced++; break;
+                    case WriteResult.Skipped: skipped++; break;
+                    default:
+                        errors.Add(new RowError(rows[i].Line, "Duplicate row"));
+                        failed = true;
+                        break;
+                }
+            }
+
+            rows.Clear();
+            return failed && options.StopOnError;
+        }
+
         await foreach (var source_row in reader.ReadAsync(source, cancellationToken).ConfigureAwait(false))
         {
             read++;
@@ -37,6 +63,13 @@ public sealed class Loader(IEnumerable<IRowReader> readers, IEnumerable<IPipelin
             {
                 errors.Add(new RowError(row.Line, rejected));
                 if (options.StopOnError) break;
+                continue;
+            }
+
+            if (batch is not null)
+            {
+                batch.Add(row);
+                if (batch.Count >= options.BatchSize && await FlushAsync().ConfigureAwait(false)) return new LoadReport(read, written, replaced, skipped, errors);
                 continue;
             }
 
@@ -52,6 +85,7 @@ public sealed class Loader(IEnumerable<IRowReader> readers, IEnumerable<IPipelin
             }
         }
 
+        if (batch is not null) await FlushAsync().ConfigureAwait(false);
         return new LoadReport(read, written, replaced, skipped, errors);
     }
 

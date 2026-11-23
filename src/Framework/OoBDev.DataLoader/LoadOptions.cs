@@ -10,4 +10,7 @@ public sealed class LoadOptions
 
     /// <summary>Stop at the first rejected row.</summary>
     public bool StopOnError { get; set; }
+
+    /// <summary>Rows written per sink call when the sink is an <see cref="IBatchRowSink"/>; 1 writes row by row.</summary>
+    public int BatchSize { get; set; } = 1;
 }
