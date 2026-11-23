@@ -1,6 +1,6 @@
 ﻿# Feature request: Face and pet detection, embedding and clustering
 
-- **Status:** triaged (clustering and schedule policy built 2026-11-19 in OoBDev.Imaging.People; detectors, embedders and adapter open)
+- **Status:** done 2026-11-23 for the framework side (clustering, schedule policy, stage contracts, match request and response, `MatchPipeline`); no detector or embedder is shipped (owner Q22: the application supplies adapters), see the [design](../../design/FaceAndPetMatching/README.md)
 - **Requested by:** owner (filed from the NAS storage catalog application, `C:\repo\_storage`)
 - **Date:** 2026-11-11
 - **Area:** new, near `Onnx.ImageEmbeddings` and `Data.Vectors`

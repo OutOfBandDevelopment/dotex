@@ -12,3 +12,18 @@ Clustering of detected faces and pets into people and pet groups. Pure logic: it
 | `PeopleClusteringOptions` | Thresholds, weight and schedule values (defaults taken from the catalog application) |
 
 Items that already have a cluster are never reassigned, so an assignment the owner confirmed does not change. Ported from the storage catalog's `ClusterAssigner` (behaviour kept, with similarity and notes added).
+
+## Stages and the match pipeline
+
+The detect, embed and cluster stages are interfaces an adapter implements; the framework ships no model (owner Q22: the application supplies detectors and embedders).
+
+| Type | Purpose |
+|------|---------|
+| `IFaceDetector`, `IPetDetector` | Find faces or pets in an encoded image (a pet detection names its species) |
+| `IFaceEmbedder`, `IPetEmbedder` | Embed one detection |
+| `DetectedItem`, `ImageBox`, `ImagePoint` | A detection: kind, box, score, species, landmarks |
+| `MatchRequest` | Image, kinds, species filter, stages, items of an earlier run, candidate set, named pet clusters, thresholds, `IncludeEmbeddings`, `NearestCount` |
+| `MatchPipeline` | Runs the requested stages in order; any adapter can be left out when its stage is not asked for, and a missing one fails with a message naming it |
+| `MatchResponse`, `MatchedItem`, `NearCandidate` | Per item: detection, embedding (only when asked), cluster, similarity, *why* note, nearest candidates; counts of new clusters |
+
+A run may do one stage (for example detect on one host) and a later run continues from the returned items (`MatchRequest.Items`), so the work can be split and resumed. Embeddings are left out of a response unless `IncludeEmbeddings` is set; they are private data.

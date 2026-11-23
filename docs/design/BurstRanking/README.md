@@ -60,7 +60,7 @@ Pairs: five frames within two seconds pair up, a gap above the window breaks the
 
 ## Not in the first slice
 
-- Eyes-open and face signals (need the face decision, see [face and pet matching](../../features/request/2026-11-11-face-and-pet-matching.md)).
+- Eyes-open and face signals (need the face decision, see [face and pet matching](../../features/completed/2026-11-11-face-and-pet-matching.md)).
 - Subject-region focus (needs the face decision); the eight whole-frame measures are built (below).
 - Database queue and API: catalog-specific.
 
