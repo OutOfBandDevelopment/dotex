@@ -14,13 +14,24 @@ public sealed partial class ScheduleHost(
     IOptions<ScheduleHostOptions> options,
     TimeProvider timeProvider,
     ILogger<ScheduleHost> logger,
-    IScheduleFailureHandler? failureHandler = null) : BackgroundService
+    IScheduleFailureHandler? failureHandler = null,
+    RecurringScheduler? recurring = null) : BackgroundService
 {
     /// <inheritdoc />
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var o = options.Value;
-        var runner = new ScheduleRunner(store, timeProvider, run, o.Lease, failureHandler);
+        Func<ScheduleItem, CancellationToken, Task> step = recurring is null ? run : async (item, ct) =>
+        {
+            await run(item, ct).ConfigureAwait(false);
+            await recurring.CompletedAsync(item, ct).ConfigureAwait(false);
+        };
+        var runner = new ScheduleRunner(store, timeProvider, step, o.Lease, failureHandler);
+        if (recurring is not null)
+        {
+            await recurring.StartAsync(stoppingToken).ConfigureAwait(false);
+        }
+
         using var timer = new PeriodicTimer(o.PollInterval, timeProvider);
         try
         {

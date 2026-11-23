@@ -59,6 +59,21 @@ public sealed class RecurringSchedule(IScheduleStore store, TimeProvider time, s
         return registered;
     }
 
+    /// <summary>Registers the occurrence after <paramref name="after"/>, if the recurrence has one; registering it twice never duplicates it.</summary>
+    /// <param name="after">The due time of the occurrence that just ran.</param>
+    /// <param name="cancellationToken">Cancellation.</param>
+    /// <returns>The due time registered, or null when the recurrence has ended.</returns>
+    public async Task<DateTimeOffset?> RegisterNextAsync(DateTimeOffset after, CancellationToken cancellationToken)
+    {
+        if (recurrence.Next(after) is not { } next)
+        {
+            return null;
+        }
+
+        await RegisterAsync(next, [], cancellationToken).ConfigureAwait(false);
+        return next;
+    }
+
     private async Task RegisterAsync(DateTimeOffset due, List<DateTimeOffset> registered, CancellationToken cancellationToken)
     {
         await store.RegisterAsync($"{key}@{due.UtcTicks.ToString(CultureInfo.InvariantCulture)}", due, eventType, payload, cancellationToken).ConfigureAwait(false);

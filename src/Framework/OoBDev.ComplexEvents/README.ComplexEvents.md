@@ -5,3 +5,5 @@
 `CronRecurrence`, `RecurringSchedule` and the catch-up policies (`ScheduleAt` attribute in the Abstractions) cover recurring events. Not built here: the Event Hubs provider (CE-6), persisting the last run time. Design: [ComplexEvents](../../../docs/design/ComplexEvents/README.md).
 
 Failure hook: pass an `IScheduleFailureHandler` to `ScheduleRunner` (or register one for `ScheduleHost`) to dead-letter an item after its last attempt.
+
+Recurring runs: `RecurringScheduler` (a set of `RecurringSchedule`s plus an `ILastRunStore`) is picked up by `ScheduleHost` when registered: it registers missed and upcoming occurrences on start from the recorded last run, and after each run records it and registers the next. `InMemoryLastRunStore` loses the record on restart.
