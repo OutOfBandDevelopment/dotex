@@ -1,0 +1,54 @@
+@page "/dock"
+@using OoBDev.DevTerm.Web.Docking
+@inject DockLayoutStore Store
+
+<h2>Dock</h2>
+<style>
+    .dock-root { height: 80vh; display: flex; }
+    .dock-split { display: flex; flex: 1; min-width: 0; min-height: 0; gap: 4px; }
+    .dock-cell { min-width: 0; min-height: 0; display: flex; }
+    .dock-cell > * { flex: 1; }
+    .dock-pane { display: flex; flex-direction: column; flex: 1; min-width: 0; border: 1px solid #38424f; }
+    .dock-tabs { display: flex; flex-wrap: wrap; background: #1c232b; }
+    .dock-tab { display: inline-flex; border-right: 1px solid #38424f; }
+    .dock-tab[aria-selected=true] { background: #2a3440; }
+    .dock-body { overflow: auto; padding: 8px; flex: 1; }
+</style>
+@if (_layout is null)
+{
+    <p class="note">Loading layout...</p>
+}
+else
+{
+    <div class="dock-root" data-dock>
+        <DockNodeView Node="_layout.Root" OnActivate="ActivateAsync" OnClose="CloseAsync" />
+    </div>
+    <p><button type="button" @onclick="ResetAsync">Reset layout</button></p>
+}
+
+@code {
+    private DockLayout? _layout;
+
+    private static IReadOnlyCollection<string> Ids => [.. DockPanels.All.Select(p => p.Id)];
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _layout = await Store.LoadAsync(Ids);
+            StateHasChanged();
+        }
+    }
+
+    private Task ActivateAsync(string id) => ChangeAsync(_layout!.Activate(id));
+
+    private Task CloseAsync(string id) => ChangeAsync(_layout!.Close(id));
+
+    private Task ResetAsync() => ChangeAsync(DockLayout.Default(Ids));
+
+    private async Task ChangeAsync(DockLayout next)
+    {
+        _layout = next;
+        await Store.SaveAsync(next);
+    }
+}

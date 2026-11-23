@@ -1,0 +1,45 @@
+@using OoBDev.DevTerm.Web.Docking
+@if (Node is DockSplit split)
+{
+    <div class="dock-split" style="flex-direction:@(split.Direction == "column" ? "column" : "row")">
+        @for (var i = 0; i < split.Children.Count; i++)
+        {
+            <div class="dock-cell" style="flex:@split.Ratios[i].ToString("0.####", global::System.Globalization.CultureInfo.InvariantCulture) 1 0">
+                <DockNodeView Node="split.Children[i]" OnActivate="OnActivate" OnClose="OnClose" />
+            </div>
+        }
+    </div>
+}
+else if (Node is DockPane pane)
+{
+    <div class="dock-pane">
+        <div class="dock-tabs" role="tablist">
+            @foreach (var id in pane.Tabs)
+            {
+                var panel = DockPanels.All.First(p => p.Id == id);
+                var active = id == pane.Active;
+                <span class="dock-tab" aria-selected="@(active ? "true" : "false")">
+                    <button type="button" role="tab" data-tab="@id" @onclick="() => OnActivate.InvokeAsync(id)">@panel.Title</button>
+                    <button type="button" class="dock-close" aria-label="Close @panel.Title" data-close="@id" @onclick="() => OnClose.InvokeAsync(id)">x</button>
+                </span>
+            }
+        </div>
+        <div class="dock-body">
+            @if (pane.Active is not null)
+            {
+                <DynamicComponent Type="DockPanels.All.First(p => p.Id == pane.Active).Component" />
+            }
+        </div>
+    </div>
+}
+
+@code {
+    /// <summary>The node to draw.</summary>
+    [Parameter, EditorRequired] public DockNode Node { get; set; } = default!;
+
+    /// <summary>Raised with the panel id when a tab is chosen.</summary>
+    [Parameter] public EventCallback<string> OnActivate { get; set; }
+
+    /// <summary>Raised with the panel id when a tab is closed.</summary>
+    [Parameter] public EventCallback<string> OnClose { get; set; }
+}

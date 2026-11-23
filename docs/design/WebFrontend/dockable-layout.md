@@ -2,7 +2,7 @@
 
 [↑ Web front end](README.md) · [Request](../../features/request/2026-11-10-devterm-dockable-layout-and-blazor-frontend.md) · [WPF `DockLayout`](../DevTermParity/README.md)
 
-**Status:** design; slice 1 (the `DockLayout` model in `OoBDev.DevTerm.Web/Docking`, 8 unit tests) built 2026-11-23, slices 2 to 4 open. **Last Updated:** 2026-11-23. Assumptions are marked; the owner can overturn them without losing work (the layout model is independent of the rendering).
+**Status:** design; slice 1 (the `DockLayout` model) and slice 2 (`DockHost` at `/dock`, `DockNodeView`, `DockLayoutStore` over `localStorage`, `Activate` and `Close`; 11 unit tests, no component render test because bUnit is not referenced, no live browser pass) built 2026-11-23, slices 3 and 4 open. **Last Updated:** 2026-11-23. Assumptions are marked; the owner can overturn them without losing work (the layout model is independent of the rendering).
 
 ## Contents
 

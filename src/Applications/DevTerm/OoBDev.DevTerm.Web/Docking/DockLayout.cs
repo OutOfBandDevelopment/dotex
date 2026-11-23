@@ -112,6 +112,11 @@ public sealed record DockLayout(int Version, DockNode Root)
         return pruned is null ? this : this with { Root = pruned };
     }
 
+    /// <summary>Makes a tab the active one in the pane that holds it.</summary>
+    /// <param name="panelId">The panel to show.</param>
+    public DockLayout Activate(string panelId) =>
+        this with { Root = Map(Root, n => n is DockPane p && p.Tabs.Contains(panelId) ? p with { Active = panelId } : n) };
+
     /// <summary>Sets the sizes of the split at <paramref name="splitIndex"/> (depth-first order), clamped to <see cref="MinRatio"/> and normalised.</summary>
     /// <param name="splitIndex">The split, depth-first order.</param>
     /// <param name="ratios">One size per child.</param>

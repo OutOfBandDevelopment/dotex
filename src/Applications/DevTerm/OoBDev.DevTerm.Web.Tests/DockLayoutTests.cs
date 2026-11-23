@@ -83,4 +83,12 @@ public class DockLayoutTests
         CollectionAssert.AreEqual(_ids, DockLayout.Load(new DockLayout(2, new DockPane(["panel"])).ToJson(), _ids).PanelIds().ToList());
         CollectionAssert.AreEqual(_ids, DockLayout.Load(null, _ids).PanelIds().ToList());
     }
+
+    [TestMethod]
+    [TestCategory("Unit")]
+    public void Activate_ChangesTheActiveTabOfItsPane()
+    {
+        var layout = DockLayout.Default(_ids).Activate("monitor");
+        Assert.AreEqual("monitor", ((DockPane)layout.Root).Active);
+    }
 }
