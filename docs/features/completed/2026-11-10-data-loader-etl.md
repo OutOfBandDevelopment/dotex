@@ -1,6 +1,6 @@
 # Feature request: data loader (ETL pipeline and CLI)
 
-- **Status:** triaged
+- **Status:** done 2026-11-23 for the library (readers, pipeline, handlers, in-memory and EF Core sinks, batching; owner Q18: library only, no CLI). The master data provider waits for the MasterData design (BACKLOG).
 - **Requested by:** owner (SharedFramework comparison, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Framework` (abstractions and pipeline) and `src/Tools` (CLI)

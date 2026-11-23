@@ -79,7 +79,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 - [ ] Triaged requests (2026-11-11) with a design or comparison first (each file under `docs/features/request/` carries its triage note); report publish and GitBook are declined (owner 2026-11-16):
   - SharedFramework gaps: [complex events](docs/features/completed/2026-11-10-complex-events-and-scheduling.md) (decided 2026-11-19, owner Q18: stand alone, no database project) (in-process core built 2026-11-19, EF store built 2026-11-19, hosted service built, `ScheduleAt`, cron and catch-up built 2026-11-23, Event Hubs built and checked on the emulator 2026-11-23, request done, [design](docs/design/ComplexEvents/README.md))
 
-    - [data loader](docs/features/request/2026-11-10-data-loader-etl.md) (decided Q18: library only, no CLI) (core and EF sink built 2026-11-19)
+    - data loader: done ([request](docs/features/completed/2026-11-10-data-loader-etl.md)); the master data provider and a database deployment template wait for the [MasterData](docs/design/MasterData/README.md) design
       - [ ] Open: master data provider (waits for the MasterData build; there is no code to provide for yet). `DocumentUpload` and `GetTextData` are built (2026-11-23).
 
     - [test data generation](docs/features/rejected/2026-11-10-procedural-test-data-generation.md) (core built 2026-11-19)
