@@ -468,6 +468,22 @@ The device list with connections is in [docs/how-tos/test-hardware.md](docs/how-
 
 ---
 
+### Azure Event Hubs emulator
+
+**Service:** Azure Event Hubs emulator (AMQP on host port 5674, `TEST_PORT_EVENTHUBS`; metadata in the Azurite container)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `EVENTHUB_CONNECTION_STRING` | `Endpoint=sb://127.0.0.1:5674;...;UseDevelopmentEmulator=true;` | Emulator connection string |
+| `EVENTHUB_NAME` | `integration-test-hub` | Hub (two partitions) from `containers/testing/eventhubs-config/Config.json` |
+| `EVENTHUB_CONSUMER_GROUP` | `integration-test-group` | Consumer group on that hub |
+
+**Docker Container:** `mcr.microsoft.com/azure-messaging/eventhubs-emulator` (needs Azurite; no health check, the scripts probe the port)
+
+**Tests Using:** `AzureEventHubIntegrationTests` (publish and read back one event with its type)
+
+---
+
 ### Moto (AWS Emulator)
 
 **Service:** AWS cloud service emulator for local development

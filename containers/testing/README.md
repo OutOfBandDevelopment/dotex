@@ -342,6 +342,7 @@ scripts\integration-down.bat --clean
 | **Azurite** | `mcr.microsoft.com/azure-storage/azurite` | 10000 (Blob)<br>10001 (Queue)<br>10002 (Table) | Azure Storage emulator | `nc -z localhost 10000` |
 | **Moto** | `motoserver/moto` | 4566 | AWS services emulator (SQS, S3, etc.) | `curl http://localhost:4566/moto-api/` |
 | **Service Bus Emulator** | `mcr.microsoft.com/azure-messaging/servicebus-emulator` | 5672 (AMQP) | Azure Service Bus emulator | `nc -z localhost 5672` |
+| **Event Hubs Emulator** | `mcr.microsoft.com/azure-messaging/eventhubs-emulator` | 5674 (AMQP) | Azure Event Hubs emulator (uses Azurite) | `nc -z localhost 5674` |
 | **OpenTelemetry** | `mcr.microsoft.com/dotnet/aspire-dashboard:latest` | 18888, 4317, 4318 | OTLP receiver, dashboard UI, telemetry API | `curl http://localhost:18888/` |
 
 ### DevTerm peers
@@ -715,6 +716,7 @@ All containers are prefixed with `oobd-test-`:
 - `oobd-test-azurite`
 - `oobd-test-moto`
 - `oobd-test-servicebus`
+- `oobd-test-eventhubs`
 - `oobd-test-keycloak`
 - `oobd-test-sbert`
 - `oobd-test-ollama`

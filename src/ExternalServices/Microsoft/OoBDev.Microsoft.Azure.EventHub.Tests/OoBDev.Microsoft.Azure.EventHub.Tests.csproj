@@ -24,5 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OoBDev.Microsoft.Azure.EventHub\OoBDev.Microsoft.Azure.EventHub.csproj" />
+    <ProjectReference Include="..\..\..\Framework\OoBDev.ComplexEvents\OoBDev.ComplexEvents.csproj" />
+    <ProjectReference Include="..\..\..\Framework\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
   </ItemGroup>
 </Project>

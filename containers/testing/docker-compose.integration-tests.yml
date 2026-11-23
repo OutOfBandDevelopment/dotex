@@ -458,6 +458,25 @@ services:
     # Service logs "Emulator Service is Successfully Up!" when ready
     # Tests should handle connection retries gracefully
 
+  # Event Hubs emulator: needs Azurite for its blob and table metadata. AMQP is on 5674 because the Service Bus emulator holds 5672 and RabbitMQ 5673.
+  eventhubs-emulator:
+    image: mcr.microsoft.com/azure-messaging/eventhubs-emulator:latest
+    container_name: oobd-test-eventhubs
+    ports:
+      - "${TEST_PORT_EVENTHUBS:-5674}:5672"   # AMQP
+    networks:
+      - integration-test-net
+    environment:
+      - ACCEPT_EULA=Y
+      - BLOB_SERVER=oobd-test-azurite
+      - METADATA_SERVER=oobd-test-azurite
+    volumes:
+      - ./eventhubs-config/Config.json:/Eventhubs_Emulator/ConfigFiles/Config.json:ro
+    depends_on:
+      azurite:
+        condition: service_healthy
+    # No health check (the image has no shell); the log line "Emulator Service is Successfully Up!" marks readiness.
+
   otel-dashboard:
     image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
     container_name: oobd-test-otel

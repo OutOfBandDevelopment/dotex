@@ -47,6 +47,7 @@ SERVICES=(
     "oobd-test-azurite"
     "oobd-test-moto"
     "oobd-test-servicebus"
+    "oobd-test-eventhubs"
     "oobd-test-keycloak"
     "oobd-test-sbert"
     "oobd-test-ollama"
@@ -98,6 +99,10 @@ check_container_health() {
         if [ "$container_state" = "running" ]; then
             # The Service Bus emulator image has no shell for a Docker health check, so probe its AMQP port instead
             if [ "$container_name" = "oobd-test-servicebus" ] && ! (exec 3<>"/dev/tcp/localhost/${TEST_PORT_SERVICEBUS:-5672}") 2>/dev/null; then
+                echo "starting"
+                return
+            fi
+            if [ "$container_name" = "oobd-test-eventhubs" ] && ! (exec 3<>"/dev/tcp/localhost/${TEST_PORT_EVENTHUBS:-5674}") 2>/dev/null; then
                 echo "starting"
                 return
             fi

@@ -17,4 +17,4 @@ services.TryAddAzureEventHub();   // binds OoBDev:Azure:EventHub, or pass an opt
 
 ## Testing
 
-One Unit test checks the registration (no network). There is no Event Hubs emulator in the test stack, so publish and consume against Azure are not covered; add a `LiveIntegration` test or an emulator service (`add-integration-service` skill) when a consumer needs it.
+One Unit test checks the registration (no network). One Integration test (`oobd-test-eventhubs`, the emulator in the test stack with Azurite, host port 5674) publishes an event and reads it back with its type. Checkpointing is not built, so restart behaviour is not covered.

@@ -1,6 +1,6 @@
 # Feature request: complex events, scheduling and Azure Event Hubs
 
-- **Status:** triaged
+- **Status:** done (scheduler, durable stores, hosted service, recurring and cron, Event Hubs client with an emulator test; [change](../../changes/2026-11-23.md))
 - **Requested by:** owner (SharedFramework comparison, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Framework` (abstractions and common), `src/ExternalServices/Microsoft` (Event Hubs)

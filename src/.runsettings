@@ -176,6 +176,11 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="SERVICEBUS_TEST_QUEUE" value="integration-test-queue" />
 		<Parameter name="SERVICEBUS_TEST_TOPIC" value="integration-test-topic" />
 		<Parameter name="SERVICEBUS_SESSION_QUEUE" value="integration-test-session-queue" />
+
+		<!-- Azure Event Hubs Emulator -->
+		<Parameter name="EVENTHUB_CONNECTION_STRING" value="Endpoint=sb://127.0.0.1:5674;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;" />
+		<Parameter name="EVENTHUB_NAME" value="integration-test-hub" />
+		<Parameter name="EVENTHUB_CONSUMER_GROUP" value="integration-test-group" />
 		<Parameter name="SERVICEBUS_TEST_SUBSCRIPTION" value="test-subscription" />
 
 		<!-- Keycloak -->

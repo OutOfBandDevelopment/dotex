@@ -1,6 +1,6 @@
 # Complex events and scheduling
 
-Status: **proposed design, written 2026-11-19 on the assumed answer A of Q18; in-process core built 2026-11-19 (dispatcher, in-memory store, runner; 6 unit tests); EF Core schedule store built 2026-11-19 (`OoBDev.ComplexEvents.EntityFrameworkCore`, 5 Simulate tests on SQLite); hosted service built 2026-11-19 (`OoBDev.ComplexEvents.Hosting`, 3 unit tests); Event Hubs built 2026-11-23 (`IEventHubClient`, publisher, consumer, in-memory fake, `OoBDev.Microsoft.Azure.EventHub`; no live or emulator test).** Request: [complex events, scheduling and Event Hubs](../../features/request/2026-11-10-complex-events-and-scheduling.md). Epic 8 of [SharedFramework](../SharedFramework/README.md).
+Status: **proposed design, written 2026-11-19 on the assumed answer A of Q18; in-process core built 2026-11-19 (dispatcher, in-memory store, runner; 6 unit tests); EF Core schedule store built 2026-11-19 (`OoBDev.ComplexEvents.EntityFrameworkCore`, 5 Simulate tests on SQLite); hosted service built 2026-11-19 (`OoBDev.ComplexEvents.Hosting`, 3 unit tests); Event Hubs built 2026-11-23 (`IEventHubClient`, publisher, consumer, in-memory fake, `OoBDev.Microsoft.Azure.EventHub`; an Integration test runs against the stack emulator).** Request: [complex events, scheduling and Event Hubs](../../features/completed/2026-11-10-complex-events-and-scheduling.md). Epic 8 of [SharedFramework](../SharedFramework/README.md).
 
 ## Contents
 
@@ -105,13 +105,13 @@ The scheduler is a hosted service that leases due items, dispatches them and com
 | Scheduler with a fake `TimeProvider` | Unit | runs once at the due time; re-registration; failure attempts |
 | EF store | Simulate | SQLite in memory: lease exclusivity with two stores, expiry, completion |
 | EF store on SQL Server and PostgreSQL | Integration | `oobd-test-sqlserver` and the PostgreSQL service, same cases |
-| Event Hubs adapter | Unit with a fake `IEventHubClient`; Azure emulator Integration if one is added; live as `LiveIntegration` | publish and consume |
+| Event Hubs adapter | Unit with a fake `IEventHubClient`; Azure emulator Integration (built 2026-11-23); live as `LiveIntegration` | publish and consume |
 
 *Table 2 maps each area to its tier; coverage target 80% or more for the Framework projects.*
 
 ## Open points
 
-- Event Hubs has no emulator in the test stack; add one only when a consumer needs the adapter (`add-integration-service` skill).
+- The test stack has an Event Hubs emulator (`oobd-test-eventhubs`, with Azurite, since 2026-11-23); one Integration test publishes and reads an event. Checkpointing is not built.
 - Built 2026-11-23: `ScheduleAtAttribute`, `IRecurrence` with the built-in `CronRecurrence`, `CatchUpPolicy` and `RecurringSchedule`; RRule stays an `IRecurrence` implementation for a consumer, and since 2026-11-23 `RecurringScheduler` (optional in `ScheduleHost`) records each run in an `ILastRunStore` (in-memory and EF stores built) and registers the next occurrence.
 - Dead letter (built 2026-11-23): `IScheduleFailureHandler` is told about every failed attempt by `ScheduleRunner` (and `ScheduleHost`, which takes an optional registered handler); a consumer publishes to its queue when `item.Attempts` reaches the store limit. A throwing handler is swallowed.
 - From the wish list (Event Scheduler lines, merged 2026-11-19): default schedule rules declared by attribute on the event generator and overridable by configuration; a recorded last run time so a restarted scheduler can catch up missed items (a per-schedule catch-up policy: run all, run latest, skip); recurrence by cron (NCrontab is a third-party package, so a small built-in cron parser or `TimeProvider` timers are compared first) with other calculators (RRule) behind an `IRecurrence` interface.
