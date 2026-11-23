@@ -35,7 +35,7 @@ public sealed class ProcessDockerCli : IDockerCli
         if (inspected != 0)
             return false;
 
-        var (code, output) = await RunAsync(["logs", "--since", startedAt.Trim(), container], cancellationToken);
+        var (code, output) = await RunAsync(["logs", "--since", startedAt.Trim(), container], cancellationToken, includeError: true);
         return code == 0 && output.Contains(text, StringComparison.Ordinal);
     }
 
@@ -43,7 +43,7 @@ public sealed class ProcessDockerCli : IDockerCli
     public async Task StopAsync(string container, TimeSpan grace, CancellationToken cancellationToken) =>
         await RunAsync(["stop", "-t", Math.Max(1, (int)grace.TotalSeconds).ToString(CultureInfo.InvariantCulture), container], cancellationToken);
 
-    private static async Task<(int Code, string Output)> RunAsync(string[] arguments, CancellationToken cancellationToken)
+    private static async Task<(int Code, string Output)> RunAsync(string[] arguments, CancellationToken cancellationToken, bool includeError = false)
     {
         var info = new ProcessStartInfo("docker") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false, CreateNoWindow = true };
         foreach (var argument in arguments)
@@ -62,7 +62,7 @@ public sealed class ProcessDockerCli : IDockerCli
         using (process)
         {
             var output = process.StandardOutput.ReadToEndAsync(CancellationToken.None);
-            _ = process.StandardError.ReadToEndAsync(CancellationToken.None);
+            var error = process.StandardError.ReadToEndAsync(CancellationToken.None);
             try
             {
                 await process.WaitForExitAsync(cancellationToken);
@@ -73,7 +73,7 @@ public sealed class ProcessDockerCli : IDockerCli
                 throw;
             }
 
-            return (process.ExitCode, await output);
+            return (process.ExitCode, includeError ? await output + await error : await output);
         }
     }
 }

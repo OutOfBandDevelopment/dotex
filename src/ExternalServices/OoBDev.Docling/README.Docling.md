@@ -38,3 +38,7 @@ Single page images (the catalog's `IPageOcr`), the docling container in the inte
 ## Tests
 
 `OoBDev.Docling.Tests` (Unit, fake HTTP handler): post, two polls and fetch; light retry after a heavy failure; both failing; failed result with errors; timeout; server down; missing task id; non-JSON; result without a document; registration and options validation.
+
+## Golden sample
+
+`DoclingIntegrationTests.Recognize_SyntheticScan_MeetsTheGoldenAccuracy` (Integration, `oobd-test-docling`) renders four known lines with SkiaSharp (rotated 1.5 degrees, 4000 grey specks, fixed seed), wraps the JPEG in a PDF with no text layer, and measures the word accuracy of `RecognizeAsync` (word edit distance, case and punctuation ignored). It logs host, date, duration and accuracy and fails below 0.8. First run: host AGIMUS, 2026-11-23, 91.2% (3.8 s on the CPU image; one inserted stray word "2" and a stray dash).

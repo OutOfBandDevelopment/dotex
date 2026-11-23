@@ -103,4 +103,34 @@ public class DoclingIntegrationTests
             File.Delete(path);
         }
     }
+
+    [IntegrationTestMethod("oobd-test-docling")]
+    public async Task Recognize_SyntheticScan_MeetsTheGoldenAccuracy()
+    {
+        var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("DOCLING_URL"));
+        using var http = new HttpClient { BaseAddress = new Uri(url.TrimEnd('/') + "/") };
+        var ocr = new DoclingOcr(http, Options.Create(new DoclingOptions { BaseUrl = url, TimeoutSeconds = 600, OcrLanguages = "eng" }));
+        await using var services = new ServiceCollection().TryAddProviders().BuildServiceProvider();
+        using var temp = services.GetRequiredService<ITempFileFactory>().GetTempFile();
+        var path = Path.ChangeExtension(temp.FilePath, ".pdf");
+        await File.WriteAllBytesAsync(path, SyntheticScan.Pdf(SyntheticScan.RenderJpeg()), TestContext.CancellationToken);
+        try
+        {
+            var started = global::System.Diagnostics.Stopwatch.StartNew();
+            var text = await ocr.RecognizeAsync(path, CancellationToken.None);
+            var truth = string.Join(' ', SyntheticScan.Lines);
+            var accuracy = WordAccuracy.Score(truth, text);
+
+            TestContext.WriteLine("golden sample: host {0}, date {1:yyyy-MM-dd}, {2} ms, word accuracy {3:P1}", Environment.MachineName, DateTimeOffset.UtcNow, started.ElapsedMilliseconds, accuracy);
+            TestContext.WriteLine(text);
+
+            Assert.IsGreaterThanOrEqualTo(MinimumAccuracy, accuracy, $"word accuracy {accuracy:P1} fell below the golden floor");
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    private const double MinimumAccuracy = 0.8;
 }
