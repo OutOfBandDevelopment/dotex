@@ -38,6 +38,8 @@ Pairing and permissions are the OS's; do not store keys.
 
 ## Open questions
 
+**Answered (checked 2026-11-23):** Windows adapter and seam only; macOS deferred (owner 2026-11-10); BlueZ waits for a Linux machine with a radio, listed in owner question Q33.
+
 Which platform first, and is a machine available for it?
 
 ## Triage notes

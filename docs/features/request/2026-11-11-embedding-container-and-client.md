@@ -45,6 +45,8 @@ Inputs are private files (photos, scans), so nothing is logged beyond identifier
 
 ## Open questions
 
+**Answered (checked 2026-11-23):** the OpenAI-compatible `/v1/embeddings` signature is built; owner Q12: no container image from this repository, any OpenAI-compatible server works and the stack's Ollama is the reference.
+
 - Is `/v1/embeddings` the right common signature, or is the Hugging Face text-embeddings-inference shape more widely supported (recommended: OpenAI-compatible first)?
 - Does the container ship from this repository or stay with the catalog application?
 

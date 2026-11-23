@@ -51,6 +51,8 @@ Writes a local audio file; no network. Set the playback level low first.
 
 ## Open questions
 
+**Answered (checked 2026-11-23):** owner Q20: an output format of the Hpgl library, 48 kHz, fast jumps without a Z track (optional `ZChannel` option); built.
+
 - Own project, or an output format of the Hpgl library?
 - Which sample rate, and which blanking approach (fast jumps, or an optional Z channel on a third track)?
 

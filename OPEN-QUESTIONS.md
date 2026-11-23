@@ -41,7 +41,7 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ### Q33 — 2026-11-23 — Bench-hardware items: who runs them?
 
-**Question:** These need a person at the bench or a captured trace, which I cannot supply: DE-5000 BLE Hardware test (radio not fitted), Z-Wave include/exclude/reset pass, the silent HP 34401A and TDS2024 TCP bridges, the Ebyte and USR UDP config capture (Ebyte `IDeviceConfigEditor`), HP-GL scope and XBee bench checks. When you are at the bench, do you want me to run each pass through the `hardware-test` skill, or to leave them off the backlog?
+**Question:** These need a person at the bench or a captured trace, which I cannot supply: DE-5000 BLE Hardware test (radio not fitted), Z-Wave include/exclude/reset pass, the silent HP 34401A and TDS2024 TCP bridges, the Ebyte and USR UDP config capture (Ebyte `IDeviceConfigEditor`), HP-GL scope and XBee bench checks, the Greaseweazle USB pass for Ser2NetWin, and the BlueZ (Linux) BLE backend, which needs a Linux machine with a radio. When you are at the bench, do you want me to run each pass through the `hardware-test` skill, or to leave them off the backlog?
 
 **Options:**
 - A (recommended): keep them listed; run them when you say the bench is ready.
@@ -62,5 +62,19 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 - C: wrap pgschema for PostgreSQL only (JSON plan), wrapper refuses drop steps; sqldef for the other engines.
 
 **Default:** A, nothing is built until you answer.
+
+**Your answer:**
+
+
+### Q35 — 2026-11-23 — Desired-state database tooling: Oracle
+
+**Question:** The design lists Oracle beside SQL Server, Postgres and SQLite, but neither sqldef nor pgschema covers it, and Atlas needs a paid licence for it. How should Oracle be handled? (From the request's open questions; answered by default so far, never confirmed.)
+
+**Options:**
+- A (recommended): hand-written repeatable scripts for Oracle in the first release, run by the same apply step with the drop gate. Least work, and nothing is built that no consumer has asked for.
+- B: a custom catalog-diff adapter for Oracle. Same experience as the other engines, much more work and a test container with a heavy image.
+- C: leave Oracle out of scope until a consumer needs it, and drop it from the design.
+
+**Default:** A; nothing is built until Q34 is answered.
 
 **Your answer:**

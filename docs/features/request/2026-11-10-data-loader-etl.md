@@ -48,6 +48,8 @@ Loads write to a database: run in a transaction, support a dry run, and never ru
 
 ## Open questions
 
+**Answered (checked 2026-11-23):** owner Q18 (assumed answer A in the [design](../../design/DataLoader/README.md)): a library only, no command line, stands alone until the MasterData design is built; the master data provider waits for that build.
+
 Does this wait for the MasterData design (Epic 5) or stand alone? Is the CLI wanted (see the CSV test data utility request: related reader code)?
 
 ## Triage notes

@@ -46,6 +46,8 @@ storage outside the repository, short token cache lifetimes, an audit entry per 
 
 ## Open questions
 
+**Answered (checked 2026-11-23):** owner Q9 (2026-11-19): a YARP-based dotex library, inbound API key then client certificate then RFC 8693; design only until a consumer appears.
+
 - Build on YARP (forwarding done) or an own `HttpClient` gateway as the notes backlog sketches?
 - Which inbound schemes first: API key, header key, client certificate, token exchange (RFC 8693)?
 - Does it belong in dotex at all, or in a separate application that references it?

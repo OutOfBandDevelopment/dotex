@@ -48,6 +48,8 @@ containers for testing. The cost is mostly test infrastructure: containers for P
 
 ## Open questions
 
+**Answered (checked 2026-11-23):** scope is schema objects first (triage defaults, [design](../../design/DesiredStateDatabase/README.md)); the design covers SQL Server, Postgres, SQLite and Oracle, with queues and event streams as idempotent ensure scripts; the stack is .NET; the sqldef evaluation was merged into the phase 0 bake-off. Build or buy is owner question Q34; the Oracle approach (catalog-diff adapter or repeatable scripts) is Q35.
+
 - Schema only, or also functions, triggers and views?
 - Wrap existing diff engines, or write a custom one?
 - Queues and streams: portable tables first, or native objects per database?

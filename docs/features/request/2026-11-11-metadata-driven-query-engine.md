@@ -78,6 +78,8 @@ Read-only by design: the engine only builds `select` statements from declaration
 
 ## Open questions
 
+**Answered (checked 2026-11-23):** model plus a dialect interface with PostgreSQL first (owner placement 2026-11-12, option A); the single entry point is `POST /q` with `GET /q?text=`, and the verb question follows the owner's HTTP decision (REST first, `QUERY` with `POST` fallback under evaluation).
+
 - Should the library depend on a relational dialect from the start, or ship the attribute model and a PostgreSQL dialect separately (recommended: model plus a dialect interface, one dialect first)?
 - Is `POST /q` with a `QUERY` verb fallback acceptable as the single entry point, or should each kind keep its own route?
 

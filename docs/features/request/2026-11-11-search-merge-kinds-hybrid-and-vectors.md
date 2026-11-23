@@ -46,6 +46,8 @@ Search reads only. Per-kind rights apply (see the query engine request).
 
 ## Open questions
 
+**Answered (checked 2026-11-23):** fusion is a strategy: max of normalised scores and reciprocal rank fusion (k 60), both built ([design](../../design/SearchMerge/README.md)).
+
 - Fusion method for hybrid scores (reciprocal rank fusion is the usual default).
 
 ## Triage notes

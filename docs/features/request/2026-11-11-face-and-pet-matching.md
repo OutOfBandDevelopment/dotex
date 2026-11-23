@@ -43,6 +43,8 @@ Inputs are private files (photos, scans), so nothing is logged beyond identifier
 
 ## Open questions
 
+**Answered (checked 2026-11-23):** owner Q22 (2026-11-19): detector-free for now; the library takes embeddings from an adapter you supply and no model is named.
+
 - Which detection model and licence? The catalog's choice would be the starting point.
 
 ## Triage notes

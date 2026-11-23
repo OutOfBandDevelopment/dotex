@@ -47,6 +47,8 @@ None; this is documentation work that decides what gets built.
 
 ## Open questions
 
+**Answered (checked 2026-11-23):** one design per area, as triaged (SearchMerge, MetadataQuery, FaceAndPetMatching, EmbeddingClientAndPgVector).
+
 - One page per area, or one page for all (recommended: one per area, as they are triaged separately)?
 
 ## Triage notes
