@@ -18,6 +18,7 @@ export const router = createRouter({
     { path: '/ai/search', component: () => import('../pages/SearchPage.vue'), meta: { crumbs: ['AI', 'Search'] } },
     { path: '/operations/info', component: () => import('../pages/OperationsPage.vue'), meta: { crumbs: ['Operations', 'Runtime and configuration'] } },
     { path: '/data/geocode', component: () => import('../pages/GeocodePage.vue'), meta: { crumbs: ['Data', 'Address lookup'] } },
+    { path: '/data/distance', component: () => import('../pages/DistancePage.vue'), meta: { crumbs: ['Data', 'Distance'] } },
     { path: '/data/load', component: () => import('../pages/DataLoadPage.vue'), meta: { crumbs: ['Data', 'Data loading'] } },
     { path: '/data/access', component: () => import('../pages/DataAccessPage.vue'), meta: { crumbs: ['Data', 'Data access'] } },
     { path: '/data/cache', component: () => import('../pages/CachePage.vue'), meta: { crumbs: ['Data', 'Cache lab'] } },

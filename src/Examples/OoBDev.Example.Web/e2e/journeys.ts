@@ -1135,6 +1135,31 @@ export const journeys: Journey[] = [
     ],
   },
   {
+    id: 'measure-a-distance',
+    title: 'Measure a distance',
+    persona: 'A developer trying the spatial services',
+    goal: 'Find the distance and bearing between two coordinates.',
+    start: '/data/distance',
+    prerequisites: ['The signed-in user holds the geocode.use right (the admin role).'],
+    features: ['OoBDev.SpatialServices (`GeoMath`)'],
+    why: 'Show the pure great-circle calculation that needs no external service.',
+    problems: [
+      { symptom: 'Coordinates refused', cause: 'A latitude is outside -90 to 90 or a longitude outside -180 to 180', fix: 'Enter decimal degrees within those ranges' },
+      { symptom: 'Forbidden', cause: 'The user lacks the geocode.use right', fix: 'Sign in with the admin role' },
+    ],
+    steps: [
+      {
+        title: 'Measure',
+        narrative: 'London and Paris are filled in; press Measure.',
+        expect: ['The distance in kilometres and miles and the initial bearing are shown.'],
+        run: async page => {
+          await press(page, 'Measure');
+          await expect(page.getByLabel('Result')).toContainText('343.6');
+        },
+      },
+    ],
+  },
+  {
     id: 'load-a-file-into-a-table',
     title: 'Load a file into a table',
     persona: 'A developer trying the data loader',

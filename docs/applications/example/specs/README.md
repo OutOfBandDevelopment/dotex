@@ -42,4 +42,5 @@ Acceptance criteria for each journey. The same journeys run as Playwright tests.
 | [Render a panel from a server-supplied definition](server-driven-ui.md) | 3 | `/utilities/server-ui` |
 | [Schedule a message](schedule-a-message.md) | 2 | `/messaging/schedule` |
 | [Look up an address](look-up-an-address.md) | 1 | `/data/geocode` |
+| [Measure a distance](measure-a-distance.md) | 1 | `/data/distance` |
 | [Load a file into a table](load-a-file-into-a-table.md) | 1 | `/data/load` |
