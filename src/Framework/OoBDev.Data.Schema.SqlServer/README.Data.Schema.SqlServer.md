@@ -7,7 +7,7 @@ SQL project (`Microsoft.Build.Sql`) that builds `OoBDev.Data.Schema.SqlServer.da
 | `Tables/RightAudit.sql` | `RightAuditDbContext` (`OoBDev.AspNetCore.EntityFrameworkCore`) |
 | `Tables/Suppressions.sql` | `SuppressionsDbContext` (`OoBDev.Communications.EntityFrameworkCore`) |
 | `Tables/Schedule.sql` | `ScheduleDbContext` (`OoBDev.ComplexEvents.EntityFrameworkCore`) |
-| `Tables/ComplexEventLastRun.sql` | `LastRunRow` in `ScheduleDbContext` (last-run times of recurring schedules; not yet deploy-checked on SQL Server) |
+| `Tables/ComplexEventLastRun.sql` | `LastRunRow` in `ScheduleDbContext` (last-run times of recurring schedules; created on the SQL Server test container 2026-11-23) |
 
 The scripts are generated from the models (`Database.GenerateCreateScript()` with the SqlServer provider). `OoBDev.Data.Migrations.Tests` (`SqlServerSchemaTests`, Unit) fails when a script no longer matches its model; regenerate with `REGENERATE_SQL_SCHEMA=1 dotnet test src/Framework/OoBDev.Data.Migrations.Tests --filter "FullyQualifiedName~SqlServerSchema"`.
 
