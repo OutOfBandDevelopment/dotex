@@ -50,3 +50,17 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 **Default:** A.
 
 **Your answer:**
+
+
+### Q34 — 2026-11-23 — Desired-state database tooling: buy with gaps or build?
+
+**Question:** The bake-off scores ([Table 8](docs/design/DesiredStateDatabase/bake-off-result.md#scores)) put sqldef at 69 to 71% and pgschema at 60%. No tool passes all three safety gates (S5 drop gate, S6 type-change hazard, S7 plan then apply), and the plan's rule says "build" when the gates fail for every candidate. Which reading do you want?
+
+**Options:**
+- A (recommended): buy with gaps: wrap sqldef (PostgreSQL, SQL Server, SQLite), and the wrapper adds the drop gate and a type-narrowing check on the plan. Least work, sqldef already skips drops without a flag.
+- B: build our own diff and apply on the catalog (strict reading of the rule). Full control of the gates, much more work.
+- C: wrap pgschema for PostgreSQL only (JSON plan), wrapper refuses drop steps; sqldef for the other engines.
+
+**Default:** A, nothing is built until you answer.
+
+**Your answer:**

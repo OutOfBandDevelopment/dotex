@@ -11,6 +11,7 @@
 - [Findings](#findings)
 - [Decision per engine](#decision-per-engine)
 - [Atlas on PostgreSQL](#atlas-on-postgresql)
+- [Scores](#scores)
 - [Not covered](#not-covered)
 
 ## Setup
@@ -88,8 +89,23 @@ Atlas v1.4.2 canary (the vendor `latest` Windows binary, downloaded 2026-11-23 i
 
 **Licence:** the free binary refuses views and extensions (S3 with a view, S9, S10) without an Atlas account login, and its data-loss diagnostics are login-gated. That breaks the REQ-008 rule "no paid feature needed for S1 to S9", so Atlas is removed as a candidate. The choice stays between sqldef and pgschema.
 
+## Scores
+
+Computed 2026-11-23 from the result tables with the weights of [Table 7](bake-off-test-plan.md#table-7): pass counts 1, gap 0.5, fail 0, scenarios not run or not applicable are left out; the safety gate is the share of S5, S6 and S7 passed; the .NET criterion is S12; object coverage is S9 and S10. Licence passes for sqldef (MIT) and pgschema (Apache 2.0).
+
+**Table 8 — Scores (maintenance excluded, so out of 90 and shown as a percentage of it)**
+
+| Tool and engine | Pass rate (40) | Safety gates (20) | .NET output (15) | Objects (15) | Score |
+| --- | --- | --- | --- | --- | --- |
+| sqldef PostgreSQL | 79% (31.7) | 1.5 of 3 (10.0) | gap (7.5) | 2 of 2 (15.0) | 71% |
+| mssqldef SQL Server | 77% (30.9) | 1.5 of 3 (10.0) | gap (7.5) | 1 of 1 (15.0) | 70% |
+| sqldef SQLite | 75% (30.0) | 1.5 of 3 (10.0) | gap (7.5) | 1 of 1 (15.0) | 69% |
+| pgschema PostgreSQL | 54% (21.7) | 1.5 of 3 (10.0) | pass (15.0) | 1 of 2 (7.5) | 60% |
+
+No candidate passes all three safety gates on any engine (S6, the hazard report for a type change, fails or is only a gap everywhere), so the plan's strict decision rule gives **build** for every engine. The scores alone put sqldef at the 70% line on PostgreSQL, SQL Server and SQLite, which is the earlier **buy with gaps** reading. Which rule applies is the owner's call (Q34).
+
 ## Not covered
 
 - Atlas: run on PostgreSQL only (2026-11-23), see [Atlas on PostgreSQL](#atlas-on-postgresql). SQLite and SQL Server were not run with it, and its EULA text and paid tiers are not assessed beyond what the errors showed.
 - S10 for SQL Server and the fixture's function, trigger and extension objects.
-- No weights or scores were computed; the table above is the raw record.
+- Maintenance (10%) was not assessed, so the scores below are over the other 90%.
