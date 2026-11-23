@@ -1134,4 +1134,30 @@ export const journeys: Journey[] = [
       },
     ],
   },
+  {
+    id: 'load-a-file-into-a-table',
+    title: 'Load a file into a table',
+    persona: 'A developer trying the data loader',
+    goal: 'Load a small CSV into a throwaway table and read the report.',
+    start: '/data/load',
+    prerequisites: ['The signed-in user holds the data.load right (the admin role).'],
+    features: ['OoBDev.DataLoader (`ILoader`, `CsvRowReader`, `InMemoryRowSink`)'],
+    why: 'Show the read, key check and store steps with a report of what was written, skipped or rejected.',
+    problems: [
+      { symptom: 'Load refused', cause: 'The text is empty, too long, the key column is blank or the format is unknown', fix: 'Paste CSV or JSON text under 100000 characters and name the key column' },
+      { symptom: 'Forbidden', cause: 'The user lacks the data.load right', fix: 'Sign in with the admin role' },
+    ],
+    steps: [
+      {
+        title: 'Load the sample',
+        narrative: 'The sample CSV has a repeated id; press Load.',
+        expect: ['The report shows 3 rows read, 2 written and 1 skipped, and the stored rows are listed.'],
+        run: async page => {
+          await press(page, 'Load');
+          await expect(page.getByLabel('Report')).toContainText('Skipped');
+          await expect(page.getByLabel('Stored rows')).toContainText('Ann');
+        },
+      },
+    ],
+  },
 ];

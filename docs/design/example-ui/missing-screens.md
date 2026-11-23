@@ -37,7 +37,7 @@ These have no row in [the plan](plan.md) or `screens.md`; whether each deserves 
 | Query over HTTP | `OoBDev.AspNetCore.OData` (`[OoBDevEnableQuery]`, `QUERY` verb) | Query builder against an `IQueryable` endpoint; needs one in the example API |
 | Complex events | `OoBDev.ComplexEvents` (schedule store and runner built; the screen is `/messaging/schedule`, built 2026-11-20) | A schedule of due items with a hosted runner; the rule viewer stays open |
 | Spatial and geocoding | `OoBDev.Census.Geocoding` (`OoBDev.SpatialServices` is not built yet) | Address to coordinates built 2026-11-20 as `/data/geocode` (`POST api/Geocode`, right `geocode.use`); distance between points waits for `OoBDev.SpatialServices` |
-| Data loading | `OoBDev.DataLoader` (not built yet; designs in `docs/design/MasterData`) | Load a file into a table with a preview of the mapping |
+| Data loading | `OoBDev.DataLoader` (built; `/data/load`, 2026-11-23) | Load a CSV or JSON text into a throwaway in-memory table and read the report; the mapping preview waits for `docs/design/MasterData` |
 | Code generation | `OoBDev.Generations` (not built yet) | Generate from a model and show the output |
 | Server-driven UI | `OoBDev.UiDefinitions` (+ ViewModels, Wpf) | A page rendered from a `UiDefinition` returned by the API (the framework's own UI contract is not shown anywhere in the SPA) |
 | Token tools | `OoBDev.Identity.Jws` | Built 2026-11-16 as a section of the Toolbox page: sign HS256, read a token, check the signature |

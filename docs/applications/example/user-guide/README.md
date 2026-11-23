@@ -42,3 +42,4 @@ Step-by-step guides with screenshots, one per user journey. They are regenerated
 | [Render a panel from a server-supplied definition](server-driven-ui.md) | A developer who wants one UI contract for every front end | Open a UI definition and watch the host decide which controls show, enable and validate. |
 | [Schedule a message](schedule-a-message.md) | A developer trying the scheduling building block | Schedule a message for later, see it wait, and take it back before it is due. |
 | [Look up an address](look-up-an-address.md) | A developer trying the spatial services | Find the coordinates of a US address. |
+| [Load a file into a table](load-a-file-into-a-table.md) | A developer trying the data loader | Load a small CSV into a throwaway table and read the report. |
