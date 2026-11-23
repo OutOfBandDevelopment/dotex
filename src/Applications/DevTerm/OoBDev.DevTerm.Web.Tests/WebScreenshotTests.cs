@@ -172,6 +172,36 @@ public class WebScreenshotTests
     }
 
     [TestMethod]
+    public async Task DockPage_DragSplitsResizesAndExports()
+    {
+        await RunAsync(async (page, baseUrl) =>
+        {
+            await page.GotoAsync($"{baseUrl}/dock?token=demo-token");
+            await Assertions.Expect(page.Locator("[data-dock]")).ToBeVisibleAsync();
+            await SaveAsync(page, "web-blazor-dock-default.png");
+
+            await page.Locator("[data-tab=monitor]").DragToAsync(page.Locator("[data-drop=right]").First);
+            await Assertions.Expect(page.Locator(".dock-pane")).ToHaveCountAsync(2);
+            await Assertions.Expect(page.Locator("[data-tab=monitor]")).ToHaveCountAsync(1);
+
+            await page.Locator("[data-grow='0']").ClickAsync();
+            await page.Locator("[data-export]").ClickAsync();
+            await Assertions.Expect(page.Locator("[data-layout-json]")).ToHaveValueAsync(new global::System.Text.RegularExpressions.Regex("monitor"));
+            var exported = await page.Locator("[data-layout-json]").InputValueAsync();
+            StringAssert.Contains(exported, "monitor");
+            TestContext.WriteLine("Exported {0} characters", exported.Length);
+            await SaveAsync(page, "web-blazor-dock-split.png");
+
+            await page.Locator("[data-close=monitor]").ClickAsync();
+            await Assertions.Expect(page.Locator(".dock-pane")).ToHaveCountAsync(1);
+            await page.Locator("[data-layout-json]").FillAsync(exported);
+            await page.Locator("[data-import]").ClickAsync();
+            await Assertions.Expect(page.Locator(".dock-pane")).ToHaveCountAsync(2);
+            await Assertions.Expect(page.Locator("[data-note]")).ToContainTextAsync("imported");
+        });
+    }
+
+    [TestMethod]
     public async Task ThemesPage_BuildsAndSavesATheme()
     {
         var themes = WebTestTemp.Directory();
