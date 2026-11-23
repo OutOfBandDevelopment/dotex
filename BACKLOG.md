@@ -77,8 +77,8 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
     - [HP-GL to stereo audio for X-Y scopes](docs/features/request/2026-11-10-hpgl-vector-display-sink.md) (WAV writer built 2026-11-19; scope bench check open).
     - XBee: library built 2026-11-19 ([request](docs/features/completed/2026-11-10-xbee-api-and-mqtt-gateway.md)); a bench check with a radio is open.
 - [ ] Triaged requests (2026-11-11) with a design or comparison first (each file under `docs/features/request/` carries its triage note); report publish and GitBook are declined (owner 2026-11-16):
-  - SharedFramework gaps: [complex events](docs/features/request/2026-11-10-complex-events-and-scheduling.md) (decided 2026-11-19, owner Q18: stand alone, no database project) (in-process core built 2026-11-19, EF store built 2026-11-19, hosted service built, Event Hubs open, [design](docs/design/ComplexEvents/README.md))
-      - [ ] Open: Event Hubs adapter and client (no emulator, waits for a consumer); a `ScheduleAt` attribute (only `ComplexEventHandlerAttribute` exists); catch-up policy and last-run time; cron recurrence; dead-letter publish on failure (design open points).
+  - SharedFramework gaps: [complex events](docs/features/request/2026-11-10-complex-events-and-scheduling.md) (decided 2026-11-19, owner Q18: stand alone, no database project) (in-process core built 2026-11-19, EF store built 2026-11-19, hosted service built, `ScheduleAt`, cron and catch-up built 2026-11-23, Event Hubs open, [design](docs/design/ComplexEvents/README.md))
+      - [ ] Open: Event Hubs adapter and client (no emulator, waits for a consumer); last-run time persisted by the hosted service (the `RecurringSchedule` catch-up logic is built); dead-letter publish on failure (design open points).
 
     - [data loader](docs/features/request/2026-11-10-data-loader-etl.md) (decided Q18: library only, no CLI) (core and EF sink built 2026-11-19)
       - [ ] Open: batching (the SQL Server Integration test is built 2026-11-23); lookups by property or query, master data provider, `DocumentUpload` and `GetTextData` from the source (decide with the MasterData design).

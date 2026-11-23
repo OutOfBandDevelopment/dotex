@@ -112,5 +112,6 @@ The scheduler is a hosted service that leases due items, dispatches them and com
 ## Open points
 
 - Event Hubs has no emulator in the test stack; add one only when a consumer needs the adapter (`add-integration-service` skill).
+- Built 2026-11-23: `ScheduleAtAttribute`, `IRecurrence` with the built-in `CronRecurrence`, `CatchUpPolicy` and `RecurringSchedule`; RRule stays an `IRecurrence` implementation for a consumer, and the hosted service still has to record the last run time.
 - Whether the dispatcher should publish to the message queue on failure (dead letter) is left to the first consumer.
 - From the wish list (Event Scheduler lines, merged 2026-11-19): default schedule rules declared by attribute on the event generator and overridable by configuration; a recorded last run time so a restarted scheduler can catch up missed items (a per-schedule catch-up policy: run all, run latest, skip); recurrence by cron (NCrontab is a third-party package, so a small built-in cron parser or `TimeProvider` timers are compared first) with other calculators (RRule) behind an `IRecurrence` interface.
