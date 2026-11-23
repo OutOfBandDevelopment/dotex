@@ -80,7 +80,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
   - SharedFramework gaps: [complex events](docs/features/completed/2026-11-10-complex-events-and-scheduling.md) (decided 2026-11-19, owner Q18: stand alone, no database project) (in-process core built 2026-11-19, EF store built 2026-11-19, hosted service built, `ScheduleAt`, cron and catch-up built 2026-11-23, Event Hubs built and checked on the emulator 2026-11-23, request done, [design](docs/design/ComplexEvents/README.md))
 
     - [data loader](docs/features/request/2026-11-10-data-loader-etl.md) (decided Q18: library only, no CLI) (core and EF sink built 2026-11-19)
-      - [ ] Open: master data provider, `DocumentUpload` and `GetTextData` from the source (decide with the MasterData design).
+      - [ ] Open: master data provider (waits for the MasterData build; there is no code to provide for yet). `DocumentUpload` and `GetTextData` are built (2026-11-23).
 
     - [test data generation](docs/features/rejected/2026-11-10-procedural-test-data-generation.md) (core built 2026-11-19)
     - [document packaging](docs/features/completed/2026-11-10-document-packaging-and-store.md) (ZIP packager, document store, key generator and content validation hook built 2026-11-23, and the resolver by request reference built 2026-11-23; directory packing built 2026-11-23; passwords are out of scope, so the request is done).
