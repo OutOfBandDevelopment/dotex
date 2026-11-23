@@ -19,7 +19,7 @@ A sample ASP.NET Core web API that composes the OoBDev framework the way a real 
 | `MessageQueueingController` | Message queue sender, configured channels (no secrets) and the received-message monitor |
 | `CommunicationsController` | Email through `ISendService` (channel `email`), directly or queued |
 | `WebhooksController` | Anonymous `POST /webhooks/{channel}`: raw body to `IReceiveService.HandleWebhookAsync` (204, 400 or 404 problem details) |
-| `DocumentController`, `TextToolsController` | Document conversion, the stored-documents list and text tools |
+| `DocumentController`, `TextToolsController` | Document conversion, the stored-documents list, a ZIP of all stored documents (`GET Document/Package`, through `IDocumentPackager`) and text tools |
 | `TextTemplateController` | Text templating: list, read and save the example template files, preview a draft, apply a named template |
 | `UserController` | Current user and claims |
 | `KernelPlugInsController` | Lists the Semantic Kernel plug-in functions and invokes one with text arguments (right `toolbox.use`) |

@@ -18,6 +18,7 @@ const onFile = (e: Event) => { vm.file.value = (e.target as HTMLInputElement).fi
   <h2>Stored documents</h2>
   <p><fluent-button :disabled="!vm.refresh.canExecute.value" @click="vm.refresh.execute()">Refresh</fluent-button></p>
   <p v-if="vm.refresh.error.value" class="error">{{ vm.refresh.error.value }}</p>
+  <p><a href="/Document/Package" data-package>Download all as ZIP</a></p>
   <ul class="stored-list">
     <li v-for="d in vm.stored.value" :key="d.fileName">
       <fluent-button :appearance="vm.storeName.value === d.fileName ? 'primary' : 'neutral'" @click="vm.pick.execute(d)">{{ d.fileName }}</fluent-button> {{ d.contentType }}
