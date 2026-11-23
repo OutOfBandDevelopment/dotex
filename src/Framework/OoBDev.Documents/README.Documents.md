@@ -57,3 +57,7 @@ Tests: `ScanningBlobContainerTests`.
 ## Packaging documents
 
 `IDocumentPackager.PackAsync(type, items, stream)` writes several documents into one package; the handler is chosen by package type (case ignored). `TryAddDocumentServices` registers the `zip` handler (`ZipDocumentPackageHandler`, no password: the framework ZIP classes do not encrypt). Add another format by registering an `IDocumentPackageHandler` with its own `PackageType`. Entry names must be relative with forward slashes: an empty, rooted, backslash, drive, `..` or repeated (ignoring case) name throws `PackagingException` before anything is written, as does an unknown type. The originals are not changed. Not built from the design: passwords, directory packing and compression levels (see [PackingService](../../../docs/design/DocumentServices/PackingService/api-design.md)); the document store half of the [request](../../../docs/features/request/2026-11-10-document-packaging-and-store.md) is open.
+
+## Document store
+
+`IDocumentStore.StoreAsync(content)` validates the document with `IValidateContent` (default `BypassContentValidation`; throw `InvalidContentException` to refuse, and nothing is stored), names it with `IDocumentKeyGenerator` (default `yyyy/MM/{guid}{ext}` in UTC from `TimeProvider`) and writes it to the registered `IBlobContainer`; `ReadAsync(key)` returns it or null. The validator may read the stream: the store rewinds a seekable stream afterwards. Register the container yourself (`IBlobContainer`); `TryAddDocumentServices` adds the rest.

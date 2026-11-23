@@ -2,6 +2,8 @@ using OoBDev.Documents.Containers;
 using OoBDev.Documents.Conversion;
 using OoBDev.Documents.Models;
 using OoBDev.Documents.Packaging;
+using OoBDev.Documents.Store;
+using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -27,6 +29,11 @@ public static class ServiceCollectionExtensions
 
         services.TryAddEnumerable(ServiceDescriptor.Singleton<IDocumentPackageHandler, ZipDocumentPackageHandler>());
         services.TryAddSingleton<IDocumentPackager, DocumentPackager>();
+
+        services.TryAddSingleton(TimeProvider.System);
+        services.TryAddSingleton<IDocumentKeyGenerator, DocumentKeyGenerator>();
+        services.TryAddSingleton<IValidateContent, BypassContentValidation>();
+        services.TryAddTransient<IDocumentStore, DocumentStore>();
 
         services.TryAddTransient<IBlobContainerFactory, BlobContainerFactory>();
         services.TryAddTransient(typeof(IBlobContainer<>), typeof(WrappedBlobContainer<>));
