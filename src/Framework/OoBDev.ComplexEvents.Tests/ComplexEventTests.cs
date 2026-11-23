@@ -124,4 +124,56 @@ public sealed class ComplexEventTests
         Assert.AreEqual(1, store.FailedItems().Count);
         Assert.AreEqual(2, store.FailedItems()[0].Attempts);
     }
+
+    private sealed class Capture : IScheduleFailureHandler
+    {
+        public List<(string Key, int Attempts, string Message)> Seen { get; } = [];
+
+        public Task OnFailedAsync(ScheduleItem item, Exception exception, CancellationToken cancellationToken)
+        {
+            Seen.Add((item.Key, item.Attempts, exception.Message));
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class Throwing : IScheduleFailureHandler
+    {
+        public Task OnFailedAsync(ScheduleItem item, Exception exception, CancellationToken cancellationToken) => throw new InvalidOperationException("handler broke");
+    }
+
+    [TestMethod]
+    public async Task Runner_FailingItem_ReportsEachAttemptToTheFailureHandler()
+    {
+        var clock = NewClock();
+        var store = new InMemoryScheduleStore(clock, maxAttempts: 2);
+        var capture = new Capture();
+        var runner = new ScheduleRunner(store, clock, (_, _) => throw new InvalidOperationException("boom"), TimeSpan.FromMinutes(1), capture);
+        await store.RegisterAsync("k", clock.GetUtcNow(), "ping", Payload, CancellationToken.None);
+
+        for (var i = 0; i < 3; i++)
+        {
+            await runner.RunDueAsync(10, CancellationToken.None);
+            clock.Advance(TimeSpan.FromMinutes(2));
+        }
+
+        TestContext.WriteLine(string.Join("; ", capture.Seen));
+        CollectionAssert.AreEqual(new[] { ("k", 1, "boom"), ("k", 2, "boom") }, capture.Seen);
+    }
+
+    [TestMethod]
+    public async Task Runner_ThrowingFailureHandler_DoesNotStopTheNextItem()
+    {
+        var clock = NewClock();
+        var store = new InMemoryScheduleStore(clock);
+        var ran = new List<string>();
+        var runner = new ScheduleRunner(store, clock, (i, _) => { ran.Add(i.Key); return i.Key == "a" ? throw new InvalidOperationException("x") : Task.CompletedTask; }, TimeSpan.FromMinutes(1), new Throwing());
+        await store.RegisterAsync("a", clock.GetUtcNow(), "ping", Payload, CancellationToken.None);
+        await store.RegisterAsync("b", clock.GetUtcNow().AddSeconds(1), "ping", Payload, CancellationToken.None);
+        clock.Advance(TimeSpan.FromSeconds(5));
+
+        var done = await runner.RunDueAsync(10, CancellationToken.None);
+
+        Assert.AreEqual(1, done);
+        CollectionAssert.AreEqual(new[] { "a", "b" }, ran);
+    }
 }

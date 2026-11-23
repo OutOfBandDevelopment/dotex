@@ -13,13 +13,14 @@ public sealed partial class ScheduleHost(
     Func<ScheduleItem, CancellationToken, Task> run,
     IOptions<ScheduleHostOptions> options,
     TimeProvider timeProvider,
-    ILogger<ScheduleHost> logger) : BackgroundService
+    ILogger<ScheduleHost> logger,
+    IScheduleFailureHandler? failureHandler = null) : BackgroundService
 {
     /// <inheritdoc />
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var o = options.Value;
-        var runner = new ScheduleRunner(store, timeProvider, run, o.Lease);
+        var runner = new ScheduleRunner(store, timeProvider, run, o.Lease, failureHandler);
         using var timer = new PeriodicTimer(o.PollInterval, timeProvider);
         try
         {

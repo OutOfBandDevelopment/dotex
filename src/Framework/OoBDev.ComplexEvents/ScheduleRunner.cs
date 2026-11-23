@@ -4,12 +4,13 @@ using System.Threading.Tasks;
 
 namespace OoBDev.ComplexEvents;
 
-/// <summary>Leases due items and runs a callback for each; a throwing callback leaves the lease to expire (an attempt is counted).</summary>
+/// <summary>Leases due items and runs a callback for each; a throwing callback leaves the lease to expire (an attempt is counted) and is reported to the optional failure handler.</summary>
 /// <param name="store">The store.</param>
 /// <param name="time">The clock.</param>
 /// <param name="run">Runs one item (deserialize by <see cref="ScheduleItem.EventType"/> and dispatch).</param>
 /// <param name="lease">Lease length.</param>
-public sealed class ScheduleRunner(IScheduleStore store, TimeProvider time, Func<ScheduleItem, CancellationToken, Task> run, TimeSpan lease)
+/// <param name="onFailure">Told about each failed attempt, for example to dead-letter the item.</param>
+public sealed class ScheduleRunner(IScheduleStore store, TimeProvider time, Func<ScheduleItem, CancellationToken, Task> run, TimeSpan lease, IScheduleFailureHandler? onFailure = null)
 {
     /// <summary>Runs everything due now; returns how many completed.</summary>
     /// <param name="max">Most items to lease.</param>
@@ -25,6 +26,7 @@ public sealed class ScheduleRunner(IScheduleStore store, TimeProvider time, Func
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
+                await ReportAsync(item, ex, cancellationToken).ConfigureAwait(false);
                 continue;
             }
 
@@ -33,5 +35,21 @@ public sealed class ScheduleRunner(IScheduleStore store, TimeProvider time, Func
         }
 
         return done;
+    }
+
+    private async Task ReportAsync(ScheduleItem item, Exception exception, CancellationToken cancellationToken)
+    {
+        if (onFailure is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await onFailure.OnFailedAsync(item, exception, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+        }
     }
 }
