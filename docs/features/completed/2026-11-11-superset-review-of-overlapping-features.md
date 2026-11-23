@@ -1,6 +1,6 @@
 ﻿# Feature request: superset review of features that exist in both dotex and the catalog application
 
-- **Status:** triaged (comparisons written; the built features are listed in the [SearchMerge design](../../design/SearchMerge/README.md))
+- **Status:** done 2026-11-23 (the comparisons are written, one design per area; the built features are listed in the [SearchMerge design](../../design/SearchMerge/README.md))
 - **Requested by:** owner (filed from the NAS storage catalog application, `C:\repo\_storage`)
 - **Date:** 2026-11-11
 - **Area:** cross-cutting: query layer, vectors, embeddings, search, queue, caching, telemetry, identity and rights, documents

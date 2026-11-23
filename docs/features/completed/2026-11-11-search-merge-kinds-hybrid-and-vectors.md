@@ -1,6 +1,6 @@
 ﻿# Feature request: merge the catalog search model with dotex Search (hybrid ranking, kinds, multi-vector)
 
-- **Status:** triaged (first slice built 2026-11-16: request model, fusion, hybrid, vector, keyword and SQL-kind providers; see the [design](../../design/SearchMerge/README.md))
+- **Status:** done 2026-11-23 (request model, parser, fusion, hybrid, vector, keyword and SQL-kind providers, filter-parity set; see the [design](../../design/SearchMerge/README.md); query-by-image and rerankers wait for a consumer, BACKLOG)
 - **Requested by:** owner (filed from the NAS storage catalog application, `C:\repo\_storage`)
 - **Date:** 2026-11-11
 - **Area:** `OoBDev.Search`, `OoBDev.Search.Abstractions`, `Data.Vectors`; companion to `2026-11-11-metadata-driven-query-engine.md`

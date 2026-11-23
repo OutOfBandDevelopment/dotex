@@ -49,6 +49,7 @@ public sealed partial class QueryEngine(
         if (kind.Right.Length > 0 && authorizer?.IsAllowed(kind.Right) != true)
             throw new QueryException($"Kind '{kind.Name}' needs the right '{kind.Right}'.", 403);
 
+        QueryLimits.Check(request, options.Value);
         request = await EmbedAnchorAsync(request, cancellationToken).ConfigureAwait(false);
 
         if (request.Shape == "graph")

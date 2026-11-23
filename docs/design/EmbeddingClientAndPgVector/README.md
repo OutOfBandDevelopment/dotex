@@ -1,6 +1,6 @@
 ﻿# Embedding HTTP client, pgvector store and annotation layer
 
-Status: **first slice built 2026-11-16 (HTTP embedding client and pgvector store, two ExternalServices projects per owner placement 2026-11-12; Npgsql and Pgvector in the store only); the items under "Not in the first slice" are open.** Requests: [embedding container and client](../../features/request/2026-11-11-embedding-container-and-client.md), [pgvector store and read-only annotation layer](../../features/completed/2026-11-11-pgvector-store-and-read-only-annotation-layer.md). Related: [ImageEmbeddings](../ImageEmbeddings/README.md), [VectorSearch](../VectorSearch/README.md), [WorkQueue](../WorkQueue/README.md).
+Status: **first slice built 2026-11-16 (HTTP embedding client and pgvector store, two ExternalServices projects per owner placement 2026-11-12; Npgsql and Pgvector in the store only); the items under "Not in the first slice" are open.** Requests: [embedding container and client](../../features/completed/2026-11-11-embedding-container-and-client.md), [pgvector store and read-only annotation layer](../../features/completed/2026-11-11-pgvector-store-and-read-only-annotation-layer.md). Related: [ImageEmbeddings](../ImageEmbeddings/README.md), [VectorSearch](../VectorSearch/README.md), [WorkQueue](../WorkQueue/README.md).
 
 ## Contents
 
@@ -66,4 +66,4 @@ Unit: batch vectors come back in request order with the configured dimension; op
 - Annotation abstractions in code.
 - The image variant (`IImageEmbeddingProvider` posting bytes) and the ONNX providers implementing the shared interface. Deferred 2026-11-16: no server in the stack or the catalog speaks an image wire format (OpenAI has no image embeddings route), so a contract written now could not be tested against a real server; build it with the first server that needs it.
 - A shared explanation type with HybridSearch: `VectorMatch` (vector index and distance) lives in the pgvector project until HybridSearch needs it.
-- ONNX versus HTTP cosine comparison: built 2026-11-19 (`OnnxVersusHttpTests`, Integration, against the stack's Ollama `all-minilm`): five sentences, lowest cosine 1.00000, bar 0.995. Whether a dedicated embedding image is still wanted is Q12.
+- ONNX versus HTTP cosine comparison: built 2026-11-19 (`OnnxVersusHttpTests`, Integration, against the stack's Ollama `all-minilm`): five sentences, lowest cosine 1.00000, bar 0.995. No dedicated embedding image (owner Q12): any OpenAI-compatible server works.

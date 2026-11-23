@@ -1,6 +1,6 @@
 ﻿# Feature request: metadata-driven query engine (kinds declared by attributes, one query entry point)
 
-- **Status:** triaged (built: registry, compiler, keyset paging, text form, buckets, hints, relations, graph, near, host sample; remaining slices in the [design](../../design/MetadataQuery/README.md))
+- **Status:** done 2026-11-23 (registry, compiler, keyset paging, text form, buckets, hints, relations, graph, near with text anchor, cost guard, host sample; see the [design](../../design/MetadataQuery/README.md); GraphQL and OData transports are separate designs, BACKLOG)
 - **Requested by:** owner (filed from the NAS storage catalog application, `C:\repo\_storage`, `src/Storage.Query`)
 - **Date:** 2026-11-11
 - **Area:** new library near `OoBDev.AspNetCore.OData`, `OoBDev.Search` and `OoBDev.Data.Vectors`; the HTTP QUERY verb and OData designs

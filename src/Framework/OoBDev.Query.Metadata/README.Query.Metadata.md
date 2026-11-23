@@ -42,6 +42,11 @@ The text form `photos tag:beach by -taken top 60 count` (`QueryText.Parse`) and 
 |-----|---------|---------|
 | `CursorKey` | required, 32 characters or more | HMAC key that signs cursors |
 | `MaxTop` | 500 (1 to 5000) | Largest page a request may ask for |
+| `MaxFilters` | 50 (1 to 1000) | Most filter entries in one request |
+| `MaxFilterValues` | 100 (1 to 10000) | Most values one filter entry may list |
+| `MaxSearchLength` | 1000 (1 to 100000) | Longest free text, in characters |
+
+A request over a limit answers 400 with the limit named (the cost guard of the OData limits: page size, maximum top, filter size).
 
 ## Buckets
 
