@@ -330,6 +330,8 @@
     <Project Path="Framework/OoBDev.DataLoader.EntityFrameworkCore/OoBDev.DataLoader.EntityFrameworkCore.csproj" />
     <Project Path="Framework/OoBDev.DataLoader.Tests/OoBDev.DataLoader.Tests.csproj" />
     <Project Path="Framework/OoBDev.DataLoader/OoBDev.DataLoader.csproj" />
+    <Project Path="ExternalServices/Google/OoBDev.Google.Maps.Tests/OoBDev.Google.Maps.Tests.csproj" />
+    <Project Path="ExternalServices/Google/OoBDev.Google.Maps/OoBDev.Google.Maps.csproj" />
     <Project Path="ExternalServices/Census/OoBDev.Census.Geocoding.Tests/OoBDev.Census.Geocoding.Tests.csproj" />
     <Project Path="ExternalServices/Census/OoBDev.Census.Geocoding/OoBDev.Census.Geocoding.csproj" />
     <Project Path="Framework/OoBDev.Generations.Tests/OoBDev.Generations.Tests.csproj" />
