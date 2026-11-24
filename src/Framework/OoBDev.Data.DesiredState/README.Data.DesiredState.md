@@ -37,13 +37,15 @@ var plan = await provider.PlanAsync(desired, new DatabaseTarget("localhost", 543
 await provider.ApplyAsync(desired, target, plan, new ApplyOptions());      // refuses drops and type changes
 ```
 
+The command line is [`desired-state`](../../Tools/OoBDev.DesiredState.Cli/README.DesiredState.Cli.md).
+
 ## Ensure scripts
 
 `EnsureScriptRunner` runs ensure scripts (extensions, queues, event streams) in file-name order through an `IScriptExecutor`. Scripts must be idempotent and run every time; a script named `*.once.sql` runs only until its name and SHA-512 content hash are recorded in the `IAppliedScriptStore` (in-memory by default; a database-table store is a consumer's adapter). The result is an `EnsureReport` of ran and skipped scripts.
 
 ## Not built yet
 
-The feature manifest compiler, the CLI verbs and an Oracle `IScriptExecutor` are in `BACKLOG.md`.
+The feature manifest compiler and an Oracle `IScriptExecutor` are in `BACKLOG.md`.
 
 ## Tests
 

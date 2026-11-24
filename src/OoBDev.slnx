@@ -460,6 +460,8 @@
     <Project Path="Tools/OoBDev.FileInventory.Cli/OoBDev.FileInventory.Cli.csproj" />
     <Project Path="Tools/OoBDev.ImageMask.Cli/OoBDev.ImageMask.Cli.csproj" />
     <Project Path="Tools/OoBDev.ImageMask.Cli.Tests/OoBDev.ImageMask.Cli.Tests.csproj" />
+    <Project Path="Tools/OoBDev.DesiredState.Cli/OoBDev.DesiredState.Cli.csproj" />
+    <Project Path="Tools/OoBDev.DesiredState.Cli.Tests/OoBDev.DesiredState.Cli.Tests.csproj" />
     <Project Path="Tools/OoBDev.LlmCodeGen.Cli.Tests/OoBDev.LlmCodeGen.Cli.Tests.csproj" />
     <Project Path="Tools/OoBDev.LlmCodeGen.Cli/OoBDev.LlmCodeGen.Cli.csproj" />
     <Project Path="Tools/OoBDev.MigrationHelper.Cli.Tests/OoBDev.MigrationHelper.Cli.Tests.csproj" />
