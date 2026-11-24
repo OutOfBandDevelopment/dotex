@@ -53,6 +53,41 @@ public class PostgresDefIntegrationTests
         }
     }
 
+    [TestCategory(TestCategories.Integration)]
+    [IntegrationTestMethod("oobd-test-pgvector")]
+    public async Task EnsureRun_ManifestOnPostgres_CreatesTablesAndSecondRunChangesNothing()
+    {
+        // Stage
+        var admin = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("PGVECTOR_CONNECTION_STRING"));
+        var database = $"ensure_{Guid.NewGuid():N}";
+        TestContext.WriteLine($"database {database}");
+        await ExecuteAsync(admin, $"CREATE DATABASE \"{database}\"");
+        try
+        {
+            var connectionString = new NpgsqlConnectionStringBuilder(admin) { Database = database }.ConnectionString;
+            var runner = new EnsureScriptRunner(new AdoScriptExecutor(_ => new NpgsqlConnection(connectionString)), new InMemoryAppliedScriptStore());
+            var target = new DatabaseTarget("postgres", 5432, database);
+            var scripts = ManifestCompiler.Compile(FeatureManifest.Parse("""{ "queues": ["orders"], "streams": ["events"] }"""), "postgres");
+
+            // Test
+            await runner.RunAsync(scripts, target, TestContext.CancellationToken);
+            var second = await runner.RunAsync(scripts, target, TestContext.CancellationToken);
+            TestContext.WriteLine($"second run re-ran {second.Ran.Count} idempotent scripts without error");
+
+            // Assert
+            await using var connection = new NpgsqlConnection(connectionString);
+            await connection.OpenAsync(TestContext.CancellationToken);
+            await using var command = new NpgsqlCommand("SELECT COUNT(*) FROM information_schema.tables WHERE table_name IN ('queue_orders','stream_events')", connection);
+            Assert.AreEqual(2L, await command.ExecuteScalarAsync(TestContext.CancellationToken));
+            Assert.AreEqual(2, second.Ran.Count);
+        }
+        finally
+        {
+            NpgsqlConnection.ClearAllPools();
+            await ExecuteAsync(admin, $"DROP DATABASE IF EXISTS \"{database}\" WITH (FORCE)");
+        }
+    }
+
     private async Task ExecuteAsync(string connectionString, string sql)
     {
         await using var connection = new NpgsqlConnection(connectionString);
