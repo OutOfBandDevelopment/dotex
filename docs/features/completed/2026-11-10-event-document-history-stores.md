@@ -1,6 +1,6 @@
 # Feature request: Event, document and history store abstractions with an embedded SQLite provider
 
-- **Status:** triaged
+- **Status:** done (history store built 2026-11-23, see [HistoryStore](../../design/HistoryStore/README.md); event and document stores existed in EventSourcing)
 - **Requested by:** owner (filed from the notes repository; origin is the `ctrl-home` proposal, `docs/proposal/02-architecture.md` and `11-build-on-dotex.md`)
 - **Date:** 2026-11-10
 - **Area:** new, near `OoBDev.MessageQueueing`, `OoBDev.Caching` and `OoBDev.ComplexEvents`
