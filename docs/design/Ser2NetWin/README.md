@@ -9,4 +9,5 @@ Ser2NetWin bridges Windows COM ports to TCP (raw or RFC 2217, optionally adverti
 | Document | Holds |
 |----------|-------|
 | [migration-plan.md](migration-plan.md) | project map, layer decision (option A) and the steps taken |
+| [usb-bridge.md](usb-bridge.md) | USBTMC and HID over a framed TCP stream (design) |
 | [Application docs](../../applications/ser2netwin/README.md) | architecture, testing, CLI guide and imported history |

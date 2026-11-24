@@ -16,8 +16,8 @@ Docker Desktop on Windows cannot pass a USB device into a Linux container. For e
 | Device | Covered | Route |
 | --- | --- | --- |
 | USB serial adapters (FTDI, Prolific, CH340), the Aeotec Z-Stick, anything with a Windows COM port | Yes | `ser2net-win` |
-| Devices with a vendor USB protocol and no serial interface | No, permanently out of scope (owner Q16) | `usbipd-win` with WSL |
-| Greaseweazle floppy controller | Not claimed until a bench pass (owner question Q33) | Needs the device; its timing may not tolerate the TCP hop |
+| Devices with a vendor USB protocol and no serial interface | Planned: a framed USBTMC and HID bridge, not USB/IP (owner, 2026-11-24; [design](../../design/Ser2NetWin/usb-bridge.md)). Until built, `usbipd-win` with WSL |
+| Greaseweazle floppy controller | Not claimed until a bench pass | Any COM-port device can run the bench pass; the Greaseweazle itself is not required |
 
 ## Select the port by USB id
 
