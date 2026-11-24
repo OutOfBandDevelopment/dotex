@@ -98,6 +98,7 @@ export async function mockApi(page: Page): Promise<void> {
     if (path === '/api/DataAccess/query') return json(route, { columns: ['name', 'create_date'], rows: [['master', '2003-04-08 09:13:36'], ['model', '2003-04-08 09:13:36'], ['msdb', '2025-04-19 08:37:53'], ['tempdb', '2026-11-20 08:00:00']], truncated: false, elapsedMs: 4 });
     if (path === '/api/Geocode') return json(route, { matched: true, latitude: 38.8977, longitude: -77.0365, quality: 'Interpolated', normalizedAddress: '1600 PENNSYLVANIA AVE NW, WASHINGTON, DC, 20500' });
     if (path === '/api/Distance') return json(route, { meters: 343556.2, kilometers: 343.6, miles: 213.5, bearingDegrees: 148.1 });
+    if (path === '/api/SampleCatalog') return json(route, { '@odata.count': 3, value: [{ Id: 10, Name: 'Bench supply', Category: 'Instruments', Price: 119, InStock: true }, { Id: 7, Name: 'Logic analyzer', Category: 'Instruments', Price: 59, InStock: true }, { Id: 5, Name: 'Multimeter', Category: 'Instruments', Price: 39, InStock: true }] });
     if (path === '/api/DataLoad/preview') return json(route, { read: 3, written: 2, replaced: 0, skipped: 1, errors: [], columns: ['id', 'name', 'city'], rows: [['1', 'Ann', 'Oslo'], ['2', 'Bo', 'Lima']] });
     if (path === '/api/Schedule' || path.startsWith('/api/Schedule/')) {
       if (method === 'POST') scheduled.push({ key: 'reminder-1', dueAt: '2026-11-20T08:00:10+00:00', message: 'Stand up and stretch', firedAt: null });

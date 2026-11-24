@@ -43,4 +43,5 @@ Step-by-step guides with screenshots, one per user journey. They are regenerated
 | [Schedule a message](schedule-a-message.md) | A developer trying the scheduling building block | Schedule a message for later, see it wait, and take it back before it is due. |
 | [Look up an address](look-up-an-address.md) | A developer trying the spatial services | Find the coordinates of a US address. |
 | [Measure a distance](measure-a-distance.md) | A developer trying the spatial services | Find the distance and bearing between two coordinates. |
+| [Query a catalog](query-a-catalog.md) | A developer trying the OData query surface | Filter, sort and page the rows of a sample catalog with system query options. |
 | [Load a file into a table](load-a-file-into-a-table.md) | A developer trying the data loader | Load a small CSV into a throwaway table and read the report. |

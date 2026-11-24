@@ -1160,6 +1160,31 @@ export const journeys: Journey[] = [
     ],
   },
   {
+    id: 'query-a-catalog',
+    title: 'Query a catalog',
+    persona: 'A developer trying the OData query surface',
+    goal: 'Filter, sort and page the rows of a sample catalog with system query options.',
+    start: '/data/query',
+    prerequisites: ['The signed-in user holds the catalog.read right (the admin role).'],
+    features: ['OoBDev.AspNetCore.OData (`[OoBDevEnableQuery]`, `$filter`, `$orderby`, `$top`, `$count`)'],
+    why: 'Show that any IQueryable endpoint gets filtering, sorting and paging with cost limits and problem details errors.',
+    problems: [
+      { symptom: 'Bad query', cause: 'The filter names a property that does not exist or exceeds the cost limits', fix: 'Use Id, Name, Category, Price or InStock and a shorter filter' },
+      { symptom: 'Forbidden', cause: 'The user lacks the catalog.read right', fix: 'Sign in with the admin role' },
+    ],
+    steps: [
+      {
+        title: 'Run the query',
+        narrative: 'The filter keeps the instruments under 100, sorted by price, highest first; press Run query.',
+        expect: ['The table lists the matching rows and the number of matches.'],
+        run: async page => {
+          await press(page, 'Run query');
+          await expect(page.getByLabel('Rows')).toContainText('Multimeter');
+        },
+      },
+    ],
+  },
+  {
     id: 'load-a-file-into-a-table',
     title: 'Load a file into a table',
     persona: 'A developer trying the data loader',

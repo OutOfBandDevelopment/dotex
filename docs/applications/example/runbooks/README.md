@@ -43,4 +43,5 @@ How to verify each feature and what to do when it fails. Generated from the same
 | [Schedule a message](schedule-a-message.md) | The API runs with its hosted services on (not DISABLE_HOSTING=true). The signed-in user holds the schedule.use right (the admin role). |
 | [Look up an address](look-up-an-address.md) | The API can reach the public US Census geocoder. The signed-in user holds the geocode.use right (the admin role). |
 | [Measure a distance](measure-a-distance.md) | The signed-in user holds the geocode.use right (the admin role). |
+| [Query a catalog](query-a-catalog.md) | The signed-in user holds the catalog.read right (the admin role). |
 | [Load a file into a table](load-a-file-into-a-table.md) | The signed-in user holds the data.load right (the admin role). |
