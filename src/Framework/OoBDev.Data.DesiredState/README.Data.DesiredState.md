@@ -54,3 +54,7 @@ Unit tests use a fake tool runner. The Integration test runs the real `sqlite3de
 ## Feature manifest
 
 `FeatureManifest.Parse("""{ "extensions": ["pgcrypto"], "queues": ["orders"], "streams": ["order_events"] }""")` and `ManifestCompiler.Compile(manifest, "postgres")` give idempotent ensure scripts (`001_extensions.sql`, `020_queues.sql`, `030_streams.sql`) for `EnsureScriptRunner`. Queues and streams are portable tables (`queue_{name}`, `stream_{name}`); extensions exist for Postgres only; names are validated identifiers; Oracle scripts are hand-written.
+
+## Running ensure scripts
+
+`AdoScriptExecutor` is the `IScriptExecutor` for any ADO.NET provider: pass a factory that opens the connection for a `DatabaseTarget` (Npgsql, SqlClient, Microsoft.Data.Sqlite). It needs no driver package here. An Oracle driver waits on an owner decision (Q36).
