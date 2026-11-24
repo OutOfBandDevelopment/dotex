@@ -25,29 +25,3 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 **Your answer:**
 
 
-### Q34 — 2026-11-23 — Desired-state database tooling: buy with gaps or build?
-
-**Question:** The bake-off scores ([Table 8](docs/design/DesiredStateDatabase/bake-off-result.md#scores)) put sqldef at 69 to 71% and pgschema at 60%. No tool passes all three safety gates (S5 drop gate, S6 type-change hazard, S7 plan then apply), and the plan's rule says "build" when the gates fail for every candidate. Which reading do you want?
-
-**Options:**
-- A (recommended): buy with gaps: wrap sqldef (PostgreSQL, SQL Server, SQLite), and the wrapper adds the drop gate and a type-narrowing check on the plan. Least work, sqldef already skips drops without a flag.
-- B: build our own diff and apply on the catalog (strict reading of the rule). Full control of the gates, much more work.
-- C: wrap pgschema for PostgreSQL only (JSON plan), wrapper refuses drop steps; sqldef for the other engines.
-
-**Default:** A, nothing is built until you answer.
-
-**Your answer:**
-
-
-### Q35 — 2026-11-23 — Desired-state database tooling: Oracle
-
-**Question:** The design lists Oracle beside SQL Server, Postgres and SQLite, but neither sqldef nor pgschema covers it, and Atlas needs a paid licence for it. How should Oracle be handled? (From the request's open questions; answered by default so far, never confirmed.)
-
-**Options:**
-- A (recommended): hand-written repeatable scripts for Oracle in the first release, run by the same apply step with the drop gate. Least work, and nothing is built that no consumer has asked for.
-- B: a custom catalog-diff adapter for Oracle. Same experience as the other engines, much more work and a test container with a heavy image.
-- C: leave Oracle out of scope until a consumer needs it, and drop it from the design.
-
-**Default:** A; nothing is built until Q34 is answered.
-
-**Your answer:**

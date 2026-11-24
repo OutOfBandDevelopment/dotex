@@ -313,6 +313,8 @@
     <Project Path="Framework/OoBDev.DacFx/OoBDev.DacFx.csproj" />
     <Project Path="Framework/OoBDev.Data.Common.Abstractions/OoBDev.Data.Common.Abstractions.csproj" />
     <Project Path="Framework/OoBDev.Data.Common.Tests/OoBDev.Data.Common.Tests.csproj" />
+    <Project Path="Framework/OoBDev.Data.DesiredState.Tests/OoBDev.Data.DesiredState.Tests.csproj" />
+    <Project Path="Framework/OoBDev.Data.DesiredState/OoBDev.Data.DesiredState.csproj" />
     <Project Path="Framework/OoBDev.Data.Common/OoBDev.Data.Common.csproj" />
     <Project Path="Framework/OoBDev.Data.Migrations.Postgres/OoBDev.Data.Migrations.Postgres.csproj" />
     <Project Path="Framework/OoBDev.Data.Migrations.Sqlite/OoBDev.Data.Migrations.Sqlite.csproj" />
