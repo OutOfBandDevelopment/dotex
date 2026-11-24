@@ -13,6 +13,8 @@ public static class ServiceCollectionExtensions
         services.TryAddKeyedSingleton<IDesiredStateProvider>(SqldefProvider.SqlServer, (sp, _) => SqldefProvider.ForSqlServer(sp.GetRequiredService<IToolRunner>()));
         services.TryAddKeyedSingleton<IDesiredStateProvider>(SqldefProvider.Sqlite, (sp, _) => SqldefProvider.ForSqlite(sp.GetRequiredService<IToolRunner>()));
         services.TryAddSingleton<DesiredStateProviderFactory>();
+        services.TryAddSingleton<IAppliedScriptStore, InMemoryAppliedScriptStore>();
+        services.TryAddSingleton<EnsureScriptRunner>();
         return services;
     }
 
