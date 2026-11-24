@@ -29,6 +29,9 @@ public sealed class PluginManifest
     /// <summary>Set for an out-of-process plugin: the program to run. It only runs after the user approves it (<see cref="PluginTrust"/>).</summary>
     public PluginProcess? Process { get; set; }
 
+    /// <summary>Optional isolation for an out-of-process plugin: folders it may reach and its limits. Without a platform launcher a plugin with this block is refused.</summary>
+    public PluginPermissions? Permissions { get; set; }
+
     /// <summary>Reads a manifest; null (with <paramref name="error"/> set) when the file is missing, unreadable or incomplete.</summary>
     public static PluginManifest? TryRead(string path, out string error)
     {

@@ -119,3 +119,5 @@ sample-data generator, expression picker and CEL-style language landed
 ([expression picker](expression-picker-paths-and-cel.md)), and a binary-frame inbound schema (`Inbound.Frame`) can be
 generated from a `.ksy` by `KsyImporter` ([.ksy importer](ksy-importer.md)). Generated schema files for the
 manifest formats are a separate, completed feature: [Schema files for custom formats](format-schema-files.md).
+
+**Decision (owner, 2026-11-23, Q32 A):** no per-row expression picker in the Tui; its whole-list Channels picker edits each channel's expression with validation, and a per-row picker would change every Tui form in the shared renderer. WPF has the picker.

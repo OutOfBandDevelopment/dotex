@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Framework\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Framework\OoBDev.System.Sandbox.Windows\OoBDev.System.Sandbox.Windows.csproj" />
+    <ProjectReference Include="..\..\..\Framework\OoBDev.System.Sandbox.Linux\OoBDev.System.Sandbox.Linux.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.Documents.Hpgl\OoBDev.Documents.Hpgl.csproj" />
     <ProjectReference Include="..\..\..\Extensions\OoBDev.Extensions.Drawing\OoBDev.Extensions.Drawing.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.Documents.ExternalTools\OoBDev.Documents.ExternalTools.csproj" />

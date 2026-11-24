@@ -105,21 +105,36 @@ public static class PluginLoader
         var root = Path.GetFullPath(folder);
         var command = process.Command.Replace("{folder}", root, StringComparison.Ordinal);
         var arguments = process.Arguments.Select(a => a.Replace("{folder}", root, StringComparison.Ordinal)).ToArray();
-        var request = new PluginApprovalRequest(manifest.Name, manifest.Version, root, string.Join(' ', new[] { command }.Concat(arguments)), PluginHash.Compute(root));
+        PluginSandbox? sandbox = null;
+        var shown = string.Join(' ', new[] { command }.Concat(arguments));
+        if (manifest.Permissions is { } permissions)
+        {
+            var launcher = PluginSandboxes.Launcher;
+            if (launcher is null)
+            {
+                return new(folder, manifest.Name, false, "declares permissions, but this platform has no sandbox launcher; it is not run unsandboxed.");
+            }
+
+            sandbox = permissions.ToSandbox(launcher, root);
+            var write = sandbox.WriteDirectories.Count == 0 ? "nothing" : string.Join(", ", sandbox.WriteDirectories);
+            shown += $" [sandbox ({launcher.Mechanism}): read {string.Join(", ", sandbox.ReadDirectories)}; write {write}; memory {sandbox.Limits.MemoryMb} MB; no network]";
+        }
+
+        var request = new PluginApprovalRequest(manifest.Name, manifest.Version, root, shown, PluginHash.Compute(root));
         if (!PluginTrust.Authorise(request))
         {
-            LivePlugins.AddPending(new PendingPlugin(request, command, arguments, TimeSpan.FromMilliseconds(Math.Clamp(process.ReplyTimeoutMs, 100, 60000)), process.Kind.ToLowerInvariant()));
+            LivePlugins.AddPending(new PendingPlugin(request, command, arguments, TimeSpan.FromMilliseconds(Math.Clamp(process.ReplyTimeoutMs, 100, 60000)), process.Kind.ToLowerInvariant(), sandbox));
             return new(folder, manifest.Name, false, $"needs your approval to run: {request.CommandLine}");
         }
 
         var timeout = TimeSpan.FromMilliseconds(Math.Clamp(process.ReplyTimeoutMs, 100, 60000));
         if (string.Equals(process.Kind, "transport", StringComparison.OrdinalIgnoreCase))
         {
-            services.AddSingleton(new PluginTransport(manifest.Name, () => new ExternalProcessAdapter(manifest.Name, command, arguments, timeout)));
+            services.AddSingleton(new PluginTransport(manifest.Name, () => new ExternalProcessAdapter(manifest.Name, command, arguments, timeout, sandbox)));
         }
         else
         {
-            services.AddTransient<IPresenter>(_ => new LazyExternalPresenter(manifest.Name, command, arguments, timeout));
+            services.AddTransient<IPresenter>(_ => new LazyExternalPresenter(manifest.Name, command, arguments, timeout, sandbox));
         }
 
         return new(folder, manifest.Name, true, $"approved {manifest.Name} {manifest.Version} (runs: {request.CommandLine}).");

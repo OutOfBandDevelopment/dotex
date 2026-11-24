@@ -23,7 +23,8 @@ public sealed class ExternalProcessAdapter : IDeviceAdapter
     private readonly IReadOnlyList<string> _arguments;
     private readonly TimeSpan _replyTimeout;
     private readonly Lock _gate = new();
-    private Process? _process;
+    private readonly PluginSandbox? _sandbox;
+    private PluginChild? _process;
     private Pipe _pipe = NewPipe();
     private PipeWriter? _output;
     private TaskCompletionSource<string?> _opened = new(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -34,8 +35,9 @@ public sealed class ExternalProcessAdapter : IDeviceAdapter
     /// <param name="fileName">The program to run.</param>
     /// <param name="arguments">Its arguments.</param>
     /// <param name="replyTimeout">How long the open may take.</param>
-    public ExternalProcessAdapter(string name, string fileName, IReadOnlyList<string> arguments, TimeSpan replyTimeout)
+    public ExternalProcessAdapter(string name, string fileName, IReadOnlyList<string> arguments, TimeSpan replyTimeout, PluginSandbox? sandbox = null)
     {
+        _sandbox = sandbox;
         Type = name;
         _fileName = fileName;
         _arguments = arguments;
@@ -89,33 +91,18 @@ public sealed class ExternalProcessAdapter : IDeviceAdapter
         FaultReason = null;
         _pipe = NewPipe();
         _opened = new(TaskCreationOptions.RunContinuationsAsynchronously);
-        var info = new ProcessStartInfo(_fileName)
-        {
-            RedirectStandardInput = true,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,
-            CreateNoWindow = true,
-        };
-        foreach (var argument in _arguments)
-        {
-            info.ArgumentList.Add(argument);
-        }
-
-        Process process;
+        PluginChild process;
         try
         {
-            process = Process.Start(info) ?? throw new IOException("The plugin process did not start.");
+            process = PluginChild.Start(_fileName, _arguments, _sandbox);
         }
-        catch (global::System.ComponentModel.Win32Exception ex)
+        catch (InvalidOperationException ex)
         {
             State = ConnectionState.Faulted;
-            throw new IOException($"Could not start plugin '{_fileName}': {ex.Message}", ex);
+            throw new IOException(ex.Message, ex);
         }
 
         _process = process;
-        process.ErrorDataReceived += static (_, _) => { };
-        process.BeginErrorReadLine();
         _ = Task.Run(() => ReadLoopAsync(process), CancellationToken.None);
         try
         {
@@ -153,7 +140,6 @@ public sealed class ExternalProcessAdapter : IDeviceAdapter
                 // The child is already gone.
             }
 
-            Kill(process);
             process.Dispose();
         }
 
@@ -176,15 +162,15 @@ public sealed class ExternalProcessAdapter : IDeviceAdapter
         return Task.CompletedTask;
     }
 
-    private void Send(Process process, object message)
+    private void Send(PluginChild process, object message)
     {
         var line = JsonSerializer.Serialize(message);
         try
         {
             lock (_gate)
             {
-                process.StandardInput.WriteLine(line);
-                process.StandardInput.Flush();
+                process.Input.WriteLine(line);
+                process.Input.Flush();
             }
         }
         catch (Exception ex) when (ex is IOException or InvalidOperationException)
@@ -193,11 +179,11 @@ public sealed class ExternalProcessAdapter : IDeviceAdapter
         }
     }
 
-    private async Task ReadLoopAsync(Process process)
+    private async Task ReadLoopAsync(PluginChild process)
     {
         try
         {
-            while (await process.StandardOutput.ReadLineAsync().ConfigureAwait(false) is { } line)
+            while (await process.Output.ReadLineAsync().ConfigureAwait(false) is { } line)
             {
                 using var doc = JsonDocument.Parse(line);
                 var root = doc.RootElement;
@@ -244,25 +230,11 @@ public sealed class ExternalProcessAdapter : IDeviceAdapter
         _process = null;
         if (process is not null)
         {
-            Kill(process);
+            process.Kill();
         }
 
         await _pipe.Writer.CompleteAsync().ConfigureAwait(false);
         State = ConnectionState.Faulted;
     }
 
-    private static void Kill(Process process)
-    {
-        try
-        {
-            if (!process.HasExited)
-            {
-                process.Kill(entireProcessTree: true);
-            }
-        }
-        catch (InvalidOperationException)
-        {
-            // already gone
-        }
-    }
 }

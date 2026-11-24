@@ -15,7 +15,7 @@ namespace OoBDev.DevTerm;
 /// starts the program, asks it, and delivers the lines through <see cref="OutputReady"/>, so the read loop and the
 /// other presenters are never held up by a slow plugin (decided 2026-10-13).
 /// </summary>
-public sealed class LazyExternalPresenter(string name, string fileName, IReadOnlyList<string> arguments, TimeSpan replyTimeout)
+public sealed class LazyExternalPresenter(string name, string fileName, IReadOnlyList<string> arguments, TimeSpan replyTimeout, PluginSandbox? sandbox = null)
     : IPresenter, IAsyncOutputSource, IAsyncDisposable
 {
     private readonly Lock _gate = new();
@@ -110,7 +110,7 @@ public sealed class LazyExternalPresenter(string name, string fileName, IReadOnl
             {
                 try
                 {
-                    _inner = await ExternalProcessPresenter.StartAsync(fileName, arguments, replyTimeout).ConfigureAwait(false);
+                    _inner = await ExternalProcessPresenter.StartAsync(fileName, arguments, replyTimeout, sandbox: sandbox).ConfigureAwait(false);
                 }
                 catch (InvalidOperationException ex)
                 {

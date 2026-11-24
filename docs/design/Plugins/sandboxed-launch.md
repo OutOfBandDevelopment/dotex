@@ -1,6 +1,6 @@
 # Launching DevTerm process plugins through the sandbox
 
-**Status:** proposed design, written 2026-11-23; nothing built. The default is recorded as Q31 in [OPEN-QUESTIONS](../../../OPEN-QUESTIONS.md). Parent: [out-of-process-plugins](out-of-process-plugins.md); isolation: [PluginSandbox](../PluginSandbox/README.md).
+**Status:** built 2026-11-23 (owner answered Q31 A). Windows (AppContainer plus job object) and Linux (bubblewrap) launch process plugins; macOS stays deferred like the rest of the sandbox. Parent: [out-of-process-plugins](out-of-process-plugins.md); isolation: [PluginSandbox](../PluginSandbox/README.md).
 
 ## Contents
 
@@ -62,14 +62,14 @@ P <--> C : JSON lines on stdio
 
 *Figure 1 — Launch paths (option A)*
 
-## Plan
+## Built
 
-Option A, in order, each step its own change:
+Owner decision (2026-11-23, Q31 A): the launchers run any command line and DevTerm keeps its JSON-lines protocol on stdio.
 
-1. `PluginManifest` gets an optional `permissions` block (folders, network, memory, cpu, wall time) reusing the sandbox manifest field names; absent means today's behaviour.
-2. The sandbox launchers get `StartCommand(commandLine, profile)` returning the redirected streams; Windows and Linux first, macOS deferred like the rest of the sandbox.
-3. `ExternalProcessPresenter` takes an `IProcessStarter`; the default is `Process.Start`, the sandboxed one is used when `permissions` is present, and approval shows the grants.
-4. A plugin with `permissions` on a platform without a launcher is refused, not run unsandboxed.
+1. `PluginManifest.Permissions` (`PluginPermissions`): `read` and `write` folders (`{folder}` expands to the plugin folder, which is always readable), `memoryMb` (256), `cpuSeconds`, `wallSeconds`, `maxProcesses`. Absent means today's behaviour: a plain child process.
+2. `ISandboxCommandLauncher.StartCommand` (`OoBDev.System.Abstractions`) returns an `ISandboxedProcess` with plain stdio streams, exit state and the limit that ended it. `SandboxedCommand` (Windows) and `BubblewrapProcess` (Linux) implement it; no network, only the granted folders.
+3. `PluginChild` wraps either a `Process` or an `ISandboxedProcess`; `ExternalProcessPresenter`, `LazyExternalPresenter` and `ExternalProcessAdapter` take an optional `PluginSandbox`. The approval prompt shows the grants (mechanism, folders, memory, no network), and a plugin changing its grants changes the approved hash.
+4. A plugin with `permissions` where `PluginSandboxes.Launcher` is null (macOS, Linux without bubblewrap) is refused with a reason, never run unsandboxed.
 
 ## Testing strategy
 
@@ -78,9 +78,9 @@ Option A, in order, each step its own change:
 | Case | Tier | Check |
 |------|------|-------|
 | manifest with and without `permissions` | Unit | parsed; absent keeps the plain starter |
-| `IProcessStarter` swap | Unit | presenter handshake and fault handling unchanged |
+| sandboxed start through a fake launcher | Unit | presenter handshake and render unchanged; a program that ends fails the handshake without hanging |
 | sandboxed Python reads outside its grants | Integration (Linux container with bubblewrap) | denied |
-| sandboxed plugin exceeds wall time | Integration | ended, presenter marked faulted, session carries on |
+| sandboxed program exceeds wall time (Windows) | Integration | handshake fails within the limit, host carries on |
 | refusal on an unsupported platform | Unit | not started |
 
 *Table 2 maps each case to its tier; the AppContainer checks run on the Windows host as Hardware-free Unit or Simulate tests where the existing sandbox tests do.*

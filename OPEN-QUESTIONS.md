@@ -12,33 +12,6 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 ## Open
 
 
-### Q31 — 2026-11-23 — DevTerm plugins: sandbox the `process` plugins?
-
-**Question:** DevTerm `process` plugins (Python, Java, Go over JSON lines) run with the user's full rights after approval. The sandbox library can limit them, but its launchers start only their own plugin host and speak a different protocol ([design](docs/design/Plugins/sandboxed-launch.md)). Should DevTerm plugins run through the sandbox?
-
-**Options:**
-- A (recommended): add a command-line mode to the sandbox launchers and keep the JSON-lines protocol; `plugin.json` gets an optional `permissions` block, and a plugin with it is refused where no launcher exists. Existing examples keep working and the isolation is real.
-- B: move presenter plugins to the sandbox frame protocol. One protocol, but every language needs a frame codec and presenters gain nothing from the broker.
-- C: stay unsandboxed with approval only. No work, no isolation.
-
-**Default:** A, built only after your answer (it changes the sandbox library API); until then the design is the deliverable and nothing is built.
-
-**Your answer:**
-
-
-### Q32 — 2026-11-23 — DevTerm Tui: per-channel expression picker?
-
-**Question:** The WPF manifest editor has an expression picker on each channel row. The Tui's whole-list Channels picker already edits each channel's expression with validation. A per-row picker needs dynamic fields in the shared `OoBDev.UiDefinitions.Tui` form renderer. Build it?
-
-**Options:**
-- A (recommended): no. The existing editor covers the job, and the renderer change touches every Tui form.
-- B: build the per-row picker in the renderer, with tests and a screenshot.
-
-**Default:** A.
-
-**Your answer:**
-
-
 ### Q33 — 2026-11-23 — Bench-hardware items: who runs them?
 
 **Question:** These need a person at the bench or a captured trace, which I cannot supply: DE-5000 BLE Hardware test (radio not fitted), Z-Wave include/exclude/reset pass, the silent HP 34401A and TDS2024 TCP bridges, the Ebyte and USR UDP config capture (Ebyte `IDeviceConfigEditor`), HP-GL scope and XBee bench checks, the Greaseweazle USB pass for Ser2NetWin, and the BlueZ (Linux) BLE backend, which needs a Linux machine with a radio. When you are at the bench, do you want me to run each pass through the `hardware-test` skill, or to leave them off the backlog?

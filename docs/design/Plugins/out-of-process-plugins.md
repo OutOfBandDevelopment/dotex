@@ -18,6 +18,7 @@ The sandboxed host that now implements the isolation (grants, brokered access, l
   stays silent, exits, or answers malformed JSON is marked faulted (`FaultReason`) and renders nothing from then on;
   the session and the other presenters carry on. A failed handshake throws from `StartAsync`.
 - stderr is the plugin's own log and is drained so it can never block the child.
+- An optional `permissions` block in `plugin.json` runs the program in the platform sandbox (no network, only the listed folders, memory, CPU and wall limits); where no launcher exists the plugin is refused. See [sandboxed-launch](sandboxed-launch.md).
 - Presenters are `ExternalProcessPresenter : IPresenter`. A manifest `process.kind` of `transport` makes the same kind of child a
   transport (`ExternalProcessAdapter : IDeviceAdapter`, path `plugin://{name}`), chosen with `--transport {name}`. Host to plugin:
   `hello`, `open`, `{"type":"write","hex":"..."}`, `close`. Plugin to host: `{"type":"opened"}` (answers `open` within the reply
