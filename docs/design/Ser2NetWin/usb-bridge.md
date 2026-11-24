@@ -85,5 +85,6 @@ Unit tests: frame codec round trips, bad frames, server against fake `IUsbTmcDev
 
 ## Open points
 
+- **Decided 2026-11-24 (owner): one TCP port per device for now.** A shared port is later work: `Hello` carries a device selector, a `List` op returns the attached devices, one connection serves one device, and an optional allow-list limits what is exposed (`Transport: "UsbHub"`). Serial bridges stay one port per COM port.
 - Whether a second client may watch HID reports read-only (default: no, one client).
 - A `u32` timeout field per `ReadBulkIn` (default: the server's device timeout).
