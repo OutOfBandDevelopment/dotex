@@ -15,6 +15,7 @@
 | --- | --- |
 | [user-guide.md](user-guide.md) | Commands and options, generated from a run of the built tool |
 | [architecture.md](architecture.md) | Parts, the one-client policy and how a client is handled |
+| [usb-devices-and-containers.md](usb-devices-and-containers.md) | Selecting a port by USB id, the container recipe and the scope of the bridge |
 | [testing.md](testing.md) | Test projects, tiers and the hardware test |
 | [source/README.md](source/README.md) | The project guide as imported from the source repository (usage, settings, mDNS) |
 | [bugs/](bugs/single-client-silent-reject.md) | Imported bug history: a second client was dropped without a reason (fixed in 0.0.4) |

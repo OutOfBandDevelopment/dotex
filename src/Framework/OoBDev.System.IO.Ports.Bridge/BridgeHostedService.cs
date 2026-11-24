@@ -48,7 +48,7 @@ public sealed class BridgeHostedService : BackgroundService
 
     private async Task RunBridgeAsync(BridgeOptions options, CancellationToken stoppingToken)
     {
-        var logger = _loggerFactory.CreateLogger($"Bridge.{options.ComPort}");
+        var logger = _loggerFactory.CreateLogger($"Bridge.{options.PortLabel}");
         try
         {
             using var worker = new BridgeWorker(options, _serialFactory, logger, RetryInterval, _advertiser);
@@ -60,7 +60,7 @@ public sealed class BridgeHostedService : BackgroundService
         }
         catch (Exception ex)
         {
-            logger.BridgeFailed(ex, options.ComPort);
+            logger.BridgeFailed(ex, options.PortLabel);
         }
     }
 }

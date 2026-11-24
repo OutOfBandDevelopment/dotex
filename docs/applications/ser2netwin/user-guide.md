@@ -16,7 +16,7 @@ Commands:
   run         Run the bridges in this console (default; Ctrl+C to stop)
   config      Open the interactive editor for port mappings
   list        Show the configured mappings
-  ports       Show the COM ports currently present
+  ports       Show the COM ports present, with USB vendor, product and serial
   install     Register the Windows Service (admin; add --start to start it)
   uninstall   Stop and remove the Windows Service (admin)
   start       Start the installed service (admin)

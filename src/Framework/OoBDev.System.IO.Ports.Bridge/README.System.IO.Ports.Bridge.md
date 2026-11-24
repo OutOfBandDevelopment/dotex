@@ -9,6 +9,7 @@ Bridges serial (COM) ports to TCP: a raw socket per port or an RFC 2217 server, 
 - `BridgeHostedService`: runs every configured bridge as a hosted service (console or Windows Service).
 - `ConfigStore`, `ConfigValidator`, `Ser2NetConfig`, `BridgeOptions`, `MdnsOptions`: JSON configuration model, load and save, validation.
 - `MdnsAdvertiser`, `IServiceAdvertiser`: advertises each bridge as `_ser2net._tcp` (and extra service types) over multicast DNS.
+- `UsbPortResolver`, `IUsbPortLister`, `RegistryUsbPortLister`, `UsbPortInfo`: a bridge can set `UsbVendorId`, `UsbProductId` (and `UsbSerialNumber`) instead of `ComPort`; the port is resolved on every open, so a replug on another COM number reconnects. Two matches without a serial number refuse and name both ports. Ids come from the Windows registry.
 - `ISerialLink`, `ISerialControl`, `ISerialPortFactory`, `SystemSerialLink`: the serial seam; tests use in-memory fakes.
 
 ## Used by

@@ -32,10 +32,25 @@ public sealed record BridgeOptions
     /// <summary>When true a new connection disconnects the current client instead of being refused (newest program wins).</summary>
     public bool ReplaceExistingClient { get; init; }
 
-    public string DisplayName => string.IsNullOrWhiteSpace(Name) ? ComPort : Name.Trim();
+    /// <summary>USB vendor id in hex (for example <c>067B</c>). With <see cref="UsbProductId"/> it selects the port instead of <see cref="ComPort"/>, so a renumbered COM port is found again.</summary>
+    public string? UsbVendorId { get; init; }
+
+    public string? UsbProductId { get; init; }
+
+    /// <summary>Needed only when two attached devices share the vendor and product id.</summary>
+    public string? UsbSerialNumber { get; init; }
+
+    public bool SelectsByUsbId => !string.IsNullOrWhiteSpace(UsbVendorId) && !string.IsNullOrWhiteSpace(UsbProductId);
+
+    public string UsbDescription => $"{UsbVendorId?.Trim().ToUpperInvariant()}:{UsbProductId?.Trim().ToUpperInvariant()}{(string.IsNullOrWhiteSpace(UsbSerialNumber) ? string.Empty : " serial " + UsbSerialNumber.Trim())}";
+
+    /// <summary>The port name used in logs: the COM name, or the USB id when the port is selected by it.</summary>
+    public string PortLabel => SelectsByUsbId ? UsbDescription : ComPort;
+
+    public string DisplayName => string.IsNullOrWhiteSpace(Name) ? PortLabel : Name.Trim();
 
     public override string ToString() =>
-        $"{ComPort} {BaudRate} {DataBits}{Parity.ToString()[0]}{StopBitsText(StopBits)} <-> {BindAddress}:{TcpPort} ({Protocol})";
+        $"{PortLabel} {BaudRate} {DataBits}{Parity.ToString()[0]}{StopBitsText(StopBits)} <-> {BindAddress}:{TcpPort} ({Protocol})";
 
     private static string StopBitsText(StopBits stopBits) => stopBits switch
     {

@@ -13,7 +13,7 @@ const string Usage = """
       run         Run the bridges in this console (default; Ctrl+C to stop)
       config      Open the interactive editor for port mappings
       list        Show the configured mappings
-      ports       Show the COM ports currently present
+      ports       Show the COM ports present, with USB vendor, product and serial
       install     Register the Windows Service (admin; add --start to start it)
       uninstall   Stop and remove the Windows Service (admin)
       start       Start the installed service (admin)
@@ -78,7 +78,7 @@ switch (options.Command)
         return 0;
 
     case "ports":
-        foreach (var port in SerialPort.GetPortNames().OrderBy(p => p.Length).ThenBy(p => p, StringComparer.Ordinal))
+        foreach (var port in new RegistryUsbPortLister().List())
         {
             Console.WriteLine(port);
         }

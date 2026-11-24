@@ -73,7 +73,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 - [ ] Triaged low-priority requests (2026-11-11), scheduled behind the active work:
   - Specialized formats: [Basic Stamp tokenizer](docs/features/rejected/2026-11-10-basic-stamp-tokenizer.md) (declined for now, owner 2026-11-23), MIDI USB transport (file and stream decoding and the DevTerm serial panel built, [request](docs/features/completed/2026-11-10-midi-support.md)).
   - Device ideas that need bench hardware before a design:
-    - [USB passthrough](docs/features/request/2026-11-10-ser2netwin-usb-device-passthrough.md) (decided Q16: USB-id selection in the configuration, recipe in the Ser2NetWin docs only, non-serial USB out of scope; bench-test with a different USB device).
+    - [USB passthrough](docs/features/request/2026-11-10-ser2netwin-usb-device-passthrough.md) (USB-id selection and the container recipe built 2026-11-23, see [the guide](docs/applications/ser2netwin/usb-devices-and-containers.md); open: bench pass with a real USB device and a Greaseweazle, owner question Q33).
     - [HP-GL to stereo audio for X-Y scopes](docs/features/request/2026-11-10-hpgl-vector-display-sink.md) (WAV writer built 2026-11-19; scope bench check open).
     - XBee: library built 2026-11-19 ([request](docs/features/completed/2026-11-10-xbee-api-and-mqtt-gateway.md)); a bench check with a radio is open.
 - [ ] Triaged requests (2026-11-11) with a design or comparison first (each file under `docs/features/request/` carries its triage note); report publish and GitBook are declined (owner 2026-11-16):

@@ -10,9 +10,13 @@ public static partial class ConfigValidator
     {
         var errors = new List<string>();
 
-        if (string.IsNullOrWhiteSpace(bridge.ComPort))
+        if (bridge.SelectsByUsbId)
         {
-            errors.Add("ComPort is required.");
+            ValidateUsbIds(bridge, errors);
+        }
+        else if (string.IsNullOrWhiteSpace(bridge.ComPort))
+        {
+            errors.Add("ComPort, or UsbVendorId with UsbProductId, is required.");
         }
 
         if (bridge.BaudRate <= 0)
@@ -60,6 +64,20 @@ public static partial class ConfigValidator
         return errors;
     }
 
+    private static void ValidateUsbIds(BridgeOptions bridge, List<string> errors)
+    {
+        foreach (var (name, value) in new[] { ("UsbVendorId", bridge.UsbVendorId), ("UsbProductId", bridge.UsbProductId) })
+        {
+            if (!UsbIdPattern().IsMatch(value ?? string.Empty))
+            {
+                errors.Add($"{bridge.PortLabel}: {name} must be one to four hex digits.");
+            }
+        }
+    }
+
+    [GeneratedRegex("^(0x)?[0-9A-Fa-f]{1,4}$", RegexOptions.ExplicitCapture, matchTimeoutMilliseconds: 250)]
+    private static partial Regex UsbIdPattern();
+
     private static void ValidateServices(BridgeOptions bridge, List<string> errors)
     {
         foreach (var service in bridge.MdnsServices ?? [])
@@ -90,7 +108,7 @@ public static partial class ConfigValidator
         var errors = list.SelectMany(Validate).ToList();
 
         errors.AddRange(list
-            .Where(b => !string.IsNullOrWhiteSpace(b.ComPort))
+            .Where(b => !b.SelectsByUsbId && !string.IsNullOrWhiteSpace(b.ComPort))
             .GroupBy(b => b.ComPort.Trim(), StringComparer.OrdinalIgnoreCase)
             .Where(g => g.Count() > 1)
             .Select(g => $"{g.Key} is configured more than once."));

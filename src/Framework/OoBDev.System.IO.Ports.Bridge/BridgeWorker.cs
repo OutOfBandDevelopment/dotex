@@ -76,7 +76,7 @@ public sealed class BridgeWorker : IDisposable
         var listener = new TcpListener(IPAddress.Parse(_options.BindAddress), _options.TcpPort);
         listener.Start();
         _listener = listener;
-        _logger.Listening(_options.ComPort, listener.LocalEndpoint, _options.Protocol);
+        _logger.Listening(_options.PortLabel, listener.LocalEndpoint, _options.Protocol);
 
         if (_advertiser is not null)
         {
@@ -86,7 +86,7 @@ public sealed class BridgeWorker : IDisposable
             }
             catch (Exception ex)
             {
-                _logger.AdvertisementFailed(ex, _options.ComPort);
+                _logger.AdvertisementFailed(ex, _options.PortLabel);
             }
         }
     }
@@ -149,7 +149,7 @@ public sealed class BridgeWorker : IDisposable
         }
         catch (Exception ex) when (ex is IOException or SocketException or ObjectDisposedException or InvalidOperationException)
         {
-            _logger.AcceptDropped(ex, _options.ComPort);
+            _logger.AcceptDropped(ex, _options.PortLabel);
             client.Dispose();
         }
     }
@@ -182,7 +182,7 @@ public sealed class BridgeWorker : IDisposable
                 {
                     holder = _client;
                     kicked = true;
-                    _logger.ReplacingClient(_options.ComPort, _clientRemote, client.Client.RemoteEndPoint);
+                    _logger.ReplacingClient(_options.PortLabel, _clientRemote, client.Client.RemoteEndPoint);
                 }
             }
 
@@ -207,7 +207,7 @@ public sealed class BridgeWorker : IDisposable
                 : $"{_clientRemote} for {(TimeProvider.GetUtcNow() - _clientSince).TotalSeconds:0}s";
         }
 
-        _logger.RejectedClient(_options.ComPort, client.Client.RemoteEndPoint, holder);
+        _logger.RejectedClient(_options.PortLabel, client.Client.RemoteEndPoint, holder);
 
         // Raw bridges can carry a plain-text reason; RFC 2217 clients expect telnet framing, so they just see the close.
         if (_options.Protocol == BridgeProtocol.Raw)
@@ -232,7 +232,7 @@ public sealed class BridgeWorker : IDisposable
     private async Task RunClientAsync(TcpClient client, CancellationToken cancellationToken)
     {
         var remote = client.Client.RemoteEndPoint;
-        _logger.ClientConnected(_options.ComPort, remote);
+        _logger.ClientConnected(_options.PortLabel, remote);
         Rfc2217Session? session = null;
         using var clientCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         Task modemTask = Task.CompletedTask;
@@ -259,7 +259,7 @@ public sealed class BridgeWorker : IDisposable
         }
         catch (Exception ex) when (ex is IOException or SocketException or ObjectDisposedException or InvalidOperationException)
         {
-            _logger.ClientError(ex, _options.ComPort);
+            _logger.ClientError(ex, _options.PortLabel);
         }
         finally
         {
@@ -270,7 +270,7 @@ public sealed class BridgeWorker : IDisposable
             client.Dispose();
             ReleaseClient(client);
 
-            _logger.ClientDisconnected(_options.ComPort, remote);
+            _logger.ClientDisconnected(_options.PortLabel, remote);
         }
     }
 
@@ -377,7 +377,7 @@ public sealed class BridgeWorker : IDisposable
 
         if (link is null)
         {
-            _logger.SerialClosedDropped(_options.ComPort, data.Length);
+            _logger.SerialClosedDropped(_options.PortLabel, data.Length);
             return;
         }
 
@@ -388,7 +388,7 @@ public sealed class BridgeWorker : IDisposable
         catch (Exception ex) when (ex is IOException or InvalidOperationException or ObjectDisposedException or UnauthorizedAccessException)
         {
             // The serial loop notices the dead port on its next read and reopens it.
-            _logger.SerialWriteFailed(ex, _options.ComPort, data.Length);
+            _logger.SerialWriteFailed(ex, _options.PortLabel, data.Length);
         }
     }
 
@@ -408,7 +408,7 @@ public sealed class BridgeWorker : IDisposable
                     _link = link;
                 }
 
-                _logger.SerialOpen(_options.ComPort, _options);
+                _logger.SerialOpen(_options.PortLabel, _options);
 
                 while (true)
                 {
@@ -427,7 +427,7 @@ public sealed class BridgeWorker : IDisposable
             }
             catch (Exception ex)
             {
-                _logger.SerialUnavailable(_options.ComPort, ex.Message, _retryInterval.TotalSeconds);
+                _logger.SerialUnavailable(_options.PortLabel, ex.Message, _retryInterval.TotalSeconds);
             }
             finally
             {
@@ -470,7 +470,7 @@ public sealed class BridgeWorker : IDisposable
         }
         catch (Exception ex) when (ex is IOException or SocketException or InvalidOperationException or ObjectDisposedException)
         {
-            _logger.ClientDropped(ex, _options.ComPort);
+            _logger.ClientDropped(ex, _options.PortLabel);
             client.Dispose();
         }
     }
