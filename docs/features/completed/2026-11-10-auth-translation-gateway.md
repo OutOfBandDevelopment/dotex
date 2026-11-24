@@ -1,6 +1,6 @@
 # Feature request: authentication translation gateway
 
-- **Status:** triaged (library built 2026-11-23, see [AuthGateway](../../design/AuthGateway/README.md); proxy pipeline step not yet run end to end)
+- **Status:** done (library and end-to-end Simulate test built 2026-11-23, see [AuthGateway](../../design/AuthGateway/README.md))
 - **Requested by:** owner (notes repository project mapping, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.AspNetCore.JwtAuthentication`, `OoBDev.Identity*`, a new gateway project

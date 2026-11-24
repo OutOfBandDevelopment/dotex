@@ -1,6 +1,6 @@
 # Authentication translation gateway
 
-**Status:** Library built 2026-11-23 (authorizer, API key, client certificate, client credentials, RFC 8693, cache; `UseAuthGateway()` not yet exercised against a running proxy) · **Request:** [authentication translation gateway](../../features/request/2026-11-10-auth-translation-gateway.md) · **Owner decision:** Q9 (2026-11-19): a YARP-based dotex library; inbound API key, then client certificate, then RFC 8693 token exchange.
+**Status:** Library built 2026-11-23 (authorizer, API key, client certificate, client credentials, RFC 8693, cache; `UseAuthGateway()` not yet exercised against a running proxy) · **Request:** [authentication translation gateway](../../features/completed/2026-11-10-auth-translation-gateway.md) · **Owner decision:** Q9 (2026-11-19): a YARP-based dotex library; inbound API key, then client certificate, then RFC 8693 token exchange.
 
 A reverse proxy step that authenticates the inbound caller with one scheme and calls the target with a bearer token. Services keep understanding only JWT (rule `owner-decisions`); the gateway is the edge adapter that converts the other credentials.
 
