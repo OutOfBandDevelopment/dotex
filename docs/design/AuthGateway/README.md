@@ -16,7 +16,7 @@ A reverse proxy step that authenticates the inbound caller with one scheme and c
 
 | Id | Requirement |
 |----|-------------|
-| G1 | A route names its target in its YARP metadata (`AuthGateway:Target`). A route with no target, or a target not configured, is refused with 403 (no open proxy). |
+| G1 | A route names its target in its YARP metadata (`AuthGatewayTarget`). A route with no target, or a target not configured, is refused with 403 (no open proxy). |
 | G2 | Inbound schemes per target, tried in the listed order: `ApiKey` (a header, compared as a SHA-512 hash in constant time) and `ClientCertificate` (a thumbprint allow-list). A request with no accepted credential gets 401 before any outbound call. |
 | G3 | Outbound is a bearer token: `ClientCredentials` (the gateway's own client) or `TokenExchange` (RFC 8693, the inbound bearer token is the `subject_token`, `audience` from the target). |
 | G4 | Tokens are cached per target and caller until shortly before expiry (skew 30 s); concurrent requests for the same key fetch one token. |

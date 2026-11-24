@@ -84,7 +84,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 
     - [test data generation](docs/features/rejected/2026-11-10-procedural-test-data-generation.md) (core built 2026-11-19)
     - [document packaging](docs/features/completed/2026-11-10-document-packaging-and-store.md) (ZIP packager, document store, key generator and content validation hook built 2026-11-23, and the resolver by request reference built 2026-11-23; directory packing built 2026-11-23; passwords are out of scope, so the request is done).
-  - Consolidation: [auth translation gateway](docs/features/request/2026-11-10-auth-translation-gateway.md) (decided 2026-11-19, owner Q9: a YARP-based dotex library, inbound API key then client certificate then RFC 8693; library built 2026-11-23; open: a Simulate test of `UseAuthGateway()` with a real YARP pipeline (needs `Microsoft.AspNetCore.TestHost`))
+  - Consolidation: [auth translation gateway](docs/features/request/2026-11-10-auth-translation-gateway.md) (decided 2026-11-19, owner Q9: a YARP-based dotex library, inbound API key then client certificate then RFC 8693; library built 2026-11-23; Simulate test of `UseAuthGateway()` with a real YARP pipeline built 2026-11-23)
     - [event, document and history stores](docs/features/completed/2026-11-10-event-document-history-stores.md) done 2026-11-23 (history store built); embedding server image (Q12: none; the client works with any OpenAI-compatible server, the stack's Ollama is the reference)
 
     - [Postgres support](docs/features/completed/2026-11-10-postgres-support.md), and the 2026-11-11 storage and photo-library requests.

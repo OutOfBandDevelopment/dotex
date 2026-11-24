@@ -9,7 +9,7 @@ namespace OoBDev.AspNetCore.AuthGateway;
 public static class ProxyPipelineExtensions
 {
     /// <summary>The YARP route metadata key that names the gateway target.</summary>
-    public const string TargetMetadataKey = "AuthGateway:Target";
+    public const string TargetMetadataKey = "AuthGatewayTarget";
 
     /// <summary>
     /// Adds the gateway step to the proxy pipeline: <c>app.MapReverseProxy(p => p.UseAuthGateway())</c>. On success the request carries
