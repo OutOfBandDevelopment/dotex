@@ -154,3 +154,9 @@ The tools the desktop apps keep in menus are pages here, all behind the same tok
 - `/plugins`: [Plugins](plugins.md)
 - `/themes`: [Choosing a theme](themes.md)
 - `/manifest`: [Editing a device manifest](manifest-editor.md)
+
+### The /dock page
+
+Open `/dock` to arrange the other pages as tabs in panes. Drag a tab onto another pane's **here** to move it there, or onto **left**, **right**, **top** or **bottom** to split that pane. The `<` and `>` buttons between two panes resize them, `x` closes a tab, and **Reset layout** puts every page back in one pane. The layout is kept in the browser. **Export** writes it as JSON into the box and **Import** applies JSON pasted there; text that is not a valid layout is replaced by the default.
+
+![The /dock page with Monitor split to the right](images/web-blazor-dock-split.png)

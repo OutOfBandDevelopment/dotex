@@ -19,11 +19,11 @@ Review of the example web app (`src/Examples/OoBDev.Example.Web`) and API agains
 | --- | --- | --- | --- |
 | Template management | `OoBDev.TextTemplating`, Handlebars | List, edit, save and preview templates | List, open and preview built 2026-11-09; save built (writes over the repository file, owner 2026-11-09) |
 | Identity management | `OoBDev.Identity`, `OoBDev.Identity.Jws`, Keycloak | User lookup, rights (read-only page `/identity/directory` built 2026-11-11; sessions are not covered) | Keycloak admin scope; the host runs the API anonymously today |
-| Data access and DacPac builder | `OoBDev.Data.Common`, MongoDB, `OoBDev.DacFx` | Read-only query runner, dacpac build and diff | Read-only guard design |
+| Data access and DacPac builder | `OoBDev.Data.Common`, MongoDB, `OoBDev.DacFx` | Dacpac half dropped (owner default, Q31 option A: builds and diffs stay in the CLI). Read-only query runner built 2026-11-20 as `/data/access` (`POST api/DataAccess/query`, `SelectOnlyGuard`, `ReadOnlyQueryRunner`); dacpac build and diff still open | Read-only guard decided 2026-11-20 (owner Q22): a dedicated read-only login on a test or reporting instance (`OoBDev:DataAccess:ConnectionString`), `ApplicationIntent=ReadOnly`, one statement that must parse as SELECT (ScriptDom), a row cap and timeout, right `data.query` on admin only; the login permissions are the real guard |
 | Semantic Kernel plug-in tester | `OoBDev.SemanticKernel` | Built 2026-11-17 as `/utilities/kernel`: plug-in function list and a direct invoke with text arguments (no model) | Controller (built) |
-| Vector store browser | Qdrant, OpenSearch, SQL store | Collection list, upsert, query | Collection listing on the vector store interface |
-| Mail receive | MailKit IMAP | Inbox view | Decision in [the plan](plan.md) section 6 |
-| Formats and pipelines | `OoBDev.System.IO.Pipelines`, Tar, BCD, bit tools | File inspector, pipeline builder (the Morse, Roman and Base32 codecs are on the Toolbox page since 2026-11-17) | Controller |
+| Vector store browser | Qdrant, OpenSearch, SQL store | Collection list, upsert, query | `IVectorStoreCollectionCatalog` (opt-in) exists with the Qdrant, SQL store and Azure AI Search implementations (2026-11-19); the screen is built 2026-11-19 (collection picker on `/utilities/vectors`, `GET api/VectorStore/collections`) |
+| Mail receive | MailKit IMAP | Inbox view | Built 2026-11-20 as the Inbox section of `/messaging/communications` (`POST api/Communications/inbox/poll`, right `communications.receive`) |
+| Formats and pipelines | `OoBDev.System.IO.Pipelines`, Tar, BCD, bit tools | Built 2026-11-19 on the Toolbox page: the file inspector, the Morse, Roman, Base32 and packed BCD codecs and a pipeline builder (hex, base64, base32, gzip, SHA-256 and SHA-512, reverse) | Controller |
 | CLI tool catalog | DacPacCompiler, DocumentConverter, FileRagEngine, and the other CLI tools | Built 2026-11-16 as `/utilities/tools` (static list with a filter; no execution from the browser) | Static page |
 
 ## Framework areas the plan does not mention
@@ -35,10 +35,10 @@ These have no row in [the plan](plan.md) or `screens.md`; whether each deserves 
 | Area | Projects | Possible screen |
 | --- | --- | --- |
 | Query over HTTP | `OoBDev.AspNetCore.OData` (`[OoBDevEnableQuery]`, `QUERY` verb) | Query builder against an `IQueryable` endpoint; needs one in the example API |
-| Complex events | `OoBDev.ComplexEvents` (+ DatabaseExtensions, EntityFrameworkCore) | Event stream and rule viewer |
-| Spatial and geocoding | `OoBDev.SpatialServices`, `OoBDev.Census.Geocoding` | Address to coordinates, distance between points |
-| Data loading | `OoBDev.DataLoader` | Load a file into a table with a preview of the mapping |
-| Code generation | `OoBDev.Generations` | Generate from a model and show the output |
+| Complex events | `OoBDev.ComplexEvents` (schedule store and runner built; the screen is `/messaging/schedule`, built 2026-11-20) | A schedule of due items with a hosted runner; the rule viewer stays open |
+| Spatial and geocoding | `OoBDev.Census.Geocoding`, `OoBDev.SpatialServices` (`GeoMath`) | Address to coordinates built 2026-11-20 as `/data/geocode` (`POST api/Geocode`, right `geocode.use`); distance and bearing built 2026-11-23 as `/data/distance` (`POST api/Distance`, same right) |
+| Data loading | `OoBDev.DataLoader` (built; `/data/load`, 2026-11-23) | Load a CSV or JSON text into a throwaway in-memory table and read the report; the mapping preview waits for `docs/design/MasterData` |
+| Code generation | `OoBDev.Generations` (not built yet) | Generate from a model and show the output |
 | Server-driven UI | `OoBDev.UiDefinitions` (+ ViewModels, Wpf) | A page rendered from a `UiDefinition` returned by the API (the framework's own UI contract is not shown anywhere in the SPA) |
 | Token tools | `OoBDev.Identity.Jws` | Built 2026-11-16 as a section of the Toolbox page: sign HS256, read a token, check the signature |
 | Instrument protocols | `OoBDev.Nmea`, `OoBDev.Scpi`, `OoBDev.ZWave` | Deferred with the hardware UI |
@@ -49,10 +49,10 @@ These have no row in [the plan](plan.md) or `screens.md`; whether each deserves 
 
 | Screen | Gap |
 | --- | --- |
-| Telemetry | Traces from the host-run API do not reach the Aspire dashboard (see `BACKLOG.md`) |
+| Telemetry | Fixed 2026-11-20: the API now lists the `Microsoft.AspNetCore` and `System.Net.Http` sources, and request traces reach the Aspire dashboard (checked live); the page itself lists the recent traces |
 | Current user, Sign in | Fail against the Aspire host, which runs anonymously |
 | Developer | API and event references are links only |
-| Overview | Health tiles per provider are planned (`screens.md`, Table 2) and not built |
+| Overview | Probes cover eight endpoints (vector store, operations and rights added 2026-11-20); a tile per provider (Qdrant, SQL, mail) stays planned (`screens.md`, Table 2) |
 
 ## Recommended order
 

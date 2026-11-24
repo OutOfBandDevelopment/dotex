@@ -18,6 +18,8 @@ public sealed class InMemoryVectorStoreProviderFactory : IVectorStoreProviderFac
 {
     private static readonly ConcurrentDictionary<string, List<(string Id, float[] Vector, IDictionary<string, object> Metadata)>> Collections = new(StringComparer.Ordinal);
 
+    internal static IReadOnlyList<string> CollectionNames() => [.. Collections.Keys.Order(StringComparer.Ordinal)];
+
     /// <inheritdoc/>
     public IVectorStoreProvider Create(string containerName) => new Provider(containerName, Collections.GetOrAdd(containerName, _ => []));
 

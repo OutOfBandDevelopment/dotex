@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Framework\OoBDev.System.Abstractions\OoBDev.System.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Framework\OoBDev.System.Sandbox.Windows\OoBDev.System.Sandbox.Windows.csproj" />
+    <ProjectReference Include="..\..\..\Framework\OoBDev.System.Sandbox.Linux\OoBDev.System.Sandbox.Linux.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.Documents.Hpgl\OoBDev.Documents.Hpgl.csproj" />
     <ProjectReference Include="..\..\..\Extensions\OoBDev.Extensions.Drawing\OoBDev.Extensions.Drawing.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.Documents.ExternalTools\OoBDev.Documents.ExternalTools.csproj" />
@@ -18,6 +20,7 @@
     <ProjectReference Include="..\..\..\Framework\OoBDev.System.IO.Brokers\OoBDev.System.IO.Brokers.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.System.IO.Mqtt\OoBDev.System.IO.Mqtt.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.System.IO.Tcp\OoBDev.System.IO.Tcp.csproj" />
+    <ProjectReference Include="..\..\..\Framework\OoBDev.System.Net.Discovery\OoBDev.System.Net.Discovery.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.System.IO.Bluetooth\OoBDev.System.IO.Bluetooth.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.System.IO.Ports\OoBDev.System.IO.Ports.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.System.IO.UsbHids\OoBDev.System.IO.UsbHids.csproj" />

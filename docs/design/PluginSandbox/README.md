@@ -1,6 +1,6 @@
 # Sandboxed Plugin Host — Overview
 
-**Status:** Draft (phase 0 threat model written, awaiting owner sign-off) · **Date:** 2026-10-29 · **Request:** [Sandboxed plugin host](../../features/request/2026-10-28-plugin-sandbox.md) · **Related:** `OoBDev.AspNetCore.Cgi` (process limits, no sandbox), [design standard](../../patterns-discovery/06-design-document-standard.md)
+**Status:** Approved by the owner 2026-11-20 ("do these": threat model, protocol and manifest, layering plan; REQ-010 signed off) · **Date:** 2026-10-29 · **Request:** [Sandboxed plugin host](../../features/request/2026-10-28-plugin-sandbox.md) · **Related:** `OoBDev.AspNetCore.Cgi` (process limits, no sandbox), [design standard](../../patterns-discovery/06-design-document-standard.md)
 
 A .NET 10 host that runs plugins written in any language as isolated processes, with approved permissions, brokered access to external resources, network isolation and resource limits.
 

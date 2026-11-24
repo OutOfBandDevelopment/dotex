@@ -64,7 +64,7 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Status:** first cut with options under `OoBDev:Cgi`.
 - **Known issues:** running external processes from a web host needs a sandbox review (the security-audit skill); environment variables passed to the script must be an allow-list.
 - **Standards:** RFC 3875 (CGI 1.1).
-- **Built 2026-11-16:** documented defaults: 30 s timeout, 10 MB request, 50 MB response (`null` disables), 64 KB stderr. **Missing:** per-script timeout; FastCGI is not designed.
+- **Built 2026-11-16:** documented defaults: 30 s timeout, 10 MB request, 50 MB response (`null` disables), 64 KB stderr. **Built 2026-11-19:** `ScriptTimeouts` per script file name. **Missing:** FastCGI is not designed.
 
 ## Jws and SharedIdentity
 

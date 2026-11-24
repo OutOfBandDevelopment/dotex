@@ -1,5 +1,6 @@
 using OoBDev.Documents;
 using OoBDev.Documents.Models;
+using OoBDev.Documents.Packaging;
 using OoBDev.WebApi.Models;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,7 @@ public partial class DocumentController : Controller
     [BlobContainer(ContainerName = "summary")]
     public class Summaries { }
 
+    private readonly IDocumentPackager _packager;
     private readonly IDocumentConversion _converter;
     private readonly IDocumentTypeTools _documentTypes;
     private readonly ILogger _logger;
@@ -48,12 +50,14 @@ public partial class DocumentController : Controller
     /// <param name="logger">The logger.</param>
     /// <param name="docs">The blob container for documents.</param>
     /// <param name="summary">The blob container for summaries.</param>
+    /// <param name="packager">Packs stored documents into one file.</param>
     public DocumentController(
         IDocumentConversion converter,
         IDocumentTypeTools documentTypes,
         ILogger<DocumentController> logger,
         IBlobContainer<Documents> docs,
-        IBlobContainer<Summaries> summary
+        IBlobContainer<Summaries> summary,
+        IDocumentPackager packager
         )
     {
         _converter = converter;
@@ -61,6 +65,7 @@ public partial class DocumentController : Controller
         _logger = logger;
         _docs = docs;
         _summary = summary;
+        _packager = packager;
     }
 
     /// <summary>
@@ -87,6 +92,38 @@ public partial class DocumentController : Controller
             null => NotFound(),
             ContentReference blob => File(blob.Content, blob.ContentType, blob.FileName)
         };
+
+    /// <summary>
+    /// Packs every stored document into one ZIP file with <see cref="IDocumentPackager"/>.
+    /// </summary>
+    /// <param name="cancellationToken">The request cancellation token.</param>
+    /// <returns>The ZIP file, or 404 when nothing is stored.</returns>
+    [HttpGet]
+    [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    public async Task<IActionResult> Package(global::System.Threading.CancellationToken cancellationToken)
+    {
+        var items = new List<PackageItem>();
+        foreach (var meta in _docs.QueryContent().Select(c => c.FileName).AsEnumerable().OrderBy(n => n, StringComparer.OrdinalIgnoreCase))
+        {
+            if (await _docs.GetContentAsync(meta) is { } blob)
+            {
+                using var buffer = new MemoryStream();
+                await blob.Content.CopyToAsync(buffer, cancellationToken);
+                items.Add(new PackageItem(meta, buffer.ToArray()));
+            }
+        }
+
+        if (items.Count == 0)
+        {
+            return NotFound();
+        }
+
+        var zip = new MemoryStream();
+        await _packager.PackAsync("zip", items, zip, cancellationToken);
+        zip.Position = 0;
+        return File(zip, "application/zip", "documents.zip");
+    }
 
     /// <summary>
     /// Retrieves the text of the specified file.

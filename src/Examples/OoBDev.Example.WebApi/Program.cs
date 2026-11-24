@@ -1,5 +1,8 @@
+using Microsoft.Extensions.Configuration;
 using OoBDev.AspNetCore.JwtAuthentication.OpenApi;
+using OoBDev.AspNetCore.EntityFrameworkCore;
 using OoBDev.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OoBDev.Common;
 using OoBDev.Common.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -37,6 +40,7 @@ public static class Program
 
         // Add example application services 
         services.AddApplicationServices();
+        services.TryAddProblemDetailsExceptionHandler(builder.Configuration);
 
         var identityProvider = Enum.TryParse<IdentityProviders>(
             Environment.GetEnvironmentVariable("IDENTITY_PROVIDER"), ignoreCase: true, out var ip) ? ip :
@@ -78,7 +82,23 @@ public static class Program
         ConfigureVectorsAndModels(builder);
         builder.Services.AddTransient<OoBDev.WebApi.Services.TemplateCatalog>();
         builder.Services.Configure<OoBDev.WebApi.Models.QueueChannelsOptions>(builder.Configuration.GetSection("MessageQueue"));
+        builder.Services.Configure<OoBDev.WebApi.Models.DataAccessOptions>(builder.Configuration.GetSection("OoBDev:DataAccess"));
+        builder.Services.AddTransient<OoBDev.WebApi.Services.ReadOnlyQueryRunner>();
         builder.Services.AddTransient<OoBDev.WebApi.Services.QueueChannelCatalog>();
+        OoBDev.DataLoader.ServiceCollectionExtensions.TryAddDataLoader(builder.Services);
+        OoBDev.Census.Geocoding.ServiceCollectionExtensions.TryAddCensusGeocoding(builder.Services);
+        builder.Services.AddSingleton<OoBDev.WebApi.Services.ScheduleDemo>();
+        if (!disableHosting)
+        {
+            // registered first so the runner callback resolves the one ScheduleDemo of the host (TryAdd then keeps it)
+            builder.Services.AddSingleton<Func<OoBDev.ComplexEvents.ScheduleItem, global::System.Threading.CancellationToken, global::System.Threading.Tasks.Task>>(
+                sp => sp.GetRequiredService<OoBDev.WebApi.Services.ScheduleDemo>().RunAsync);
+            OoBDev.ComplexEvents.Hosting.ServiceCollectionExtensions.TryAddScheduleHosting(
+                builder.Services,
+                static (_, _) => global::System.Threading.Tasks.Task.CompletedTask,
+                o => o.PollInterval = TimeSpan.FromSeconds(2));
+        }
+
         builder.Services.AddSingleton<OoBDev.WebApi.Services.ReceivedMessageLog>();
         builder.Services.AddTransient<OoBDev.WebApi.Services.CgiProgramCatalog>();
         builder.Services.AddSingleton<OoBDev.WebApi.Services.EndpointRightCatalog>();
@@ -95,6 +115,7 @@ public static class Program
         );
 
         services.TryAddRoleRightMapping(builder.Configuration);
+        ConfigureRightAudit(builder);
         builder.Services.AddControllers();
 
         // CGI programs (see cgi-src/ and README.Example.WebApi.md); their {program}.openapi.json files appear in the "all" OpenAPI document
@@ -104,16 +125,31 @@ public static class Program
 
     }
 
+    // The durable right-check trail, only when OoBDev:RightAudit:ConnectionString is set (SQL Server); the screen says "not configured" otherwise.
+    private static void ConfigureRightAudit(WebApplicationBuilder builder)
+    {
+        var connectionString = builder.Configuration["OoBDev:RightAudit:ConnectionString"];
+        if (string.IsNullOrWhiteSpace(connectionString))
+            return;
+
+        builder.Services.TryAddEntityFrameworkRightAudit(builder.Configuration, (_, options) => options.UseSqlServer(connectionString));
+        builder.Services.AddRightAuditLog();
+    }
+
     private static void ConfigureVectorsAndModels(WebApplicationBuilder builder)
     {
         var services = builder.Services;
 
         // The vector store: SQL Server when configured, otherwise in memory (replaces the Qdrant default)
         services.RemoveAll<OoBDev.Search.Semantic.IVectorStoreProviderFactory>();
+        services.RemoveAll<OoBDev.Search.Semantic.IVectorStoreCollectionCatalog>();
         if (!string.IsNullOrWhiteSpace(builder.Configuration["SqlVectorStoreOptions:ConnectionString"]))
             OoBDev.Data.Vectors.SqlStore.ServiceCollectionExtensions.TryAddSqlVectorStore(services, builder.Configuration, "SqlVectorStoreOptions");
         else
+        {
             services.AddSingleton<OoBDev.Search.Semantic.IVectorStoreProviderFactory, OoBDev.WebApi.Services.InMemoryVectorStoreProviderFactory>();
+            services.AddSingleton<OoBDev.Search.Semantic.IVectorStoreCollectionCatalog, OoBDev.WebApi.Services.InMemoryVectorStoreCollectionCatalog>();
+        }
 
         // Extra sentence models for the compare screen; downloaded only when first used
         OoBDev.SBert.AllMpnetBaseV2.ServiceCollectionExtensions.TryAddAllMpnetBaseV2Services(services, builder.Configuration, "AllMpnetBaseV2");
@@ -138,6 +174,8 @@ public static class Program
             app.MapAsyncApi();
         }
 
+        app.UseProblemDetailsExceptionHandler();
+        app.UseHttpUsageMetrics();
         app.UseHttpsRedirection();
 
         app.UseAllCommonMiddleware(
@@ -150,5 +188,16 @@ public static class Program
         OoBDev.AspNetCore.Cgi.ServiceCollectionExtensions.UseCgi(app);
 
         app.MapControllers();
+        var screens = app.Configuration.GetSection("OoBDev:Analytics:Screens").Get<string[]>();
+        if (screens is { Length: > 0 })
+            app.MapScreenViews(screens).RequireAuthorization();
+
+        if (!string.IsNullOrWhiteSpace(app.Configuration["OoBDev:RightAudit:ConnectionString"]))
+        {
+            using (var scope = app.Services.CreateScope())
+            using (var context = scope.ServiceProvider.GetRequiredService<IDbContextFactory<RightAuditDbContext>>().CreateDbContext())
+                context.Database.EnsureCreated();
+            app.MapRightAuditQuery(["audit.read"]);
+        }
     }
 }

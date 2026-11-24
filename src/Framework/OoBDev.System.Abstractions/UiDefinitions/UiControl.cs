@@ -13,6 +13,7 @@ namespace OoBDev.UiDefinitions;
 [JsonDerivedType(typeof(SliderControl), "slider")]
 [JsonDerivedType(typeof(NumericControl), "numeric")]
 [JsonDerivedType(typeof(ChoiceControl), "choice")]
+[JsonDerivedType(typeof(ListControl), "list")]
 [JsonDerivedType(typeof(TextFieldControl), "textField")]
 [JsonDerivedType(typeof(IndicatorControl), "indicator")]
 [JsonDerivedType(typeof(BarGraphControl), "barGraph")]

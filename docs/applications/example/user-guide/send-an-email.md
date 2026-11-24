@@ -36,6 +36,7 @@ skinparam shadowing false
 start
 :Choose a channel and write the message;
 :Send;
+:Check the inbox;
 stop
 @enduml
 ```
@@ -59,3 +60,11 @@ The API acknowledges the message with a reference id.
 ![Send](images/send-an-email/02-send.png)
 
 *Figure 3 — Send*
+
+### 3. Check the inbox
+
+Check mail polls the inbox channel over IMAP and lists the unread messages; they are marked seen, so the next check returns only newer mail.
+
+![Check the inbox](images/send-an-email/03-check-the-inbox.png)
+
+*Figure 4 — Check the inbox*

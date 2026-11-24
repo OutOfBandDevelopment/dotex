@@ -37,6 +37,8 @@ public static class IntegrationContainers
     {
         ["oobd-test-servicebus"] = "Emulator Service is Successfully Up!",
         ["oobd-test-smtp"] = "IMAP Server is listening",
+        ["oobd-test-rabbitmq"] = "started STOMP TCP listener",
+        ["oobd-test-docling"] = "Application startup complete",
     };
     private static bool _stopAfterTests = true;
     private static IDockerCli _docker = new ProcessDockerCli();

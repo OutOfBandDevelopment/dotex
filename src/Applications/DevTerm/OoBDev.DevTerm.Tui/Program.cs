@@ -173,8 +173,8 @@ if (earlyConfig.GetValue<bool>(nameof(CliOptions.ListLxiDevices)))
 
 if (earlyConfig.GetValue<bool>(nameof(CliOptions.ListNetworkDevices)))
 {
-    var found = await OoBDev.DevTerm.Configuration.Discovery.NetworkDiscovery.CreateDefault().DiscoverAsync(TimeSpan.FromSeconds(3));
-    foreach (var device in OoBDev.DevTerm.Configuration.Discovery.NetworkDiscovery.GroupByDevice(found))
+    var found = await OoBDev.DevTerm.Configuration.LxiDeviceScanner.CreateDiscovery().DiscoverAsync(TimeSpan.FromSeconds(3));
+    foreach (var device in OoBDev.System.Net.Discovery.NetworkDiscovery.GroupByDevice(found))
     {
         Console.WriteLine($"{device.Address}  {device.Name}  [{device.Badges}]");
     }

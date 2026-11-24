@@ -183,4 +183,40 @@ public class ErasureServiceTests
     [TestCategory(TestCategories.Unit)]
     public void Register_ErasureEvents_AreAccepted()
         => _ = new EventTypeRegistry().Register<ErasureRequested>().Register<ErasureCompleted>();
+
+    private sealed class Collecting : IProjection
+    {
+        public string Name => "collecting";
+
+        public List<string> Payloads { get; } = [];
+
+        public Task ApplyAsync(EventRecord record, CancellationToken cancellationToken = default)
+        {
+            Payloads.Add(record.Payload);
+            return Task.CompletedTask;
+        }
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public async Task Rebuild_AfterErasure_ReadModelHoldsNoPersonalValue()
+    {
+        // Stage
+        await Seed();
+        var projection = new Collecting();
+        var runner = new ProjectionRunner(_store, new InMemoryEntityStore(), [projection]);
+        _ = await runner.CatchUpAsync();
+        Assert.IsTrue(projection.Payloads.Any(p => p.Contains("ann@example.com", StringComparison.Ordinal)));
+        await _service.RequestAsync("c1", "r1");
+
+        // Test
+        _ = await _service.CompactAsync();
+        projection.Payloads.Clear();
+        await runner.ResetAsync(projection.Name);
+        _ = await runner.CatchUpAsync();
+
+        // Assert
+        Assert.IsFalse(projection.Payloads.Any(p => p.Contains("ann@example.com", StringComparison.Ordinal) || p.Contains("Ann Lee", StringComparison.Ordinal)));
+        Assert.IsTrue(projection.Payloads.Any(p => p.Contains("bob@example.com", StringComparison.Ordinal)));
+    }
 }

@@ -17,6 +17,7 @@ How to verify each feature and what to do when it fails. Generated from the same
 | [Ask a question about your own text](ask-your-own-documents.md) | The Ollama container is running with the phi3 model. |
 | [Check the running service](check-the-running-service.md) | Example stack running. |
 | [Cache a value](cache-a-value.md) | Example stack running. |
+| [Run a read-only query](run-a-read-only-query.md) | OoBDev:DataAccess:ConnectionString names a test or reporting instance, ideally a login that can only read. The signed-in user holds the data.query right (the admin role). |
 | [Hash, sign, compare and calculate](use-the-toolbox.md) | Example stack running. |
 | [Query a document and render Markdown](query-and-render-text.md) | Example stack running. |
 | [Store texts and find the closest](store-and-search-vectors.md) | Example stack running. |
@@ -36,5 +37,10 @@ How to verify each feature and what to do when it fails. Generated from the same
 | [Run a CGI program](run-a-cgi-program.md) | The example API is running and cgi-bin holds a program built for this system. |
 | [Send a webhook to a channel](send-a-webhook.md) | The example API is running. |
 | [Check which rights an endpoint needs](check-your-rights.md) | The example API is running. |
+| [Review the right audit trail](review-the-right-audit-trail.md) | The example API runs with OoBDev:RightAudit:ConnectionString set. The signed-in user holds the audit.read right. |
 | [Browse users and roles](browse-users-and-roles.md) | Sign-in is configured and the signed-in user holds the identity.read right. The Keycloak service account has the view-users and view-realm roles. |
 | [Render a panel from a server-supplied definition](server-driven-ui.md) | The example API is running. |
+| [Schedule a message](schedule-a-message.md) | The API runs with its hosted services on (not DISABLE_HOSTING=true). The signed-in user holds the schedule.use right (the admin role). |
+| [Look up an address](look-up-an-address.md) | The API can reach the public US Census geocoder. The signed-in user holds the geocode.use right (the admin role). |
+| [Measure a distance](measure-a-distance.md) | The signed-in user holds the geocode.use right (the admin role). |
+| [Load a file into a table](load-a-file-into-a-table.md) | The signed-in user holds the data.load right (the admin role). |

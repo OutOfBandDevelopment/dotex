@@ -95,6 +95,8 @@ var api = builder.AddProject<OoBDev_Example_WebApi>("example-api", options => op
     .WithEnvironment("ConnectionStrings__EmbeddingSentenceTransformer", vectorDb)
     // The vector store provider reads its own options section; without it the API falls back to the in-memory store.
     .WithEnvironment("SqlVectorStoreOptions__ConnectionString", vectorDb)
+    // The right audit trail screen needs the durable store; without this the endpoint is not mapped and the screen says "not configured".
+    .WithEnvironment("OoBDev__RightAudit__ConnectionString", vectorDb)
     .WaitFor(vectorDb)
     .WaitFor(ollama)
     .WaitFor(redis)
@@ -113,7 +115,9 @@ api.WithEnvironment("Telemetry__DashboardUrl", dashboardUrl)
     .WithEnvironment("Telemetry__PublicUrl", dashboardUrl)
     .WithEnvironment("Telemetry__ApiKey", builder.Configuration["AppHost:DashboardApiKey"] ?? "")
     .WithEnvironment("OpenTelemetryOptions__ServiceName", "example-api")
-    .WithEnvironment("OpenTelemetryOptions__Sources__0", "Microsoft.AspNetCore");
+    .WithEnvironment("OpenTelemetryOptions__Sources__0", "Microsoft.AspNetCore")
+    .WithEnvironment("OpenTelemetryOptions__Meters__0", "OoBDev.AspNetCore.Mvc")
+    .WithEnvironment("OpenTelemetryOptions__Meters__1", "OoBDev.AspNetCore.Mvc.Ui");
 
 foreach (var queue in new[] { "ExampleMessageProvider", "EmailMessageModel" })
 {

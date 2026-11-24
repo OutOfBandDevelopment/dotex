@@ -45,7 +45,7 @@ public sealed partial class MailKitImapChannelProvider(
         var inbox = client.Inbox;
         await inbox.OpenAsync(FolderAccess.ReadOnly, cancellationToken).ConfigureAwait(false);
 
-        var ids = await inbox.SearchAsync(SearchQuery.NotDeleted.And(SearchQuery.NotSeen), cancellationToken).ConfigureAwait(false);
+        var ids = await inbox.SearchAsync(SearchQuery.NotSeen, cancellationToken).ConfigureAwait(false);
         var server = options.Value.Uri?.ToString() ?? $"{options.Value.Host}:{options.Value.Port}";
         var polled = new List<PolledMessage>();
         foreach (var id in ids.Take(maxMessages))

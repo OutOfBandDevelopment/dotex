@@ -34,7 +34,7 @@ public class VectorStoreReembedTests
         await store.StoreVectorsAsync([new ReadOnlyMemory<float>([9f, 9f])], new Dictionary<string, object> { ["text"] = "old row" });
         await store.StoreVectorsAsync([new ReadOnlyMemory<float>([8f, 8f])], new Dictionary<string, object> { ["note"] = "no text" });
         await store.StoreVectorsAsync([new ReadOnlyMemory<float>([7f, 7f])], EmbeddingVersion.Stamp(new Dictionary<string, object> { ["text"] = "current" }, tag));
-        var controller = new VectorStoreController(new FakeEmbedding(), stores);
+        var controller = new VectorStoreController(new FakeEmbedding(), stores, []);
 
         var result = (await controller.Reembed(collection)).Value!;
 

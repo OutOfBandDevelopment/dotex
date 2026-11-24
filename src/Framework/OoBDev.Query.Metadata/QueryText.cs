@@ -133,7 +133,14 @@ public static class QueryText
 
     private static NearClause ParseNear(List<Token> tokens, ref int i)
     {
-        const string usage = "'near' needs space:key or space:lat,lon, optionally followed by max <distance>, for example: near geo:51.5,-0.1 max 25.";
+        const string usage = "'near' needs space:key, space:lat,lon or space about \"words\", optionally followed by max <distance>, for example: near geo:51.5,-0.1 max 25.";
+        if (i + 3 < tokens.Count && !tokens[i + 1].Text.Contains(':', StringComparison.Ordinal) && tokens[i + 2].Text.Equals("about", StringComparison.OrdinalIgnoreCase) && !tokens[i + 2].Quoted)
+        {
+            var about = new NearClause(tokens[i + 1].Text, Text: tokens[i + 3].Text);
+            i += 4;
+            return ParseMax(tokens, ref i, about, usage);
+        }
+
         if (i + 1 >= tokens.Count || tokens[i + 1].Text.Split(':', 2) is not [{ Length: > 0 } space, { Length: > 0 } anchor])
             throw new QueryException(usage);
         i += 2;
@@ -150,6 +157,11 @@ public static class QueryText
             near = near with { Ref = anchor };
         }
 
+        return ParseMax(tokens, ref i, near, usage);
+    }
+
+    private static NearClause ParseMax(List<Token> tokens, ref int i, NearClause near, string usage)
+    {
         if (i < tokens.Count && tokens[i].Text.Equals("max", StringComparison.OrdinalIgnoreCase))
         {
             if (i + 1 >= tokens.Count || !double.TryParse(tokens[i + 1].Text, NumberStyles.Float, CultureInfo.InvariantCulture, out var max) || max <= 0)

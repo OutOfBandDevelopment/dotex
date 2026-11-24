@@ -2,7 +2,7 @@
 
 [← Testing strategy](testing-strategy.md) · [↑ Overview](README.md)
 
-**Status:** Draft for owner review before the run · **Date:** 2026-11-09
+**Status:** Draft for owner review; a partial run is in [bake-off-result.md](bake-off-result.md) · **Date:** 2026-11-09
 
 ## Contents
 

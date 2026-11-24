@@ -11,6 +11,7 @@ for (const journey of journeys) {
   test(`journey: ${journey.title}`, async ({ page }) => {
     const live = !!process.env.E2E_BASE_URL;
     test.skip(journey.liveOnly === true && !live, 'needs the compose stack');
+    test.skip(journey.mockOnly === true && live, 'depends on the seeded mock data');
     if (!live) await mockApi(page);
     resetImages(journey);
     const dir = imageDir(journey);

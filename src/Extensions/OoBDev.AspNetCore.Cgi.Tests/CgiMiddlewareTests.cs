@@ -401,6 +401,15 @@ public class CgiMiddlewareTests
 
     [TestMethod]
     [TestCategory("Simulate")]
+    public async Task Get_ScriptTimeout_OverridesTheDefault()
+    {
+        await StartAsync(new() { ["OoBDev:Cgi:Timeout"] = "00:00:30", [$"OoBDev:Cgi:ScriptTimeouts:sleep-first{Ext}"] = "00:00:01" });
+        using var response = await _client!.GetAsync($"/cgi-bin/sleep-first{Ext}");
+        Assert.AreEqual(HttpStatusCode.GatewayTimeout, response.StatusCode);
+    }
+
+    [TestMethod]
+    [TestCategory("Simulate")]
     public async Task Get_HeaderWithControlCharacter_ReturnsBadGateway()
     {
         // Stage

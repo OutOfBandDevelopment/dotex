@@ -1,6 +1,6 @@
 # OAuth client (desktop sign-in and refresh tokens)
 
-Status: designed 2026-11-18, not built. Owner answer 2026-11-17 (Q2): a host-free Framework library `OoBDev.Security.OAuthClient`, with a Windows DPAPI secret store as a leaf in Extensions. The project layout waits for the owner's confirmation of the [migration plan](migration-plan.md) (rule `layering-and-migration-plans`).
+Status: library built 2026-11-20 (abstractions, `OoBDev.Security.OAuthClient`, 16 Unit tests); the class is `PublicOAuthClient` because the analyzer forbids a type named like its namespace. `DpapiSecretStore` built in `Extensions/OoBDev.Security.OAuthClient.Windows` (2 tests). Open: Keycloak Integration tests. Owner answer 2026-11-17 (Q2): a host-free Framework library, with a Windows DPAPI secret store as a leaf in Extensions; layout confirmed 2026-11-19.
 
 ## Contents
 
@@ -72,7 +72,7 @@ TokenCache --> OAuthClient : refresh
 ## Testing strategy
 
 - Unit: PKCE verifier and challenge against the RFC 7636 vectors; discovery parsing; token endpoint calls with a fake `HttpMessageHandler` (code exchange, refresh, device polling with `authorization_pending` and `slow_down`); cache skew, concurrent refresh sharing one call, `invalid_grant` clearing; the loopback listener accepting a state-checked redirect and rejecting a wrong state.
-- Integration (`[IntegrationTestMethod("oobd-test-keycloak")]`): the real flows against the Keycloak container of the test stack (code flow driven with `HttpClient` through the login form, device flow approved through the admin API).
+- Integration (`[IntegrationTestMethod("oobd-test-keycloak")]`): the real flows against the Keycloak container of the test stack (code flow driven with `HttpClient` through the login form, device flow approved by posting the login form of the verification page; both with PKCE, built and run 2026-11-20).
 - DPAPI store: Windows-only Unit tests (round trip and delete).
 - Coverage target 80% or more for the Framework library.
 

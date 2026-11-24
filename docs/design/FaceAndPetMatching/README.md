@@ -1,6 +1,6 @@
 # Face and pet matching
 
-Status: **design written 2026-11-12 from the owner's answers (the framework takes this on); nothing built.** Request: [face and pet matching](../../features/request/2026-11-11-face-and-pet-matching.md). Related: [ImageEmbeddings](../ImageEmbeddings/README.md) (model cache and ONNX runners), [EmbeddingClientAndPgVector](../EmbeddingClientAndPgVector/README.md), [BurstRanking](../BurstRanking/README.md), [WorkQueue](../WorkQueue/README.md).
+Status: **design written 2026-11-12 from the owner's answers (the framework takes this on); clustering and schedule policy built 2026-11-19, stage contracts (`IFaceDetector`, `IFaceEmbedder`, `IPetDetector`, `IPetEmbedder`), `MatchRequest`/`MatchResponse` and `MatchPipeline` built 2026-11-23, all in `OoBDev.Imaging.People`; no detector or embedder ships (owner Q22), the application supplies them.** Request: [face and pet matching](../../features/completed/2026-11-11-face-and-pet-matching.md). Related: [ImageEmbeddings](../ImageEmbeddings/README.md) (model cache and ONNX runners), [EmbeddingClientAndPgVector](../EmbeddingClientAndPgVector/README.md), [BurstRanking](../BurstRanking/README.md), [WorkQueue](../WorkQueue/README.md).
 
 ## Contents
 
@@ -69,6 +69,6 @@ Unit: owner-confirmed assignments are unchanged after clustering; fewer than the
 
 ## Not in the first slice
 
-- The permissive detector choice and conversion to ONNX (a spike: licence check, accuracy against `buffalo_l` on a sample set).
+- The ONNX adapter project `OoBDev.Onnx.People` is declined for now (owner Q22: detector-free; the application supplies detectors and embedders). If resumed, start with the permissive detector choice and conversion to ONNX (a spike: licence check, accuracy against `buffalo_l` on a sample set). Candidate found 2026-11-19 (secondhand, to be confirmed against the `LICENSE` files before use): the [OpenCV Zoo](https://huggingface.co/opencv/opencv_zoo) models YuNet (face detector, reported MIT) and SFace (face recognizer, reported Apache-2.0) ship as ONNX; the repository itself is Apache-2.0 and says to check each model's licence. Accuracy against `buffalo_l` is still unmeasured.
 - Manual detections and pet claims (catalog duties tied to its screens).
 - Sub-group bubbles and threshold tuning.

@@ -8,6 +8,9 @@ public enum FormFieldKind
     TextField,
     Toggle,
     Choice,
+
+    /// <summary>A list of items with one selected: <see cref="FormFieldAttribute.OptionsFrom"/> names the items, <see cref="FormFieldAttribute.AddCommand"/> and <see cref="FormFieldAttribute.DeleteCommand"/> the buttons.</summary>
+    List,
     Numeric,
     Slider,
     Indicator,

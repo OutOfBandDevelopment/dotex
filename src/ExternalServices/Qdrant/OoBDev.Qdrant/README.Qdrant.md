@@ -38,3 +38,5 @@ var store = provider.GetRequiredService<IVectorStoreProviderFactory>().Create("m
 ## Tests
 
 `QdrantVectorStoreProviderTests` are `Integration` tests (nearest vector first, group-by) against the Qdrant container of the test stack.
+
+`QdrantVectorStoreCollectionCatalog` implements `IVectorStoreCollectionCatalog` (registered by `TryAddQdrantServices`) and lists the collection names of the instance.

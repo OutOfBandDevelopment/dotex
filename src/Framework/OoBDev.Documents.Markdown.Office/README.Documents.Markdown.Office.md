@@ -1,6 +1,6 @@
 # OoBDev.Documents.Markdown.Office
 
-Reads word-processing and e-book files (`.doc`, `.docx`, `.odt`, `.rtf`, `.epub`) as Markdown for `DocumentMarkdownConverter`. Design: [DocumentToMarkdown](../../../docs/design/DocumentToMarkdown/README.md).
+Reads word-processing and e-book files (`.doc`, `.docx`, `.odt`, `.rtf`, `.epub`, and the binary `.xls` and `.ppt` through Tika) as Markdown for `DocumentMarkdownConverter`. Design: [DocumentToMarkdown](../../../docs/design/DocumentToMarkdown/README.md).
 
 | Type | Role |
 |------|------|

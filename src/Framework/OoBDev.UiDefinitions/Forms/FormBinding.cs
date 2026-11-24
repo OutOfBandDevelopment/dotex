@@ -68,6 +68,31 @@ public sealed class FormBinding : IDisposable
         _ => false,
     };
 
+    /// <summary>The current items of the property named by <see cref="ChoiceControl.OptionsSource"/>, as text; null when the model has no such property.</summary>
+    /// <param name="source">The property name (public or not, instance or static).</param>
+    public IReadOnlyList<string>? GetOptions(string source)
+    {
+        return OptionItems(source) is { } items ? [.. items.Select(i => i is null ? string.Empty : Format(i))] : null;
+    }
+
+    private static string? PickSource(UiControl control) => control switch
+    {
+        ChoiceControl { OptionsSource: { } choices } => choices,
+        ListControl { ItemsSource: { } items } => items,
+        _ => null,
+    };
+
+    private IEnumerable<object?>? OptionItems(string source)
+    {
+        var property = Source.GetType().GetProperty(source, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+        if (property?.GetMethod is null)
+        {
+            return null;
+        }
+
+        return property.GetValue(property.GetMethod.IsStatic ? null : Source) is IEnumerable items ? items.Cast<object?>() : [];
+    }
+
     /// <summary>A check list's checked options: a collection property's items, or a comma-separated text property split.</summary>
     public IReadOnlyList<string> GetSelection(string id) => GetValue(id) switch
     {
@@ -101,6 +126,18 @@ public sealed class FormBinding : IDisposable
         }
 
         var type = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+        if (PickSource(control) is { } source && !IsScalar(type) && !IsStringCollection(type))
+        {
+            // An object-valued pick (a detected device): the row's text is the item's display text, and the model gets the item itself.
+            var match = OptionItems(source)?.FirstOrDefault(item => item is not null && string.Equals(Format(item), text, StringComparison.Ordinal));
+            if (match is not null && type.IsInstanceOfType(match))
+            {
+                Write(property, match);
+            }
+
+            return result;
+        }
+
         if (type == typeof(string))
         {
             Write(property, text);
@@ -186,6 +223,7 @@ public sealed class FormBinding : IDisposable
         bool b => b ? "true" : "false",
         IFormattable formattable => formattable.ToString(null, CultureInfo.InvariantCulture),
         IEnumerable items => string.Join(',', items.Cast<object?>().Select(i => i is null ? string.Empty : Format(i))),
+        { } other when other.GetType().GetProperty("Display", typeof(string)) is { } display => display.GetValue(other) as string ?? string.Empty,
         _ => value.ToString() ?? string.Empty,
     };
 

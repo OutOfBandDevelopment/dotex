@@ -43,17 +43,21 @@ internal sealed class ZWaveStick : IDisposable
         return adapter;
     }
 
+    /// <summary>Opens the stick on the serial port named by <c>ZWAVE_SERIAL_PORT</c>; the test ends Inconclusive when it is blank, unlisted or busy.</summary>
+    public static ZWaveStick OpenSerial(TestContext testContext) =>
+        Open(DevicePreflight.RequireSerialPort(testContext, "ZWAVE_SERIAL_PORT"));
+
     /// <summary>
-    /// Opens the stick the run parameters name: <c>ZWAVE_TCP_HOST</c> (<c>host:port</c>, a serial-to-Ethernet bridge) wins over
-    /// <c>ZWAVE_SERIAL_PORT</c>; the test ends Inconclusive when neither is set or the stick cannot be reached.
+    /// Opens the stick behind the serial-to-Ethernet bridge named by <c>ZWAVE_TCP_HOST</c> (<c>host:port</c>); the test ends
+    /// Inconclusive when it is blank, malformed or cannot be reached.
     /// </summary>
-    public static ZWaveStick Open(TestContext testContext)
+    public static ZWaveStick OpenTcp(TestContext testContext)
     {
         var endpoint = testContext.Properties["ZWAVE_TCP_HOST"]?.ToString();
         if (string.IsNullOrWhiteSpace(endpoint))
-            return Open(DevicePreflight.RequireSerialPort(testContext, "ZWAVE_SERIAL_PORT"));
+            Assert.Inconclusive("No 'ZWAVE_TCP_HOST' run parameter (host:port of the serial-to-Ethernet bridge).");
 
-        endpoint = endpoint.Replace("tcp://", string.Empty, StringComparison.OrdinalIgnoreCase);
+        endpoint = endpoint!.Replace("tcp://", string.Empty, StringComparison.OrdinalIgnoreCase);
         var tcpPort = 0;
         var split = endpoint.LastIndexOf(':');
         if (split <= 0 || !int.TryParse(endpoint[(split + 1)..], out tcpPort))
@@ -69,7 +73,6 @@ internal sealed class ZWaveStick : IDisposable
             throw;
         }
     }
-
     /// <summary>A snapshot of the frames received so far.</summary>
     public IList<ZWaveFrame> Frames
     {

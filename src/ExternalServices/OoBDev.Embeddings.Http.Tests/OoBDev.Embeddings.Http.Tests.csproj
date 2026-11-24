@@ -28,6 +28,8 @@
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.Embeddings.Http\OoBDev.Embeddings.Http.csproj" />
 		<ProjectReference Include="..\..\Framework\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
+		<ProjectReference Include="..\Onnx\OoBDev.Onnx.SentenceEmbeddings\OoBDev.Onnx.SentenceEmbeddings.csproj" />
+		<ProjectReference Include="..\SBert\OoBDev.SBert.AllMiniLmL6V2\OoBDev.SBert.AllMiniLmL6V2.csproj" />
 	</ItemGroup>
 
 </Project>

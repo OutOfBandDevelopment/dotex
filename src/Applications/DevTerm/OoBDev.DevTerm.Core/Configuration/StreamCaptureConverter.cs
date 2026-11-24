@@ -65,13 +65,18 @@ public sealed class StreamCaptureConverter
 
     private static Task<StreamConversionResult> ConvertInternal(StreamMonitorCapture capture, StreamCaptureConverterOptions options, CancellationToken cancellationToken)
     {
-        if (capture.Capture.Kind.Format != StreamContentFormat.Hpgl)
+        if (capture.Capture.Kind.Format is not (StreamContentFormat.Hpgl or StreamContentFormat.PostScript or StreamContentFormat.Pcl))
         {
-            return Task.FromResult(new StreamConversionResult(false, null, $"The internal HP-GL-to-SVG converter only handles HP-GL captures, not {capture.Capture.Kind.DisplayName}."));
+            return Task.FromResult(new StreamConversionResult(false, null, $"The internal converter handles HP-GL, PostScript and PCL captures, not {capture.Capture.Kind.DisplayName}."));
         }
 
         var extension = options.OutputExtension ?? "svg";
         var raster = RasterFormatOf(extension);
+        if (capture.Capture.Kind.Format != StreamContentFormat.Hpgl)
+        {
+            return Task.FromResult(WriteScene(capture, extension, raster));
+        }
+
         return raster is null
             ? RunHandlerAsync(capture, new HpglToSvgConversionHandler(), HpglToSvgConversionHandler.SvgContentType, extension, cancellationToken)
             : Task.FromResult(RasterizeHpgl(capture, extension, raster.Value));
@@ -86,6 +91,35 @@ public sealed class StreamCaptureConverter
         "jpg" or "jpeg" => SKEncodedImageFormat.Jpeg,
         _ => null,
     };
+
+    private static StreamConversionResult WriteScene(StreamMonitorCapture capture, string extension, SKEncodedImageFormat? raster)
+    {
+        if (capture.SavedPath is null)
+        {
+            return new StreamConversionResult(false, null, "This capture was never saved to a file, so there is nowhere to write the converted output next to.");
+        }
+
+        var outputPath = OutputPathFor(capture, extension)!;
+        try
+        {
+            IVectorSceneParser parser = capture.Capture.Kind.Format == StreamContentFormat.PostScript ? new PostScriptSceneParser() : new PclSceneParser();
+            var scene = parser.Parse(capture.Capture.Data);
+            if (raster is null)
+            {
+                File.WriteAllText(outputPath, VectorSceneSvgWriter.Write(scene));
+            }
+            else
+            {
+                File.WriteAllBytes(outputPath, VectorSceneRasterizer.Rasterize(scene, RasterWidthPixels, raster.Value));
+            }
+
+            return new StreamConversionResult(true, outputPath, null);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException)
+        {
+            return new StreamConversionResult(false, null, ex.Message);
+        }
+    }
 
     private static StreamConversionResult RasterizeHpgl(StreamMonitorCapture capture, string extension, SKEncodedImageFormat format)
     {

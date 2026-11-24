@@ -52,7 +52,7 @@ Lifetime is a manifest capability chosen by application configuration (REQ-011):
 
 | Phase | Content | Needs |
 |-------|---------|-------|
-| 0 | [Threat model and PoC review](threat-model.md) (written 2026-10-29, awaiting sign-off) | Q6 not needed |
+| 0 | [Threat model and PoC review](threat-model.md) (written 2026-10-29, signed off 2026-11-20) | Q6 not needed |
 | 1 | [Protocol and manifest schema](protocol-and-manifest.md) (versioned; design written 2026-10-29; generated JSON Schema waits for the C# types) | Phase 0 |
 | 2 | Windows launcher and broker with limits | Windows host |
 | 3 | Linux shim and launcher | Linux host or container |

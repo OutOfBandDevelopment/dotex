@@ -23,6 +23,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\OoBDev.System\OoBDev.System.csproj" />
+		<ProjectReference Include="..\OoBDev.AI.Abstractions\OoBDev.AI.Abstractions.csproj" />
 	</ItemGroup>
 
 </Project>

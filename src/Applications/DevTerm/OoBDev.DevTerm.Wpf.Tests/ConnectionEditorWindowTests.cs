@@ -77,8 +77,8 @@ public sealed class ConnectionEditorWindowTests
             WpfScreenshot.ShowOffScreen(window, 900, 700);
             Dispatcher.CurrentDispatcher.Invoke(() => { }, DispatcherPriority.Background);
             window.UpdateLayout();
-            checkBoxes = Descendants<CheckBox>(window).Count(c => editor.PresenterChoices.Any(p => ReferenceEquals(c.DataContext, p)));
-            combos = Descendants<ComboBox>(window).Count(c => ReferenceEquals(c.ItemsSource, editor.PresenterOptions) || ReferenceEquals(c.ItemsSource, editor.LineEndingOptions));
+            checkBoxes = Descendants<CheckBox>(window).Count(c => c.DataContext is OoBDev.UiDefinitions.ViewModels.ChoiceOptionViewModel o && editor.PresenterChoices.Any(p => p.Name == o.Text));
+            combos = Descendants<ComboBox>(window).Count(c => c.DataContext is OoBDev.UiDefinitions.ViewModels.ChoiceViewModel v && v.Id is nameof(ConnectionEditorViewModel.Parser) or nameof(ConnectionEditorViewModel.LineEndingText));
             window.Close();
         });
 

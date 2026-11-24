@@ -40,6 +40,8 @@ A sandbox and threat model exist ([threat model](../../design/PluginSandbox/thre
 
 ## Open questions
 
+**Answered (checked 2026-11-23):** the PluginSandbox design and requirements are done and the launchers built; the remaining follow-up is owner question Q31.
+
 The PluginSandbox layering question and sign-off of its requirements are already open; this request waits on them.
 
 ## Triage notes

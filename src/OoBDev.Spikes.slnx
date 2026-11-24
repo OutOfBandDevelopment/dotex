@@ -5,6 +5,4 @@
     <Platform Name="x86" />
   </Configurations>
   <Project Path="Spikes/OoBDev.Spike.ExtensionsAI/OoBDev.Spike.ExtensionsAI.csproj" />
-  <Project Path="Spikes/OoBDev.Spike.PluginSandbox/OoBDev.Spike.PluginSandbox.csproj" />
-  <Project Path="Spikes/OoBDev.Spike.PluginSandbox.Tests/OoBDev.Spike.PluginSandbox.Tests.csproj" />
 </Solution>

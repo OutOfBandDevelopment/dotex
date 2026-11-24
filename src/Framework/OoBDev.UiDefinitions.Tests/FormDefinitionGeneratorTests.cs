@@ -133,6 +133,7 @@ public sealed class FormDefinitionGeneratorTests
         Assert.AreSequenceEqual(["Color", "ShowAdvanced"], [.. definition.Sections[0].Controls.Select(c => c.Id)], "Order beats declaration order; NotAField isn't annotated, so it's out.");
         var color = (ChoiceControl)definition.Sections[0].Controls[0];
         Assert.AreSequenceEqual(["red", "green"], color.Options, "OptionsFrom reads the instance's list.");
+        Assert.AreEqual("Colors", color.OptionsSource, "the source name is kept so a form view model can re-read the list.");
         Assert.AreEqual(ChoiceStyle.RadioGroup, color.Style);
 
         var advanced = definition.Sections[1].Controls;

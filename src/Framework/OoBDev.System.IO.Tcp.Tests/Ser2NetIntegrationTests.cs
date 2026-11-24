@@ -38,6 +38,11 @@ public sealed class Ser2NetIntegrationTests
         var options = new Rfc2217ClientOptions { Host = host, Port = port, BaudRate = 9600 };
         await using var transport = new Rfc2217ClientDeviceAdapter(new SystemTcpConnectionSource(), Options.Create(options));
         await transport.OpenAsync(TestContext.CancellationToken);
+        TestContext.WriteLine("Opened {0}:{1}; COM-PORT control negotiated: {2}", host, port, transport.ComPortControlNegotiated);
+
+        // The client sends its baud/size/parity settings in the same burst as the first data; ser2net applies them to the
+        // pty pair with a flush, which swallows a byte that is already in flight. A real serial port behaves the same.
+        await Task.Delay(500, TestContext.CancellationToken);
 
         await transport.WriteAsync("ping\n"u8.ToArray(), TestContext.CancellationToken);
 

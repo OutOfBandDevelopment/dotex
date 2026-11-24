@@ -21,7 +21,7 @@ Converters are opt-in registrations, not part of the common set; decide whether 
 
 ## Existing code checked
 
-`docs/design/DocumentServices/ConversionService` (Tika based), request [document packaging and store](../request/2026-11-10-document-packaging-and-store.md). They cover Tika but not removing the two converters from the common set.
+`docs/design/DocumentServices/ConversionService` (Tika based), request [document packaging and store](../completed/2026-11-10-document-packaging-and-store.md). They cover Tika but not removing the two converters from the common set.
 
 Source comments (replaced by a reference to this request):
 

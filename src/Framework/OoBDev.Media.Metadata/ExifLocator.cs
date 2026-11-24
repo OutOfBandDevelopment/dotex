@@ -27,6 +27,8 @@ public static class ExifLocator
             return FindInPng(file);
         if (file.Length > 12 && file[..4].SequenceEqual("RIFF"u8) && file.Slice(8, 4).SequenceEqual("WEBP"u8))
             return FindInWebP(file);
+        if (HeicContainer.IsHeic(file))
+            return HeicContainer.Read(file)?.Tiff ?? default;
         return default;
     }
 

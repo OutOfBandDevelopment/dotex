@@ -18,6 +18,8 @@ namespace OoBDev.DevTerm.Configuration.Tests;
 [DoNotParallelize]
 public sealed class StreamCaptureConverterTests
 {
+    public TestContext TestContext { get; set; } = null!;
+
     private string _directory = string.Empty;
 
     [TestInitialize]
@@ -91,6 +93,30 @@ public sealed class StreamCaptureConverterTests
         Assert.IsTrue(result.Success, result.Error);
         Assert.AreEqual(Path.ChangeExtension(capture.SavedPath, extension), result.OutputPath);
         Assert.AreEqual(firstByte, File.ReadAllBytes(result.OutputPath!)[0]);
+    }
+
+    [TestMethod]
+    [DataRow("ps", "svg")]
+    [DataRow("ps", "png")]
+    [DataRow("pcl", "svg")]
+    public async Task ConvertAsync_InternalPostScriptAndPcl_WriteTheLineWork(string language, string extension)
+    {
+        var options = new StreamCaptureConverterOptions { Mode = StreamConversionMode.InternalHpglToSvg, OutputExtension = extension };
+        var kind = language == "ps" ? StreamContentKind.PostScript : StreamContentKind.Pcl;
+        var data = language == "ps"
+            ? global::System.Text.Encoding.ASCII.GetBytes("%!PS\n0 0 moveto 100 0 lineto 100 50 lineto stroke showpage")
+            : global::System.Text.Encoding.ASCII.GetBytes("\u001bE\u001b%0BIN;PU0,0;PD100,0,100,50;\u001b%0A");
+        var capture = SavedCapture(kind, data, "page." + language);
+
+        var result = await Converter(options).ConvertAsync(capture);
+        TestContext.WriteLine($"{language} -> {result.OutputPath}");
+
+        Assert.IsTrue(result.Success, result.Error);
+        Assert.IsTrue(new FileInfo(result.OutputPath!).Length > 50);
+        if (extension == "svg")
+        {
+            StringAssert.Contains(File.ReadAllText(result.OutputPath!), "<svg");
+        }
     }
 
     [TestMethod]

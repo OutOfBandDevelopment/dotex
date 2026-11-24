@@ -1,4 +1,4 @@
-import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { Journey } from './journey';
 
@@ -115,5 +115,11 @@ export function writeIndexes(journeys: Journey[]): void {
 
 function write(path: string, content: string): void {
   mkdirSync(resolve(path, '..'), { recursive: true });
-  writeFileSync(path, content.replace(/\r?\n/g, '\n'), 'utf8');
+  const text = content.replace(/\r?\n/g, '\n');
+  const existing = existsSync(path) ? readFileSync(path, 'utf8') : undefined;
+  if (existing !== undefined && existing.replace(/\r?\n/g, '\n') === text) {
+    return; // unchanged: keep the file (and its line endings and timestamp) so git shows no change
+  }
+  const eol = existing?.includes('\r\n') ? '\r\n' : '\n';
+  writeFileSync(path, text.replace(/\n/g, eol), 'utf8');
 }

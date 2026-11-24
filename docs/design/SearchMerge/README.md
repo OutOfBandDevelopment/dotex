@@ -1,6 +1,6 @@
 ﻿# Search merge: one request model over keyword, vector, hybrid and SQL kinds
 
-Status: **first slice built 2026-11-16** (request model, text parser, max-normalised and reciprocal-rank fusion, hybrid provider; the vector provider was added the same day; the keyword provider (OpenSearch) was added the same day; the SQL-kind provider (PostgreSQL query adapter) and the filter-parity Integration set were added the same day). Design written 2026-11-12. It builds on the confirmed placements of MetadataQuery and EmbeddingClientAndPgVector. Requests: [search merge and hybrid](../../features/request/2026-11-11-search-merge-kinds-hybrid-and-vectors.md), [superset review](../../features/request/2026-11-11-superset-review-of-overlapping-features.md). Related: [HybridSearch](../HybridSearch/README.md), [MetadataQuery](../MetadataQuery/README.md), [EmbeddingClientAndPgVector](../EmbeddingClientAndPgVector/README.md).
+Status: **first slice built 2026-11-16** (request model, text parser, max-normalised and reciprocal-rank fusion, hybrid provider; the vector provider was added the same day; the keyword provider (OpenSearch) was added the same day; the SQL-kind provider (PostgreSQL query adapter) and the filter-parity Integration set were added the same day). Design written 2026-11-12. It builds on the confirmed placements of MetadataQuery and EmbeddingClientAndPgVector. Requests: [search merge and hybrid](../../features/completed/2026-11-11-search-merge-kinds-hybrid-and-vectors.md), [superset review](../../features/completed/2026-11-11-superset-review-of-overlapping-features.md). Related: [HybridSearch](../HybridSearch/README.md), [MetadataQuery](../MetadataQuery/README.md), [EmbeddingClientAndPgVector](../EmbeddingClientAndPgVector/README.md).
 
 ## Contents
 
@@ -45,7 +45,7 @@ The review is done per area in the design that covers it:
 
 | Area | Comparison |
 |------|------------|
-| Query layer, cost limits | [MetadataQuery](../MetadataQuery/README.md) (the dotex `ODataQueryLimits` cost guard is to be added there: page size, maximum top, filter size) |
+| Query layer, cost limits | [MetadataQuery](../MetadataQuery/README.md) (the dotex `ODataQueryLimits` cost guard is built there: page size, maximum top, filter count, values per filter and text length) |
 | Vectors, embeddings | [EmbeddingClientAndPgVector](../EmbeddingClientAndPgVector/README.md) |
 | Search | this page |
 | Queue | [WorkQueue](../WorkQueue/README.md) |
@@ -70,6 +70,6 @@ Unit: parser cases from `tests/Storage.Query.Tests`; RRF and max fusion golden s
 
 ## Not in the first slice
 
-- Built hybrid merge until a consumer needs it (backlog line stays).
-- Query-by-image anchors and learned rerankers.
+- Built-in hybrid merge needs a cursor only when a consumer pages through fused results (the hybrid provider returns one page without a cursor).
+- Image variant and learned rerankers: with the first consumer (listed in BACKLOG).
 - Built 2026-11-16 in `OoBDev.Search` and `OoBDev.Search.Abstractions`: `SearchRequest`, `ISearchProvider`, `SearchTextParser`, `IScoreFusion` (max-normalised and reciprocal rank), `HybridSearchProvider`, `Search:Fusion` options. `VectorSearchProvider` (over `IVectorStore` and `IEmbeddingProvider`; refuses filters, cursors and like-item anchors, since the store has no filterable fields) built 2026-11-16. `KeywordSearchProvider` in `OoBDev.OpenSearch` built 2026-11-16 (simple query string, term, match and range clauses, offset cursor). `SqlKindSearchProvider` in `OoBDev.PostgreSql.Query` built 2026-11-16 (facet operators over the MetadataQuery engine, keyset cursor). The shared filter-parity set (`src/Tools/OoBDev.Search.Parity.Tests`, Integration: equals, negated equals, range, whole-word text and combined cases on equal data in OpenSearch and PostgreSQL) was built and run 2026-11-16. Known limit: contains is a whole-word match in OpenSearch and a substring match in SQL, so the set uses whole words. The hybrid provider returns one page without a cursor.

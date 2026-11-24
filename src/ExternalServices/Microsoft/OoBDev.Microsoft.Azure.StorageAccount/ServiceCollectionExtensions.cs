@@ -59,6 +59,7 @@ public static class ServiceCollectionExtensions
         services.TryAddTransient(sp => sp.GetRequiredService<IBlobServiceClientFactory>().Create());
 
         services.AddTransient<IBlobContainerProviderFactory, AzureBlobContainerProviderFactory>();
+        services.AddKeyedTransient<IBlobContainerProviderFactory, AzureBlobContainerProviderFactory>(AzureStorageGlobals.BlobProviderKey);
 
         return services;
     }

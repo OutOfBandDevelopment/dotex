@@ -179,7 +179,7 @@ Checklist (tick as work lands):
   - [x] ONNX sentence embeddings and model compare
   - [x] Vectors and matrix calculator
   - [ ] Identity management: read-only screen in the example (owner, 2026-11-10); the admin feature belongs in the reference architecture stack, see BACKLOG.md
-  - [ ] Data access and DacPac builder
+  - [ ] Data access and DacPac builder (the read-only query runner is built 2026-11-20; the dacpac build and diff are open)
   - [ ] Queue adapters monitor and blob browser
   - [ ] Semantic Kernel plug-in tester
   - [ ] Expression calculator, pipelines, text tools, security helpers, format inspectors (no device IO)
@@ -212,11 +212,11 @@ Checklist (tick as work lands):
   - [ ] Playwright flows for every screen against the integration stack
   - [ ] Accessibility pass (keyboard, contrast, screen reader labels)
   - [ ] Docs validation (`dotnet test src/Tools/OoBDev.Docs.Tests`) and README for the new project
-- [ ] **Phase 6: mail receive (lowest priority)**
-  - [ ] Review what exists in MailKit hosting and why `DisableMailKit = true`
-  - [ ] Design the four documents (requirements, architecture, API design, testing) for receive
-  - [ ] Complete the framework feature with tests, using the SMTP4Dev container
-  - [ ] Enable it in the example and add the inbox screen
+- [x] **Phase 6: mail receive (lowest priority)** built 2026-11-20
+  - [x] Framework side: `IPollableChannelProvider`, `ReceiveService.PollAsync` and the MailKit IMAP provider exist with unit tests; the example configures an `inbox` channel (`mailkit-imap`)
+  - [x] API: `POST api/Communications/inbox/poll?max=` (right `communications.receive`, 404 problem when the channel is missing or not pollable, 502 problem when the mail server fails); 4 Unit tests
+  - [x] Screen: an Inbox section on `/messaging/communications` (Check mail, list of sender, subject and preview), view-model test, mocked journey step and regenerated guide
+  - [x] Live run against SMTP4Dev IMAP: Integration test `MailKitImapPollIntegrationTests` (send over SMTP, poll, acknowledge, poll again) passes; it found that smtp4dev rejects the `UNDELETED` search criterion, so the poll searches unseen mail only
 
 ## 6. Open questions
 

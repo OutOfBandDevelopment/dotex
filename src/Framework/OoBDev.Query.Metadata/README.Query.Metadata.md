@@ -42,6 +42,11 @@ The text form `photos tag:beach by -taken top 60 count` (`QueryText.Parse`) and 
 |-----|---------|---------|
 | `CursorKey` | required, 32 characters or more | HMAC key that signs cursors |
 | `MaxTop` | 500 (1 to 5000) | Largest page a request may ask for |
+| `MaxFilters` | 50 (1 to 1000) | Most filter entries in one request |
+| `MaxFilterValues` | 100 (1 to 10000) | Most values one filter entry may list |
+| `MaxSearchLength` | 1000 (1 to 100000) | Longest free text, in characters |
+
+A request over a limit answers 400 with the limit named (the cost guard of the OData limits: page size, maximum top, filter size).
 
 ## Buckets
 
@@ -60,6 +65,8 @@ The text form `photos tag:beach by -taken top 60 count` (`QueryText.Parse`) and 
 `[Edge(source, target, weight)]` marks a kind whose rows are links. `shape: "graph"` (text: `as graph [from <id>] [depth <n>]`) returns the strongest `top` links that pass the filters as `GraphEdge` rows (`source`, `target` as text, `weight`) plus `Nodes`, the distinct ends. With `root` the engine walks outwards `depth` steps (1 to 4), one statement per step, each limited to links that touch the previous frontier, and stops when `top` links are collected. A kind without `[Edge]` answers a `QueryException`.
 
 ## Near (spaces)
+
+**Text anchor.** `near { "space": "similar", "text": "red barn at sunset" }` (text form `near similar about "red barn at sunset" max 0.4`) embeds the words with the registered `IEmbeddingProvider` and ranks by closeness; without a provider the request answers 400. The words never reach the SQL.
 
 `[Space(name, metric)]` declares how a kind measures closeness. `SpaceMetric.Haversine` takes two numeric facets (`A` latitude, `B` longitude) and a request position, and gives kilometres. `SpaceMetric.Cosine` joins an embedding table as `sv` (`Table`, `IdColumn`, `VectorColumn`, `IdType`) and gives the cosine distance to the vector stored for the anchor row `ref`. `Candidates = n` takes the nearest n rows from the embedding table first so a vector index can answer (filters then apply to that pool, and paging covers the pool only). `DefaultMax` limits the distance when the request gives none. A request names `near: { space, ref | lat + lon, max }` (text: `near geo:51.5,-0.1 max 25`, `near similar:42`); the rows get a `distance` column, sort by it by default (`sort: ["distance"]` also works) and page with the usual cursor. `IQueryDialect.Haversine` and `VectorDistance` give the SQL; the PostgreSQL dialect uses the `<=>` operator, so the pgvector extension must be on the connection's search path.
 

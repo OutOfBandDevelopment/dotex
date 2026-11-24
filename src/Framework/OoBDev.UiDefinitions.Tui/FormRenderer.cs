@@ -370,6 +370,43 @@ public static class FormRenderer
                     break;
                 }
 
+            case ListControl list:
+                {
+                    var items = new ObservableCollection<string>();
+                    var view = new ListView { X = column, Width = Math.Min(width, 40), Height = 5 };
+                    view.SetSource(items);
+                    var syncing = false;
+                    view.ValueChanged += (_, _) =>
+                    {
+                        if (!syncing && view.SelectedItem is int index && index >= 0 && index < items.Count)
+                        {
+                            var text = items[index];
+                            parts.Push(() => binding.SetText(list, text));
+                        }
+                    };
+                    row.Add(view);
+                    row.Height = 5;
+                    row.Refresh = () =>
+                    {
+                        syncing = true;
+                        var current = list.ItemsSource is { } source ? binding.GetOptions(source) : null;
+                        if (current is not null && !current.SequenceEqual(items, StringComparer.Ordinal))
+                        {
+                            items.Clear();
+                            foreach (var item in current)
+                            {
+                                items.Add(item);
+                            }
+                        }
+
+                        var at = IndexOf(items, binding.GetText(list.Id));
+                        view.SelectedItem = at >= 0 ? at : null;
+                        syncing = false;
+                    };
+                    parts.ControlViews[control.Id] = view;
+                    break;
+                }
+
             default:
                 BuildTextField(app, parts, row, control, column, width, options);
                 break;

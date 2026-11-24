@@ -25,3 +25,5 @@ var store = provider.GetRequiredService<IVectorStoreProviderFactory>().Create("d
 
 - Unit: mapper, provider (mocked `SearchClient`/`SearchIndexClient`) and registration.
 - LiveIntegration (manual, may cost money): `AzureAISearchLiveTests` creates and deletes its own index; set `AZURE_SEARCH_ENDPOINT` and `AZURE_SEARCH_API_KEY` (parameters or environment variables). Without them it ends inconclusive.
+
+`AzureAISearchVectorStoreCollectionCatalog` implements `IVectorStoreCollectionCatalog` (the service indexes, sorted; registered by `TryAddAzureAISearchServices`).

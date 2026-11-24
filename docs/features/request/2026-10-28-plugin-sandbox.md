@@ -46,6 +46,8 @@ is unaddressed.
 
 ## Open questions
 
+**Answered (checked 2026-11-23):** a dotex package family (`OoBDev.System.Sandbox*`); Windows and Linux, macOS deferred (owner 2026-11-10); the threat model came first and the design's open questions were taken in its order. Sandboxing DevTerm `process` plugins is Q31.
+
 - Is this a dotex package, or does it stay a separate project that dotex could adopt?
 - Which of the design's open questions 6 to 15 (`docs/decision-log.md` in the notes) must be answered first?
 - Is Windows plus Linux enough, or does macOS matter?

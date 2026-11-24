@@ -80,7 +80,7 @@ UI -> UI : prefill Transport/Host/Port/baud/profile
 
 ## Completion checklist
 
-- [x] `INetworkDeviceProbe`/`NetworkDeviceHit` in a shared library; LXI discovery wrapped as the first probe (2026-10-08, `DevTerm.Configuration.Discovery`)
+- [x] `INetworkDeviceProbe`/`NetworkDeviceHit` in a shared library; LXI discovery wrapped as the first probe (2026-10-08, `OoBDev.System.Net.Discovery` since 2026-11-20)
 - [x] mDNS/DNS-SD probe (2026-10-08, fake-response tests only)
 - [x] SSDP probe (2026-10-08, fake-response tests only)
 - [ ] EByte UDP probe (needs a fresh capture first)

@@ -72,7 +72,8 @@ public static class ProjectCatalog
         {
             var (purpose, hasReadme) = Purpose(directory, name);
             var stem = name.EndsWith(".Abstractions", StringComparison.Ordinal) ? name[..^".Abstractions".Length] : name;
-            var hasTests = names.Any(t => t.StartsWith(stem + ".Tests", StringComparison.Ordinal) || t == stem + "Tests");
+            var family = stem.Contains('.', StringComparison.Ordinal) ? stem[..stem.LastIndexOf('.')] : stem;
+            var hasTests = names.Any(t => t.StartsWith(stem + ".Tests", StringComparison.Ordinal) || t == stem + "Tests" || t == family + ".Tests");
             var flags = new List<string>();
             if (!hasReadme)
             {

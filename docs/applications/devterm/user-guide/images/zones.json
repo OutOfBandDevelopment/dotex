@@ -6,6 +6,8 @@
     { "name": "routing-timestamps", "match": "tui-routing.png", "x": 8, "y": 320, "width": 100, "height": 40 },
     { "name": "wpf-routing-timestamps", "match": "wpf-routing.png", "x": 10, "y": 620, "width": 80, "height": 40 },
     { "name": "wpf-playback-local-time", "match": "wpf-playback.png", "x": 170, "y": 8, "width": 180, "height": 18 },
+    { "name": "wpf-picker-channels-hover", "match": "wpf-expression-picker-channels.png", "x": 10, "y": 142, "width": 526, "height": 24 },
+    { "name": "wpf-picker-error-find-hover", "match": "wpf-expression-picker-error.png", "x": 82, "y": 96, "width": 456, "height": 24 },
     { "name": "web-plugins-temp-path", "match": "web-blazor-plugins.png", "x": 28, "y": 208, "width": 944, "height": 56 },
     { "name": "web-monitor-port", "match": "web-blazor-monitor.png", "x": 188, "y": 138, "width": 70, "height": 18 },
     { "name": "web-monitor-saving-path", "match": "web-blazor-monitor.png", "x": 240, "y": 170, "width": 300, "height": 18 },

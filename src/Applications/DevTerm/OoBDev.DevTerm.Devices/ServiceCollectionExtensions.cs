@@ -6,6 +6,7 @@ using OoBDev.Fencing.ScoreMachines.Panels;
 using OoBDev.DevTerm.Panels;
 using OoBDev.Kuando.Busylight.Panels;
 using OoBDev.LanC.Panels;
+using OoBDev.Midi.Panels;
 using OoBDev.Quarta.RadexOne.Panels;
 using OoBDev.Velleman.K8055.Panels;
 using OoBDev.Zoom.H4n.Panels;
@@ -27,6 +28,7 @@ public static class ServiceCollectionExtensions
         services.TryAddDevicePanel<RadexOnePanel>();
         services.TryAddDevicePanel<De5000Panel>();
         services.TryAddDevicePanel<LanCPanel>();
+        services.TryAddDevicePanel<MidiPanel>();
         services.TryAddDevicePanel<FaveroPanel>();
         services.TryAddDevicePanel<SaintGeorgePanel>();
         services.TryAddDevicePanel<ZWavePanel>();

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -91,9 +92,11 @@ public static class QueryCompiler
         }
         else
         {
-            if (string.IsNullOrEmpty(near.Ref))
-                throw new QueryException($"Space '{space.Name}' needs an anchor: ref, the key of a row.");
-            var anchor = $"SELECT a.{space.VectorColumn} FROM {space.Table} a WHERE a.{space.IdColumn} = CAST({parameters.Add(near.Ref)} AS {space.IdType})";
+            if (string.IsNullOrEmpty(near.Ref) && near.Vector is null)
+                throw new QueryException($"Space '{space.Name}' needs an anchor: ref (the key of a row) or text.");
+            var anchor = near.Vector is { } vector
+                ? dialect.VectorFromText(parameters.Add("[" + string.Join(",", vector.Select(v => v.ToString("R", CultureInfo.InvariantCulture))) + "]"))
+                : $"SELECT a.{space.VectorColumn} FROM {space.Table} a WHERE a.{space.IdColumn} = CAST({parameters.Add(near.Ref)} AS {space.IdType})";
             if (space.Candidates > 0)
             {
                 var pool = dialect.VectorDistance("x." + space.VectorColumn, anchor);

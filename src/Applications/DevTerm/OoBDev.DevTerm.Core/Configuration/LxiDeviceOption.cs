@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using OoBDev.System.IO.Tcp;
+using OoBDev.System.Net.Discovery;
 namespace OoBDev.DevTerm.Configuration;
 
 /// <summary>
@@ -12,7 +13,7 @@ public sealed record LxiDeviceOption(string Display, string Host, int Port, stri
     /// A hit from any probe, carrying the transport it suggests: <c>vxi11</c> and <c>mqtt</c> hits switch the editor to that
     /// transport; anything else is a plain <c>tcp</c> hit (a VXI-11-only hit's RPC port is not a raw-SCPI port, so none is kept).
     /// </summary>
-    public static LxiDeviceOption FromHit(Discovery.NetworkDeviceHit hit) => hit.Transport switch
+    public static LxiDeviceOption FromHit(NetworkDeviceHit hit) => hit.Transport switch
     {
         "vxi11" => new(hit.Display, hit.Address, 0, "vxi11"),
         "mqtt" => new(hit.Display, hit.Address, hit.Port, "mqtt"),
@@ -24,7 +25,7 @@ public sealed record LxiDeviceOption(string Display, string Host, int Port, stri
     /// One row for a whole device (decided 2026-10-13): the label lists its services as badges, and picking the row fills the
     /// service most likely to carry data: a raw tcp port first, then vxi11, then mqtt, then whatever else was found.
     /// </summary>
-    public static LxiDeviceOption FromDevice(Discovery.NetworkDevice device)
+    public static LxiDeviceOption FromDevice(NetworkDevice device)
     {
         global::System.ArgumentNullException.ThrowIfNull(device);
         var primary = device.Services.FirstOrDefault(s => s.Transport == "tcp" && s.Port > 0)

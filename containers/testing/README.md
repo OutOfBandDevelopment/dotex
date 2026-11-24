@@ -342,6 +342,7 @@ scripts\integration-down.bat --clean
 | **Azurite** | `mcr.microsoft.com/azure-storage/azurite` | 10000 (Blob)<br>10001 (Queue)<br>10002 (Table) | Azure Storage emulator | `nc -z localhost 10000` |
 | **Moto** | `motoserver/moto` | 4566 | AWS services emulator (SQS, S3, etc.) | `curl http://localhost:4566/moto-api/` |
 | **Service Bus Emulator** | `mcr.microsoft.com/azure-messaging/servicebus-emulator` | 5672 (AMQP) | Azure Service Bus emulator | `nc -z localhost 5672` |
+| **Event Hubs Emulator** | `mcr.microsoft.com/azure-messaging/eventhubs-emulator` | 5674 (AMQP) | Azure Event Hubs emulator (uses Azurite) | `nc -z localhost 5674` |
 | **OpenTelemetry** | `mcr.microsoft.com/dotnet/aspire-dashboard:latest` | 18888, 4317, 4318 | OTLP receiver, dashboard UI, telemetry API | `curl http://localhost:18888/` |
 
 ### DevTerm peers
@@ -419,31 +420,31 @@ dotnet test --filter "TestCategory=Integration" --collect:"XPlat Code Coverage"
 ## Environment Variables
 
 ### Connection Strings
-
+Tests use environment variables for connection strings. See `.env.integration` for defaults. The values use `127.0.0.1`, not `localhost`: .NET resolves `localhost` to `::1` first, where a WSL relay listens on the same ports and stalls the connection.
 Tests use environment variables for connection strings. See `.env.integration` for defaults.
 
 | Variable | Default | Purpose |
 |----------|---------|---------|
-| `SQL_CONNECTION_STRING` | `Server=localhost,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=True` | SQL Server connection |
-| `MONGODB_CONNECTION_STRING` | `mongodb://localhost:27017` | MongoDB connection |
-| `RABBITMQ_CONNECTION_STRING` | `amqp://guest:guest@localhost:5673/` | RabbitMQ connection |
-| `REDIS_CONNECTION_STRING` | `localhost:6379` | Redis connection |
-| `POSTGRES_CONNECTION_STRING` | `Host=localhost;Port=5434;...` | PostgreSQL connection |
-| `PGVECTOR_CONNECTION_STRING` | `Host=localhost;Port=5435;...` | PostgreSQL with pgvector connection |
-| `OPENSEARCH_URL` | `https://localhost:9200` | OpenSearch endpoint |
-| `QDRANT_URL` | `http://localhost:6333` | Qdrant HTTP endpoint |
-| `TIKA_URL` | `http://localhost:9998` | Apache Tika endpoint |
-| `DOCLING_URL` | `http://localhost:5001` | docling-serve endpoint |
-| `CLAMAV_HOST` / `CLAMAV_PORT` | `localhost` / `3310` | clamd endpoint |
-| `SONARQUBE_URL` | `http://localhost:9002` | SonarQube endpoint |
-| `SMTP_HOST` | `localhost` | SMTP server host |
+| `SQL_CONNECTION_STRING` | `Server=127.0.0.1,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=True` | SQL Server connection |
+| `MONGODB_CONNECTION_STRING` | `mongodb://127.0.0.1:27017` | MongoDB connection |
+| `RABBITMQ_CONNECTION_STRING` | `amqp://guest:guest@127.0.0.1:5673/` | RabbitMQ connection |
+| `REDIS_CONNECTION_STRING` | `127.0.0.1:6379` | Redis connection |
+| `POSTGRES_CONNECTION_STRING` | `Host=127.0.0.1;Port=5434;...` | PostgreSQL connection |
+| `PGVECTOR_CONNECTION_STRING` | `Host=127.0.0.1;Port=5435;...` | PostgreSQL with pgvector connection |
+| `OPENSEARCH_URL` | `https://127.0.0.1:9200` | OpenSearch endpoint |
+| `QDRANT_URL` | `http://127.0.0.1:6333` | Qdrant HTTP endpoint |
+| `TIKA_URL` | `http://127.0.0.1:9998` | Apache Tika endpoint |
+| `DOCLING_URL` | `http://127.0.0.1:5001` | docling-serve endpoint |
+| `CLAMAV_HOST` / `CLAMAV_PORT` | `127.0.0.1` / `3310` | clamd endpoint |
+| `SONARQUBE_URL` | `http://127.0.0.1:9002` | SonarQube endpoint |
+| `SMTP_HOST` | `127.0.0.1` | SMTP server host |
 | `AZURITE_CONNECTION_STRING` | (see .env file) | Azurite connection |
-| `MOTO_URL` | `http://localhost:4566` | Moto endpoint |
-| `SQS_QUEUE_URL` | `http://localhost:4566/000000000000/{queue-name}` | AWS SQS queue URL |
-| `SERVICEBUS_CONNECTION_STRING` | `Endpoint=sb://localhost;...;UseDevelopmentEmulator=true;` | Azure Service Bus connection |
-| `KEYCLOAK_URL` | `http://localhost:8081` | Keycloak endpoint |
-| `SBERT_URL` | `http://localhost:5080` | SBert endpoint |
-| `OLLAMA_URL` | `http://localhost:11435` | Ollama LLM endpoint |
+| `MOTO_URL` | `http://127.0.0.1:4566` | Moto endpoint |
+| `SQS_QUEUE_URL` | `http://127.0.0.1:4566/000000000000/{queue-name}` | AWS SQS queue URL |
+| `SERVICEBUS_CONNECTION_STRING` | `Endpoint=sb://127.0.0.1;...;UseDevelopmentEmulator=true;` | Azure Service Bus connection |
+| `KEYCLOAK_URL` | `http://127.0.0.1:8081` | Keycloak endpoint |
+| `SBERT_URL` | `http://127.0.0.1:5080` | SBert endpoint |
+| `OLLAMA_URL` | `http://127.0.0.1:11435` | Ollama LLM endpoint |
 | `OLLAMA_MODEL` | `phi3` | Ollama model name |
 
 ### Auto-Initialized Resources
@@ -715,6 +716,7 @@ All containers are prefixed with `oobd-test-`:
 - `oobd-test-azurite`
 - `oobd-test-moto`
 - `oobd-test-servicebus`
+- `oobd-test-eventhubs`
 - `oobd-test-keycloak`
 - `oobd-test-sbert`
 - `oobd-test-ollama`

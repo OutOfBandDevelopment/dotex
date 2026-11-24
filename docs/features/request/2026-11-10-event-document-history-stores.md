@@ -45,6 +45,8 @@ Local files on the host; place, permissions and encryption at rest are the host'
 
 ## Open questions
 
+**Answered (checked 2026-11-23):** owner Q10: a separate package family beside EventSourcing, the history store is its own request, and there is no second embedded provider yet. No code until a consumer appears.
+
 - Does this belong inside `OoBDev.MessageQueueing` and `OoBDev.ComplexEvents`, or as a separate package?
 - LiteDB or an LMDB-style store as a second provider (`ctrl-home` spike 2 compares them)?
 - Is the history store in scope here, or a separate request tied to OpenTelemetry export?

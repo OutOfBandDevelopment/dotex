@@ -10,3 +10,5 @@ await foreach (var hit in store.FindNeighborsAsync(query)) { }
 ```
 
 Vectors of a different length than the query are skipped. The Qdrant adapter registers the same factory interface; register one of them.
+
+`SqlVectorStoreCollectionCatalog` implements `IVectorStoreCollectionCatalog` over `[embedding].[Sources]` (registered by `TryAddSqlVectorStore`).

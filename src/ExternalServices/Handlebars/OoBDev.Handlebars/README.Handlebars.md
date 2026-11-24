@@ -36,7 +36,7 @@ var text = await engine.ApplyAsync("welcome.hbs", new { Name = "Ada" });
 
 ## Not built yet
 
-The design set in `docs/design/TextTemplating/HandlebarsProvider` goes further. Not in the code: the `IDataContainer` adapter (needs Epic 11), and the database template source. They are tracked in `BACKLOG.md`.
+The design set in `docs/design/TextTemplating/HandlebarsProvider` goes further. The database template source is `EfTemplateSource` (`OoBDev.System.Text.Templating.EntityFrameworkCore`): a stored row with the content type `text/x-handlebars-template` renders through this provider (Simulate test `HandlebarsDatabaseSourceTests`). Not in the code: the `IDataContainer` adapter (needs Epic 11), tracked in `BACKLOG.md`.
 
 ## Notes and references
 

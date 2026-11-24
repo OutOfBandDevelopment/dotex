@@ -62,7 +62,7 @@ Synthetic buffers only: solid mid-grey (one bin per channel), 10 percent white p
 ## Later slices
 
 - Rendering a histogram to an image (Extensions.Drawing or a web view), if wanted.
-- Burst and near-duplicate ranking builds on these metrics ([request](../../features/request/2026-11-11-burst-and-near-duplicate-ranking.md)).
+- Burst and near-duplicate ranking builds on these metrics ([request](../../features/completed/2026-11-11-burst-and-near-duplicate-ranking.md)).
 - Resizing stays with the imaging library that decodes (Skia).
 
 ## Built

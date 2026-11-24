@@ -28,7 +28,7 @@ The Service Bus emulator requires SQL Server for persistence. The docker-compose
 1. **Starts SQL Server first** (via `depends_on` with health check)
 2. **Mounts Config.json** into `/ServiceBus_Emulator/ConfigFiles/Config.json`
 3. **Passes SQL credentials** via environment variables:
-   - `SQL_SERVER=oobd-test-sqlserver`
+   - `SQL_SERVER=oobd-test-servicebus-sql` (its own SQL Server, no volume)
    - `MSSQL_SA_PASSWORD=${SQL_SA_PASSWORD:-IntegrationTest123!}`
 4. **Memory limits** set to prevent crashes:
    - Limit: 2GB maximum
@@ -138,8 +138,8 @@ To add new queues or topics:
 **Cause:** SQL Server not ready or connection string incorrect
 
 **Fix:**
-1. Verify SQL Server is healthy: `docker ps | grep oobd-test-sqlserver`
-2. Check SQL Server logs: `docker logs oobd-test-sqlserver`
+1. Verify SQL Server is healthy: `docker ps | grep oobd-test-servicebus-sql`
+2. Check SQL Server logs: `docker logs oobd-test-servicebus-sql`
 3. Verify SQL_SERVER and MSSQL_SA_PASSWORD environment variables match
 
 ### Entities not created

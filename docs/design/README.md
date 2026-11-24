@@ -10,9 +10,11 @@ One folder per feature, written to the [design-document standard](../patterns-di
 | [ApplicationRights](ApplicationRights/README.md) | Role-based access control with application rights. |
 | [AsyncApi](AsyncApi/README.md) | Publishes an AsyncAPI 3.0 document for the message queue surfaces (SQS, Service Bus, RabbitMQ, in-process) and a viewer page, so queue contracts are as discoverable as the REST contracts. |
 | [CgiMiddleware](CgiMiddleware/README.md) | An opt-in ASP.NET Core middleware that runs CGI/1.1 ([RFC 3875](https://www.rfc-editor.org/rfc/rfc3875)) programs as child processes, so a Kestrel application can serve legacy scripts and small native tools without changing Kestrel. |
+| [ComplexEvents](ComplexEvents/README.md) | Proposed: handler model, scheduler with a lease and Event Hubs (Epic 8). |
 | [Communications](Communications/README.md) | The Communications Platform provides a **multi-channel communications orchestration system** that enables applications to send messages through various channels (Email, SMS, Push Notifications) with: |
 | [ConnectionProfiles](ConnectionProfiles/README.md) | Saved connection profiles and how they are chosen at startup. |
 | [ContractParser](ContractParser/README.md) | ContractParser is a proposed Domain-Specific Language (DSL) and parser for describing service contracts using a text-based format with ANTLR4 grammar. |
+| [DataLoader](DataLoader/README.md) | Proposed: validated, prioritized loading of CSV and JSON files (Epic 5). |
 | [DataEnhancement](DataEnhancement/README.md) | The Data Enhancement Pipeline is a **generic, reusable framework** for enriching data through attribute-discovered providers. |
 | [DesiredStateDatabase](DesiredStateDatabase/README.md) | Derive migrations from plain `CREATE` scripts for SQL Server, Postgres, SQLite and Oracle, and manage the objects a schema diff cannot model (extensions, queues, event streams) with idempotent ensure scripts. |
 | [DevTermParity](DevTermParity/README.md) | Owner requirement (2026-10-29): the OoBDev version of dev-term has 100% parity with dev-term, every protocol and every feature. |
@@ -21,11 +23,14 @@ One folder per feature, written to the [design-document standard](../patterns-di
 | [BurstRanking](BurstRanking/README.md) | Burst grouping, best-shot ranking, quality labels and a 64-bit difference hash, merged from the storage catalog; shares the ImageAnalysis placement question. |
 | [DocumentToMarkdown](DocumentToMarkdown/README.md) | Documents to page-anchored Markdown, Docling OCR client and resumable segmented OCR, merged from the storage catalog. |
 | [RawDevelopment](RawDevelopment/README.md) | RAW detection, embedded-preview extraction and an optional native developer behind one interface. |
+| [ReferenceDesigns](ReferenceDesigns/README.md) | Proposed catalogue of common entity patterns. |
 | [MetadataQuery](MetadataQuery/README.md) | Kinds declared by attributes, one request shape, dialect interface and keyset paging, merged from the storage catalog's query engine. |
 | [WorkQueue](WorkQueue/README.md) | Row-level work queue with leases, fenced completion, back-off and dead letters on PostgreSQL, merged from the storage catalog. |
 | [EmbeddingClientAndPgVector](EmbeddingClientAndPgVector/README.md) | OpenAI-compatible embedding client, pgvector store with multi-vector matches, annotation-layer pattern. |
 | [SearchMerge](SearchMerge/README.md) | One search request model over keyword, vector, hybrid and SQL kinds, with match explanations; index of the superset reviews. |
 | [FaceAndPetMatching](FaceAndPetMatching/README.md) | Multistage face and pet detection, embedding and clustering with a common request and detailed response; ONNX models through the Hugging Face cache, copyleft models deployed separately. |
+| [FileInventory](FileInventory/README.md) | Proposed: read-only file inventory and duplicate detection. |
+| [HpglAudioSink](HpglAudioSink/README.md) | Proposed: HP-GL scene to stereo X-Y WAV. |
 | [ImageAnalysis](ImageAnalysis/README.md) | Histograms, colour facets and exposure metrics as pure functions over RGB buffers; placement waits for the owner. |
 | [MediaMetadata](MediaMetadata/README.md) | Read-only EXIF reader and tag dump for images (JPEG, PNG, WebP, TIFF), merged from the storage catalog; placement waits for the owner. |
 | [GeneratedGuides](GeneratedGuides/README.md) | A user or API guide is never edited by hand to stay current. |
@@ -52,9 +57,11 @@ One folder per feature, written to the [design-document standard](../patterns-di
 | [SharedCaching](SharedCaching/README.md) | Design documents for the caching features of the SharedFramework (Epic 4). |
 | [SharedFramework](SharedFramework/README.md) | This directory contains **implementation-ready design documentation** for SharedFramework features. |
 | [SharedIdentity](SharedIdentity/README.md) | Design documents for the identity features of the SharedFramework (Epic 7). |
+| [SpatialServices](SpatialServices/README.md) | Proposed: geocoding behind one contract (Epic 3). |
 | [SqlServiceBroker](SqlServiceBroker/README.md) | Send and receive messages through SQL Server Service Broker using the existing `IMessageSenderProvider` and `IMessageReceiverProvider` contracts, selected by configuration like the RabbitMQ, SQS and Service Bus providers. |
 | [StreamTools](StreamTools/README.md) | Detecting what a captured stream contains and converting it. |
 | [TemplateTools](TemplateTools/README.md) | Backlog item: stack review of `OoBDev.Xslt.Cli` and `OoBDev.TemplateEngine.Cli` (owner, 2026-10-30). |
+| [TestDataGeneration](TestDataGeneration/README.md) | Proposed: seeded, attribute-driven test data (Epic 9). |
 | [TextTemplating](TextTemplating/README.md) | 1/ **Handlebars Template Provider** - Industry-standard template support |
 | [Theming](Theming/README.md) | Light, dark, system and user-defined JSON themes with semantic color roles, shared by the WPF and Terminal.Gui front ends. |
 | [Transports](Transports/README.md) | The `ITransport` contract and the transports built on it (serial, TCP, HID, USBTMC, BLE, RFC 2217, VXI-11, MQTT, AMQP, STOMP, loopback). |

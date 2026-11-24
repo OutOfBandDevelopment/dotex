@@ -43,7 +43,7 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Known issues:** diagrams crashed the PlantUML server until `fork` was replaced by `split` (fixed 2026-11-11); ranking quality is not measured.
 - **Standards:** none formal; BM25 plus vector fusion (reciprocal rank fusion) is the usual pattern.
 - **Built 2026-11-16:** `RelevanceMetrics` (recall at k, reciprocal rank, mean reciprocal rank) in OoBDev.Search to score a query set; the query set itself is per project.
-- **Missing:** access filters tied to ApplicationRights so search never leaks documents.
+- **Built 2026-11-19:** `AccessFilteredSearchProvider` and `IItemAccessPolicy` (post-filter of hits by a caller-supplied policy; one page, no cursor). **Missing:** a ready policy that maps item ids to ApplicationRights, and filter push-down into the stores.
 
 ## LlmCodeGen and ContractParser
 
@@ -51,14 +51,14 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Known issues:** ContractParser is a harvest project with no migration decision yet; live LLM tests are manual (LiveIntegration).
 - **Practices:** provider/factory per LLM service, local Ollama for CI.
 - **Built 2026-11-16:** prompt-injection guidance in the LlmCodeGen requirements ("Untrusted input and output").
-- **Missing:** token and cost accounting.
+- **Built 2026-11-16:** estimated token accounting (`OoBDev.AI`, `TryAddEstimatedLlmUsage`, `LlmUsageMeter`). **Missing:** provider-reported usage and cost (needs an interface change, declined for now).
 
 ## DesiredStateDatabase
 
 - **Works with:** MasterData, VectorSearch (schemas) and the SQL Server test container.
 - **Known issues:** schema compare needs a SQL Server instance, so tests are Integration.
 - **Decided 2026-11-16:** the data-loss guard is requirement REQ-003 of the DesiredStateDatabase design (unsafe changes refused without an explicit flag; hazard and `ApplyAsync` test in its testing strategy), built with the feature after the bake-off, not separately.
-- **Missing:** a rollback story.
+- **Proposed 2026-11-19:** roll forward to an earlier desired state with the stored apply script as audit (architecture, Rollback). Built with the feature after the bake-off.
 
 ## GeneratedGuides
 

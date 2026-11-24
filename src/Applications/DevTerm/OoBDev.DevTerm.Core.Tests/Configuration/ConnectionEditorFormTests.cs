@@ -42,7 +42,7 @@ public sealed class ConnectionEditorFormTests
             Assert.AreSequenceEqual(
                 ["Port", "Detected ports", "", "Baud", "Data bits", "Parity", "Stop bits", "Handshake", "DTR", "RTS", "Write timeout (ms)", "Read timeout (ms)"],
                 [.. definition.Sections[1].Controls.Select(c => c.Label)]);
-            Assert.AreSequenceEqual(["Host", "Port", "Detected network devices", "Listen (server mode)"], [.. definition.Sections[2].Controls.Select(c => c.Label)]);
+            Assert.AreSequenceEqual(["Host", "Port", "Detected network devices", "Scan network", "Listen (server mode)"], [.. definition.Sections[2].Controls.Select(c => c.Label)]);
             Assert.AreSequenceEqual(
                 ["Vendor ID", "Product ID", "Serial number", "Show as hex", "Detected HID devices", "Detected USBTMC devices", ""],
                 [.. definition.Sections[3].Controls.Select(c => c.Label)]);
@@ -137,5 +137,26 @@ public sealed class ConnectionEditorFormTests
         Assert.AreEqual(
             "Which transport to use: serial, tcp, hid, usbtmc, ble, rfc2217, vxi11, mqtt, amqp, stomp, loopback, or service.",
             Controls(definition).Single(c => c.Id == nameof(CliOptions.Transport)).Description);
+    }
+
+    [TestMethod]
+    public void ScanCommands_FillTheDetectedDeviceLists()
+    {
+        // Stage
+        using var folder = new TempDirectoryHandle();
+        using var viewModel = new ConnectionEditorViewModel(
+            new ConnectionProfileStore(folder.DirectoryPath),
+            new CliOptions { Transport = "ble" },
+            lxiScan: () => [new LxiDeviceOption("scope", "192.168.0.5", 5025)],
+            bleScan: () => [new BleDeviceOption("radex", "dev-1", "radex")]);
+
+        // Test
+        viewModel.ScanLxiCommand.Execute(null);
+        viewModel.ScanBleCommand.Execute(null);
+
+        // Assert
+        Assert.AreEqual("scope", viewModel.LxiDeviceOptions.Single().Display);
+        Assert.AreEqual("dev-1", viewModel.BleDeviceOptions.Single().DeviceId);
+        Assert.Contains(nameof(ConnectionEditorViewModel.ScanBleCommand), Controls(viewModel.FormDefinition).Select(c => c.Id).ToList(), "A scan command is a button in the generated form.");
     }
 }

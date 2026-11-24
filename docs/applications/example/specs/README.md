@@ -17,6 +17,7 @@ Acceptance criteria for each journey. The same journeys run as Playwright tests.
 | [Ask a question about your own text](ask-your-own-documents.md) | 2 | `/ai/rag` |
 | [Check the running service](check-the-running-service.md) | 2 | `/operations/info` |
 | [Cache a value](cache-a-value.md) | 2 | `/data/cache` |
+| [Run a read-only query](run-a-read-only-query.md) | 2 | `/data/access` |
 | [Hash, sign, compare and calculate](use-the-toolbox.md) | 5 | `/utilities/toolbox` |
 | [Query a document and render Markdown](query-and-render-text.md) | 2 | `/utilities/text` |
 | [Store texts and find the closest](store-and-search-vectors.md) | 2 | `/utilities/vectors` |
@@ -25,7 +26,7 @@ Acceptance criteria for each journey. The same journeys run as Playwright tests.
 | [Compare sentence embedding models](compare-embedding-models.md) | 1 | `/ai/model-compare` |
 | [See what the API just did](see-recent-traces.md) | 1 | `/operations/telemetry` |
 | [Render a text template](render-a-template.md) | 2 | `/content/templates` |
-| [Send an email through a channel](send-an-email.md) | 2 | `/messaging/communications` |
+| [Send an email through a channel](send-an-email.md) | 3 | `/messaging/communications` |
 | [Put a message on a queue](queue-a-message.md) | 2 | `/messaging/queues` |
 | [Convert and store a document](convert-a-document.md) | 3 | `/content/documents` |
 | [Sign in with Keycloak](sign-in.md) | 3 | `/identity/me` |
@@ -36,5 +37,10 @@ Acceptance criteria for each journey. The same journeys run as Playwright tests.
 | [Run a CGI program](run-a-cgi-program.md) | 1 | `/developer/cgi` |
 | [Send a webhook to a channel](send-a-webhook.md) | 1 | `/messaging/webhooks` |
 | [Check which rights an endpoint needs](check-your-rights.md) | 2 | `/identity/rights` |
+| [Review the right audit trail](review-the-right-audit-trail.md) | 2 | `/operations/right-audit` |
 | [Browse users and roles](browse-users-and-roles.md) | 2 | `/identity/directory` |
 | [Render a panel from a server-supplied definition](server-driven-ui.md) | 3 | `/utilities/server-ui` |
+| [Schedule a message](schedule-a-message.md) | 2 | `/messaging/schedule` |
+| [Look up an address](look-up-an-address.md) | 1 | `/data/geocode` |
+| [Measure a distance](measure-a-distance.md) | 1 | `/data/distance` |
+| [Load a file into a table](load-a-file-into-a-table.md) | 1 | `/data/load` |

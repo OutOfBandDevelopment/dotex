@@ -64,6 +64,36 @@ public sealed class FormViewTests
     private static global::System.Collections.Generic.IEnumerable<T> All<T>(Control root)
         where T : Control => root.Controls.Cast<Control>().SelectMany(c => All<T>(c)).Concat(root.Controls.OfType<T>());
 
+    public sealed class ProfileModel
+    {
+        public global::System.Collections.Generic.List<string> Saved { get; } = ["bench", "lab"];
+
+        [FormField(Kind = FormFieldKind.List, OptionsFrom = nameof(Saved))]
+        public string? Selected { get; set; }
+    }
+
+    [TestMethod]
+    public void List_SelectItem_WritesTheModel()
+    {
+        // Stage
+        var model = new ProfileModel();
+        var view = new FormView(new FormViewModel(FormDefinitionGenerator.Generate(model, "m"), new FormBinding(model))) { Dock = DockStyle.Fill };
+        var host = new Form { Width = 500, Height = 500, StartPosition = FormStartPosition.Manual, Location = new global::System.Drawing.Point(-3000, -3000), ShowInTaskbar = false };
+        host.Controls.Add(view);
+        host.Show();
+        Application.DoEvents();
+
+        // Test
+        var box = (ListBox)view.Editors["Selected"];
+        var rows = box.Items.Count;
+        box.SelectedItem = "lab";
+        host.Dispose();
+
+        // Assert
+        Assert.AreEqual(2, rows);
+        Assert.AreEqual("lab", model.Selected);
+    }
+
     [TestMethod]
     public void Render_Form_HidesTheConditionalRowUntilToggled()
     {
@@ -164,5 +194,62 @@ public sealed class FormViewTests
 
         // Assert
         Assert.IsTrue(check);
+    }
+
+    public sealed class PortSettings
+    {
+        public string Port { get; set; } = "COM3";
+
+        public string Reading { get; set; } = "none";
+    }
+
+    private static FormViewModel PortForm(PortSettings model) => new(
+        new UiDefinition
+        {
+            Name = "p",
+            Sections =
+            [
+                new UiSection
+                {
+                    Controls =
+                    [
+                        new ChoiceControl { Id = "Port", Label = "Port", Options = ["COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8"], Style = ChoiceStyle.Dropdown },
+                        new IndicatorControl { Id = "Reading", Label = "Reading" },
+                    ],
+                },
+            ],
+        },
+        new FormBinding(model));
+
+    [TestMethod]
+    public void Choice_LongDropdown_IsAComboBoxThatWritesTheModel()
+    {
+        // Stage
+        var model = new PortSettings();
+        using var view = new FormView(PortForm(model));
+        var combo = (ComboBox)view.Editors["Port"];
+
+        // Test
+        var initial = combo.SelectedItem;
+        combo.SelectedItem = "COM7";
+
+        // Assert
+        Assert.AreEqual(8, combo.Items.Count);
+        Assert.AreEqual("COM3", initial);
+        Assert.AreEqual("COM7", model.Port);
+    }
+
+    [TestMethod]
+    public void Indicator_Row_ShowsTheModelText()
+    {
+        // Stage
+        var model = new PortSettings { Reading = "42 V" };
+        using var view = new FormView(PortForm(model));
+
+        // Test
+        var label = (Label)view.Editors["Reading"];
+
+        // Assert
+        Assert.AreEqual("42 V", label.Text);
     }
 }

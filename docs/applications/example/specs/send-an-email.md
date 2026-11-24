@@ -14,5 +14,6 @@
 | --- | --- | --- |
 | 1 | Choose a channel and write the message | The Public channel is selected by default. |
 | 2 | Send | The result says the mail was accepted. |
+| 3 | Check the inbox | At least one message is listed with its sender and subject. |
 
 Source: `e2e/journeys.ts` (journey `send-an-email`). Each expected result is asserted by the step's `run` function.

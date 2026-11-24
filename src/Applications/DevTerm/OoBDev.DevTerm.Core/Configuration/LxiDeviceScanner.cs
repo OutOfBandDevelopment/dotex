@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using OoBDev.DevTerm.Configuration.Discovery;
+using OoBDev.System.Net.Discovery;
 using OoBDev.System.IO.Tcp;
 
 namespace OoBDev.DevTerm.Configuration;
@@ -16,7 +16,10 @@ public static class LxiDeviceScanner
     public static IReadOnlyList<LxiDeviceOption> Scan() =>
         [.. LxiDiscovery.ScanAsync(TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(1)).GetAwaiter().GetResult().Select(LxiDeviceOption.FromDevice)];
 
+    /// <summary>The default probes plus <see cref="LxiProbe"/>.</summary>
+    public static NetworkDiscovery CreateDiscovery() => new([.. NetworkDiscovery.DefaultProbes(), new LxiProbe()]);
+
     /// <summary>Every discovery probe (LXI, mDNS, SSDP, USR), for the Connection Editor's "Detect network devices..." picker: one row per device, its services as badges.</summary>
     public static IReadOnlyList<LxiDeviceOption> ScanNetwork() =>
-        [.. NetworkDiscovery.GroupByDevice(NetworkDiscovery.CreateDefault().DiscoverAsync(TimeSpan.FromSeconds(3)).GetAwaiter().GetResult()).Select(LxiDeviceOption.FromDevice)];
+        [.. NetworkDiscovery.GroupByDevice(CreateDiscovery().DiscoverAsync(TimeSpan.FromSeconds(3)).GetAwaiter().GetResult()).Select(LxiDeviceOption.FromDevice)];
 }

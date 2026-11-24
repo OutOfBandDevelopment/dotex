@@ -24,12 +24,12 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 |---------|------|-----------|----------|
 | MessageQueuing | adapters (SQS, Service Bus, RabbitMQ) with AsyncAPI contributors | AMQP 0-9-1 and 1.0, AsyncAPI | dead-letter and retry policy is per adapter |
 | SqlServiceBroker | built (design and code) | none (SQL Server feature) | none recorded |
-| Communications | `OoBDev.Communications` plus Abstractions, Hosting, MessageQueueing | RFC 5321/5322 (mail), RFC 2045 (MIME) | design status stale |
+| Communications | `OoBDev.Communications` plus Abstractions, Hosting, MessageQueueing | RFC 5321/5322 (mail), RFC 2045 (MIME) | channel providers beyond email and SMS are not designed |
 | MessageComposition | none | MIME, RFC 8058 (one-click unsubscribe) | design only |
 | TextTemplating | Handlebars adapter, `OoBDev.System.Text.Templating.Xslt` | XSLT 1.0 | engine selection by key is not shown in the design |
 | TemplateTools | `OoBDev.TemplateEngine.Cli` | none | status unclear |
 | DataEnhancement | none | none | design only |
-| DocumentServices | `OoBDev.Documents` plus Abstractions, ExternalTools, Guides, Hpgl | PDF 2.0 (ISO 32000), Tika detection | design status stale |
+| DocumentServices | `OoBDev.Documents` plus Abstractions, ExternalTools, Guides, Hpgl | PDF 2.0 (ISO 32000), Tika detection | none recorded (design reconciled 2026-11-11) |
 | SharedCaching | `OoBDev.Caching` plus Abstractions | RFC 9111 (HTTP caching semantics) for the web part | attribute-based and background-task parts unconfirmed |
 | SharedFramework | umbrella epics | none | epics 2, 6, 7 and 10 still design-first |
 | CqrsEventSourcing | design drafted, no library | CloudEvents 1.0 for event envelopes | decisions list for the owner (see the CQRS design) |
@@ -54,7 +54,8 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Built:** delivery status tracking and the SES webhook (delivered, bounce, complaint, open, click) exist; 2026-11-16 added the suppression list (`ISuppressionList`, `SuppressingSendService`).
 - **Built 2026-11-16:** `DeliveryStatus.Complained`, recipients on `DeliveryStatusUpdate`, and `SuppressionStatusHandler` feed the list from permanent bounces and complaints.
 - **Built 2026-11-16:** durable list (`OoBDev.Communications.EntityFrameworkCore`) and signed RFC 8058 unsubscribe links (`UnsubscribeLinks`).
-- **Missing:** an unsubscribe HTTP endpoint in a host, SMS and push as further channels behind the same provider.
+- **Built 2026-11-19:** the unsubscribe HTTP endpoint (`OoBDev.Communications.Web`, `MapUnsubscribe`, POST one-click and a GET confirmation page).
+- **Built:** SMS (`ISmsMessage`, Twilio adapter). **Missing:** push notifications (FCM, APNs) as a channel; needs a vendor decision.
 
 ## TextTemplating, TemplateTools and DataEnhancement
 
@@ -86,4 +87,4 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 - **Works with:** MessageQueuing, SharedFramework Complex Events (`OoBDev.ComplexEvents`), Search (projections).
 - **Known issues:** CQRS is draft only; MasterData has no code and no owner-confirmed scope.
 - **Standards:** CloudEvents 1.0, optimistic concurrency with expected sequence.
-- **Missing:** snapshotting, upcasting of old events, and GDPR erasure for append-only stores.
+- **Built:** snapshots (`ISnapshotable`, `SnapshotOptions`) and event upcasting (`IEventUpcaster`, `EventUpcastPipeline`). GDPR erasure (`ErasureService`, `PersonalDataRule`, `IEventPayloadRewriter`).

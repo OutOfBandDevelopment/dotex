@@ -40,6 +40,35 @@ describe('toolbox commands', () => {
     expect(JSON.parse(fetchMock.mock.calls[0][1].body as string)).toEqual({ codec: 'morse', decode: false, value: 'sos' });
     expect(vm.codecResult.value).toBe('... --- ...');
   });
+  it('inspect_File_PostsFormAndFillsTheInspection', async () => {
+    const fetchMock = vi.fn(async (_p: string, _i: RequestInit) =>
+      new Response(JSON.stringify({ length: 3, sha256: 'AB', detectedContentType: null, hexDump: '0000  61\n' }), { status: 200, headers: { 'Content-Type': 'application/json' } }));
+    vi.stubGlobal('fetch', fetchMock);
+    const vm = new ToolboxViewModel();
+    expect(vm.inspect.canExecute.value).toBe(false);
+    vm.inspectFile.value = new File(['abc'], 'a.txt');
+    await vm.inspect.execute();
+    expect(fetchMock.mock.calls[0][0]).toBe('/api/Toolbox/inspect');
+    expect(fetchMock.mock.calls[0][1].body).toBeInstanceOf(FormData);
+    expect(vm.inspection.value?.length).toBe(3);
+  });
+  it('pipeline_AddedSteps_PostsAndFillsResults', async () => {
+    const fetchMock = vi.fn(async (_p: string, _i: RequestInit) =>
+      new Response(JSON.stringify([{ step: 'sha256', length: 32, hex: 'AB', text: null }, { step: 'hex', length: 64, hex: '4142', text: 'AB' }]), { status: 200, headers: { 'Content-Type': 'application/json' } }));
+    vi.stubGlobal('fetch', fetchMock);
+    const vm = new ToolboxViewModel();
+    expect(vm.runPipeline.canExecute.value).toBe(false);
+    vm.pipelineChoice.value = 'sha256';
+    await vm.addPipelineStep.execute();
+    vm.pipelineChoice.value = 'hex';
+    await vm.addPipelineStep.execute();
+    await vm.runPipeline.execute();
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body as string)).toEqual({ value: 'hello world', steps: ['sha256', 'hex'] });
+    expect(vm.pipelineResults.value).toHaveLength(2);
+    await vm.clearPipeline.execute();
+    expect(vm.pipelineSteps.value).toEqual([]);
+    expect(vm.pipelineResults.value).toEqual([]);
+  });
   it('convertCodec_EmptyText_CannotExecute', () => {
     const vm = new ToolboxViewModel();
     vm.codecValue.value = ' ';

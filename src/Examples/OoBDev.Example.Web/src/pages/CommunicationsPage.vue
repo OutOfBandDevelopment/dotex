@@ -18,4 +18,14 @@ const vm = new CommunicationsViewModel();
   <p><fluent-button appearance="primary" :disabled="!vm.send.canExecute.value" @click="vm.send.execute()">Send</fluent-button></p>
   <p v-if="vm.send.error.value" class="error">{{ vm.send.error.value }}</p>
   <pre class="result">{{ vm.result.value }}</pre>
+
+  <h2>Inbox</h2>
+  <p>Fetches unread mail over IMAP (requires the <code>communications.receive</code> right); fetched mail is marked seen.</p>
+  <p><fluent-button appearance="primary" :disabled="!vm.poll.canExecute.value" @click="vm.poll.execute()">Check mail</fluent-button></p>
+  <p v-if="vm.poll.error.value" class="error">{{ vm.poll.error.value }}</p>
+  <p v-else-if="vm.polled.value && vm.inbox.value.length === 0">No unread mail.</p>
+  <table v-if="vm.inbox.value.length" class="inbox">
+    <thead><tr><th>From</th><th>Subject</th><th>Preview</th></tr></thead>
+    <tbody><tr v-for="m in vm.inbox.value" :key="m.messageId"><td>{{ m.from }}</td><td>{{ m.subject }}</td><td>{{ m.preview }}</td></tr></tbody>
+  </table>
 </template>

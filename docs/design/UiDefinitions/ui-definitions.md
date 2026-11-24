@@ -86,6 +86,7 @@ fields:
 - `ChoiceControl` — one of a fixed set of named options, either as a dropdown or a radio group (a
   `Style` field picks which — a small option count reads better as radio buttons, e.g. a color
   preset or a connection mode; a longer list reads better as a dropdown, e.g. a sound track name).
+- `ListControl` (built 2026-11-19, owner Q6) — a list of items with one selected, the master half of a master-detail view (saved profiles). `Id` is the model property holding the selected item, `ItemsSource` the property listing items (re-read on refresh), `AddCommand` and `DeleteCommand` the ids of button controls. The detail is the form generated for the selected item; the host places it beside the list. A form field declares it with `[FormField(Kind = FormFieldKind.List, OptionsFrom, AddCommand, DeleteCommand)]`; `FormBinding.SetText` writes the chosen item itself. `ListViewModel` (items re-read on refresh, `SelectedItem`) is built in `OoBDev.UiDefinitions.ViewModels`; the Tui renderer (a `ListView` in the form) is built; the Blazor and WPF renderers are still to do.
 - `TextFieldControl` — free text (e.g. an IP address, a hostname), or, with an optional
   `Constraint: ValueConstraint?`, a typed value with a data type and bounds (see "Values and
   widgets" below).
@@ -338,7 +339,7 @@ field (with an `Integer`/`Number` constraint for a numeric type).
 
 **Generating it.** `FormDefinitionGenerator.Generate(model)` (or `Generate<T>()`/`Generate(type,
 instance)`) walks the properties in declaration order and produces a plain `UiDefinition`: a
-control's `Id` is its property name, defaults and `OptionsFrom` lists are read from the instance.
+control's `Id` is its property name, defaults and `OptionsFrom` lists are read from the instance. The generator keeps the `OptionsFrom` name in `ChoiceControl.OptionsSource`, and a form view model re-reads that property on every refresh (`FormBinding.GetOptions`), so a list that changes while the form is open (detected serial ports) updates its rows; a fixed list leaves it null. An object-valued property (a detected device) shows each source item by its string `Display` property and gets the picked item written back.
 The result is an ordinary definition — it serializes to JSON/XML like any other.
 
 **Binding it.** `FormBinding` connects a rendered form to its model by id = property name: read as

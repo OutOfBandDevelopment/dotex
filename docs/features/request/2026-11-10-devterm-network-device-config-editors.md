@@ -41,7 +41,9 @@ Broadcast probes reach the whole segment: show before sending and allow turning 
 
 ## Open questions
 
-Needs a fresh capture of each real device (the dev-term TODO said "continue to wait"). Depends on the [UDP transport](2026-11-10-devterm-udp-transport.md).
+**Answered (checked 2026-11-23):** the Ebyte capture needs the real unit; it is listed in owner question Q33.
+
+Needs a fresh capture of each real device (the dev-term TODO said "continue to wait"). Depends on the [UDP transport](../completed/2026-11-10-devterm-udp-transport.md).
 
 ## Triage notes
 

@@ -49,6 +49,7 @@ One section per stack. Values are the test defaults from `src/.runsettings`; the
 | Azurite | `azure-storage/azurite` | `http://127.0.0.1:10000/devstoreaccount1` | well-known dev account key |
 | Moto | `motoserver/moto` | `http://localhost:4566` | `test` / `test` |
 | Service Bus emulator | `azure-messaging/servicebus-emulator` | `sb://localhost:5672` | emulator SAS key |
+| Event Hubs emulator | `azure-messaging/eventhubs-emulator` | `sb://localhost:5674` | emulator SAS key |
 | Keycloak | `keycloak/keycloak` | `http://localhost:8081` | `admin` / `admin` |
 | SBert | built from `containers/` | `http://localhost:5080` | none |
 | Ollama | `oobdev/ollama-phi3` (built) | `http://localhost:11435` | none |
@@ -125,6 +126,10 @@ AWS emulator (SQS and others) on 4566. The one-shot `moto-init` container create
 ## Service Bus emulator
 
 Starts after SQL Server and reads its queue and topic definition from `servicebus-config/Config.json`. It has no health check, so the scripts wait on its port. Keys: `SERVICEBUS_CONNECTION_STRING`, `SERVICEBUS_HOST`, `SERVICEBUS_PORT`, `SERVICEBUS_TEST_QUEUE`, `SERVICEBUS_TEST_TOPIC`.
+
+## Event Hubs emulator
+
+Starts after Azurite (its blob and table metadata) and reads the hub definition from `eventhubs-config/Config.json` (`integration-test-hub`, two partitions, group `integration-test-group`). AMQP is on host port 5674 because the Service Bus emulator holds 5672 and RabbitMQ 5673. It has no health check, so the scripts wait on its port. Keys: `EVENTHUB_CONNECTION_STRING`, `EVENTHUB_NAME`, `EVENTHUB_CONSUMER_GROUP`.
 
 ## Keycloak
 

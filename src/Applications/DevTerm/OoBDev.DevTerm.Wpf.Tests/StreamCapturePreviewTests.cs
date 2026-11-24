@@ -76,16 +76,39 @@ public sealed class StreamCapturePreviewTests
     }
 
     [TestMethod]
-    public void Render_PostScript_HasNoInProcessPreview()
+    public void Render_PostScript_DrawsThePathOperators()
+    {
+        // Stage / Test
+        var image = StreamCapturePreview.Render(Capture(StreamContentKind.PostScript, "%!PS\n10 10 moveto 100 100 lineto stroke showpage"u8.ToArray()), out var message);
+
+        // Assert
+        Assert.IsNotNull(image, message);
+        Assert.AreEqual(string.Empty, message);
+    }
+
+    [TestMethod]
+    public void Render_PostScriptWithoutLineWork_ExplainsWhy()
     {
         // Stage / Test
         var image = StreamCapturePreview.Render(Capture(StreamContentKind.PostScript, "%!PS"u8.ToArray()), out var message);
 
         // Assert
         Assert.IsNull(image);
-        StringAssert.StartsWith(message, "Preview not available yet for");
+        StringAssert.StartsWith(message, "No line work found in this PostScript document");
     }
 
+    [TestMethod]
+    public void Render_Pcl_DrawsTheEmbeddedHpgl()
+    {
+        // Stage
+        var data = global::System.Text.Encoding.ASCII.GetBytes("\u001b%0BIN;SP1;PU0,0;PD1000,1000;\u001b%0A");
+
+        // Test
+        var image = StreamCapturePreview.Render(Capture(StreamContentKind.Pcl, data), out var message);
+
+        // Assert
+        Assert.IsNotNull(image, message);
+    }
     [TestMethod]
     public async Task SelectedPostScript_NoToolInstalled_ExplainsWhatToInstall()
     {

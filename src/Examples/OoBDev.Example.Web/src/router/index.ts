@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { auth, authEnabled } from '../core/auth';
+import { trackScreen } from '../core/analytics';
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -16,6 +17,10 @@ export const router = createRouter({
     { path: '/ai/rag', component: () => import('../pages/RagPage.vue'), meta: { crumbs: ['AI', 'Retrieval (RAG)'] } },
     { path: '/ai/search', component: () => import('../pages/SearchPage.vue'), meta: { crumbs: ['AI', 'Search'] } },
     { path: '/operations/info', component: () => import('../pages/OperationsPage.vue'), meta: { crumbs: ['Operations', 'Runtime and configuration'] } },
+    { path: '/data/geocode', component: () => import('../pages/GeocodePage.vue'), meta: { crumbs: ['Data', 'Address lookup'] } },
+    { path: '/data/distance', component: () => import('../pages/DistancePage.vue'), meta: { crumbs: ['Data', 'Distance'] } },
+    { path: '/data/load', component: () => import('../pages/DataLoadPage.vue'), meta: { crumbs: ['Data', 'Data loading'] } },
+    { path: '/data/access', component: () => import('../pages/DataAccessPage.vue'), meta: { crumbs: ['Data', 'Data access'] } },
     { path: '/data/cache', component: () => import('../pages/CachePage.vue'), meta: { crumbs: ['Data', 'Cache lab'] } },
     { path: '/utilities/kernel', component: () => import('../pages/KernelPlugInsPage.vue'), meta: { crumbs: ['Utilities', 'Kernel plug-ins'] } },
     { path: '/utilities/tools', component: () => import('../pages/ToolCatalogPage.vue'), meta: { crumbs: ['Utilities', 'Command-line tools'] } },
@@ -26,6 +31,7 @@ export const router = createRouter({
     { path: '/utilities/server-ui', component: () => import('../pages/ServerUiPage.vue'), meta: { crumbs: ['Utilities', 'Server-driven UI'] } },
     { path: '/ai/images', component: () => import('../pages/ImagesPage.vue'), meta: { crumbs: ['AI', 'Image labels'] } },
     { path: '/ai/model-compare', component: () => import('../pages/ModelComparePage.vue'), meta: { crumbs: ['AI', 'Model compare'] } },
+    { path: '/operations/right-audit', component: () => import('../pages/RightAuditPage.vue'), meta: { crumbs: ['Operations', 'Right audit trail'] } },
     { path: '/operations/telemetry', component: () => import('../pages/TelemetryPage.vue'), meta: { crumbs: ['Operations', 'Telemetry'] } },
     { path: '/ai/ollama', component: () => import('../pages/OllamaPage.vue'), meta: { crumbs: ['AI', 'Ollama'] } },
     { path: '/ai/groq', component: () => import('../pages/GroqPage.vue'), meta: { crumbs: ['AI', 'Groq cloud'] } },
@@ -39,6 +45,7 @@ export const router = createRouter({
     { path: '/identity/directory', component: () => import('../pages/IdentityDirectoryPage.vue'), meta: { crumbs: ['Identity and security', 'Users and roles'], requiresAuth: true } },
     { path: '/developer/cgi', component: () => import('../pages/CgiPage.vue'), meta: { crumbs: ['Developer', 'CGI programs'] } },
     { path: '/messaging/webhooks', component: () => import('../pages/WebhooksPage.vue'), meta: { crumbs: ['Messaging', 'Webhooks'] } },
+    { path: '/messaging/schedule', component: () => import('../pages/SchedulePage.vue'), meta: { crumbs: ['Messaging', 'Schedule'] } },
     { path: '/developer/api', component: () => import('../pages/ExternalLinkPage.vue'), props: { title: 'API reference', href: '/scalar' }, meta: { crumbs: ['Developer', 'API reference'] } },
     { path: '/developer/events', component: () => import('../pages/ExternalLinkPage.vue'), props: { title: 'Event reference', href: '/asyncapi/all' }, meta: { crumbs: ['Developer', 'Event reference'] } },
   ],
@@ -51,3 +58,5 @@ router.beforeEach(async to => {
     return false;
   }
 });
+
+router.afterEach(to => trackScreen(to.path));

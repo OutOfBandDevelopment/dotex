@@ -59,10 +59,44 @@
                             <DataTrigger Binding="{Binding Style}" Value="CheckList">
                                 <Setter Property="ItemTemplate" Value="{StaticResource OptionCheck}" />
                             </DataTrigger>
+                            <DataTrigger Binding="{Binding UsesDropdown}" Value="True">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ItemsControl">
+                                            <ComboBox ItemsSource="{Binding Options}"
+                                                      SelectedItem="{Binding PickedOption}"
+                                                      HorizontalAlignment="Left"
+                                                      MinWidth="200" />
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </ItemsControl.Style>
             </ItemsControl>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:IndicatorViewModel}">
+            <TextBlock Text="{Binding Text}" TextWrapping="Wrap" VerticalAlignment="Center" ToolTip="{Binding Description}">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsWarning}" Value="True">
+                                <Setter Property="Foreground" Value="Firebrick" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:ListViewModel}">
+            <ListBox ItemsSource="{Binding Items}"
+                     SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                     IsEnabled="{Binding IsEnabled}"
+                     ToolTip="{Binding Description}"
+                     MinHeight="80" MaxHeight="160" MaxWidth="320" HorizontalAlignment="Left" />
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type vm:ButtonViewModel}">

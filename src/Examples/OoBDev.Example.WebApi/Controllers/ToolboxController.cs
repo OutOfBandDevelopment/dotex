@@ -1,15 +1,20 @@
 using OoBDev.AspNetCore.Mvc.Filters;
 using OoBDev.Identity.Jws;
+using OoBDev.Documents;
+using OoBDev.System;
 using OoBDev.System.Codecs;
 using OoBDev.System.ExpressionCalculator.Expressions;
 using OoBDev.System.Math;
 using OoBDev.System.Security.Cryptography;
 using OoBDev.WebApi.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Buffers.Text;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using System.Linq;
 using System.Text;
 
@@ -124,7 +129,7 @@ public class ToolboxController(IServiceProvider services) : ControllerBase
         }
     }
 
-    /// <summary>Converts text with Morse code, Roman numerals or Base32.</summary>
+    /// <summary>Converts text with Morse code, Roman numerals, Base32 or packed BCD (hex).</summary>
     /// <param name="model">The codec, direction and text.</param>
     /// <returns>The converted text.</returns>
     [HttpPost("codec")]
@@ -142,16 +147,107 @@ public class ToolboxController(IServiceProvider services) : ControllerBase
                     ? new RomanNumeral().Convert(model.Value.Trim().ToUpperInvariant()).ToString(global::System.Globalization.CultureInfo.InvariantCulture)
                     : new RomanNumeral().Convert(int.Parse(model.Value.Trim(), global::System.Globalization.CultureInfo.InvariantCulture)),
                 "base32" => model.Decode ? Encoding.UTF8.GetString(new Base32Codec().Decode(model.Value.Trim())) : new Base32Codec().Encode(Encoding.UTF8.GetBytes(model.Value)),
+                "bcd" => model.Decode ? BcdEx.AsBCD((ReadOnlySpan<byte>)Convert.FromHexString(model.Value.Trim())).ToString(global::System.Globalization.CultureInfo.InvariantCulture) : ToBcdHex(model.Value.Trim()),
                 _ => null,
             };
             return result is null
-                ? Problem(title: "Unknown codec", detail: "Use morse, roman or base32.", statusCode: 400)
+                ? Problem(title: "Unknown codec", detail: "Use morse, roman, base32 or bcd.", statusCode: 400)
                 : new ToolResultModel { Algorithm = key, Result = result };
         }
         catch (Exception ex) when (ex is ArgumentException or FormatException or OverflowException or InvalidOperationException or KeyNotFoundException)
         {
             return Problem(title: "The text cannot be converted", detail: ex.Message, statusCode: 400);
         }
+    }
+
+    private static string ToBcdHex(string digits)
+    {
+        if (digits.Length == 0 || digits.Length > 18 || !digits.All(char.IsAsciiDigit))
+            throw new ArgumentException("Give 1 to 18 decimal digits.", nameof(digits));
+        var bytes = new byte[(digits.Length + 1) / 2];
+        BcdEx.ToBCD(long.Parse(digits, global::System.Globalization.CultureInfo.InvariantCulture), bytes);
+        return Convert.ToHexString(bytes);
+    }
+
+    /// <summary>Lists the pipeline step keys.</summary>
+    /// <returns>The step keys.</returns>
+    [HttpGet("pipeline/steps")]
+    public IReadOnlyList<string> PipelineSteps() => ToolboxPipeline.Keys;
+
+    /// <summary>Runs text through a chain of byte transforms and returns every intermediate result.</summary>
+    /// <param name="model">The text and the steps.</param>
+    /// <returns>One result per step.</returns>
+    [HttpPost("pipeline")]
+    public ActionResult<IReadOnlyList<PipelineStepResultModel>> Pipeline([FromBody] PipelineRequestModel model)
+    {
+        if (model.Value.Length > 10_000 || model.Steps.Count is 0 or > 20)
+            return Problem(title: "The request is too large", detail: "Give at most 10000 characters and 1 to 20 steps.", statusCode: 400);
+        try
+        {
+            var results = ToolboxPipeline.Run(Encoding.UTF8.GetBytes(model.Value), model.Steps);
+            return Ok(model.Steps.Zip(results, (step, bytes) => new PipelineStepResultModel
+            {
+                Step = step,
+                Length = bytes.Length,
+                Hex = Convert.ToHexString(bytes),
+                Text = ToText(bytes),
+            }).ToList());
+        }
+        catch (Exception ex) when (ex is ArgumentException or FormatException or InvalidDataException or KeyNotFoundException)
+        {
+            return Problem(title: "The pipeline cannot run", detail: ex.Message, statusCode: 400);
+        }
+    }
+
+    private static string? ToText(byte[] bytes)
+    {
+        try
+        {
+            var text = new UTF8Encoding(false, true).GetString(bytes);
+            return text.Any(c => char.IsControl(c) && c is not ('\r' or '\n' or '\t')) ? null : text;
+        }
+        catch (ArgumentException)
+        {
+            return null;
+        }
+    }
+
+    /// <summary>Reports size, hash, detected type and a hex dump of the start of an uploaded file.</summary>
+    /// <param name="content">The file; at most 5 MiB.</param>
+    /// <returns>The inspection.</returns>
+    [HttpPost("inspect")]
+    [RequestSizeLimit(5 * 1024 * 1024)]
+    public async Task<ActionResult<FileInspectionModel>> Inspect(IFormFile content)
+    {
+        if (content.Length > 5 * 1024 * 1024)
+            return Problem(title: "The file is too large", detail: "At most 5 MiB.", statusCode: 400);
+        using var buffer = new MemoryStream();
+        await content.CopyToAsync(buffer);
+        var bytes = buffer.ToArray();
+        string? type = null;
+        if (services.GetService<IDocumentTypeTools>() is { } tools)
+        {
+            using var probe = new MemoryStream(bytes);
+            type = await tools.DetectContentTypeAsync(probe);
+        }
+
+        var shown = Math.Min(bytes.Length, 256);
+        var dump = new StringBuilder();
+        for (var offset = 0; offset < shown; offset += 16)
+        {
+            var row = bytes.AsSpan(offset, Math.Min(16, shown - offset)).ToArray();
+            var hex = string.Join(' ', row.Select(b => b.ToString("X2", global::System.Globalization.CultureInfo.InvariantCulture)));
+            var text = string.Concat(row.Select(b => b is >= 0x20 and < 0x7F ? (char)b : '.'));
+            dump.Append(offset.ToString("X4", global::System.Globalization.CultureInfo.InvariantCulture)).Append("  ").Append(hex.PadRight(47)).Append("  ").Append(text).Append('\n');
+        }
+
+        return new FileInspectionModel
+        {
+            Length = bytes.Length,
+            Sha256 = Convert.ToHexString(global::System.Security.Cryptography.SHA256.HashData(bytes)),
+            DetectedContentType = type,
+            HexDump = dump.ToString(),
+        };
     }
 
     /// <summary>Signs a JSON payload as an HS256 token.</summary>

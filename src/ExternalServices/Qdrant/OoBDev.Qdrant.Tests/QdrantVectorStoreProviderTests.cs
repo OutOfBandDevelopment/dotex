@@ -5,6 +5,7 @@ using OoBDev.TestUtilities;
 using Qdrant.Client.Grpc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace OoBDev.Qdrant.Tests;
@@ -43,6 +44,7 @@ public class QdrantVectorStoreProviderTests
             Url = "unused",
             EnsureCollectionExists = true,
         }), _collection);
+[IntegrationTestMethod("oobd-test-qdrant")]    [TestCategory(TestCategories.Integration)]    public async Task Catalog_ListsAStoredCollection()    {        await CreateProvider().StoreVectorsAsync([new float[] { 1, 0, 0 }], new Dictionary<string, object>());        var names = await new QdrantVectorStoreCollectionCatalog(_client!).ListCollectionsAsync(TestContext.CancellationToken);        TestContext.WriteLine($"collections: {names.Count}, looking for {_collection}");        CollectionAssert.Contains(names.ToList(), _collection);    }
 
     [IntegrationTestMethod("oobd-test-qdrant")]
     [TestCategory(TestCategories.Integration)]

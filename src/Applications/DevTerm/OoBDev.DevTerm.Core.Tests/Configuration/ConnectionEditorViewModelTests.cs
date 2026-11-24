@@ -1926,8 +1926,8 @@ public sealed class ConnectionEditorViewModelTests
         try
         {
             var vm = new ConnectionEditorViewModel(new ConnectionProfileStore(directory), new CliOptions());
-            var vxi = LxiDeviceOption.FromHit(new Discovery.NetworkDeviceHit("10.0.0.7", 111, "vxi11", "lxi", "Scope", "lxi"));
-            var mqtt = LxiDeviceOption.FromHit(new Discovery.NetworkDeviceHit("10.0.0.9", 1883, "mqtt", "mqtt", "Broker", "mdns"));
+            var vxi = LxiDeviceOption.FromHit(new OoBDev.System.Net.Discovery.NetworkDeviceHit("10.0.0.7", 111, "vxi11", "lxi", "Scope", "lxi"));
+            var mqtt = LxiDeviceOption.FromHit(new OoBDev.System.Net.Discovery.NetworkDeviceHit("10.0.0.9", 1883, "mqtt", "mqtt", "Broker", "mdns"));
             vm.SetLxiDeviceOptions([vxi, mqtt]);
 
             vm.SelectedLxiDevice = vxi;

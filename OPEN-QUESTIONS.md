@@ -8,17 +8,20 @@ How this file is kept: see `.claude/rules/open-questions.md` and `.claude/rules/
 
 _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
+
 ## Open
 
-### Q1 (2026-11-18, Security, OAuth client): confirm the OAuthClient project layout
 
-You chose a Framework library `OoBDev.Security.OAuthClient` with a Windows DPAPI leaf (Q2, 2026-11-17). The rule `layering-and-migration-plans` needs the table in [the migration plan](docs/design/OAuthClient/migration-plan.md) confirmed before any project is created: abstractions in Common, the library in Framework, `OoBDev.Security.OAuthClient.Windows` in Extensions, and tests beside each.
+### Q33 — 2026-11-23 — Bench-hardware items: who runs them?
 
-**Options**
-- A. Confirm as written (recommended: it follows your Q2 answer and the Abstractions-only rule; the work then builds the first slice from [the design](docs/design/OAuthClient/README.md)).
-- B. One Framework project without the Common abstractions split. Fewer projects, but adapters and clients then reference the implementation.
-- C. Change the layout (say what).
+**Question:** These need a person at the bench or a captured trace, which I cannot supply: DE-5000 BLE Hardware test (radio not fitted), Z-Wave include/exclude/reset pass, the silent HP 34401A and TDS2024 TCP bridges, the Ebyte and USR UDP config capture (Ebyte `IDeviceConfigEditor`), HP-GL scope and XBee bench checks, the Greaseweazle USB pass for Ser2NetWin, and the BlueZ (Linux) BLE backend, which needs a Linux machine with a radio. When you are at the bench, do you want me to run each pass through the `hardware-test` skill, or to leave them off the backlog?
 
-**Default:** A is assumed for the design only; no project is created until you answer.
+**Options:**
+- A (recommended): keep them listed; run them when you say the bench is ready.
+- B: drop the ones with no hardware in sight and re-add on demand.
+
+**Default:** A.
 
 **Your answer:**
+
+

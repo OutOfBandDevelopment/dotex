@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
 using System;
 using System.Linq;
@@ -15,11 +15,28 @@ public class ZWaveHardwareTests
 
     public TestContext TestContext { get; set; } = null!;
 
-    [TestMethod, TestCategory(TestCategories.Hardware)]
-    public async Task GetVersion_OnTheStick_AnswersWithALibraryNameAndNoCanTest()
+    [TestMethod, TestCategory(TestCategories.Hardware), TestCategory(TestCategories.Serial)]
+    public Task GetVersion_SerialPort_AnswersWithALibraryNameAndNoCanTest() => GetVersionAsync(ZWaveStick.OpenSerial);
+
+    [TestMethod, TestCategory(TestCategories.Hardware), TestCategory(TestCategories.Tcp)]
+    public Task GetVersion_TcpBridge_AnswersWithALibraryNameAndNoCanTest() => GetVersionAsync(ZWaveStick.OpenTcp);
+
+    [TestMethod, TestCategory(TestCategories.Hardware), TestCategory(TestCategories.Serial)]
+    public Task Switch_SerialPort_TogglesOffToOnToOffTest() => SwitchAsync(ZWaveStick.OpenSerial);
+
+    [TestMethod, TestCategory(TestCategories.Hardware), TestCategory(TestCategories.Tcp)]
+    public Task Switch_TcpBridge_TogglesOffToOnToOffTest() => SwitchAsync(ZWaveStick.OpenTcp);
+
+    [TestMethod, TestCategory(TestCategories.Hardware), TestCategory(TestCategories.Serial)]
+    public Task Enumerate_SerialPort_ListsNodesAndTheirProtocolInfoTest() => EnumerateAsync(ZWaveStick.OpenSerial);
+
+    [TestMethod, TestCategory(TestCategories.Hardware), TestCategory(TestCategories.Tcp)]
+    public Task Enumerate_TcpBridge_ListsNodesAndTheirProtocolInfoTest() => EnumerateAsync(ZWaveStick.OpenTcp);
+
+    private async Task GetVersionAsync(Func<TestContext, ZWaveStick> open)
     {
         // Stage
-        using var stick = ZWaveStick.Open(TestContext);
+        using var stick = open(TestContext);
 
         // Test
         stick.Send(ZWaveRequests.GetVersion());
@@ -38,15 +55,14 @@ public class ZWaveHardwareTests
     /// new state, and always puts it back. Opt-in on top of the port: it needs <c>ZWAVE_SWITCH_NODE</c> because it actuates
     /// whatever is plugged into that outlet.
     /// </summary>
-    [TestMethod, TestCategory(TestCategories.Hardware)]
-    public async Task Switch_AgainstRealNode_TogglesOffToOnToOffTest()
+    private async Task SwitchAsync(Func<TestContext, ZWaveStick> open)
     {
         // Stage
         var node = TestContext.GetPropertyOrDefault("ZWAVE_SWITCH_NODE", 0);
         if (node is < 2 or > 232)
             Assert.Inconclusive("No 'ZWAVE_SWITCH_NODE' run parameter: it actuates a real outlet, so name the relay node (2 to 232) in .runsettings.");
 
-        using var stick = ZWaveStick.Open(TestContext);
+        using var stick = open(TestContext);
         byte callback = 0;
 
         async Task<bool?> ReadStateAsync()
@@ -90,11 +106,11 @@ public class ZWaveHardwareTests
         // Verify
         Assert.AreEqual(original, await ReadStateAsync().ConfigureAwait(false), "The node was not restored to its original state.");
     }
-    [TestMethod, TestCategory(TestCategories.Hardware)]
-    public async Task Enumerate_OnTheStick_ListsNodesAndTheirProtocolInfoTest()
+
+    private async Task EnumerateAsync(Func<TestContext, ZWaveStick> open)
     {
         // Stage
-        using var stick = ZWaveStick.Open(TestContext);
+        using var stick = open(TestContext);
         var table = new ZWaveNodeTable();
 
         // Test

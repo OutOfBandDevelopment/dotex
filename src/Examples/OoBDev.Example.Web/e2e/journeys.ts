@@ -261,6 +261,40 @@ export const journeys: Journey[] = [
     ],
   },
   {
+    id: 'run-a-read-only-query',
+    title: 'Run a read-only query',
+    persona: 'A developer looking at rows in a test or reporting database',
+    goal: 'Run one SELECT and read the rows, knowing nothing else can run.',
+    start: '/data/access',
+    prerequisites: ['OoBDev:DataAccess:ConnectionString names a test or reporting instance, ideally a login that can only read.', 'The signed-in user holds the data.query right (the admin role).'],
+    features: ['OoBDev.DacFx (`SelectOnlyGuard`)', 'OoBDev.Example.WebApi (`ReadOnlyQueryRunner`)'],
+    why: 'Let a developer look at data without a path to change it: a parser allows one SELECT, the connection asks for the read-only intent, rows and time are capped, and the login permissions are the real guard.',
+    problems: [
+      { symptom: 'Data access is not configured', cause: 'OoBDev:DataAccess:ConnectionString is empty', fix: 'Set it to a test or reporting instance' },
+      { symptom: 'Query refused', cause: 'The text is not exactly one SELECT (several statements, SELECT INTO, OPENROWSET and the like)', fix: 'Send a single plain SELECT' },
+      { symptom: 'More rows exist than shown', cause: 'The row cap applies', fix: 'Add a TOP or a WHERE, or raise OoBDev:DataAccess:MaxRows' },
+    ],
+    steps: [
+      {
+        title: 'Write the query',
+        narrative: 'The box holds one SELECT. Change it to what you want to see.',
+        expect: ['The Run button is enabled while the box is not empty.'],
+        run: async page => {
+          await expect(page.getByLabel('SQL')).toBeVisible();
+        },
+      },
+      {
+        title: 'Run it',
+        narrative: 'The rows appear in a table with the elapsed time; a note says when the cap cut the list short.',
+        expect: ['The row count and elapsed time are shown.', 'The columns and rows are listed.'],
+        run: async page => {
+          await press(page, 'Run');
+          await expect(page.locator('table.grid')).toContainText('master');
+        },
+      },
+    ],
+  },
+  {
     id: 'use-the-toolbox',
     title: 'Hash, sign, compare and calculate',
     persona: 'A developer checking integrity and similarity',
@@ -571,6 +605,15 @@ export const journeys: Journey[] = [
           await expect(page.locator('pre.result')).toContainText('accepted');
         },
       },
+      {
+        title: 'Check the inbox',
+        narrative: 'Check mail polls the inbox channel over IMAP and lists the unread messages; they are marked seen, so the next check returns only newer mail.',
+        expect: ['At least one message is listed with its sender and subject.'],
+        run: async page => {
+          await press(page, 'Check mail');
+          await expect(page.locator('table.inbox')).toContainText('@example.test');
+        },
+      },
     ],
   },
   {
@@ -698,6 +741,7 @@ export const journeys: Journey[] = [
   },
   {
     id: 'see-who-you-are',
+    mockOnly: true,
     title: 'See the claims on your token',
     persona: 'A developer checking authentication',
     goal: 'Read the claims the API sees for the current user.',
@@ -790,6 +834,7 @@ export const journeys: Journey[] = [
   },
   {
     id: 'watch-the-queues',
+    mockOnly: true,
     title: 'See the queue channels and received messages',
     persona: 'A developer checking the message queue wiring',
     goal: 'Confirm which provider and queue each channel uses and whether this host receives from it.',
@@ -874,6 +919,7 @@ export const journeys: Journey[] = [
   },
   {
     id: 'check-your-rights',
+    mockOnly: true,
     title: 'Check which rights an endpoint needs',
     persona: 'A developer working out why an API call is refused',
     goal: 'See the access each endpoint needs and check the current user against a right.',
@@ -908,7 +954,50 @@ export const journeys: Journey[] = [
     ],
   },
   {
+    id: 'review-the-right-audit-trail',
+    title: 'Review the right audit trail',
+    persona: 'An operator looking into a refused call',
+    goal: 'See which right checks the API allowed or refused, and narrow the list to the refusals.',
+    start: '/operations/right-audit',
+    prerequisites: ['The example API runs with OoBDev:RightAudit:ConnectionString set.', 'The signed-in user holds the audit.read right.'],
+    features: ['OoBDev.AspNetCore.Abstractions (`IApplicationRightChecker`)', 'OoBDev.AspNetCore.EntityFrameworkCore (`TryAddEntityFrameworkRightAudit`)'],
+    why: 'Answer "who was refused, and for which right" from the durable trail, without reading logs.',
+    problems: [
+      { symptom: 'The screen says Not configured', cause: 'The host has no audit connection string, so the endpoint is not mapped', fix: 'Set OoBDev:RightAudit:ConnectionString (SQL Server) and restart the API' },
+      { symptom: 'The screen shows 403', cause: 'Your token has no role that maps to audit.read', fix: 'Ask for a role that is translated to audit.read' },
+    ],
+    steps: [
+      {
+        title: 'Read the trail',
+        narrative: 'Every right check is listed newest first with who asked, the rights and the result.',
+        expect: ['Both checks are listed, the allowed one and the forbidden one.'],
+        run: async page => {
+          // A live API has no seeded rows; the trail holds the checks made so far, which include this screen's own allowed one.
+          if (process.env.E2E_BASE_URL) {
+            await press(page, 'Refresh');
+            await expect(page.locator('table.grid')).toContainText('Allowed');
+            return;
+          }
+          await expect(page.locator('table.grid')).toContainText('ann');
+          await expect(page.locator('table.grid')).toContainText('Forbidden');
+        },
+      },
+      {
+        title: 'Show only the refusals',
+        narrative: 'Choose Forbidden as the result and refresh to narrow the list.',
+        expect: ['Only the forbidden check remains.'],
+        run: async page => {
+          await page.getByLabel('Result').selectOption('Forbidden');
+          await press(page, 'Refresh');
+          if (!process.env.E2E_BASE_URL) await expect(page.locator('table.grid')).toContainText('bob');
+          await expect(page.locator('table.grid')).not.toContainText('Allowed');
+        },
+      },
+    ],
+  },
+  {
     id: 'browse-users-and-roles',
+    mockOnly: true,
     title: 'Browse users and roles',
     persona: 'An administrator checking who can do what',
     goal: 'See the realm users with their roles and the application rights those roles grant.',
@@ -943,6 +1032,7 @@ export const journeys: Journey[] = [
   },
   {
     id: 'server-driven-ui',
+    mockOnly: true,
     title: 'Render a panel from a server-supplied definition',
     persona: 'A developer who wants one UI contract for every front end',
     goal: 'Open a UI definition and watch the host decide which controls show, enable and validate.',
@@ -981,6 +1071,116 @@ export const journeys: Journey[] = [
         run: async page => {
           await page.getByLabel('Constant current', { exact: true }).check();
           await expect(page.locator('[data-control="reset"]')).toBeVisible();
+        },
+      },
+    ],
+  },
+  {
+    id: 'schedule-a-message',
+    title: 'Schedule a message',
+    persona: 'A developer trying the scheduling building block',
+    goal: 'Schedule a message for later, see it wait, and take it back before it is due.',
+    start: '/messaging/schedule',
+    prerequisites: ['The API runs with its hosted services on (not DISABLE_HOSTING=true).', 'The signed-in user holds the schedule.use right (the admin role).'],
+    features: ['OoBDev.ComplexEvents (`IScheduleStore`, `ScheduleRunner`)', 'OoBDev.ComplexEvents.Hosting (`ScheduleHost`)'],
+    why: 'Show a due-time event store with a hosted runner: items are leased so two instances never run the same one, and registering the same key again moves the due time.',
+    problems: [
+      { symptom: 'The item never moves to Fired', cause: 'The API runs with DISABLE_HOSTING=true, so no runner polls the store', fix: 'Start the API without that variable' },
+      { symptom: 'Item refused', cause: 'The key is empty or the delay is outside 0 to 3600 seconds', fix: 'Enter a key and a delay in range' },
+    ],
+    steps: [
+      {
+        title: 'Schedule it',
+        narrative: 'Give the item a key, a delay and a message, then press Schedule.',
+        expect: ['The item is listed under Pending with its due time.', 'Earlier items that already ran are listed under Fired.'],
+        run: async page => {
+          await press(page, 'Schedule');
+          await expect(page.getByLabel('Pending')).toContainText('Stand up and stretch');
+        },
+      },
+      {
+        title: 'Take it back',
+        narrative: 'Remove drops a pending item before it is due, so it never fires.',
+        expect: ['The Pending list is empty again.'],
+        run: async page => {
+          await press(page, 'Remove');
+          await expect(page.getByText('Nothing is waiting.')).toBeVisible();
+        },
+      },
+    ],
+  },
+  {
+    id: 'look-up-an-address',
+    title: 'Look up an address',
+    persona: 'A developer trying the spatial services',
+    goal: 'Find the coordinates of a US address.',
+    start: '/data/geocode',
+    prerequisites: ['The API can reach the public US Census geocoder.', 'The signed-in user holds the geocode.use right (the admin role).'],
+    features: ['OoBDev.SpatialServices (`ILocationServices`)', 'OoBDev.Census.Geocoding (`CensusLocationServices`)'],
+    why: 'Show the location contract behind one provider; the same call works with any other provider registered for it.',
+    problems: [
+      { symptom: 'No match for an address that exists', cause: 'The Census service matches US street addresses only, and it is rate limited', fix: 'Check the street, city and ZIP, then retry a little later' },
+      { symptom: 'Forbidden', cause: 'The user lacks the geocode.use right', fix: 'Sign in with the admin role' },
+    ],
+    steps: [
+      {
+        title: 'Look it up',
+        narrative: 'The sample White House address is filled in; press Look up.',
+        expect: ['The matched address, latitude, longitude and match quality are shown.'],
+        run: async page => {
+          await press(page, 'Look up');
+          await expect(page.getByLabel('Result')).toContainText('38.8977');
+        },
+      },
+    ],
+  },
+  {
+    id: 'measure-a-distance',
+    title: 'Measure a distance',
+    persona: 'A developer trying the spatial services',
+    goal: 'Find the distance and bearing between two coordinates.',
+    start: '/data/distance',
+    prerequisites: ['The signed-in user holds the geocode.use right (the admin role).'],
+    features: ['OoBDev.SpatialServices (`GeoMath`)'],
+    why: 'Show the pure great-circle calculation that needs no external service.',
+    problems: [
+      { symptom: 'Coordinates refused', cause: 'A latitude is outside -90 to 90 or a longitude outside -180 to 180', fix: 'Enter decimal degrees within those ranges' },
+      { symptom: 'Forbidden', cause: 'The user lacks the geocode.use right', fix: 'Sign in with the admin role' },
+    ],
+    steps: [
+      {
+        title: 'Measure',
+        narrative: 'London and Paris are filled in; press Measure.',
+        expect: ['The distance in kilometres and miles and the initial bearing are shown.'],
+        run: async page => {
+          await press(page, 'Measure');
+          await expect(page.getByLabel('Result')).toContainText('343.6');
+        },
+      },
+    ],
+  },
+  {
+    id: 'load-a-file-into-a-table',
+    title: 'Load a file into a table',
+    persona: 'A developer trying the data loader',
+    goal: 'Load a small CSV into a throwaway table and read the report.',
+    start: '/data/load',
+    prerequisites: ['The signed-in user holds the data.load right (the admin role).'],
+    features: ['OoBDev.DataLoader (`ILoader`, `CsvRowReader`, `InMemoryRowSink`)'],
+    why: 'Show the read, key check and store steps with a report of what was written, skipped or rejected.',
+    problems: [
+      { symptom: 'Load refused', cause: 'The text is empty, too long, the key column is blank or the format is unknown', fix: 'Paste CSV or JSON text under 100000 characters and name the key column' },
+      { symptom: 'Forbidden', cause: 'The user lacks the data.load right', fix: 'Sign in with the admin role' },
+    ],
+    steps: [
+      {
+        title: 'Load the sample',
+        narrative: 'The sample CSV has a repeated id; press Load.',
+        expect: ['The report shows 3 rows read, 2 written and 1 skipped, and the stored rows are listed.'],
+        run: async page => {
+          await press(page, 'Load');
+          await expect(page.getByLabel('Report')).toContainText('Skipped');
+          await expect(page.getByLabel('Stored rows')).toContainText('Ann');
         },
       },
     ],

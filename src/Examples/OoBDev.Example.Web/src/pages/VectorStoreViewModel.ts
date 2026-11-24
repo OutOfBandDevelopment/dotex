@@ -23,6 +23,8 @@ export class VectorStoreViewModel {
   readonly list = new ListCommand(this);
   readonly reembed = new ReembedCommand(this);
   readonly reembedResult = ref<{ replaced: number; tag: string } | null>(null);
+  readonly collections = ref<string[]>([]);
+  readonly loadCollections = new LoadCollectionsCommand(this);
 
   /** The non-empty lines of the text box, one document each. */
   lines() { return this.texts.value.split('\n').map(l => l.trim()).filter(l => l !== ''); }
@@ -64,5 +66,13 @@ export class ReembedCommand extends Command {
   protected async run() {
     this.vm.reembedResult.value = await http.postJson<{ replaced: number; tag: string }>(
       `/api/VectorStore/${encodeURIComponent(this.vm.collection.value.trim())}/reembed`, {});
+  }
+}
+
+export class LoadCollectionsCommand extends Command {
+  constructor(private readonly vm: VectorStoreViewModel) { super(); }
+  protected isAllowed() { return true; }
+  protected async run() {
+    this.vm.collections.value = await http.getJson<string[]>('/api/VectorStore/collections');
   }
 }

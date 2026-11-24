@@ -101,7 +101,7 @@ public static class LivePlugins
     {
         lock (_gate)
         {
-            return [.. _live.Values.Select(p => (IPresenter)new LazyExternalPresenter(p.Request.Name, p.Command, p.Arguments, p.ReplyTimeout))];
+            return [.. _live.Values.Where(p => p.Kind == "presenter").Select(p => (IPresenter)new LazyExternalPresenter(p.Request.Name, p.Command, p.Arguments, p.ReplyTimeout, p.Sandbox))];
         }
     }
 

@@ -31,6 +31,7 @@ public static class ServiceCollectionExtensions
             .Bind(configuration.GetSection(optionSection))
             .ValidateDataAnnotations();
         services.TryAddTransient<IVectorStoreProviderFactory, AzureAISearchVectorStoreProviderFactory>();
+        services.AddTransient<IVectorStoreCollectionCatalog>(sp => new AzureAISearchVectorStoreCollectionCatalog(sp.GetRequiredService<global::Microsoft.Extensions.Options.IOptions<AzureAISearchOptions>>()));
         return services;
     }
 }

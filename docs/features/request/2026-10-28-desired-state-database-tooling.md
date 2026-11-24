@@ -48,6 +48,8 @@ containers for testing. The cost is mostly test infrastructure: containers for P
 
 ## Open questions
 
+**Answered (checked 2026-11-23):** scope is schema objects first (triage defaults, [design](../../design/DesiredStateDatabase/README.md)); the design covers SQL Server, Postgres, SQLite and Oracle, with queues and event streams as idempotent ensure scripts; the stack is .NET; the sqldef evaluation was merged into the phase 0 bake-off. Owner answers (2026-11-23): Q34 A, wrap sqldef and add the drop and type-change gates; Q35 A, Oracle as hand-written repeatable scripts. Built: the providers and gates (`OoBDev.Data.DesiredState`); left in `BACKLOG.md`: ensure-script runner, manifest compiler, CLI, Oracle executor.
+
 - Schema only, or also functions, triggers and views?
 - Wrap existing diff engines, or write a custom one?
 - Queues and streams: portable tables first, or native objects per database?

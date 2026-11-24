@@ -28,4 +28,9 @@ public record OllamaApiClientOptions
     /// Gets or initializes the model used for embeddings. It is pulled on first use when the server does not have it. Defaults to all-minilm.
     /// </summary>
     public string EmbeddingModel { get; init; } = "all-minilm";
+
+    /// <summary>
+    /// Gets or initializes the HTTP timeout of one request. Defaults to five minutes, because a CPU-only model can take longer than the 100 seconds of a plain HttpClient.
+    /// </summary>
+    public global::System.TimeSpan Timeout { get; init; } = global::System.TimeSpan.FromMinutes(5);
 }

@@ -37,10 +37,12 @@ The Web host is loopback-only with token authentication; keep that.
 
 ## Open questions
 
+**Answered (checked 2026-11-23):** AvalonDock (MIT) for the WPF dockable layout (owner 2026-11-09); built as `DockLayout`.
+
 Docking library: a third-party one (for example AvalonDock) conflicts with the owner's dependency preference; is it acceptable, or build a small one? The two ideas can be split on triage.
 
 ## Triage notes
 
 Origin: dev-term BACKLOG (Research, Proposed Ideas).
 
-2026-11-11: triaged. Decided 2026-11-09: AvalonDock (MIT) for the WPF dockable layout, themed in `DarkControls.xaml`, layout saved as XML. The Web host exists; no docking code is built yet. Design: [WebFrontend](../../design/WebFrontend/README.md), [DevTermParity](../../design/DevTermParity/README.md). Backlog: BACKLOG.md, DevTerm.
+2026-11-11: triaged. Decided 2026-11-09: AvalonDock (MIT) for the WPF dockable layout, themed in `DarkControls.xaml`, layout saved as XML. The Web host exists; the WPF docking is built since (`DockLayout`). Design: [WebFrontend](../../design/WebFrontend/README.md), [DevTermParity](../../design/DevTermParity/README.md). Backlog: BACKLOG.md, DevTerm.

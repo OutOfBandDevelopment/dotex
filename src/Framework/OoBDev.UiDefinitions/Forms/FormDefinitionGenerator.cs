@@ -191,7 +191,18 @@ public static class FormDefinitionGenerator
                 Id = id,
                 Label = label,
                 Options = [.. Options(property.DeclaringType!, type, field.OptionsFrom, defaults)],
+                OptionsSource = field.OptionsFrom,
                 Style = field.ChoiceStyle,
+                DefaultValue = current is null ? null : FormBinding.Format(current),
+            },
+            FormFieldKind.List => new ListControl
+            {
+                Id = id,
+                Label = label,
+                Items = [.. Options(property.DeclaringType!, type, field.OptionsFrom, defaults)],
+                ItemsSource = field.OptionsFrom,
+                AddCommand = field.AddCommand,
+                DeleteCommand = field.DeleteCommand,
                 DefaultValue = current is null ? null : FormBinding.Format(current),
             },
             FormFieldKind.Numeric => new NumericControl

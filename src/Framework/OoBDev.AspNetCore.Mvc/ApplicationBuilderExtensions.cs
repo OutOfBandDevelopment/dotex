@@ -19,6 +19,24 @@ public static class ApplicationBuilderExtensions
         => builder.UseMiddleware<QueryVerbMiddleware>();
 
     /// <summary>
+    /// Returns unhandled exceptions as RFC 9457 problem details with trace and correlation identifiers.
+    /// Call first, before <see cref="UseAspNetCoreExtensionMiddleware"/>, after <c>TryAddProblemDetailsExceptionHandler</c>.
+    /// </summary>
+    /// <param name="builder">The application builder.</param>
+    /// <returns>The application builder.</returns>
+    public static IApplicationBuilder UseProblemDetailsExceptionHandler(this IApplicationBuilder builder)
+        => builder.UseExceptionHandler();
+
+    /// <summary>
+    /// Counts calls and timeouts by route template and records request duration on the meter <see cref="HttpUsageMetricsMiddleware.MeterName"/>.
+    /// Opt in; call early so the whole pipeline is timed. Needs <c>IMeterFactory</c> (registered by the web host builder or <c>AddMetrics</c>).
+    /// </summary>
+    /// <param name="builder">The application builder.</param>
+    /// <returns>The application builder.</returns>
+    public static IApplicationBuilder UseHttpUsageMetrics(this IApplicationBuilder builder)
+        => builder.UseMiddleware<HttpUsageMetricsMiddleware>();
+
+    /// <summary>
     /// Add custom middleware to ASP.Net to support these extensions
     /// <see cref="CorrelationInfoMiddleware"/>
     /// <see cref="CultureInfoMiddleware"/> 

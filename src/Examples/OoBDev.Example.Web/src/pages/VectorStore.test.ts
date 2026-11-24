@@ -32,6 +32,14 @@ describe('VectorStoreViewModel', () => {
     await vm.search.execute();
     expect(vm.hits.value[0].text).toBe('kitten');
   });
+  it("loadCollections_Valid_StoresTheNames", async () => {
+    const fetchMock = vi.fn(async (_p: string) => ok(["a", "b"]));
+    vi.stubGlobal("fetch", fetchMock);
+    const vm = new VectorStoreViewModel();
+    await vm.loadCollections.execute();
+    expect(fetchMock.mock.calls[0][0]).toContain("/api/VectorStore/collections");
+    expect(vm.collections.value).toEqual(["a", "b"]);
+  });
   it('list_Valid_GetsCollection', async () => {
     const fetchMock = vi.fn(async (_p: string) => ok([]));
     vi.stubGlobal('fetch', fetchMock);

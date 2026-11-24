@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using System.Security.Cryptography.X509Certificates;
 using OoBDev.DevTerm.Configuration;
-using OoBDev.DevTerm.Configuration.Discovery;
+using OoBDev.System.Net.Discovery;
 using OoBDev.UiDefinitions;
 using Scalar.AspNetCore;
 namespace OoBDev.DevTerm.Web;
@@ -60,6 +60,7 @@ public static class WebHost
             builder.Services.AddSingleton(editor);
         }
 
+        builder.Services.AddScoped<Docking.DockLayoutStore>();
         builder.Services.AddSingleton<Components.PanelHostHolder>();
         builder.Services.AddSingleton(sp => new WebStreamMonitor(sp.GetRequiredService<SessionHub>(), sp.GetRequiredService<ConverterToolsStore>(), sp.GetRequiredService<ConnectionManager>()));
         builder.Services.AddSingleton(new ConverterToolsStore(webOptions.ConverterToolsFile));
@@ -305,7 +306,7 @@ public static class WebHost
         app.MapGet("/api/discover", async (HttpContext context, int? seconds) =>
         {
             var listenFor = TimeSpan.FromSeconds(Math.Clamp(seconds ?? 3, 1, 10));
-            var hits = await NetworkDiscovery.CreateDefault().DiscoverAsync(listenFor, context.RequestAborted).ConfigureAwait(false);
+            var hits = await LxiDeviceScanner.CreateDiscovery().DiscoverAsync(listenFor, context.RequestAborted).ConfigureAwait(false);
             return Results.Json(hits.Select(h => new { address = h.Address, port = h.Port, transport = h.Transport, kind = h.Kind, name = h.DisplayName, source = h.Source, hostname = h.Hostname }));
         }).WithSummary("Network devices found by the LXI, mDNS and SSDP probes (?seconds=1..10, default 3)");
 

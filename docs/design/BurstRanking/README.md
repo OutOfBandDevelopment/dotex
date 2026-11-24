@@ -1,6 +1,6 @@
 ﻿# Burst grouping and best-shot ranking
 
-Status: **first slice built 2026-11-16** (ranker, labels, measures, dHash in `OoBDev.Imaging.Analysis`; placement confirmed by the owner 2026-11-12, shared with [ImageAnalysis](../ImageAnalysis/README.md)). Request: [burst and near-duplicate ranking](../../features/request/2026-11-11-burst-and-near-duplicate-ranking.md).
+Status: **first slice built 2026-11-16** (ranker, labels, measures, dHash in `OoBDev.Imaging.Analysis`; placement confirmed by the owner 2026-11-12, shared with [ImageAnalysis](../ImageAnalysis/README.md)). Request: [burst and near-duplicate ranking](../../features/completed/2026-11-11-burst-and-near-duplicate-ranking.md).
 
 ## Contents
 
@@ -60,7 +60,7 @@ Pairs: five frames within two seconds pair up, a gap above the window breaks the
 
 ## Not in the first slice
 
-- Eyes-open and face signals (need the face decision, see [face and pet matching](../../features/request/2026-11-11-face-and-pet-matching.md)).
+- Eyes-open and face signals (need the face decision, see [face and pet matching](../../features/completed/2026-11-11-face-and-pet-matching.md)).
 - Subject-region focus (needs the face decision); the eight whole-frame measures are built (below).
 - Database queue and API: catalog-specific.
 

@@ -48,6 +48,22 @@ public sealed class PluginLoaderTests
     }
 
     [TestMethod]
+    public void LoadAll_LowerOrderFirst_ThenFolderName()
+    {
+        using var pluginsFolder = new TempDirectoryHandle();
+        var directory = pluginsFolder.DirectoryPath;
+        CopySample(directory, "a-late", text => text.Replace("\"contract\": 1", "\"contract\": 1, \"order\": 5", StringComparison.Ordinal));
+        CopySample(directory, "c-plain");
+        CopySample(directory, "b-plain");
+        CopySample(directory, "z-early", text => text.Replace("\"contract\": 1", "\"contract\": 1, \"order\": -1", StringComparison.Ordinal));
+
+        var results = PluginLoader.LoadAll(directory, new ServiceCollection());
+
+        var order = results.Select(r => Path.GetFileName(r.Folder)).ToList();
+        Assert.AreEqual("z-early,b-plain,c-plain,a-late", string.Join(",", order));
+    }
+
+    [TestMethod]
     public void LoadAll_SkipsAPluginBuiltForAnotherContract_AndSaysWhy()
     {
         using var pluginsFolder = new TempDirectoryHandle();

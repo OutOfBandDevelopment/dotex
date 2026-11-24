@@ -103,7 +103,7 @@ public sealed partial class CgiProcessRunner : ICgiProcessRunner, IDisposable
         if (!await _slots.WaitAsync(0, CancellationToken.None).ConfigureAwait(false))
             throw new CgiBusyException();
 
-        var timeout = new CancellationTokenSource(_options.Timeout);
+        var timeout = new CancellationTokenSource(_options.ScriptTimeouts.TryGetValue(request.Script.ScriptName, out var scriptTimeout) ? scriptTimeout : _options.Timeout);
         var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeout.Token);
         Process? process = null;
         var handedOver = false;

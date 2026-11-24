@@ -13,11 +13,13 @@ const vector = (seed: number) => Array.from({ length: 384 }, (_, i) => Math.sin(
  */
 export async function mockApi(page: Page): Promise<void> {
   let turn = 0;
+  const scheduled: { key: string; dueAt: string; message: string; firedAt: string | null }[] = [];
   await page.route(/\/(api|Document|openapi|asyncapi|cgi-bin|webhooks)\//, async route => {
     const url = new URL(route.request().url());
     const path = url.pathname;
     const method = route.request().method();
 
+    if (path === '/api/v1/analytics/screen-views') return route.fulfill({ status: 204 });
     if (path === '/api/Ollama' && method === 'POST') return text(route, 'An embedding turns text into a list of numbers so similar meanings end up close together.');
     if (path === '/api/Ollama/Streamed') return json(route, ['An embedding ', 'turns text into ', 'numbers.']);
     if (path === '/api/Ollama/Completion') {
@@ -53,6 +55,11 @@ export async function mockApi(page: Page): Promise<void> {
       ]);
     }
     if (path === '/api/Rights/endpoints') return json(route, [{ method: 'GET', route: '/api/Cache', access: 'anonymous', rights: [] }, { method: 'GET', route: '/api/Rights/protected', access: 'rights', rights: ['rights.demo'] }, { method: 'GET', route: '/api/User/claims', access: 'authenticated', rights: [] }]);
+    if (path === '/api/v1/right-audit') {
+      const rows = [{ at: '2026-11-20T09:00:00Z', subject: 'ann', rights: 'docs.read', result: 'Allowed' }, { at: '2026-11-20T08:59:00Z', subject: 'bob', rights: 'identity.read', result: 'Forbidden' }];
+      const wanted = new URL(route.request().url()).searchParams.get('result');
+      return json(route, wanted ? rows.filter(r => r.result === wanted) : rows);
+    }
     if (path === '/api/Rights/check') return json(route, { required: ['rights.demo'], held: [], result: 'Unauthenticated' });
     if (path === '/api/Identity/users') return json(route, [{ id: '1', userName: 'ann', email: 'ann@example.test', displayName: 'Ann Lee', enabled: true, roles: ['editor'], rights: ['docs.read'] }]);
     if (path === '/api/Identity/roles') return json(route, [{ name: 'editor', rights: ['docs.read'] }, { name: 'viewer', rights: [] }]);
@@ -64,6 +71,7 @@ export async function mockApi(page: Page): Promise<void> {
     }
     if (path === '/api/Toolbox/calculate') return json(route, { result: 54, optimized: '54', variables: ['A'] });
     if (path === '/api/Toolbox/otp') return json(route, { secret: 'JBSWY3DPEHPK3PXP', code: '492039', uri: 'otpauth://totp/OoBDev%20Example:demo?secret=JBSWY3DPEHPK3PXP', valid: null });
+    if (path === '/api/VectorStore/collections') return json(route, ['notes']);
     if (path === '/api/VectorStore/index') return json(route, { ids: ['1', '2', '3', '4'], store: 'memory' });
     if (path === '/api/VectorStore/query') return json(route, [{ id: '3', score: 0.31, text: 'A kitten curled up on the sofa to sleep.' }, { id: '1', score: 0.44, text: 'The cat sat on the warm windowsill.' }]);
     if (path === '/api/VectorLab/matrix') return json(route, { matrix: [[0, 1, 0.006, 0.43], [1, 0, 0.99, 0.43], [0.006, 0.99, 0, 0.45], [0.43, 0.43, 0.45, 0]], magnitudes: [1, 1, 0.906, 0.995], centroid: [0.6, 0.4, 0.175] });
@@ -87,6 +95,16 @@ export async function mockApi(page: Page): Promise<void> {
     if (path === '/api/TextTemplate/Read') return json(route, { info: { name: 'order-shipped', file: 'order-shipped.html.hbs', templateContentType: 'text/x-handlebars-template', targetExtension: '.html' }, text: '<h1>Hello {{name}}</h1><p>Your order {{orderId}} has shipped.</p>' });
     if (path === '/api/TextTemplate/Preview') return text(route, '<h1>Hello Ada</h1><p>Your order 1042 has shipped.</p>');
     if (path.startsWith('/api/TextTemplate/Apply')) return text(route, '<h1>Hello Ada</h1><p>Your order 1042 has shipped.</p>');
+    if (path === '/api/DataAccess/query') return json(route, { columns: ['name', 'create_date'], rows: [['master', '2003-04-08 09:13:36'], ['model', '2003-04-08 09:13:36'], ['msdb', '2025-04-19 08:37:53'], ['tempdb', '2026-11-20 08:00:00']], truncated: false, elapsedMs: 4 });
+    if (path === '/api/Geocode') return json(route, { matched: true, latitude: 38.8977, longitude: -77.0365, quality: 'Interpolated', normalizedAddress: '1600 PENNSYLVANIA AVE NW, WASHINGTON, DC, 20500' });
+    if (path === '/api/Distance') return json(route, { meters: 343556.2, kilometers: 343.6, miles: 213.5, bearingDegrees: 148.1 });
+    if (path === '/api/DataLoad/preview') return json(route, { read: 3, written: 2, replaced: 0, skipped: 1, errors: [], columns: ['id', 'name', 'city'], rows: [['1', 'Ann', 'Oslo'], ['2', 'Bo', 'Lima']] });
+    if (path === '/api/Schedule' || path.startsWith('/api/Schedule/')) {
+      if (method === 'POST') scheduled.push({ key: 'reminder-1', dueAt: '2026-11-20T08:00:10+00:00', message: 'Stand up and stretch', firedAt: null });
+      if (method === 'DELETE') scheduled.length = 0;
+      return json(route, { pending: scheduled, fired: [{ key: 'backup-check', dueAt: '2026-11-20T07:59:00+00:00', message: 'Check last night\'s backup', firedAt: '2026-11-20T07:59:01+00:00' }] });
+    }
+    if (path === '/api/Communications/inbox/poll') return json(route, [{ messageId: 'm-1', from: 'grace@example.test', to: ['ada@example.test'], subject: 'Re: Your order has shipped', preview: 'Thanks, it arrived today.', timestamp: '2026-11-20T09:30:00Z' }]);
     if (path.startsWith('/api/Communications/')) return text(route, 'Mail accepted');
     if (path === '/api/MessageQueueing/channels') return json(route, [{ channel: 'EmailMessageModel', provider: 'rabbit-mq', queueName: 'email-receive', hostName: 'localhost', receiverEnabled: false }, { channel: 'ExampleMessageProvider', provider: 'rabbit-mq', queueName: 'email-receive', hostName: 'localhost', receiverEnabled: false }]);
     if (path === '/api/MessageQueueing/received') return json(route, [{ receivedAt: '2026-11-09T12:00:00Z', correlationId: 'demo-1', message: '{"Input":"hello"}' }]);

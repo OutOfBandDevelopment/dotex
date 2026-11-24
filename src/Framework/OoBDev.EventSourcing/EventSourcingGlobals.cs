@@ -17,6 +17,9 @@ public static class EventSourcingGlobals
     /// <summary>The configuration section of the snapshot options.</summary>
     public const string SnapshotSection = "OoBDev:EventSourcing:Snapshots";
 
+    /// <summary>Configuration section of <see cref="ErasureJobOptions"/>.</summary>
+    public const string ErasureSection = "OoBDev:EventSourcing:Erasure";
+
     /// <summary>Key under which the configured event store is resolved.</summary>
     public const string EventStoreSelectedKey = "event-store-selected";
 

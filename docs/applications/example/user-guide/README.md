@@ -17,6 +17,7 @@ Step-by-step guides with screenshots, one per user journey. They are regenerated
 | [Ask a question about your own text](ask-your-own-documents.md) | A developer learning retrieval augmented generation | Give the model a few passages, ask a question, and see which passages the answer came from. |
 | [Check the running service](check-the-running-service.md) | An operator | See which environment the API runs in and find a configuration setting. |
 | [Cache a value](cache-a-value.md) | A developer adding caching to a service | Store text under a key, read it back, and remove it. |
+| [Run a read-only query](run-a-read-only-query.md) | A developer looking at rows in a test or reporting database | Run one SELECT and read the rows, knowing nothing else can run. |
 | [Hash, sign, compare and calculate](use-the-toolbox.md) | A developer checking integrity and similarity | Hash some text, sign a message with a shared secret, measure how far apart two vectors are, evaluate an expression and get a one-time code. |
 | [Query a document and render Markdown](query-and-render-text.md) | A developer pulling values out of mixed documents | Query a JSON document with XPath, see the XML view XPath works on, and render Markdown. |
 | [Store texts and find the closest](store-and-search-vectors.md) | A developer adding semantic search to an application | Embed a few sentences into a collection and find the ones closest in meaning to a query. |
@@ -36,5 +37,10 @@ Step-by-step guides with screenshots, one per user journey. They are regenerated
 | [Run a CGI program](run-a-cgi-program.md) | A developer checking the CGI hosting | Pick a program the host can start and see its answer. |
 | [Send a webhook to a channel](send-a-webhook.md) | A developer testing inbound provider calls | Post a provider call to a channel and see how the host answers. |
 | [Check which rights an endpoint needs](check-your-rights.md) | A developer working out why an API call is refused | See the access each endpoint needs and check the current user against a right. |
+| [Review the right audit trail](review-the-right-audit-trail.md) | An operator looking into a refused call | See which right checks the API allowed or refused, and narrow the list to the refusals. |
 | [Browse users and roles](browse-users-and-roles.md) | An administrator checking who can do what | See the realm users with their roles and the application rights those roles grant. |
 | [Render a panel from a server-supplied definition](server-driven-ui.md) | A developer who wants one UI contract for every front end | Open a UI definition and watch the host decide which controls show, enable and validate. |
+| [Schedule a message](schedule-a-message.md) | A developer trying the scheduling building block | Schedule a message for later, see it wait, and take it back before it is due. |
+| [Look up an address](look-up-an-address.md) | A developer trying the spatial services | Find the coordinates of a US address. |
+| [Measure a distance](measure-a-distance.md) | A developer trying the spatial services | Find the distance and bearing between two coordinates. |
+| [Load a file into a table](load-a-file-into-a-table.md) | A developer trying the data loader | Load a small CSV into a throwaway table and read the report. |

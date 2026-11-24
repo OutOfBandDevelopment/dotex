@@ -18,8 +18,12 @@ The sandboxed host that now implements the isolation (grants, brokered access, l
   stays silent, exits, or answers malformed JSON is marked faulted (`FaultReason`) and renders nothing from then on;
   the session and the other presenters carry on. A failed handshake throws from `StartAsync`.
 - stderr is the plugin's own log and is drained so it can never block the child.
-- Today only presenters are covered (`ExternalProcessPresenter : IPresenter`). Transports and device modules over the
-  same protocol are not designed.
+- An optional `permissions` block in `plugin.json` runs the program in the platform sandbox (no network, only the listed folders, memory, CPU and wall limits); where no launcher exists the plugin is refused. See [sandboxed-launch](sandboxed-launch.md).
+- Presenters are `ExternalProcessPresenter : IPresenter`. A manifest `process.kind` of `transport` makes the same kind of child a
+  transport (`ExternalProcessAdapter : IDeviceAdapter`, path `plugin://{name}`), chosen with `--transport {name}`. Host to plugin:
+  `hello`, `open`, `{"type":"write","hex":"..."}`, `close`. Plugin to host: `{"type":"opened"}` (answers `open` within the reply
+  timeout), `{"type":"data","hex":"..."}` (input bytes), `{"type":"error","message":"..."}` and `{"type":"closed"}`. Silence,
+  an exit or a bad line faults the adapter. Example: `examples/devterm/powershell/out-of-process-transport/`. There is no separate device-module protocol: see "Device modules" below.
 
 ```plantuml
 @startuml
@@ -71,7 +75,9 @@ bytes), `examples/go/out-of-process-plugin/` (reverses text); each folder has a 
 - [x] Go example run through the host (go 1.27.1, 2026-10-03)
 - [x] `plugin.json` discovery of out-of-process plugins in `PluginLoader` (a `process` entry instead of an `assembly`; 2026-10-03)
 - [x] Attach-to-a-running-session variant: any program can use the control pipe or loopback HTTP channel (`examples/python/control-channel-client/`, 2026-10-07)
-- [ ] Transport and device-module variants
+- [ ] Sandboxed launch of `process` plugins ([sandboxed-launch](sandboxed-launch.md), waits for Q31)
+- [x] Transport variant (`kind: transport`, 2026-11-23)
+- [x] Device-module variant: decided not to add a protocol (2026-11-23), see "Device modules"
 - [x] TUI in-app approval prompt: the TUI starts first, asks in a dialog, and an approved plugin goes live at once through `LivePlugins` (2026-10-09; WPF asks after its window loads, and the web host has a /plugins page)
 - [x] Review or revoke remembered approvals from the CLI: `--listapprovals true`, `--forgetplugin <name>` (2026-10-09)
 - [x] TUI/WPF Device > Plugin approvals...: lists them and walks them one at a time: forget, keep, stop (2026-10-09)
@@ -88,3 +94,7 @@ of every file in the plugin folder in `plugin-approvals.json` under the dev-term
 With no approver (a script) only remembered approvals run, and `--listplugins` shows "needs your approval". Covered by `PluginTrustTests` (unit) and a real
 Python run through the loader (`PluginTrustProcessTests`, Integration). Example: `examples/python/out-of-process-plugin/plugin.json`. Not built: (the TUI, WPF and web now have in-app approval; remaining:)
 (a real-console check of choosing a button in the TUI dialog), and transport/device-module variants.
+
+## Device modules
+
+An in-process device module (`IInstrumentPanelProvider`) returns live UI objects (WPF or Terminal.Gui panels), which cannot cross a process boundary as JSON lines without inventing a second UI protocol. Decision (2026-11-23): an out-of-process device is the pieces that already exist, composed. Its bytes arrive through a `transport` plugin or a normal transport, its decoding is a `presenter` plugin, and its control surface is a declarative [device manifest](../UiDefinitions/device-manifests.md) (buttons, fields and sends, no code). A device whose panel needs real code stays an in-process plugin assembly. A plugin that wants a richer panel later should extend the manifest language, not the process protocol.

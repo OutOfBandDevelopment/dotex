@@ -51,6 +51,8 @@ listener per bridge. A raw device behind a TCP hop adds latency; some tools may 
 
 ## Open questions
 
+**Answered (checked 2026-11-23):** owner Q16: USB-id selection in the configuration, the container recipe in the Ser2NetWin docs only, non-serial USB out of scope. The Greaseweazle bench pass needs the device and is listed in owner question Q33.
+
 - Is selection by USB id wanted in the bridge configuration, or only in the `ports` listing?
 - Does the container recipe live in the Ser2NetWin docs only, or does dotex ship a small helper image (the `containers` repository is a candidate)?
 - Should non-serial USB (vendor protocols) be declared permanently out of scope, or is a USB/IP bridge ever wanted here?

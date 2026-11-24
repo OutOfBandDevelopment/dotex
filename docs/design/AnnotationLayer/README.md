@@ -1,6 +1,6 @@
 # Annotation layer (pattern)
 
-Status: **pattern page written 2026-11-18** (documentation only; no abstractions in code until a second consumer appears). Source: the tables of the storage catalog (`C:\repo\_storage`, read-only reference; rules `imgx-2`, `imgx-3`, `imgx-4` in its image feature document). Parent design: [embedding client, pgvector store and annotation layer](../EmbeddingClientAndPgVector/README.md); request: [pgvector store and read-only annotation layer](../../features/request/2026-11-11-pgvector-store-and-read-only-annotation-layer.md).
+Status: **pattern page written 2026-11-18** (documentation only; no abstractions in code until a second consumer appears). Source: the tables of the storage catalog (`C:\repo\_storage`, read-only reference; rules `imgx-2`, `imgx-3`, `imgx-4` in its image feature document). Parent design: [embedding client, pgvector store and annotation layer](../EmbeddingClientAndPgVector/README.md); request: [pgvector store and read-only annotation layer](../../features/completed/2026-11-11-pgvector-store-and-read-only-annotation-layer.md).
 
 ## Contents
 

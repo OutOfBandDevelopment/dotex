@@ -1,6 +1,6 @@
-# OAuth client: migration plan (proposal, awaiting owner confirmation)
+# OAuth client: migration plan (confirmed 2026-11-19)
 
-Status: proposed 2026-11-18. Rule `layering-and-migration-plans`: no project is created until the owner confirms this table.
+Status: confirmed by the owner 2026-11-19 (Q1, option A); the table may be built.
 
 **Table 1 — Proposed projects**
 

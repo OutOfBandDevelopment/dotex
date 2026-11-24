@@ -27,6 +27,7 @@ By hand, in the example web application at `/messaging/communications`:
 
 1. **Choose a channel and write the message.** Public sends straight away, Queued hands the message to the queue, Private needs a signed-in user. Expect: The Public channel is selected by default.
 2. **Send.** The API acknowledges the message with a reference id. Expect: The result says the mail was accepted.
+3. **Check the inbox.** Check mail polls the inbox channel over IMAP and lists the unread messages; they are marked seen, so the next check returns only newer mail. Expect: At least one message is listed with its sender and subject.
 
 ## Troubleshooting
 

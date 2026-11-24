@@ -227,6 +227,24 @@ public class RoleRightTests
 
     [TestMethod]
     [TestCategory("Unit")]
+    public void TryAddRoleRightMapping_AfterAddAuthentication_ReplacesTheNoopTransformation()
+    {
+        // Stage
+        var configuration = new ConfigurationBuilder().Build();
+        var services = new ServiceCollection();
+        services.AddLogging();
+        services.AddAuthentication();
+
+        // Test
+        services.TryAddRoleRightMapping(configuration);
+        using var provider = services.BuildServiceProvider();
+
+        // Assert
+        Assert.IsInstanceOfType<RoleRightClaimsTransformation>(provider.GetRequiredService<IClaimsTransformation>());
+    }
+
+    [TestMethod]
+    [TestCategory("Unit")]
     public void Filter_Decisions_MapToChallengeForbidAndPass()
     {
         // Stage

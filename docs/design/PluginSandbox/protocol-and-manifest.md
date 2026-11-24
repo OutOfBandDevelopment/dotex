@@ -2,7 +2,7 @@
 
 [← Threat model](threat-model.md) · [↑ Overview](README.md)
 
-**Status:** Draft for owner review · **Date:** 2026-10-29
+**Status:** Signed off by the owner 2026-11-20 · **Date:** 2026-10-29
 
 Phase 1 design (REQ-009, REQ-002, REQ-006). The frame format described here is built and tested in the spike (`src/Spikes/OoBDev.Spike.PluginSandbox`, `FrameChannel`). It fixes what is on the wire and in the manifest so a plugin in any language can be written from this page. It is based on the proof-of-concept wire profile (`PROFILE.md` in `examples/plugin-sandbox-poc`), which carried five languages and the real host's 36 conformance checks unchanged, and it adds versioning, grants and a manifest schema. Decisions here are reversible until a launcher ships.
 
@@ -186,7 +186,7 @@ What happens when the caller dies is its own choice, named `onCallerExit` (manif
 - `Kill` (default): the plugin is ended with the caller (job kill-on-close).
 - `Survive`: the plugin keeps running without its caller for `reconnectWindowSec`, holding its state but doing no new brokered work (the broker is gone, so every grant is suspended). A recovered caller finds the instance through the same named mutex, presents the reconnect token the old session left in the protected grant store, and gets a **new session**: new key, sequences restart at 1, and the plugin sees an `Event lifecycle.reconnected`. If the window passes with no caller the host-owned watchdog kills the plugin. `Survive` needs the plugin to say it can resume (`modes` includes `Shared` and `resumable: true`), because only the plugin knows whether it can continue after losing a caller.
 
-A `Bound` plugin with `Survive` is allowed: the job object is then created without kill-on-close and a small watchdog (a helper process or the next caller) enforces the window.
+A `Bound` plugin with `Survive` is allowed: the job object is then created without kill-on-close and the plugin itself ends when no caller reconnects within the window (owner, 2026-11-20: no host-side watchdog; `Sweep(timeout)` covers reconnecting hosts).
 
 Rules for `Shared`:
 

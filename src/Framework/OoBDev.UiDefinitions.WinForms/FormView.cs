@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using OoBDev.UiDefinitions.Forms;
 using OoBDev.UiDefinitions.ViewModels;
@@ -98,8 +99,11 @@ public sealed class FormView : UserControl
     private Control Editor(ControlViewModel row) => row switch
     {
         ToggleViewModel toggle => ToggleEditor(toggle),
+        ChoiceViewModel { UsesDropdown: true } choice => DropdownEditor(choice),
         ChoiceViewModel choice => ChoiceEditor(choice),
+        IndicatorViewModel indicator => IndicatorEditor(indicator),
         ButtonViewModel button => ButtonEditor(button),
+        ListViewModel list => ListEditor(list),
         TextViewModel { IsSlider: true } slider => SliderEditor(slider),
         TextViewModel text => TextEditor(text),
         _ => new Label { Text = row.Label, AutoSize = true },
@@ -117,6 +121,59 @@ public sealed class FormView : UserControl
         };
         Follow(toggle, () => box.Checked = toggle.IsChecked);
         return box;
+    }
+
+    private ComboBox DropdownEditor(ChoiceViewModel choice)
+    {
+        var combo = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, MinimumSize = new Size(160, 0) };
+        combo.SelectedIndexChanged += (_, _) =>
+        {
+            if (!_updating && combo.SelectedItem is string picked)
+            {
+                choice.PickedOption = picked;
+            }
+        };
+        Follow(choice, () =>
+        {
+            if (!choice.OptionTexts.SequenceEqual(combo.Items.Cast<string>(), StringComparer.Ordinal))
+            {
+                combo.Items.Clear();
+                combo.Items.AddRange([.. choice.OptionTexts]);
+            }
+
+            combo.SelectedItem = choice.PickedOption;
+        });
+        return combo;
+    }
+
+    private ListBox ListEditor(ListViewModel list)
+    {
+        var box = new ListBox { Height = 100, Width = 240 };
+        box.SelectedIndexChanged += (_, _) =>
+        {
+            if (!_updating && box.SelectedItem is string picked)
+            {
+                list.SelectedItem = picked;
+            }
+        };
+        Follow(list, () =>
+        {
+            if (!list.Items.SequenceEqual(box.Items.Cast<string>(), StringComparer.Ordinal))
+            {
+                box.Items.Clear();
+                box.Items.AddRange([.. list.Items]);
+            }
+
+            box.SelectedItem = list.SelectedItem;
+        });
+        return box;
+    }
+
+    private Label IndicatorEditor(IndicatorViewModel indicator)
+    {
+        var label = new Label { AutoSize = true };
+        Follow(indicator, () => label.Text = indicator.Text);
+        return label;
     }
 
     private FlowLayoutPanel ChoiceEditor(ChoiceViewModel choice)

@@ -50,6 +50,32 @@ public sealed class FormViewTests
         return (cut, model, form, context);
     }
 
+    public sealed class ProfileModel
+    {
+        public List<string> Saved { get; } = ["bench", "lab"];
+
+        [FormField(Kind = FormFieldKind.List, OptionsFrom = nameof(Saved))]
+        public string? Selected { get; set; }
+    }
+
+    [TestMethod]
+    public void Change_ListSelection_WritesTheModel()
+    {
+        // Stage
+        var model = new ProfileModel();
+        var form = new FormViewModel(FormDefinitionGenerator.Generate(model), new FormBinding(model));
+        using var context = new Bunit.TestContext();
+        var cut = context.RenderComponent<FormView>(p => p.Add(c => c.Form, form));
+
+        // Test
+        var rows = cut.FindAll("[data-id=Selected] option").Count;
+        cut.Find("[data-id=Selected] select").Change("lab");
+
+        // Assert
+        Assert.AreEqual(2, rows);
+        Assert.AreEqual("lab", model.Selected);
+    }
+
     [TestMethod]
     public void Render_EachControlKind_ShowsItsElement_AndHidesTheConditionalSection()
     {

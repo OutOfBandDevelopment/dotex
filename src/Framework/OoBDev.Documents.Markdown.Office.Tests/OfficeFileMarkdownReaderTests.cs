@@ -49,6 +49,8 @@ public sealed class OfficeFileMarkdownReaderTests
     [DataRow(".odt", "application/vnd.oasis.opendocument.text")]
     [DataRow(".rtf", "application/rtf")]
     [DataRow(".epub", "application/epub+zip")]
+    [DataRow(".xls", "application/vnd.ms-excel")]
+    [DataRow(".ppt", "application/vnd.ms-powerpoint")]
     public void Read_KnownExtension_AsksTheChainForMarkdownFromThatType(string extension, string contentType)
     {
         var conversion = new FakeConversion();
