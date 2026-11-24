@@ -22,7 +22,7 @@
 
 ## Need
 
-A `process` plugin in DevTerm (Python, Java, Go) runs with the user's full rights once approved. The sandbox library (`OoBDev.System.Sandbox*`: AppContainer on Windows, bubblewrap on Linux) can limit files, network, memory and time, but DevTerm does not use it. Acceptance from the [request](../../features/request/2026-11-10-devterm-out-of-process-plugins-and-control-channel.md): a crash does not stop DevTerm (met), a control client without the token is refused (met, `--controlhttp` bearer token and `CurrentUserOnly` pipe), install asks for approval first (met).
+A `process` plugin in DevTerm (Python, Java, Go) runs with the user's full rights once approved. The sandbox library (`OoBDev.System.Sandbox*`: AppContainer on Windows, bubblewrap on Linux) can limit files, network, memory and time, but DevTerm does not use it. Acceptance from the [request](../../features/completed/2026-11-10-devterm-out-of-process-plugins-and-control-channel.md): a crash does not stop DevTerm (met), a control client without the token is refused (met, `--controlhttp` bearer token and `CurrentUserOnly` pipe), install asks for approval first (met).
 
 ## What exists
 

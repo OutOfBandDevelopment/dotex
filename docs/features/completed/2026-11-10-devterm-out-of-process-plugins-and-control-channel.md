@@ -1,6 +1,6 @@
 # Feature request: DevTerm out-of-process plugins and read-write control channel
 
-- **Status:** triaged
+- **Status:** done (process plugins with approval, read-write control channel, sandboxed launch and the Blazor `/plugins` panel with a Playwright journey, built by 2026-11-23)
 - **Requested by:** owner (retire dev-term, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Applications/DevTerm` (plugins), see the PluginSandbox design
