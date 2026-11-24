@@ -1,6 +1,6 @@
 # Feature request: Sandboxed plugin host
 
-- **Status:** triaged
+- **Status:** done (built as `OoBDev.System.Sandbox*`, 2026-11-20; Windows and Linux tested, macOS deferred by the owner on 2026-11-10; see [PluginSandbox](../../design/PluginSandbox/README.md))
 - **Requested by:** owner (filed from the notes repository, `projects/dotex-consolidation/plugin-sandbox-project/README.md`)
 - **Date:** 2026-10-28
 - **Area:** unknown (a new package; no existing dotex area was identified)
