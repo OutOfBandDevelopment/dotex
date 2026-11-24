@@ -50,3 +50,7 @@ The feature manifest compiler and an Oracle `IScriptExecutor` are in `BACKLOG.md
 ## Tests
 
 Unit tests use a fake tool runner. The Integration test runs the real `sqlite3def` and ends Inconclusive when it is not on `PATH`.
+
+## Feature manifest
+
+`FeatureManifest.Parse("""{ "extensions": ["pgcrypto"], "queues": ["orders"], "streams": ["order_events"] }""")` and `ManifestCompiler.Compile(manifest, "postgres")` give idempotent ensure scripts (`001_extensions.sql`, `020_queues.sql`, `030_streams.sql`) for `EnsureScriptRunner`. Queues and streams are portable tables (`queue_{name}`, `stream_{name}`); extensions exist for Postgres only; names are validated identifiers; Oracle scripts are hand-written.

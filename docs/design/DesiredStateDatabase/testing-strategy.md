@@ -21,4 +21,4 @@ Plan generation and hazard detection are Unit tests on fixture schemas (80% cove
 | REQ-004 | Integration | run ensure scripts twice, second run reports no change |
 | REQ-005, REQ-008 | Manual record | bake-off result document under `docs/design/DesiredStateDatabase/`, run per the [test plan](bake-off-test-plan.md) |
 | REQ-006 | Unit | providers resolve by engine key |
-| REQ-007 | Unit | manifest compiles to expected script text |
+| REQ-007 | Unit | manifest compiles to expected script text (built: `ManifestCompilerTests`, 5 tests) |

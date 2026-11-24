@@ -51,7 +51,7 @@ t --> db : plan / apply
 | 1 | Provider interface and gates (`PlanAnalyzer`, `ApplyOptions`); SQL Server through `mssqldef` (DacFx stays the dacpac route). Built 2026-11-23 | Phase 0 result |
 | 2 | Postgres and SQLite adapters wrapping sqldef (built 2026-11-23, Q34 A) | Phase 0 result |
 | 3 | Ensure-script runner (built 2026-11-23: `EnsureScriptRunner`, `*.once.sql` with recorded hashes) | none |
-| 4 | Manifest compiler; Oracle as repeatable scripts (provider built 2026-11-23, Q35 A; the Oracle executor is not) | none |
+| 4 | Manifest compiler (built 2026-11-23: `FeatureManifest`, `ManifestCompiler`; portable `queue_*` and `stream_*` tables, extensions on Postgres only); Oracle as repeatable scripts (provider built 2026-11-23, Q35 A; the Oracle executor is not) | none |
 
 ## Rollback (proposed 2026-11-19)
 
