@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Framework\OoBDev.System.IO.Ports.Bridge\OoBDev.System.IO.Ports.Bridge.csproj" />
+    <ProjectReference Include="..\..\..\Framework\OoBDev.System.IO.Usb.Bridge\OoBDev.System.IO.Usb.Bridge.csproj" />
   </ItemGroup>
 
   <ItemGroup>

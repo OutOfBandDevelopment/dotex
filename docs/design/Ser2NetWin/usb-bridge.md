@@ -35,7 +35,7 @@ All integers big-endian. One frame: `u32 length` (bytes after this field) | `u8 
 
 | Op | Direction | Payload | Reply |
 |----|-----------|---------|-------|
-| `Hello` 0x01 | client | `u8 version`, `u8 kind` (1 USBTMC, 2 HID) | `Hello` with the server's version and a device description string |
+| `Hello` 0x01 | client | `u8 version`, `u8 kind` (1 USBTMC, 2 HID) | `Hello` with `u8 version`, `u8 kind` and a UTF-8 device description |
 | `Open` 0x02 | client | none | `Ok`, or `Error` |
 | `Close` 0x03 | client | none | `Ok` |
 | `WriteBulkOut` 0x10 | client | transfer bytes | `Ok`, or `Error` (timeout) |
@@ -47,14 +47,14 @@ All integers big-endian. One frame: `u32 length` (bytes after this field) | `u8 
 | `HidReport` 0x21 | server, unsolicited | input report bytes | none (pumped from the device stream) |
 | `Ok` 0x80, `Data` 0x81, `Error` 0x82 | server | `Error`: `u8 code` (1 timeout, 2 device gone, 3 busy, 4 bad request), text | |
 
-A reply carries the `id` of its request. A request is answered before the next one is read (one in flight, like the USB device itself); `HidReport` frames may interleave. A frame over 1 MiB is a protocol error and closes the connection. Property reads (`MaxTransferSize`, `MaxPacketSize`) are returned in the `Hello` reply, so the client never asks per call.
+A reply carries the `id` of its request. A request is answered before the next one is read (one in flight, like the USB device itself); `HidReport` frames may interleave. A frame over 16 MiB is a protocol error and closes the connection. Property reads (`MaxTransferSize`, `MaxPacketSize`) are returned in the USBTMC `Open` reply (`u32` each), so the client never asks per call.
 
 ## Bridge configuration
 
-`BridgeOptions` gains `Transport` (`Serial` default, `UsbTmc`, `Hid`). A USB bridge reuses `UsbVendorId`, `UsbProductId` and `UsbSerialNumber` for selection (and `TcpPort`, `BindAddress`, `Name`, `ReplaceExistingClient`, mDNS); the serial fields are ignored. The device is resolved on each client `Open`, so a replug reconnects without a restart, as for serial. Two matches with no serial number: refuse and log both, as for serial. The CLI `ports` command lists USBTMC and HID devices with their ids beside the COM ports.
+A USB bridge is a `UsbBridgeOptions` entry in the `UsbBridges` array of the same config file (`Kind` `UsbTmc` or `Hid`), separate from `Bridges`, so serial config is untouched. It uses `UsbVendorId`, `UsbProductId` and `UsbSerialNumber` for selection (and `TcpPort`, `BindAddress`, `Name`, `ReplaceExistingClient`, mDNS); the serial fields are ignored. The device is resolved on each client `Open`, so a replug reconnects without a restart, as for serial. Two matches with no serial number: refuse and log both, as for serial. The CLI `ports` command lists USBTMC and HID devices with their ids beside the COM ports.
 
 ```json
-{ "Transport": "UsbTmc", "UsbVendorId": "1AB1", "UsbProductId": "09C4", "TcpPort": 4100 }
+"UsbBridges": [ { "Kind": "UsbTmc", "UsbVendorId": "1AB1", "UsbProductId": "09C4", "TcpPort": 4100 } ]
 ```
 
 ## Client
@@ -75,7 +75,7 @@ Layout confirmed by the owner on 2026-11-24: a new Framework project (option A).
 |---------|---------|--------|-----------|------|------------|
 | `OoBDev.System.IO.Usb.Bridge` (new) | none | `src/Framework` | `OoBDev.System.IO.Usb.Bridge` | NuGet package, used by Ser2NetWin | `OoBDev.System.IO.UsbTmc`, `OoBDev.System.IO.UsbHids` |
 | `OoBDev.System.IO.Usb.Bridge.Tests` (new) | none | `src/Framework` | same | test project | the project above |
-| `OoBDev.System.IO.Ports.Bridge` | `src/Framework` | unchanged | unchanged | unchanged | none new; `BridgeOptions.Transport` is the only addition |
+| `OoBDev.System.IO.Ports.Bridge` | `src/Framework` | unchanged | unchanged | unchanged | none (USB bridges have their own options and config array) |
 | `OoBDev.Ser2NetWin.Cli` | `src/Applications/Ser2NetWin` | unchanged | unchanged | unchanged | adds the new project |
 | `OoBDev.DevTerm.Core` | `src/Applications/DevTerm` | unchanged | unchanged | unchanged | adds the new project (remote device clients) |
 

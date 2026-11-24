@@ -83,6 +83,16 @@ switch (options.Command)
             Console.WriteLine(port);
         }
 
+        foreach (var d in new OoBDev.System.IO.UsbTmc.SystemUsbTmcDeviceDiscovery().GetDevices())
+        {
+            Console.WriteLine($"USBTMC {d.VendorId:X4}:{d.ProductId:X4} {d.Manufacturer} {d.Product} {d.SerialNumber}");
+        }
+
+        foreach (var d in new OoBDev.System.IO.UsbHids.SystemUsbHidDiscovery().GetDevices())
+        {
+            Console.WriteLine($"HID    {d.VendorId:X4}:{d.ProductId:X4} {d.ProductName} {d.SerialNumber}");
+        }
+
         return 0;
 
     case "install":

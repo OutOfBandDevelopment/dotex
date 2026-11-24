@@ -1,6 +1,10 @@
 using OoBDev.System.IO.Ports.Bridge;
+using OoBDev.System.IO.Usb.Bridge;
+using OoBDev.System.IO.UsbHids;
+using OoBDev.System.IO.UsbTmc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace OoBDev.Ser2NetWin.Cli;
 
@@ -26,6 +30,18 @@ public static class HostRunner
         }
 
         builder.Services.AddHostedService<BridgeHostedService>();
+
+        var usbBridges = UsbBridgeConfig.Load(configPath);
+        if (usbBridges.Count > 0)
+        {
+            builder.Services.AddSingleton<IUsbTmcDeviceFactory, SystemUsbTmcDeviceFactory>();
+            builder.Services.AddSingleton<IUsbHidDeviceFactory, SystemUsbHidDeviceFactory>();
+            builder.Services.AddHostedService(sp => new UsbBridgeHostedService(
+                usbBridges,
+                sp.GetRequiredService<IUsbTmcDeviceFactory>(),
+                sp.GetRequiredService<IUsbHidDeviceFactory>(),
+                sp.GetRequiredService<ILoggerFactory>()));
+        }
 
         using var host = builder.Build();
         await host.RunAsync().ConfigureAwait(false);
