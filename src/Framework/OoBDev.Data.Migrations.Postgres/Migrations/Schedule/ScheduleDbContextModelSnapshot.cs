@@ -22,6 +22,20 @@ namespace OoBDev.Data.Migrations.Postgres.Migrations.Schedule
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("OoBDev.ComplexEvents.EntityFrameworkCore.LastRunRow", b =>
+                {
+                    b.Property<string>("Key")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<long>("LastRunTicks")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Key");
+
+                    b.ToTable("ComplexEventLastRun", (string)null);
+                });
+
             modelBuilder.Entity("OoBDev.ComplexEvents.EntityFrameworkCore.ScheduleRow", b =>
                 {
                     b.Property<Guid>("Id")

@@ -17,6 +17,20 @@ namespace OoBDev.Data.Migrations.Sqlite.Migrations.Schedule
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.14");
 
+            modelBuilder.Entity("OoBDev.ComplexEvents.EntityFrameworkCore.LastRunRow", b =>
+                {
+                    b.Property<string>("Key")
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("LastRunTicks")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Key");
+
+                    b.ToTable("ComplexEventLastRun", (string)null);
+                });
+
             modelBuilder.Entity("OoBDev.ComplexEvents.EntityFrameworkCore.ScheduleRow", b =>
                 {
                     b.Property<Guid>("Id")

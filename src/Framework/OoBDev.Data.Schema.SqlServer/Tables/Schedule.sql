@@ -1,3 +1,10 @@
+CREATE TABLE [ComplexEventLastRun] (
+    [Key] nvarchar(200) NOT NULL,
+    [LastRunTicks] bigint NOT NULL,
+    CONSTRAINT [PK_ComplexEventLastRun] PRIMARY KEY ([Key])
+);
+GO
+
 CREATE TABLE [ComplexEventSchedule] (
     [Id] uniqueidentifier NOT NULL,
     [Key] nvarchar(200) NOT NULL,
