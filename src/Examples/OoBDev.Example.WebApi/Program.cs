@@ -87,6 +87,10 @@ public static class Program
         builder.Services.AddTransient<OoBDev.WebApi.Services.ReadOnlyQueryRunner>();
         builder.Services.AddTransient<OoBDev.WebApi.Services.QueueChannelCatalog>();
         OoBDev.DataLoader.ServiceCollectionExtensions.TryAddDataLoader(builder.Services);
+        // the example screen only reads and previews rows, so the loader gets an in-memory sink
+        builder.Services.TryAddSingleton<OoBDev.DataLoader.IRowSink>(new OoBDev.DataLoader.InMemoryRowSink("id"));
+        // the document store writes to the same container as the document controller
+        builder.Services.TryAddTransient<OoBDev.Documents.IBlobContainer>(sp => sp.GetRequiredService<OoBDev.Documents.IBlobContainer<OoBDev.WebApi.Controllers.DocumentController.Documents>>());
         OoBDev.Census.Geocoding.ServiceCollectionExtensions.TryAddCensusGeocoding(builder.Services);
         builder.Services.AddSingleton<OoBDev.WebApi.Services.ScheduleDemo>();
         if (!disableHosting)
