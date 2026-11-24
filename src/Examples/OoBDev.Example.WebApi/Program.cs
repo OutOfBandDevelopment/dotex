@@ -2,6 +2,7 @@ using Microsoft.Extensions.Configuration;
 using OoBDev.AspNetCore.JwtAuthentication.OpenApi;
 using OoBDev.AspNetCore.EntityFrameworkCore;
 using OoBDev.AspNetCore.Mvc;
+using OoBDev.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 using OoBDev.Common;
 using OoBDev.Common.Extensions;
@@ -116,7 +117,7 @@ public static class Program
 
         services.TryAddRoleRightMapping(builder.Configuration);
         ConfigureRightAudit(builder);
-        builder.Services.AddControllers();
+        builder.Services.TryAddODataQueryServices(builder.Configuration, "OoBDev:OData");
 
         // CGI programs (see cgi-src/ and README.Example.WebApi.md); their {program}.openapi.json files appear in the "all" OpenAPI document
         builder.Configuration["OoBDev:Cgi:ScriptRoot"] = Path.Combine(builder.Environment.ContentRootPath, builder.Configuration["OoBDev:Cgi:ScriptRoot"] ?? "cgi-bin");
@@ -183,6 +184,8 @@ public static class Program
             {
             });
 
+        app.UseHttpQueryVerb();
+        app.UseODataQueryBody();
         app.UseAuthentication();
         app.UseAuthorization();
         OoBDev.AspNetCore.Cgi.ServiceCollectionExtensions.UseCgi(app);

@@ -34,7 +34,7 @@ These have no row in [the plan](plan.md) or `screens.md`; whether each deserves 
 
 | Area | Projects | Possible screen |
 | --- | --- | --- |
-| Query over HTTP | `OoBDev.AspNetCore.OData` (`[OoBDevEnableQuery]`, `QUERY` verb) | Query builder against an `IQueryable` endpoint; needs one in the example API |
+| Query over HTTP | `OoBDev.AspNetCore.OData` (`[OoBDevEnableQuery]`, `QUERY` verb) | Query builder against an `IQueryable` endpoint; `GET api/SampleCatalog` built 2026-11-23 (right `catalog.read`); the query-builder screen is still open |
 | Complex events | `OoBDev.ComplexEvents` (schedule store and runner built; the screen is `/messaging/schedule`, built 2026-11-20) | A schedule of due items with a hosted runner; the rule viewer stays open |
 | Spatial and geocoding | `OoBDev.Census.Geocoding`, `OoBDev.SpatialServices` (`GeoMath`) | Address to coordinates built 2026-11-20 as `/data/geocode` (`POST api/Geocode`, right `geocode.use`); distance and bearing built 2026-11-23 as `/data/distance` (`POST api/Distance`, same right) |
 | Data loading | `OoBDev.DataLoader` (built; `/data/load`, 2026-11-23) | Load a CSV or JSON text into a throwaway in-memory table and read the report; the mapping preview waits for `docs/design/MasterData` |

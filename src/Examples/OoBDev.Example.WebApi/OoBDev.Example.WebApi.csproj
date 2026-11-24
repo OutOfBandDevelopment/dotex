@@ -37,6 +37,7 @@
     <ProjectReference Include="..\..\ExternalServices\Onnx\OoBDev.Onnx.ImageEmbeddings.Skia\OoBDev.Onnx.ImageEmbeddings.Skia.csproj" />
     <ProjectReference Include="..\..\ExternalServices\SBert\OoBDev.SBert.AllMpnetBaseV2\OoBDev.SBert.AllMpnetBaseV2.csproj" />
     <ProjectReference Include="..\..\ExternalServices\SBert\OoBDev.SBert.NomicEmbedTextV1_5\OoBDev.SBert.NomicEmbedTextV1_5.csproj" />
+    <ProjectReference Include="..\..\Extensions\OoBDev.AspNetCore.OData\OoBDev.AspNetCore.OData.csproj" />
   </ItemGroup>
 
 </Project>
