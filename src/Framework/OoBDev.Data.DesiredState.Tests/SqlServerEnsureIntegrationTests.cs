@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -44,6 +45,51 @@ public class SqlServerEnsureIntegrationTests
             await ExecuteAsync(master, $"IF DB_ID('{database}') IS NOT NULL BEGIN ALTER DATABASE [{database}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{database}]; END");
         }
     }
+
+    [TestCategory(TestCategories.Integration)]
+    [IntegrationTestMethod("oobd-test-sqlserver")]
+    public async Task Sqldef_MssqldefOnSqlServer_PlansACreateAndThenNothing()
+    {
+        // Stage
+        if (!OnPath("mssqldef"))
+        {
+            Assert.Inconclusive("mssqldef (sqldef, MIT) is not on PATH.");
+        }
+
+        var master = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("SQLSERVER_CONNECTION_STRING"));
+        var builder = new SqlConnectionStringBuilder(master);
+        var source = builder.DataSource.Replace("tcp:", string.Empty, StringComparison.OrdinalIgnoreCase).Split(',');
+        var host = source[0];
+        var port = source.Length > 1 ? int.Parse(source[1], global::System.Globalization.CultureInfo.InvariantCulture) : 1433;
+        var database = $"Def_{Guid.NewGuid():N}";
+        TestContext.WriteLine($"database {database} on {host}:{port}");
+        await ExecuteAsync(master, $"CREATE DATABASE [{database}]");
+        try
+        {
+            var provider = SqldefProvider.ForSqlServer(new ProcessToolRunner());
+            var desired = new DesiredSchema([new DesiredScript("001.sql", "CREATE TABLE t (id int NOT NULL PRIMARY KEY, name nvarchar(50));")]);
+            var target = new DatabaseTarget(host, port, database, builder.UserID, builder.Password);
+
+            // Test
+            var plan = await provider.PlanAsync(desired, target, TestContext.CancellationToken);
+            await provider.ApplyAsync(desired, target, plan, new ApplyOptions(), TestContext.CancellationToken);
+            var again = await provider.PlanAsync(desired, target, TestContext.CancellationToken);
+            TestContext.WriteLine($"first={plan.Statements.Count} second={again.Statements.Count}");
+
+            // Assert
+            Assert.IsFalse(plan.IsEmpty);
+            Assert.IsTrue(again.IsEmpty);
+        }
+        finally
+        {
+            SqlConnection.ClearAllPools();
+            await ExecuteAsync(master, $"IF DB_ID('{database}') IS NOT NULL BEGIN ALTER DATABASE [{database}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{database}]; END");
+        }
+    }
+
+    private static bool OnPath(string tool) =>
+        (Environment.GetEnvironmentVariable("PATH") ?? string.Empty).Split(global::System.IO.Path.PathSeparator)
+            .Any(d => d.Length > 0 && (global::System.IO.File.Exists(global::System.IO.Path.Combine(d, tool)) || global::System.IO.File.Exists(global::System.IO.Path.Combine(d, tool + ".exe"))));
 
     private async Task ExecuteAsync(string connectionString, string sql)
     {
