@@ -19,6 +19,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Data.Sqlite" />
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="MSTest.TestAdapter" />
@@ -28,6 +30,7 @@
   <ItemGroup>
     <ProjectReference Include="..\OoBDev.Data.DesiredState\OoBDev.Data.DesiredState.csproj" />
     <ProjectReference Include="..\OoBDev.System\OoBDev.System.csproj" />
+    <ProjectReference Include="..\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
   </ItemGroup>
 
 </Project>
