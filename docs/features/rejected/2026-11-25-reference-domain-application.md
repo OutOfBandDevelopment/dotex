@@ -40,9 +40,9 @@ A financial domain brings rounding, idempotent posting, audit and replay. It is 
 ## Open questions
 
 - Which domain is best: a loan ledger, or a smaller one such as ordering, inventory or booking (a first application needs fewer rules)?
-- Where does it live, and is it an application or an example (rule `layering-and-migration-plans`)?
+- ~~Where does it live?~~ Answered (owner, 2026-11-25): domain-specific examples belong in child repositories that consume dotex as NuGet packages, not in this solution; the `src/Examples` project stays for single-feature uses.
 - Does the AccountingEngine rules list stay the only source, or are real servicing documents wanted?
 
 ## Triage notes
 
-2026-11-25: declined for now (owner): large build, no consumer, and the backlog is long. The idea stays: a full reference application with a high bar, much like Nerd Dinner, and possibly more than one. Reopen by moving this file back to `request/` with status `triaged`. Related: [harvest candidates](../../harvest-candidates.md) (AccountingEngine stays a read-only reference), [CQRS and event sourcing design](../../design/CqrsEventSourcing/README.md).
+2026-11-25: placement decided (owner): a child repository per reference application, consuming the dotex packages, which also tests that the packages are usable from outside the solution. Declined for now (owner): large build, no consumer, and the backlog is long. The idea stays: a full reference application with a high bar, much like Nerd Dinner, and possibly more than one. Reopen by moving this file back to `request/` with status `triaged`. Related: [harvest candidates](../../harvest-candidates.md) (AccountingEngine stays a read-only reference), [CQRS and event sourcing design](../../design/CqrsEventSourcing/README.md).
