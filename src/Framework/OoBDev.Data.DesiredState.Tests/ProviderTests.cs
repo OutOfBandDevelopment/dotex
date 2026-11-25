@@ -172,7 +172,7 @@ public sealed class ProviderTests
         Assert.IsTrue(again.IsEmpty);
     }
 
-    private static bool IsOnPath(string tool) =>
+    internal static bool IsOnPath(string tool) =>
         (Environment.GetEnvironmentVariable("PATH") ?? string.Empty).Split(Path.PathSeparator)
             .Any(d => d.Length > 0 && (File.Exists(Path.Combine(d, tool)) || File.Exists(Path.Combine(d, tool + ".exe"))));
 

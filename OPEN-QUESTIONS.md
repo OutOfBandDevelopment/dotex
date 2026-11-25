@@ -37,3 +37,16 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 **Default:** A is planned but nothing is removed until you answer; the PostgreSQL and SQLite scripts and their tests (which remove nothing) are built meanwhile.
 
 **Your answer:**
+
+
+### Q38 — 2026-11-24 — Where does the EF Core hook live?
+
+**Question:** `EfDesiredStateDeployer` (replaces `Database.MigrateAsync()` with plan, gates and apply) needs `Microsoft.EntityFrameworkCore.Relational`. I put it in `OoBDev.Data.DesiredState`, which now references EF Core Relational. Keep it there, or split a project?
+
+**Options:**
+- A (recommended): keep in place. One fewer project; EF Relational is already a Framework dependency (Communications.EntityFrameworkCore). Cost: callers without EF still pull the package.
+- B: new `OoBDev.Data.DesiredState.EntityFrameworkCore`. Clean dependency edge; needs a confirmed migration plan (layering rule) and a project more.
+
+**Default:** A.
+
+**Your answer:**

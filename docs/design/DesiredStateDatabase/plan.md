@@ -2,7 +2,7 @@
 
 [← Overview](README.md)
 
-**Status:** proposed 2026-11-24; phase A built and tested 2026-11-24, phases B to G not built (see [Starting point](#starting-point)). Owner decisions it follows: final states instead of migrations (2026-11-24, [owner decisions](../../../.claude/rules/owner-decisions.md)), wrap sqldef (Q34 A), Oracle and Atlas rejected (2026-11-24). Phase E removes projects, so it waits for Q37; phase G creates a project, so it waits for a confirmed migration plan (phase F adds no project: the canonical model is internal only, owner, 2026-11-24) ([layering rule](../../../.claude/rules/layering-and-migration-plans.md)).
+**Status:** proposed 2026-11-24; phases A and B built and tested 2026-11-24, phases C to G not built (see [Starting point](#starting-point)). Owner decisions it follows: final states instead of migrations (2026-11-24, [owner decisions](../../../.claude/rules/owner-decisions.md)), wrap sqldef (Q34 A), Oracle and Atlas rejected (2026-11-24). Phase E removes projects, so it waits for Q37; phase G creates a project, so it waits for a confirmed migration plan (phase F adds no project: the canonical model is internal only, owner, 2026-11-24) ([layering rule](../../../.claude/rules/layering-and-migration-plans.md)).
 
 ## Contents
 
@@ -38,7 +38,8 @@ An EF Core `DbContext` on PostgreSQL or SQLite reaches its final schema through 
 | psqldef on Postgres (Integration) and sqlite3def (spike replay, 8 `DevLocal` tests) | Passed |
 | SQL Server final-state scripts (`OoBDev.Data.Schema.SqlServer`, `GenerateCreateScript()`, script-equals-model test) | Built |
 | PostgreSQL and SQLite final-state script for Suppressions (`OoBDev.Data.Migrations.Tests/Schema/{postgres,sqlite}`, interim location until the schema project is renamed) | Built 2026-11-24 (phase A) |
-| Host hook, other stores, package, refactor log | Not built |
+| Host hook (`EfDesiredStateDeployer`, phase B) | Built 2026-11-24 |
+| Other stores, package, refactor log | Not built |
 | Whether sqldef parses EF Core's generated PostgreSQL and SQLite scripts | **Yes** (phase A, 2026-11-24): empty database to final state is 3 statements, the second plan 0, on Postgres 17 (container) and SQLite |
 
 ## Phases
@@ -49,7 +50,7 @@ An EF Core `DbContext` on PostgreSQL or SQLite reaches its final schema through 
 | Phase | Content | Done when | Needs |
 | --- | --- | --- | --- |
 | A | **EF bridge slice (built 2026-11-24)** for one small store (Suppressions): design-time factory per provider, `GenerateCreateScript()` for PostgreSQL and SQLite, a Unit test that the committed script equals the model (`REGENERATE_SQL_SCHEMA=1` regenerates), then apply through sqldef and plan again | Second plan has 0 statements on Postgres (Integration) and SQLite (Simulate); a go or no-go on sqldef parsing EF output is recorded | none |
-| B | **Host hook** `EnsureDesiredStateAsync(DbContext)` replacing `MigrateAsync()`: generate, plan, gate, apply; seed data (`HasData`) moved to `*.once.sql` | Example host and the `Use*Migrations` call sites use it; tests cover the gates | A go |
+| B | **Host hook (built 2026-11-24, `EfDesiredStateDeployer`; no production call site used `MigrateAsync`, tests move in phase E)** `EnsureDesiredStateAsync(DbContext)` replacing `MigrateAsync()`: generate, plan, gate, apply; seed data (`HasData`) moved to `*.once.sql` | Example host and the `Use*Migrations` call sites use it; tests cover the gates | A go |
 | C | **Remaining stores** (audit, right, schedule, then the event store providers) generated and tested like phase A | Every store has script-equals-model and empty-to-final tests | B |
 | D | **Package and refactor log:** zip with `manifest.json`, ordered `schema/*.sql`, `predeploy/` and `postdeploy/` scripts, `refactorlog.json`, optional publish profile; unapplied refactor entries run first (for example `RENAME COLUMN`), are recorded in a `__refactorlog` table, then sqldef plans; deployment history table with the package hash | Rename scenario S4 passes without data loss; a repeat deploy applies nothing | C |
 | E | **Remove** `OoBDev.Data.Migrations.Postgres`, `.Sqlite`, the event store `Migrations/` folders; rename the tests project `OoBDev.Data.Schema.Tests`; update readmes, mark the older plan superseded | Build and Unit tests green without them | Q37 answered, C |

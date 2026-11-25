@@ -46,12 +46,12 @@ public sealed class SqldefProvider(string engine, string executable, IToolRunner
             throw new UnsafePlanException(refused);
         }
 
-        if (plan.IsEmpty)
+        if (plan.IsEmpty && !(options.AllowDataLoss && plan.Skipped.Count > 0))
         {
             return;
         }
 
-        // sqldef keeps skipping drops unless the caller permitted them.
+        // sqldef skips drops in its plan, so a permitted drop is applied even when the plan has no statements.
         string[] extra = options.AllowDataLoss ? ["--enable-drop"] : [];
         await RunAsync(desired, target, extra, cancellationToken).ConfigureAwait(false);
     }

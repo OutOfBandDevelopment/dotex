@@ -15,6 +15,7 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<DesiredStateProviderFactory>();
         services.TryAddSingleton<IAppliedScriptStore, InMemoryAppliedScriptStore>();
         services.TryAddSingleton<EnsureScriptRunner>();
+        services.TryAddSingleton<EfDesiredStateDeployer>();
         return services;
     }
 

@@ -37,13 +37,17 @@ await provider.ApplyAsync(desired, target, plan, new ApplyOptions());      // re
 
 The command line is [`desired-state`](../../Tools/OoBDev.DesiredState.Cli/README.DesiredState.Cli.md).
 
+## EF Core contexts
+
+`EfDesiredStateDeployer.EnsureAsync(context, options, ensureScripts)` replaces `Database.MigrateAsync()` for PostgreSQL (Npgsql) and SQLite contexts: the create script of the model (`GenerateCreateScript()`) is the desired state, the provider plans the difference, the gates apply, then the ensure scripts run. A model with `HasData` seed rows is refused (move the rows to a `*.once.sql` script); an in-memory SQLite database is refused (the tool is another process); SQL Server keeps its dacpac route. `AllowDataLoss` applies drops that sqldef skipped in its plan.
+
 ## Ensure scripts
 
 `EnsureScriptRunner` runs ensure scripts (extensions, queues, event streams) in file-name order through an `IScriptExecutor`. Scripts must be idempotent and run every time; a script named `*.once.sql` runs only until its name and SHA-512 content hash are recorded in the `IAppliedScriptStore` (in-memory by default; a database-table store is a consumer's adapter). The result is an `EnsureReport` of ran and skipped scripts.
 
 ## Not built yet
 
-Nothing is open. Oracle is rejected (owner, 2026-11-24), so there is no Oracle provider, executor or driver.
+Package zip, refactor log and history table (build plan phase D). Oracle is rejected (owner, 2026-11-24), so there is no Oracle provider, executor or driver.
 
 ## Tests
 
