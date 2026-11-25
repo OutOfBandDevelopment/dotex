@@ -15,6 +15,8 @@ namespace OoBDev.Search.Tests;
 [TestClass]
 public class HybridSearchProviderTests
 {
+    public TestContext TestContext { get; set; } = null!;
+
     private sealed class FakeProvider(string[] filters, params SearchItem[] items) : ISearchProvider
     {
         public int Calls { get; private set; }
@@ -24,7 +26,7 @@ public class HybridSearchProviderTests
         public Task<SearchResult> SearchAsync(SearchRequest request, CancellationToken cancellationToken = default)
         {
             Calls++;
-            return Task.FromResult(new SearchResult(items));
+            return Task.FromResult(new SearchResult(items.Take(request.PageSize).ToArray()));
         }
     }
 
@@ -40,7 +42,7 @@ public class HybridSearchProviderTests
         var result = await hybrid.SearchAsync(SearchTextParser.Parse("ext:pdf top:2"));
 
         Assert.AreEqual(2, result.Items.Count);
-        Assert.IsNull(result.NextCursor);
+        Assert.IsNotNull(result.NextCursor);
         Assert.AreEqual(1, keyword.Calls);
         Assert.AreEqual(1, vector.Calls);
         Assert.IsTrue(result.Items.All(i => i.Explanation.Fusion == FusionNames.MaxNormalised));
@@ -70,11 +72,65 @@ public class HybridSearchProviderTests
     }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
-    public async Task SearchAsync_Cursor_IsNotSupported()
+    public async Task SearchAsync_FollowingCursor_PagesThroughFusedResultsWithoutRepeats()
+    {
+        // Stage
+        var keyword = new FakeProvider([], Item("a", 10), Item("b", 8), Item("c", 6), Item("d", 4), Item("e", 2));
+        var hybrid = new HybridSearchProvider(new Dictionary<string, ISearchProvider> { ["keyword"] = keyword }, new MaxNormalisedFusion());
+        var ids = new List<string>();
+
+        // Test
+        var request = new SearchRequest { PageSize = 2 };
+        var pages = 0;
+        while (true)
+        {
+            var page = await hybrid.SearchAsync(request);
+            ids.AddRange(page.Items.Select(i => i.ItemId));
+            pages++;
+            TestContext.WriteLine($"page {pages}: {string.Join(",", page.Items.Select(i => i.ItemId))} next={page.NextCursor}");
+            if (page.NextCursor is null)
+                break;
+            request = request with { Cursor = page.NextCursor };
+        }
+
+        // Assert
+        CollectionAssert.AreEqual(new[] { "a", "b", "c", "d", "e" }, ids);
+        Assert.AreEqual(3, pages);
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public async Task SearchAsync_LastPageExactlyFull_HasNoCursor()
+    {
+        var hybrid = new HybridSearchProvider(new Dictionary<string, ISearchProvider> { ["a"] = new FakeProvider([], Item("a", 3), Item("b", 2)) }, new MaxNormalisedFusion());
+
+        var result = await hybrid.SearchAsync(new SearchRequest { PageSize = 2 });
+
+        Assert.AreEqual(2, result.Items.Count);
+        Assert.IsNull(result.NextCursor);
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public async Task SearchAsync_PastMaxDepth_StopsPaging()
+    {
+        var items = Enumerable.Range(0, 10).Select(i => Item($"i{i}", 10 - i)).ToArray();
+        var hybrid = new HybridSearchProvider(new Dictionary<string, ISearchProvider> { ["a"] = new FakeProvider([], items) }, new MaxNormalisedFusion(), maxDepth: 4);
+
+        var first = await hybrid.SearchAsync(new SearchRequest { PageSize = 3 });
+        var second = await hybrid.SearchAsync(new SearchRequest { PageSize = 3, Cursor = first.NextCursor });
+
+        Assert.AreEqual(3, first.Items.Count);
+        Assert.AreEqual(1, second.Items.Count);
+        Assert.IsNull(second.NextCursor);
+    }
+
+    [DataTestMethod, TestCategory(TestCategories.Unit)]
+    [DataRow("x")]
+    [DataRow("aGVsbG8=")]
+    public async Task SearchAsync_ForeignCursor_Throws(string cursor)
     {
         var hybrid = new HybridSearchProvider(new Dictionary<string, ISearchProvider> { ["a"] = new FakeProvider([]) }, new MaxNormalisedFusion());
 
-        await Assert.ThrowsExactlyAsync<NotSupportedException>(() => hybrid.SearchAsync(new SearchRequest { Cursor = "x" }));
+        await Assert.ThrowsExactlyAsync<ArgumentException>(() => hybrid.SearchAsync(new SearchRequest { Cursor = cursor }));
     }
 
     [TestMethod, TestCategory(TestCategories.Unit)]

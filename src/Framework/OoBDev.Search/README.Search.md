@@ -49,7 +49,7 @@ One request model (`SearchRequest`, in `OoBDev.Search.Abstractions`) is understo
 
 - `SearchTextParser.Parse(text)` builds a request from `ext:pdf -tag:draft size:>=10 name:~logo tag:"two words" like:item-1 near:beach sort:-date,name top:5 after:<cursor> plain words`. `-` negates, `>`, `>=`, `<`, `<=` and `~` (contains) prefix a value, quotes group words, and `like`, `near`, `sort`, `top` and `after` are reserved names.
 - `IScoreFusion` combines ranked lists by item id: `MaxNormalisedFusion` (each source divided by its largest score, the item keeps the largest) and `ReciprocalRankFusion` (`1/(k+rank)` summed, default `k` 60). The choice is `Search:Fusion:Strategy` (`max-normalised` or `reciprocal-rank`) and `Search:Fusion:K`, registered with `TryAddSearchFusion(configuration)`.
-- `HybridSearchProvider(sources, fusion)` runs the request against every source and fuses the results. It supports the filters every source supports, returns one page and rejects a cursor.
+- `HybridSearchProvider(sources, fusion)` runs the request against every source and fuses the results. It supports the filters every source supports, pages with a stateless cursor (the offset into the fused ranking; each page re-queries every source for the top `offset + page size + 1` hits), capped at `maxDepth` (default 200) fused hits.
 
 Not built yet: the keyword (OpenSearch) and vector providers, the SQL-kind provider over the metadata query engine and the filter-parity Integration set ([design](../../../docs/design/SearchMerge/README.md)).
 
