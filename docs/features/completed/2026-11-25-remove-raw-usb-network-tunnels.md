@@ -40,4 +40,4 @@ None. Owner answer to Q41, 2026-11-25: use the web host, and remove the raw tunn
 
 ## Triage notes
 
-2026-11-25: triaged. Order: remote DevTerm host with JWT exchange and a Tui and WPF remote client first, then this removal ([usb-bridge design](../../design/Ser2NetWin/usb-bridge.md) is marked superseded). Backlog: Devices.
+2026-11-25: triaged. Order: remote DevTerm host with JWT exchange and a Tui and WPF remote client first, then this removal (the usb-bridge design was deleted with the code). Backlog: Devices.
