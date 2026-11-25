@@ -45,9 +45,13 @@ The command line is [`desired-state`](../../Tools/OoBDev.DesiredState.Cli/README
 
 `EnsureScriptRunner` runs ensure scripts (extensions, queues, event streams) in file-name order through an `IScriptExecutor`. Scripts must be idempotent and run every time; a script named `*.once.sql` runs only until its name and SHA-512 content hash are recorded in the `IAppliedScriptStore` (in-memory by default; a database-table store is a consumer's adapter). The result is an `EnsureReport` of ran and skipped scripts.
 
+## Schema packages (build plan phase D)
+
+`SchemaPackage` is the dacpac equivalent: schema scripts, pre- and post-deploy scripts and a refactor log (`RefactorEntry`: id, table, SQL). `SchemaPackageFormat` reads and writes the zip (`manifest.json`, `schema/`, `predeploy/`, `postdeploy/`, `refactorlog.json`). `SchemaPackageDeployer.DeployAsync(package, engine, target, options)` runs the pre-deploy scripts, then each unapplied refactor entry (skipped and only recorded when the plan creates its table, so a fresh database has nothing to rename), re-plans, applies with the gates, runs the post-deploy scripts and records the package hash. Records are kept by the `IAppliedScriptStore`; `AdoAppliedScriptStore` keeps them in `__desired_state_history` (add `AdoAppliedScriptStore.SchemaScript` to the package schema when drops are permitted).
+
 ## Not built yet
 
-Package zip, refactor log and history table (build plan phase D). Oracle is rejected (owner, 2026-11-24), so there is no Oracle provider, executor or driver.
+Publish profile files and a CLI verb for packages. Oracle is rejected (owner, 2026-11-24), so there is no Oracle provider, executor or driver.
 
 ## Tests
 
