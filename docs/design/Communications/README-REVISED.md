@@ -1,7 +1,7 @@
 # Epic 2: Communications Platform (REVISED)
 
 **Priority:** HIGH
-**Status:** 📋 Design Phase (Architecture Revised)
+**Status:** Superseded by the [epic README](README.md); planned, not built (reconciled 2026-11-25)
 **Complexity:** MEDIUM (reduced from HIGH)
 **Impact:** ~800 LOC (down from ~2,500 LOC)
 

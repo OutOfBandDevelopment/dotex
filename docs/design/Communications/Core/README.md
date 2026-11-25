@@ -2,7 +2,7 @@
 
 **Epic:** Communications Platform
 **Priority:** CRITICAL
-**Status:** 📋 Design Phase
+**Status:** Planned (reconciled with `src` 2026-11-25): the central processor, message composers, target preferences, deferral manager and data enhancement described here are not built; the built part is the channel layer in the [epic README](../README.md) (`OoBDev.Communications*`).
 **LOC Impact:** ~1,145 (replaces 16 LOC stub)
 
 ---
