@@ -26,4 +26,24 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<ISuppressionList, EfSuppressionList>();
         return services;
     }
+
+    /// <summary>
+    /// Adds the orchestrator tables with <see cref="EfDeferralStore"/> and <see cref="EfTargetPreferenceProvider"/> as the
+    /// <see cref="IDeferralStore"/> and <see cref="ITargetPreferenceProvider"/>. Call it before <c>TryAddCommunicationOrchestration</c>
+    /// (or <c>TryAddCommunicationsHosting</c>) so the in-memory defaults are not used.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configure">Picks the database provider and connection.</param>
+    /// <returns>The service collection.</returns>
+    public static IServiceCollection TryAddEntityFrameworkOrchestration(
+        this IServiceCollection services,
+        Action<IServiceProvider, DbContextOptionsBuilder> configure)
+    {
+        ArgumentNullException.ThrowIfNull(configure);
+        services.AddDbContextFactory<OrchestrationDbContext>(configure);
+        services.TryAddSingleton<IDeferralStore, EfDeferralStore>();
+        services.TryAddSingleton<EfTargetPreferenceProvider>();
+        services.TryAddSingleton<ITargetPreferenceProvider>(sp => sp.GetRequiredService<EfTargetPreferenceProvider>());
+        return services;
+    }
 }
