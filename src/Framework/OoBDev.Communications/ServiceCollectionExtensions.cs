@@ -78,6 +78,38 @@ public static class ServiceCollectionExtensions
     }
 
     /// <summary>
+    /// Registers every public, non-abstract <see cref="IDataEnhancer"/> in <paramref name="assemblies"/> that carries a
+    /// <see cref="CommunicationAttribute"/>. When the attribute names a message type the enhancer only runs for that type. Call it once per assembly.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="assemblies">The assemblies to scan.</param>
+    /// <returns>The modified <see cref="IServiceCollection"/>.</returns>
+    public static IServiceCollection TryAddCommunicationEnhancers(this IServiceCollection services, params global::System.Reflection.Assembly[] assemblies)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(assemblies);
+        var found = assemblies
+            .SelectMany(a => a.GetExportedTypes())
+            .Where(t => t is { IsClass: true, IsAbstract: false } && typeof(IDataEnhancer).IsAssignableFrom(t))
+            .Select(t => (Type: t, Attribute: (CommunicationAttribute?)Attribute.GetCustomAttribute(t, typeof(CommunicationAttribute), inherit: false)))
+            .Where(x => x.Attribute is not null);
+        foreach (var (type, attribute) in found)
+        {
+            if (attribute!.MessageType is { } messageType)
+            {
+                services.AddSingleton<IDataEnhancer>(sp
+                    => new MessageTypeEnhancer((IDataEnhancer)ActivatorUtilities.CreateInstance(sp, type), messageType));
+            }
+            else
+            {
+                services.TryAddEnumerable(ServiceDescriptor.Singleton(typeof(IDataEnhancer), type));
+            }
+        }
+
+        return services;
+    }
+
+    /// <summary>
     /// Wraps the registered <see cref="ISendService"/> so suppressed addresses are removed before sending. Call it
     /// after <see cref="TryAddSendReceive"/>; register a durable <see cref="ISuppressionList"/> first to replace the in-memory one.
     /// </summary>
