@@ -1,6 +1,6 @@
 # USB bridge: USBTMC and HID over a framed TCP stream
 
-**Status:** built (project `OoBDev.System.IO.Usb.Bridge`, server, clients and CLI config; DevTerm connection options still open, see the backlog). Owner decision: a framing bridge with our own protocol; USB/IP is not wanted ("the usbip from Microsoft is absolute trash"). This reverses the scope part of owner Q16 (non-serial USB out of scope), at the owner's request of 2026-11-24.
+**Status:** built, superseded (owner, 2026-11-25: the remote DevTerm web host replaces it; removal is [a request](../../features/request/2026-11-25-remove-raw-usb-network-tunnels.md)); built (project `OoBDev.System.IO.Usb.Bridge`, server, clients and CLI config; DevTerm connection options still open, see the backlog). Owner decision: a framing bridge with our own protocol; USB/IP is not wanted ("the usbip from Microsoft is absolute trash"). This reverses the scope part of owner Q16 (non-serial USB out of scope), at the owner's request of 2026-11-24.
 **Request:** [Ser2NetWin USB device passthrough](../../features/request/2026-11-10-ser2netwin-usb-device-passthrough.md)
 
 ## Contents
@@ -86,6 +86,6 @@ Unit tests: frame codec round trips, bad frames, server against fake `IUsbTmcDev
 ## Open points
 
 - **Decided 2026-11-24 (owner): one TCP port per device for now.** A shared port is later work: `Hello` carries a device selector, a `List` op returns the attached devices, one connection serves one device, and an optional allow-list limits what is exposed (`Transport: "UsbHub"`). Serial bridges stay one port per COM port.
-- **Open (Q41, 2026-11-25):** whether DevTerm reaches remote USB devices through this bridge or through the remote DevTerm web host with a client in the Tui and WPF apps; see `OPEN-QUESTIONS.md`.
+- **Decided 2026-11-25 (owner, Q41):** DevTerm reaches remote HID and USBTMC devices through the remote DevTerm web host with a client in the Tui and WPF apps; the shared key is exchanged for a JWT; this bridge is to be removed.
 - Whether a second client may watch HID reports read-only (default: no, one client).
 - A `u32` timeout field per `ReadBulkIn` (default: the server's device timeout).

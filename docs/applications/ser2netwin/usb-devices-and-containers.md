@@ -16,7 +16,7 @@ Docker Desktop on Windows cannot pass a USB device into a Linux container. For e
 | Device | Covered | Route |
 | --- | --- | --- |
 | USB serial adapters (FTDI, Prolific, CH340), the Aeotec Z-Stick, anything with a Windows COM port | Yes | `ser2net-win` |
-| Devices with a vendor USB protocol and no serial interface | Built: a framed USBTMC and HID bridge, not USB/IP (owner, 2026-11-24): add a `UsbBridges` entry (`Kind` `UsbTmc` or `Hid`, `UsbVendorId`, `UsbProductId`, `TcpPort`); one port per device; clients are `RemoteUsbTmcDevice` and `RemoteUsbHidDevice` ([design](../../design/Ser2NetWin/usb-bridge.md)) |
+| Devices with a vendor USB protocol and no serial interface | Built but to be removed (owner, 2026-11-25: unauthenticated; use the remote DevTerm web host): a framed USBTMC and HID bridge, not USB/IP (owner, 2026-11-24): add a `UsbBridges` entry (`Kind` `UsbTmc` or `Hid`, `UsbVendorId`, `UsbProductId`, `TcpPort`); one port per device; clients are `RemoteUsbTmcDevice` and `RemoteUsbHidDevice` ([design](../../design/Ser2NetWin/usb-bridge.md)) |
 
 ## Select the port by USB id
 
