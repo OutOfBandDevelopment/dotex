@@ -35,7 +35,7 @@ This report compares the three candidates (sqldef, pgschema, Atlas) on the point
 - **sqldef** is the safest default and covers three of our four engines with one family of binaries and one command shape. Its plan is plain SQL text; it never drops without `--enable-drop`. It does not report the hazard of a type change.
 - **pgschema** has the best plan format (JSON, a saved plan applied later) but only supports PostgreSQL, plans drops without a flag, and fails on scripts that are not already in dependency order.
 - **Atlas** is the most capable product, but the free binary tested in the bake-off refuses views and extensions without a vendor login and gates its data-loss diagnostics behind it. That breaks REQ-008, so it was removed. The community image now in the bake-off stack has not been re-run.
-- **No tool does Oracle** (Q35: hand-written repeatable scripts), and none reports the hazard of narrowing a type (S6), so the wrapper's `PlanAnalyzer` is needed whichever tool is wrapped.
+- **Oracle is out of scope** (rejected by the owner, 2026-11-24; no candidate supports it anyway), and none reports the hazard of narrowing a type (S6), so the wrapper's `PlanAnalyzer` is needed whichever tool is wrapped.
 
 ## Identity and scope
 

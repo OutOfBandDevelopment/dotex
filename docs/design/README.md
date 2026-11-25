@@ -16,7 +16,7 @@ One folder per feature, written to the [design-document standard](../patterns-di
 | [ContractParser](ContractParser/README.md) | ContractParser is a proposed Domain-Specific Language (DSL) and parser for describing service contracts using a text-based format with ANTLR4 grammar. |
 | [DataLoader](DataLoader/README.md) | Proposed: validated, prioritized loading of CSV and JSON files (Epic 5). |
 | [DataEnhancement](DataEnhancement/README.md) | The Data Enhancement Pipeline is a **generic, reusable framework** for enriching data through attribute-discovered providers. |
-| [DesiredStateDatabase](DesiredStateDatabase/README.md) | Derive migrations from plain `CREATE` scripts for SQL Server, Postgres, SQLite and Oracle, and manage the objects a schema diff cannot model (extensions, queues, event streams) with idempotent ensure scripts. |
+| [DesiredStateDatabase](DesiredStateDatabase/README.md) | Derive migrations from plain `CREATE` scripts for SQL Server, Postgres, and SQLite, and manage the objects a schema diff cannot model (extensions, queues, event streams) with idempotent ensure scripts. |
 | [DevTermParity](DevTermParity/README.md) | Owner requirement (2026-10-29): the OoBDev version of dev-term has 100% parity with dev-term, every protocol and every feature. |
 | [DeviceDecoding](DeviceDecoding/README.md) | Protocol decoders for hardware devices (DE-5000, Busylight, K8055, NMEA, Radex One, Zoom H4n, later SCPI and Z-Wave), migrated from dev-term as one package per device on the existing `OoBDev.System.IO` device model. |
 | [DocumentServices](DocumentServices/README.md) | Design documents for the document-processing services of the SharedFramework (Epic 6). |

@@ -26,14 +26,3 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 
 
-### Q36 — 2026-11-23 — Oracle driver for the desired-state executor
-
-**Question:** The Oracle `IScriptExecutor` (run the hand-written repeatable scripts, Q35 A) needs an Oracle ADO.NET driver, which is not in `Directory.Packages.props`. Which one, and may the test stack gain an Oracle container (`gvenzl/oracle-free`, about 2 GB image, slow start)?
-
-**Options:**
-- A (recommended): `Oracle.ManagedDataAccess.Core` (free, official, managed) in a new adapter project `OoBDev.Data.DesiredState.Oracle` under ExternalServices, plus an `oobd-test-oracle` container for Integration tests. Cost: a vendor package and a heavy container.
-- B: no Oracle executor; the scripts run through the owner's own tools and the provider only plans. Cost: Q35 A is only half served.
-
-**Default:** A is not started until you answer; the executors for Postgres, SQL Server and SQLite (drivers already present) are built meanwhile.
-
-**Your answer:**

@@ -7,7 +7,7 @@
 
 ## Need
 
-Derive migrations from plain `CREATE` scripts for Postgres, SQL Server, SQLite and Oracle with free, MIT-compatible tooling, and also manage what a schema diff cannot model:
+Derive migrations from plain `CREATE` scripts for Postgres, SQL Server and SQLite with free, MIT-compatible tooling, and also manage what a schema diff cannot model:
 extensions, queues and event streams. dotex has a dacpac builder and validator for SQL Server, but nothing for the other three databases. The owner expects past tools to have
 failed in ways not described to me.
 
@@ -15,7 +15,7 @@ failed in ways not described to me.
 
 Three layers (from the notes, not confirmed against current docs):
 
-1. Schema diff, delegated to existing tools (sqldef, DacFx, pg-schema-diff) behind one provider interface; Oracle needs its own adapter or hand-written scripts.
+1. Schema diff, delegated to existing tools (sqldef, DacFx, pg-schema-diff) behind one provider interface.
 2. Idempotent, ordered "ensure" scripts per provider for what the diff cannot see, for example `001_extensions.sql` and `020_queues.sql`.
 3. Optional feature manifest (`queue: orders`, `extension: pgmq`) that compiles to the layer 2 scripts.
 
@@ -37,8 +37,8 @@ First step in the notes: a short bake-off of sqldef, pgschema and Atlas on a rea
 
 ## Security and operations
 
-Runs DDL against databases, so it needs credentials with schema rights and a plan-then-apply step with hazard gates (data loss, locks). Oracle and SQL Server need licences or
-containers for testing. The cost is mostly test infrastructure: containers for Postgres 14 to 18, SQL Server, and Oracle (availability unknown).
+Runs DDL against databases, so it needs credentials with schema rights and a plan-then-apply step with hazard gates (data loss, locks). SQL Server needs a licence or
+containers for testing. The cost is mostly test infrastructure: containers for Postgres 14 to 18, and SQL Server.
 
 ## Priority
 
@@ -48,12 +48,12 @@ containers for testing. The cost is mostly test infrastructure: containers for P
 
 ## Open questions
 
-**Answered (checked 2026-11-23):** scope is schema objects first (triage defaults, [design](../../design/DesiredStateDatabase/README.md)); the design covers SQL Server, Postgres, SQLite and Oracle, with queues and event streams as idempotent ensure scripts; the stack is .NET; the sqldef evaluation was merged into the phase 0 bake-off. Owner answers (2026-11-23): Q34 A, wrap sqldef and add the drop and type-change gates; Q35 A, Oracle as hand-written repeatable scripts. Built: the providers and gates (`OoBDev.Data.DesiredState`); left in `BACKLOG.md`: ensure-script runner, manifest compiler, CLI, Oracle executor.
+**Answered (checked 2026-11-23):** scope is schema objects first (triage defaults, [design](../../design/DesiredStateDatabase/README.md)); the design covers SQL Server, Postgres and SQLite, with queues and event streams as idempotent ensure scripts; the stack is .NET; the sqldef evaluation was merged into the phase 0 bake-off. Owner answers (2026-11-23): Q34 A, wrap sqldef and add the drop and type-change gates; Oracle rejected (2026-11-24). Built: the providers and gates (`OoBDev.Data.DesiredState`); left in `BACKLOG.md`: ensure-script runner, manifest compiler and CLI (since built); Oracle is rejected.
 
 - Schema only, or also functions, triggers and views?
 - Wrap existing diff engines, or write a custom one?
 - Queues and streams: portable tables first, or native objects per database?
-- Oracle: custom catalog-diff adapter, or hand-written repeatable scripts?
+- Oracle: rejected by the owner on 2026-11-24 (no provider, executor, driver or container); the question is closed.
 - Is .NET the stack? The owner has not answered.
 - Do the sqldef evaluation and this effort merge? The notes leave it open.
 

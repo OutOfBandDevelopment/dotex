@@ -9,7 +9,7 @@ namespace OoBDev.Data.DesiredState;
 /// <summary>
 /// Compiles a <see cref="FeatureManifest"/> to idempotent ensure scripts (<c>001_extensions.sql</c>, <c>020_queues.sql</c>, <c>030_streams.sql</c>)
 /// for <see cref="SqldefProvider.Postgres"/>, <see cref="SqldefProvider.SqlServer"/> and <see cref="SqldefProvider.Sqlite"/>.
-/// Queues and streams are portable tables (<c>queue_{name}</c>, <c>stream_{name}</c>). Oracle ensure scripts are written by hand (owner Q35).
+/// Queues and streams are portable tables (<c>queue_{name}</c>, <c>stream_{name}</c>).
 /// </summary>
 public static partial class ManifestCompiler
 {

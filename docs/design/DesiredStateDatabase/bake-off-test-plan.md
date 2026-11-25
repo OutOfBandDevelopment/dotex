@@ -35,7 +35,7 @@ Phase 0 of the [architecture](architecture.md#phases): decide per engine whether
 | Atlas | PostgreSQL, SQL Server, SQLite, others | Licence and which features need a paid tier |
 | DacFx (reference) | SQL Server | Already used by `OoBDev.DacFx`; the baseline for SQL Server |
 
-Oracle has no candidate; it stays a custom or hand-written decision (Q5). Versions of every tool are recorded at run time, never "latest".
+Oracle has no candidate and is rejected (owner, 2026-11-24). Versions of every tool are recorded at run time, never "latest".
 
 ## Fixture schema
 

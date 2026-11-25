@@ -2,7 +2,7 @@
 
 Plans and applies the difference between a folder of `CREATE` scripts and a database. The scripts are the source of truth; a provider per engine computes what has to change and refuses unsafe steps without an explicit flag.
 
-Design: [desired-state database tooling](../../../docs/design/DesiredStateDatabase/README.md). Decisions (owner, 2026-11-23): Q34 A, wrap sqldef and add the gates ourselves; Q35 A, Oracle through hand-written repeatable scripts.
+Design: [desired-state database tooling](../../../docs/design/DesiredStateDatabase/README.md). Decisions (owner, 2026-11-23): Q34 A, wrap sqldef and add the gates ourselves; Oracle support rejected (owner, 2026-11-24: the engines are PostgreSQL, SQL Server and SQLite).
 
 ## Providers
 
@@ -11,7 +11,6 @@ Design: [desired-state database tooling](../../../docs/design/DesiredStateDataba
 | `postgres` | `SqldefProvider.ForPostgres` | `psqldef` (sqldef, MIT) |
 | `sqlserver` | `SqldefProvider.ForSqlServer` | `mssqldef` (sqldef, MIT); `OoBDev.DacFx` stays the dacpac route |
 | `sqlite` | `SqldefProvider.ForSqlite` | `sqlite3def` (sqldef, MIT) |
-| `oracle` | `ScriptFolderProvider` | ordered repeatable scripts run through an `IScriptExecutor` you supply (the Oracle driver adapter) |
 
 The binaries are not bundled: they must be on `PATH` (or pass the path to the `For*` method). `ProcessToolRunner` feeds the scripts on standard input and passes the password through the environment (`PGPASSWORD`, `MSSQL_PWD`), never on the command line.
 
@@ -29,7 +28,6 @@ sqldef skips drops by itself but does not report type changes (bake-off S5, S6).
 
 ```csharp
 services.AddDesiredStateDatabase();          // sqldef providers, keyed by engine, and the factory
-services.AddSingleton<IScriptExecutor, MyOracleExecutor>().AddOracleScripts();
 
 var provider = factory.Create("postgres");
 var desired = DesiredSchema.FromDirectory("db/schema");              // *.sql in file-name order
@@ -45,7 +43,7 @@ The command line is [`desired-state`](../../Tools/OoBDev.DesiredState.Cli/README
 
 ## Not built yet
 
-The feature manifest compiler and an Oracle `IScriptExecutor` are in `BACKLOG.md`.
+Nothing is open. Oracle is rejected (owner, 2026-11-24), so there is no Oracle provider, executor or driver.
 
 ## Tests
 
@@ -53,8 +51,8 @@ Unit tests use a fake tool runner. The Integration test runs the real `sqlite3de
 
 ## Feature manifest
 
-`FeatureManifest.Parse("""{ "extensions": ["pgcrypto"], "queues": ["orders"], "streams": ["order_events"] }""")` and `ManifestCompiler.Compile(manifest, "postgres")` give idempotent ensure scripts (`001_extensions.sql`, `020_queues.sql`, `030_streams.sql`) for `EnsureScriptRunner`. Queues and streams are portable tables (`queue_{name}`, `stream_{name}`); extensions exist for Postgres only; names are validated identifiers; Oracle scripts are hand-written.
+`FeatureManifest.Parse("""{ "extensions": ["pgcrypto"], "queues": ["orders"], "streams": ["order_events"] }""")` and `ManifestCompiler.Compile(manifest, "postgres")` give idempotent ensure scripts (`001_extensions.sql`, `020_queues.sql`, `030_streams.sql`) for `EnsureScriptRunner`. Queues and streams are portable tables (`queue_{name}`, `stream_{name}`); extensions exist for Postgres only; names are validated identifiers.
 
 ## Running ensure scripts
 
-`AdoScriptExecutor` is the `IScriptExecutor` for any ADO.NET provider: pass a factory that opens the connection for a `DatabaseTarget` (Npgsql, SqlClient, Microsoft.Data.Sqlite). It needs no driver package here. An Oracle driver waits on an owner decision (Q36).
+`AdoScriptExecutor` is the `IScriptExecutor` for any ADO.NET provider: pass a factory that opens the connection for a `DatabaseTarget` (Npgsql, SqlClient, Microsoft.Data.Sqlite). It needs no driver package here.

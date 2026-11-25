@@ -2,7 +2,7 @@
 
 **Status:** Draft · **Date:** 2026-10-29 · **Request:** [Desired-state database tooling](../../features/request/2026-10-28-desired-state-database-tooling.md) · **Related:** `OoBDev.DacFx`, `OoBDev.DacPacCompiler.Cli`, `OoBDev.ComplexEvents.DatabaseExtensions`, [design standard](../../patterns-discovery/06-design-document-standard.md)
 
-Derive migrations from plain `CREATE` scripts for SQL Server, Postgres, SQLite and Oracle, and manage the objects a schema diff cannot model (extensions, queues, event streams) with idempotent ensure scripts.
+Derive migrations from plain `CREATE` scripts for SQL Server, Postgres and SQLite, and manage the objects a schema diff cannot model (extensions, queues, event streams) with idempotent ensure scripts.
 
 ## Contents
 
@@ -25,7 +25,7 @@ Derive migrations from plain `CREATE` scripts for SQL Server, Postgres, SQLite a
 
 ## Decisions and status (2026-11-23)
 
-Owner answers: **Q34 A** buy with gaps (wrap sqldef for PostgreSQL, SQL Server and SQLite; the wrapper adds the drop gate and the type-change check), **Q35 A** Oracle through hand-written repeatable scripts run by the same apply step with the same gate. Built in `OoBDev.Data.DesiredState` ([readme](../../../src/Framework/OoBDev.Data.DesiredState/README.Data.DesiredState.md)): `IDesiredStateProvider`, `SqldefProvider`, `ScriptFolderProvider`, `PlanAnalyzer`, `ApplyOptions`. Not built: the ensure-script runner, the manifest compiler, the CLI.
+Owner answers: **Q34 A** buy with gaps (wrap sqldef for PostgreSQL, SQL Server and SQLite; the wrapper adds the drop gate and the type-change check), **Oracle rejected** (owner, 2026-11-24: no Oracle provider, executor, driver or container; this replaces Q35 A and withdraws Q36). Built in `OoBDev.Data.DesiredState` ([readme](../../../src/Framework/OoBDev.Data.DesiredState/README.Data.DesiredState.md)): `IDesiredStateProvider`, `SqldefProvider`, `PlanAnalyzer`, `ApplyOptions`. Also built: the ensure-script runner, the manifest compiler and the CLI.
 
 ## Summary
 

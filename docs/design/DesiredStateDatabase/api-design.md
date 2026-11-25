@@ -13,7 +13,7 @@ The sketch below became `IDesiredStateProvider.PlanAsync(DesiredSchema, Database
 ```csharp
 public interface IDesiredStateProvider
 {
-    string Engine { get; }                                   // "sqlserver", "postgres", "sqlite", "oracle"
+    string Engine { get; }                                   // "sqlserver", "postgres", "sqlite"
     Task<SchemaPlan> PlanAsync(DesiredState desired, string connectionString, CancellationToken ct);
     Task ApplyAsync(SchemaPlan plan, ApplyOptions options, CancellationToken ct);   // refuses hazards unless allowed
 }

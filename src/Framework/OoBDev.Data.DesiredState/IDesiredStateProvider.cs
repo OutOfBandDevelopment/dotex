@@ -6,7 +6,7 @@ namespace OoBDev.Data.DesiredState;
 /// <summary>Plans and applies the difference between a folder of CREATE scripts and a database for one engine.</summary>
 public interface IDesiredStateProvider
 {
-    /// <summary>The engine key: <c>postgres</c>, <c>sqlserver</c>, <c>sqlite</c> or <c>oracle</c>.</summary>
+    /// <summary>The engine key: <c>postgres</c>, <c>sqlserver</c> or <c>sqlite</c>.</summary>
     string Engine { get; }
 
     /// <summary>Computes the plan without changing the database.</summary>

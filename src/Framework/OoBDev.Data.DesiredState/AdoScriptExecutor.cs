@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace OoBDev.Data.DesiredState;
 
 /// <summary>
-/// Runs a script through any ADO.NET provider: the caller supplies the connection for a target (Npgsql, SqlClient, Microsoft.Data.Sqlite, Oracle, ...),
+/// Runs a script through any ADO.NET provider: the caller supplies the connection for a target (Npgsql, SqlClient, Microsoft.Data.Sqlite, ...),
 /// so this project needs no driver. The whole script is sent as one command; split on <c>GO</c> yourself for SQL Server batches.
 /// </summary>
 public sealed class AdoScriptExecutor(Func<DatabaseTarget, DbConnection> connectionFactory) : IScriptExecutor

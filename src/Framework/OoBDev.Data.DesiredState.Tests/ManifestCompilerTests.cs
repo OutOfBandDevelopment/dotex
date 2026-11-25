@@ -57,7 +57,7 @@ public class ManifestCompilerTests
     [TestCategory("Unit")]
     public void Compile_UnsupportedEngineOrExtensionsOffPostgres_Throws()
     {
-        Assert.ThrowsExactly<NotSupportedException>(() => ManifestCompiler.Compile(FeatureManifest.Parse(Json), "oracle"));
+        Assert.ThrowsExactly<NotSupportedException>(() => ManifestCompiler.Compile(FeatureManifest.Parse(Json), "mysql"));
         Assert.ThrowsExactly<NotSupportedException>(() => ManifestCompiler.Compile(FeatureManifest.Parse(Json), "sqlite"));
     }
 }

@@ -123,39 +123,16 @@ public sealed class ProviderTests
 
     [TestMethod]
     [TestCategory("Unit")]
-    public async Task OracleScripts_RunInOrderAndRefuseDropsWithoutTheFlag()
-    {
-        // Stage
-        var executor = new FakeExecutor();
-        var provider = new ScriptFolderProvider(ScriptFolderProvider.Oracle, executor);
-        var plan = await provider.PlanAsync(_desired, _target, TestContext.CancellationToken);
-
-        // Test
-        await provider.ApplyAsync(_desired, _target, plan, new ApplyOptions(), TestContext.CancellationToken);
-        var risky = new DesiredSchema([new DesiredScript("010.sql", "DROP TABLE old;")]);
-        var riskyPlan = await provider.PlanAsync(risky, _target, TestContext.CancellationToken);
-        await Assert.ThrowsExactlyAsync<UnsafePlanException>(() => provider.ApplyAsync(risky, _target, riskyPlan, new ApplyOptions(), TestContext.CancellationToken));
-
-        // Assert
-        CollectionAssert.AreEqual(new[] { "001.sql", "002.sql" }, executor.Names);
-    }
-
-    [TestMethod]
-    [TestCategory("Unit")]
-    public void Factory_ResolvesByEngineKey_AndOracleOnlyWhenRegistered()
+    public void Factory_ResolvesByEngineKey_AndRefusesUnknownEngines()
     {
         var services = new ServiceCollection().AddDesiredStateDatabase();
-        using var withoutOracle = services.BuildServiceProvider();
-        var factory = withoutOracle.GetRequiredService<DesiredStateProviderFactory>();
+        using var provider = services.BuildServiceProvider();
+        var factory = provider.GetRequiredService<DesiredStateProviderFactory>();
 
         Assert.AreEqual("postgres", factory.Create("Postgres").Engine);
         Assert.AreEqual("sqlserver", factory.Create("sqlserver").Engine);
         Assert.AreEqual("sqlite", factory.Create("sqlite").Engine);
         Assert.ThrowsExactly<NotSupportedException>(() => factory.Create("oracle"));
-
-        services.AddSingleton<IScriptExecutor>(new FakeExecutor()).AddOracleScripts();
-        using var withOracle = services.BuildServiceProvider();
-        Assert.AreEqual("oracle", withOracle.GetRequiredService<DesiredStateProviderFactory>().Create("oracle").Engine);
     }
 
     [TestMethod]
@@ -216,14 +193,4 @@ public sealed class ProviderTests
         }
     }
 
-    private sealed class FakeExecutor : IScriptExecutor
-    {
-        public List<string> Names { get; } = [];
-
-        public Task ExecuteAsync(DatabaseTarget target, string scriptName, string scriptText, CancellationToken cancellationToken = default)
-        {
-            Names.Add(scriptName);
-            return Task.CompletedTask;
-        }
-    }
 }

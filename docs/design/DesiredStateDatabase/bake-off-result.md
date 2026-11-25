@@ -69,7 +69,7 @@ Provisional, to be confirmed by the owner:
 - **PostgreSQL:** buy with gaps. Wrap sqldef for the safe default or pgschema for the JSON plan; either way layer 2 adds a drop gate and a narrowing/rewrite check on the plan.
 - **SQLite:** buy with gaps (sqldef); renames and type changes need a custom step.
 - **SQL Server:** DacFx stays the baseline; `mssqldef` passes S1 to S3 and S5 but emitted an invalid `ALTER COLUMN` with a default for S6, so it is not a replacement.
-- **Oracle:** unchanged (Q5).
+- **Oracle:** rejected (owner, 2026-11-24).
 
 ## Atlas on PostgreSQL
 

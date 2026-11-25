@@ -10,4 +10,4 @@ desired-state apply --engine sqlite   --scripts db/schema --database app.db
 - The password comes from the environment variable named by `--password-env` (default `DESIRED_STATE_PASSWORD`), never from the command line.
 - `apply` refuses drops (`--allow-data-loss true`) and column type changes (`--allow-type-change true`) unless you pass the flag; it runs nothing when it refuses.
 - Exit codes: 0 done or nothing to do, 1 refused or hazards in the plan, 2 error, 3 plan has pending safe changes.
-- Oracle needs an `IScriptExecutor` adapter and is not available from this tool.
+- Oracle is not supported (rejected by the owner, 2026-11-24).

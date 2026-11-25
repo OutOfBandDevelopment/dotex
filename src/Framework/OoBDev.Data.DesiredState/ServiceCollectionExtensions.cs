@@ -5,7 +5,7 @@ namespace OoBDev.Data.DesiredState;
 
 public static class ServiceCollectionExtensions
 {
-    /// <summary>Registers the tool runner, the sqldef providers for PostgreSQL, SQL Server and SQLite (keyed by engine), and the factory. Oracle needs <see cref="AddOracleScripts"/> with an executor.</summary>
+    /// <summary>Registers the tool runner, the sqldef providers for PostgreSQL, SQL Server and SQLite (keyed by engine), and the factory.</summary>
     public static IServiceCollection AddDesiredStateDatabase(this IServiceCollection services)
     {
         services.TryAddSingleton<IToolRunner, ProcessToolRunner>();
@@ -18,10 +18,4 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    /// <summary>Registers the Oracle repeatable-script provider over the registered <see cref="IScriptExecutor"/>.</summary>
-    public static IServiceCollection AddOracleScripts(this IServiceCollection services)
-    {
-        services.TryAddKeyedSingleton<IDesiredStateProvider>(ScriptFolderProvider.Oracle, (sp, _) => new ScriptFolderProvider(ScriptFolderProvider.Oracle, sp.GetRequiredService<IScriptExecutor>()));
-        return services;
-    }
 }

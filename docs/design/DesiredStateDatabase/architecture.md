@@ -30,7 +30,7 @@ skinparam shadowing false
 rectangle "Manifest (layer 3, optional)" as m
 rectangle "Ensure scripts (layer 2)\n001_extensions.sql, 020_queues.sql" as e
 rectangle "Schema diff (layer 1)\nIDesiredStateProvider" as d
-rectangle "sqldef / DacFx / pg-schema-diff\n(or custom: Oracle)" as t
+rectangle "sqldef / DacFx / pg-schema-diff\n(or custom)" as t
 database "Database" as db
 m --> e : compiles to
 e --> db : run in order
@@ -51,7 +51,7 @@ t --> db : plan / apply
 | 1 | Provider interface and gates (`PlanAnalyzer`, `ApplyOptions`); SQL Server through `mssqldef` (DacFx stays the dacpac route). Built 2026-11-23 | Phase 0 result |
 | 2 | Postgres and SQLite adapters wrapping sqldef (built 2026-11-23, Q34 A) | Phase 0 result |
 | 3 | Ensure-script runner (built 2026-11-23: `EnsureScriptRunner`, `*.once.sql` with recorded hashes) | none |
-| 4 | Manifest compiler (built 2026-11-23: `FeatureManifest`, `ManifestCompiler`; portable `queue_*` and `stream_*` tables, extensions on Postgres only); Oracle as repeatable scripts (provider built 2026-11-23, Q35 A; the Oracle executor is not) | none |
+| 4 | Manifest compiler (built 2026-11-23: `FeatureManifest`, `ManifestCompiler`; portable `queue_*` and `stream_*` tables, extensions on Postgres only); Oracle rejected (owner, 2026-11-24) | none |
 
 ## Rollback (proposed 2026-11-19)
 

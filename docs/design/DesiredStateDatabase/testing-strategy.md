@@ -6,7 +6,7 @@
 
 ## Approach
 
-Plan generation and hazard detection are Unit tests on fixture schemas (80% coverage of Framework code). Apply and ensure-script tests are Integration against the stack containers (SQL Server, Postgres where present, SQLite in process); Oracle needs a container whose availability is unknown and stays `DevLocal` until then.
+Plan generation and hazard detection are Unit tests on fixture schemas (80% coverage of Framework code). Apply and ensure-script tests are Integration against the stack containers (SQL Server, Postgres where present, SQLite in process); Oracle is rejected, so it has no tests or container.
 
 ### List of Tables
 
