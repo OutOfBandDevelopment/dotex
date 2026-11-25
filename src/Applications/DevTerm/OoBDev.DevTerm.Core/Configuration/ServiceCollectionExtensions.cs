@@ -37,6 +37,15 @@ public static class ServiceCollectionExtensions
                 services.TryAddLoopbackTransport();
                 services.Configure<LoopbackTransportOptions>(o => o.SampleIntervalMs = cliOptions.LoopbackSampleIntervalMs);
                 break;
+            case "remote":
+                services.Configure<OoBDev.DevTerm.Remote.RemoteDeviceOptions>(o =>
+                {
+                    o.BaseUrl = cliOptions.Host ?? string.Empty;
+                    o.Connection = cliOptions.RemoteConnection ?? string.Empty;
+                    o.Key = cliOptions.Password ?? string.Empty;
+                });
+                services.TryAddTransient<IDeviceAdapter, OoBDev.DevTerm.Remote.RemoteDeviceAdapter>();
+                break;
             case "service":
                 services.TryAddTransient<IDeviceAdapter>(_ => new ServiceHostBridge(
                     Enum.Parse<ServiceKind>(cliOptions.Service ?? string.Empty, true),

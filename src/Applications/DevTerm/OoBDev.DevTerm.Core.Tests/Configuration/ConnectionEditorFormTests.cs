@@ -122,7 +122,7 @@ public sealed class ConnectionEditorFormTests
     {
         var definition = FormDefinitionGenerator.Generate<CliOptions>();
 
-        Assert.AreSequenceEqual(["General", "Mode", "Presentation", "Serial", "Timing", "Loopback", "Service", "TCP", "MQTT", "USB Device", "BLE", "Session", "Stream Monitor"], [.. definition.Sections.Select(s => s.Label)]);
+        Assert.AreSequenceEqual(["General", "Mode", "Presentation", "Serial", "Timing", "Loopback", "Service", "TCP", "Remote", "MQTT", "USB Device", "BLE", "Session", "Stream Monitor"], [.. definition.Sections.Select(s => s.Label)]);
         var ids = Controls(definition).Select(c => c.Id).ToList();
         Assert.DoesNotContain(nameof(CliOptions.EffectivePresenters), ids, "[Browsable(false)] is left out.");
         Assert.Contains(nameof(CliOptions.Baud), ids);

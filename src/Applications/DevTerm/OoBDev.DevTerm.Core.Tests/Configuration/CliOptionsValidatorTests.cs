@@ -125,6 +125,26 @@ public sealed class CliOptionsValidatorTests
     }
 
     [TestMethod]
+    public void Validate_RemoteWithHostConnectionAndKey_Succeeds()
+    {
+        var result = _validator.Validate(null, new CliOptions { Transport = "remote", Host = "https://bench:5000", RemoteConnection = "scope", Password = "key" });
+
+        Assert.IsTrue(result.Succeeded);
+    }
+
+    [TestMethod]
+    [DataRow(null, "scope", "key")]
+    [DataRow("bench", "scope", "key")]
+    [DataRow("https://bench:5000", null, "key")]
+    [DataRow("https://bench:5000", "scope", null)]
+    public void Validate_RemoteMissingAPart_Fails(string? host, string? connection, string? key)
+    {
+        var result = _validator.Validate(null, new CliOptions { Transport = "remote", Host = host, RemoteConnection = connection, Password = key });
+
+        Assert.IsTrue(result.Failed);
+    }
+
+    [TestMethod]
     public void Validate_Vxi11WithHostOnly_Succeeds()
     {
         var result = _validator.Validate(null, new CliOptions { Transport = "vxi11", Host = "192.168.0.87" });

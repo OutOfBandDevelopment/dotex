@@ -231,6 +231,11 @@ public sealed class CliOptions
     [DisplayName("Host")]
     public string? Host { get; set; }
 
+    /// <summary>For the <c>remote</c> transport: the saved connection on the DevTerm web host (<see cref="Host"/> holds its address, <see cref="Password"/> its shared key).</summary>
+    [Category("Remote")]
+    [DisplayName("Remote connection")]
+    public string? RemoteConnection { get; set; }
+
     [Category("TCP")]
     [DisplayName("Listen (server mode)")]
     public bool Listen { get; set; }

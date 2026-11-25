@@ -54,6 +54,11 @@ public static class ConnectionDescription
                 + (string.IsNullOrWhiteSpace(cliOptions.Publish) ? string.Empty : $" publishing to {cliOptions.Publish}");
         }
 
+        if (string.Equals(cliOptions.Transport, "remote", StringComparison.OrdinalIgnoreCase))
+        {
+            return $"Remote {cliOptions.RemoteConnection} on {cliOptions.Host}";
+        }
+
         if (string.Equals(cliOptions.Transport, "vxi11", StringComparison.OrdinalIgnoreCase))
         {
             return $"VXI-11 {cliOptions.Host}" + (string.IsNullOrWhiteSpace(cliOptions.Port) ? string.Empty : $":{cliOptions.Port}");
@@ -130,6 +135,11 @@ public static class ConnectionDescription
         if (cliOptions.Transport is { } brokerScheme && brokerScheme.ToLowerInvariant() is "mqtt" or "amqp" or "stomp")
         {
             return $"{brokerScheme.ToLowerInvariant()}://{cliOptions.Host}:{cliOptions.Port}";
+        }
+
+        if (string.Equals(cliOptions.Transport, "remote", StringComparison.OrdinalIgnoreCase))
+        {
+            return $"remote://{cliOptions.Host}/{cliOptions.RemoteConnection}";
         }
 
         if (string.Equals(cliOptions.Transport, "rfc2217", StringComparison.OrdinalIgnoreCase))

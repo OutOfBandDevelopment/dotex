@@ -249,11 +249,29 @@ public sealed class CliOptionsValidator : IValidateOptions<CliOptions>
 
                 break;
 
+            case "remote":
+                if (!Uri.TryCreate(options.Host, UriKind.Absolute, out var remoteUri) || remoteUri.Scheme is not ("http" or "https"))
+                {
+                    return ValidateOptionsResult.Fail("Missing or invalid '--host' for the remote transport (expected the host address, such as https://bench:5000).");
+                }
+
+                if (string.IsNullOrWhiteSpace(options.RemoteConnection))
+                {
+                    return ValidateOptionsResult.Fail("Missing required '--remoteconnection' for the remote transport (the saved connection on the host).");
+                }
+
+                if (string.IsNullOrWhiteSpace(options.Password))
+                {
+                    return ValidateOptionsResult.Fail("Missing the host key for the remote transport ('--password' or the environment).");
+                }
+
+                break;
+
             case "loopback":
                 break;
 
             default:
-                return ValidateOptionsResult.Fail($"Unknown transport '{options.Transport}'. Expected 'serial', 'tcp', 'hid', 'usbtmc', 'ble', 'rfc2217', 'vxi11', 'mqtt', 'amqp', 'stomp', 'loopback', or 'service'.");
+                return ValidateOptionsResult.Fail($"Unknown transport '{options.Transport}'. Expected 'serial', 'tcp', 'hid', 'usbtmc', 'ble', 'rfc2217', 'vxi11', 'mqtt', 'amqp', 'stomp', 'loopback', 'remote', or 'service'.");
         }
 
         return ValidateOptionsResult.Success;

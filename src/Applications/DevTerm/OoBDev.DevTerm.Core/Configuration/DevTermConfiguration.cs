@@ -262,6 +262,13 @@ public static class DevTermConfiguration
 
             // Password deliberately never persisted: a profile is plain JSON on disk.
         }
+        else if (string.Equals(options.Transport, "remote", StringComparison.OrdinalIgnoreCase))
+        {
+            profile[nameof(CliOptions.Host)] = options.Host;
+            profile[nameof(CliOptions.RemoteConnection)] = options.RemoteConnection;
+
+            // The host key is never persisted: a profile is plain JSON on disk.
+        }
         else if (string.Equals(options.Transport, "loopback", StringComparison.OrdinalIgnoreCase))
         {
             if (options.LoopbackSampleIntervalMs != 0)

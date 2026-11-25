@@ -223,6 +223,12 @@
         "null"
       ]
     },
+    "RemoteConnection": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
     "Listen": {
       "type": "boolean"
     },
