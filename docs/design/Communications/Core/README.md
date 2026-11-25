@@ -2,7 +2,7 @@
 
 **Epic:** Communications Platform
 **Priority:** CRITICAL
-**Status:** Slice 1 built 2026-11-25 in `OoBDev.Communications` and `.Abstractions` (`Orchestration/`): `ICommunicationOrchestrator` (`SendAsync`, `DeferAsync`, `ReleaseDueAsync`), target preferences with minimum priority and quiet hours, data enhancers, per-channel composers, in-memory deferral store; names differ from the sketches below (`CommunicationRequest` record with a string `TargetId` and a dictionary instead of `JObject`, `RequestPriority`, `IMessageComposer.ChannelName`). Not built: a hosted release loop, durable store and preference provider, template providers and the channel composers for email and SMS, `IMessageData`, the `CommunicationAttribute`. See the [project readme](../../../../src/Framework/OoBDev.Communications/README.Communications.md#orchestration).
+**Status:** Slice 1 built 2026-11-25 in `OoBDev.Communications` and `.Abstractions` (`Orchestration/`): `ICommunicationOrchestrator` (`SendAsync`, `DeferAsync`, `ReleaseDueAsync`), target preferences with minimum priority and quiet hours, data enhancers, per-channel composers, in-memory deferral store; names differ from the sketches below (`CommunicationRequest` record with a string `TargetId` and a dictionary instead of `JObject`, `RequestPriority`, `IMessageComposer.ChannelName`). Hosted release loop: `DeferralReleaseHost` in `OoBDev.Communications.Hosting`. Not built: durable store and preference provider, template providers and the channel composers for email and SMS, `IMessageData`, the `CommunicationAttribute`. See the [project readme](../../../../src/Framework/OoBDev.Communications/README.Communications.md#orchestration).
 **LOC Impact:** ~1,145 (replaces 16 LOC stub)
 
 ---

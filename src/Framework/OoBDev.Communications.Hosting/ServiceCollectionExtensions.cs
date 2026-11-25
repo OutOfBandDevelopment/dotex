@@ -8,14 +8,16 @@ namespace OoBDev.Communications.Hosting;
 /// <summary>Extension methods that host the communications background work.</summary>
 public static class ServiceCollectionExtensions
 {
-    /// <summary>Adds <see cref="ReceivePollingHost"/>, which polls the channels that set a <c>PollInterval</c>.</summary>
+    /// <summary>Adds <see cref="ReceivePollingHost"/>, which polls the channels that set a <c>PollInterval</c>, and <see cref="DeferralReleaseHost"/>, which releases deferred communication requests.</summary>
     /// <param name="services">The service collection.</param>
     /// <returns>The modified <see cref="IServiceCollection"/>.</returns>
     public static IServiceCollection TryAddCommunicationsHosting(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
         services.TryAddSendReceive();
+        services.TryAddCommunicationOrchestration();
         services.TryAddEnumerable(ServiceDescriptor.Singleton<IHostedService, ReceivePollingHost>());
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IHostedService, DeferralReleaseHost>());
         return services;
     }
 }

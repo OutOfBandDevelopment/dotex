@@ -27,6 +27,10 @@ public sealed class SendReceiveOptions
     [Range(typeof(TimeSpan), "00:00:00.001", "1.00:00:00")]
     public TimeSpan WebhookClockTolerance { get; set; } = TimeSpan.FromMinutes(5);
 
+    /// <summary>Gets or sets how often the hosted release loop hands held requests that are due to <c>ICommunicationOrchestrator.ReleaseDueAsync</c>.</summary>
+    [Range(typeof(TimeSpan), "00:00:01", "1.00:00:00")]
+    public TimeSpan DeferralReleaseInterval { get; set; } = TimeSpan.FromMinutes(1);
+
     /// <summary>Gets or sets the configured channels.</summary>
     public IList<ChannelDefinition> Channels { get; set; } = [];
 }
