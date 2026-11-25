@@ -25,3 +25,16 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 **Your answer:**
 
 
+
+### Q41 — 2026-11-25 — Remote USB devices for DevTerm: bridge client or the remote DevTerm web host?
+
+**Question:** DevTerm on one machine needs raw HID and USBTMC devices that sit on another (Windows) machine. Today the built `OoBDev.System.IO.Usb.Bridge` carries them as a framed TCP stream with no authentication; DevTerm has no connection option for it yet. The owner (2026-11-25) leans to running the DevTerm web host on the remote machine and adding a client for it to the Tui and WPF apps. Facts: the web host already has a WebSocket tunnel, session and panel APIs, and a shared bearer token (`Web:Token`, optional read-only token, non-loopback bind needs an explicit token); it has no JWT, which the owner decisions require for services. The Greaseweazle is out of scope.
+
+**Options:**
+- A (recommended): DevTerm web host as the remote side. One authenticated surface for serial, HID, USBTMC and the other transports; the Tui and WPF clients get a "remote DevTerm" connection. Cost: a remote client for the session API, JWT support on the host (today a shared token), and the bridge stays for non-DevTerm clients only.
+- B: add `usbtmc-remote` and `hid-remote` transports to DevTerm that speak the existing bridge protocol. Smallest change, no authentication until the bridge gets some, covers only these two transports.
+- C: both; A for DevTerm, B kept as the lightweight route for other dotex code.
+
+**Default:** A in design only; no code until answered. The bridge stays as built.
+
+**Your answer:**
