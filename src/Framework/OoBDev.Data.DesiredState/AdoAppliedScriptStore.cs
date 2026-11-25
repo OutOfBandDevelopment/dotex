@@ -38,10 +38,15 @@ public sealed class AdoAppliedScriptStore(Func<DatabaseTarget, DbConnection> con
         await using (connection.ConfigureAwait(false))
         {
             await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
-            await Execute(connection, SchemaScript.Replace("CREATE TABLE", "CREATE TABLE IF NOT EXISTS", StringComparison.Ordinal), null, cancellationToken).ConfigureAwait(false);
+            await Execute(connection, CreateIfMissing(connection), null, cancellationToken).ConfigureAwait(false);
             return await Execute(connection, sql, (name, hash, at), cancellationToken).ConfigureAwait(false);
         }
     }
+
+    private static string CreateIfMissing(DbConnection connection) =>
+        connection.GetType().Name == "SqlConnection"
+            ? $"IF OBJECT_ID(N'{TableName}', N'U') IS NULL {SchemaScript}"
+            : SchemaScript.Replace("CREATE TABLE", "CREATE TABLE IF NOT EXISTS", StringComparison.Ordinal);
 
     private static async Task<object?> Execute(DbConnection connection, string sql, (string Name, string Hash, string? At)? values, CancellationToken cancellationToken)
     {

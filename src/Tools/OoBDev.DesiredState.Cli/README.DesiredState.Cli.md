@@ -6,7 +6,7 @@
 desired-state plan  --engine postgres --scripts db/schema --host localhost --port 5432 --database app --user me
 desired-state apply --engine sqlite   --scripts db/schema --database app.db
 desired-state pack    --source db/package --name app --version 1.0 --out app.zip   # schema/, predeploy/, postdeploy/, refactorlog.json
-desired-state deploy  --package app.zip --engine sqlite --database app.db   # sqlite and postgres; refactors, plan, gates, post-deploy, history
+desired-state deploy  --package app.zip --engine sqlite --database app.db   # sqlite, postgres and sqlserver; refactors, plan, gates, post-deploy, history
 ```
 
 - The password comes from the environment variable named by `--password-env` (default `DESIRED_STATE_PASSWORD`), never from the command line.

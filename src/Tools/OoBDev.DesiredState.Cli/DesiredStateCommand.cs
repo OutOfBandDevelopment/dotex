@@ -18,7 +18,7 @@ internal static class DesiredStateCommand
         desired-state plan  --engine postgres|sqlserver|sqlite --scripts <dir> --database <name> [--host h] [--port p] [--user u] [--password-env NAME]
         desired-state apply (same options) [--allow-data-loss true] [--allow-type-change true]
         The password is read from the environment variable named by --password-env (default DESIRED_STATE_PASSWORD), never from the command line.
-        desired-state deploy --package <file.zip> --engine postgres|sqlite --database <name> [--host h] [--port p] [--user u] [--password-env NAME] [--allow-data-loss true] [--allow-type-change true]
+        desired-state deploy --package <file.zip> --engine postgres|sqlserver|sqlite --database <name> [--host h] [--port p] [--user u] [--password-env NAME] [--allow-data-loss true] [--allow-type-change true]
         desired-state pack  --source <dir> --name <n> --version <v> --out <file.zip>   (source: schema/, predeploy/, postdeploy/, refactorlog.json)
         For sqlite, --database is the file path. Exit: 0 done or nothing to do, 1 refused or hazards, 2 error, 3 plan has pending changes.
         """;

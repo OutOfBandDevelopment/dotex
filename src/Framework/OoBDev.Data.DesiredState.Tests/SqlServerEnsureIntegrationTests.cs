@@ -87,6 +87,40 @@ public class SqlServerEnsureIntegrationTests
         }
     }
 
+    [TestCategory(TestCategories.Integration)]
+    [IntegrationTestMethod("oobd-test-sqlserver")]
+    public async Task AppliedStore_OnSqlServer_RecordsAndFindsAScriptAndRunsGoBatches()
+    {
+        // Stage
+        var master = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("SQLSERVER_CONNECTION_STRING"));
+        var database = $"Store_{Guid.NewGuid():N}";
+        await ExecuteAsync(master, $"CREATE DATABASE [{database}]");
+        try
+        {
+            var builder = new SqlConnectionStringBuilder(master) { InitialCatalog = database };
+            SqlConnection Connect(DatabaseTarget _) => new(builder.ConnectionString);
+            var store = new AdoAppliedScriptStore(Connect);
+            var target = new DatabaseTarget("sqlserver", 1433, database);
+
+            // Test
+            var before = await store.HasAppliedAsync(target, "s1", "h1", TestContext.CancellationToken);
+            await store.RecordAsync(target, "s1", "h1", TestContext.CancellationToken);
+            var after = await store.HasAppliedAsync(target, "s1", "h1", TestContext.CancellationToken);
+            await new AdoScriptExecutor(Connect).ExecuteAsync(target, "go", "CREATE TABLE t1 (id int)\nGO\nINSERT INTO t1 VALUES (1)\nGO", TestContext.CancellationToken);
+            TestContext.WriteLine($"before={before} after={after}");
+
+            // Assert
+            Assert.IsFalse(before);
+            Assert.IsTrue(after);
+            Assert.AreEqual(1, await ScalarAsync(builder.ConnectionString, "SELECT COUNT(*) FROM t1"));
+        }
+        finally
+        {
+            SqlConnection.ClearAllPools();
+            await ExecuteAsync(master, $"IF DB_ID('{database}') IS NOT NULL BEGIN ALTER DATABASE [{database}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{database}]; END");
+        }
+    }
+
     private static bool OnPath(string tool) =>
         (Environment.GetEnvironmentVariable("PATH") ?? string.Empty).Split(global::System.IO.Path.PathSeparator)
             .Any(d => d.Length > 0 && (global::System.IO.File.Exists(global::System.IO.Path.Combine(d, tool)) || global::System.IO.File.Exists(global::System.IO.Path.Combine(d, tool + ".exe"))));

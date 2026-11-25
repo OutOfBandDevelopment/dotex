@@ -1,6 +1,7 @@
 using System;
 using System.Data.Common;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
@@ -21,6 +22,7 @@ internal static class Program
     {
         SqldefProvider.Sqlite => new SqliteConnection($"Data Source={target.Database};Pooling=False"),
         SqldefProvider.Postgres => new NpgsqlConnection(new NpgsqlConnectionStringBuilder { Host = target.Host, Port = target.Port > 0 ? target.Port : 5432, Database = target.Database, Username = target.User, Password = target.Password, Pooling = false }.ConnectionString),
-        _ => throw new NotSupportedException($"deploy supports sqlite and postgres, not '{engine}'."),
+        SqldefProvider.SqlServer => new SqlConnection(new SqlConnectionStringBuilder { DataSource = target.Port > 0 ? $"{target.Host},{target.Port}" : target.Host, InitialCatalog = target.Database, UserID = target.User ?? string.Empty, Password = target.Password ?? string.Empty, TrustServerCertificate = true }.ConnectionString),
+        _ => throw new NotSupportedException($"deploy supports sqlite, postgres and sqlserver, not '{engine}'."),
     };
 }

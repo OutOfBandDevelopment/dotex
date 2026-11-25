@@ -51,7 +51,7 @@ The command line is [`desired-state`](../../Tools/OoBDev.DesiredState.Cli/README
 
 ## Not built yet
 
-Publish profile files, and SQL Server for the `deploy` verb. Oracle is rejected (owner, 2026-11-24), so there is no Oracle provider, executor or driver.
+Publish profile files. Oracle is rejected (owner, 2026-11-24), so there is no Oracle provider, executor or driver.
 
 ## Tests
 
