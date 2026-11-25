@@ -2,7 +2,7 @@
 
 [← Overview](README.md)
 
-**Status:** proposed 2026-11-24; phases A to D built and tested 2026-11-24, phase E waits for Q37, G for Q39, F is not needed yet (see [Starting point](#starting-point)). Owner decisions it follows: final states instead of migrations (2026-11-24, [owner decisions](../../../.claude/rules/owner-decisions.md)), wrap sqldef (Q34 A), Oracle and Atlas rejected (2026-11-24). Phase E removes projects, so it waits for Q37; phase G creates a project, so it waits for a confirmed migration plan (phase F adds no project: the canonical model is internal only, owner, 2026-11-24) ([layering rule](../../../.claude/rules/layering-and-migration-plans.md)).
+**Status:** proposed 2026-11-24; phases A to D built and tested 2026-11-24, phase E confirmed 2026-11-25 (Q37 A), G skipped (Q39: sqldef stays, bundling the binary first), F is not needed yet (see [Starting point](#starting-point)). Owner decisions it follows: final states instead of migrations (2026-11-24, [owner decisions](../../../.claude/rules/owner-decisions.md)), wrap sqldef (Q34 A), Oracle and Atlas rejected (2026-11-24). Phase E removes projects, so it waits for Q37; phase G creates a project, so it waits for a confirmed migration plan (phase F adds no project: the canonical model is internal only, owner, 2026-11-24) ([layering rule](../../../.claude/rules/layering-and-migration-plans.md)).
 
 ## Contents
 
@@ -119,7 +119,7 @@ Same provider interface and options, no second differ: a `SqlServerDacFxProvider
 
 | Choice | Recommendation | Where it is decided |
 | --- | --- | --- |
-| Remove the EF migrations projects | Yes, after phase C | Q37 |
+| Remove the EF migrations projects | Yes, after phase C | Confirmed 2026-11-25 (Q37 A) |
 | Portable-subset rules as a lint test or as guidance | Decided 2026-11-24: guidance only, canonical model internal, no new lint code | owner |
 | Native differ (phase G) or stay on sqldef plus phase D | Stay on sqldef until phase D shows a gap | spike result |
 

@@ -2,7 +2,7 @@
 
 [← Overview](README.md)
 
-**Status:** proposed 2026-11-24, waiting for the owner's confirmation (Q37). Nothing in this plan is built or removed yet. Decision it follows: owner, 2026-11-24, "I would prefer it to be final states/desired state versus migration based" ([owner decisions](../../../.claude/rules/owner-decisions.md)). Layering rule: [layering-and-migration-plans](../../../.claude/rules/layering-and-migration-plans.md), so the table below is confirmed before any project moves.
+**Status:** proposed 2026-11-24, confirmed by the owner 2026-11-25 (Q37 option A: retire all the EF migration projects, data changes are hand-written `*.once.sql` ensure scripts, EF hook stays in `OoBDev.Data.DesiredState`). Removal is next (plan phase E). Decision it follows: owner, 2026-11-24, "I would prefer it to be final states/desired state versus migration based" ([owner decisions](../../../.claude/rules/owner-decisions.md)). Layering rule: [layering-and-migration-plans](../../../.claude/rules/layering-and-migration-plans.md), so the table below is confirmed before any project moves.
 
 ## Contents
 
