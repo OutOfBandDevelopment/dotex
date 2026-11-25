@@ -37,3 +37,15 @@ The web host's `/ws` tunnel today is a text session onto the host's own single s
 **Default:** A. Build slice 2 for serial only (framed binary over a new `/ws/device` route, same JWT), then HID and USBTMC; the existing text `/ws` stays as it is. Reversible: nothing is removed until slice 5.
 
 **Your answer:**
+
+### Q44 — 2026-11-25 — Remote DevTerm: where does the host key for a `remote` connection come from?
+
+Slice 4 takes the host key from `--password` and never saves it in a profile. DevTerm has no credential store today, so a remote profile asks for the key at each start.
+
+**Options**
+- A (recommended): keep it per start (environment variable `DEVTERM_PASSWORD` or a prompt in the editor). Reason: no new store, nothing secret on disk; matches the owner rule that applications never store passwords.
+- B: add a Windows Credential Manager or DPAPI-protected file store for the key. Convenient, but a new secret store to maintain and test per platform.
+
+**Default:** A.
+
+**Your answer:**
