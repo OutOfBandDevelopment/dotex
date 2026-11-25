@@ -62,7 +62,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 ### Waiting on the owner
 
 - [ ] Example screens, owner answer A 2026-11-21: the address lookup (2026-11-20), data loading and distance (2026-11-23) are built; code generation waits for its library ([missing-screens](docs/design/example-ui/missing-screens.md)).
-- [ ] **Harvest candidates** (D7, owner answers 2026-11-25): [comparison](docs/migration/harvest-d7-comparison.md), map in [harvest-candidates.md](docs/harvest-candidates.md). AccountingEngine and NeedsReviewed stay read-only references; OsciRenderClient is not taken (the HP-GL WAV sink replaces it). To do:
+- [ ] **Harvest candidates** (D7, owner answers 2026-11-25): [comparison](docs/migration/harvest-d7-comparison.md), map in [harvest-candidates.md](docs/harvest-candidates.md). AccountingEngine and NeedsReviewed stay read-only references; OsciRenderClient is rejected (migration Table 6; the HP-GL WAV sink replaces it). To do:
     - BehaviorBlackboard (`design-patterns/BehaviorBlackboard`): a worked blackboard example for the patterns docs, linked or ported small.
     - Compare `C:epooobdevntainers` (34 services) with `containers/testing` and list the services the test stack lacks.
     - postsql-playground (PgProj desired-state PostgreSQL packages): compare with the built package and refactor log of [DesiredStateDatabase](docs/design/DesiredStateDatabase/plan.md) when the repository is on disk (it was not on 2026-11-10 and is not under `proving-grounds` now).

@@ -120,6 +120,7 @@ Map: [harvest-candidates.md](../harvest-candidates.md). Nothing is copied withou
 | dev-term skills `work-docs-audit`, `bug-report`, hook `merge-gate.sh` | Covered by `tracking-hygiene`, the `work-backlog` audit, `BACKLOG.md`, change documents and the commit-time reminder |
 | BinaryDataDecoders badges, `RETIRED.md`, generated `docs/*`, report XSLT templates, GitHub workflows, `act` files | Retired GitHub or regenerated output; covered by `GitVersion.yml`, `OoBDev.Docs.Tests` and manual CI (`scripts/ci`) |
 | dev-term's "consume dotex as NuGet" plan | Superseded by the merge |
+| proving-grounds `examples/OsciRenderClient` (owner, 2026-11-25) | One-off demo client for the osci-render TCP port (wire format never confirmed); the HP-GL and SVG to stereo WAV sink ([request](../features/request/2026-11-10-hpgl-vector-display-sink.md)) replaces its purpose |
 
 ## Decisions
 
