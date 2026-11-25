@@ -17,7 +17,7 @@ All under `C:\repo\mine\proving-grounds` (origin https://github.com/mwwhited/pro
 | `examples/BuildFirstOnce` | `Directory.Build.targets` tasks `DeepClean` and `CleanPaths` | The deep-clean targets for the 112-project solution; the "build a tool first" trick only as a documented technique |
 | `examples/hybridsearch` | Hybrid search spike | The Azure and Neo4j variants as optional later adapters; the rest is covered by `OoBDev.Search` |
 | `examples/AccountingEngine` | Billing, amortization, clearing and dunning engines behind interfaces (28 files) | Read-only reference for domain rules; a reference-application idea is [declined for now](features/rejected/2026-11-25-reference-domain-application.md) |
-| `design-patterns/BehaviorBlackboard` | Blackboard pattern sample (8 files) | A worked example for the patterns docs |
+| `design-patterns/BehaviorBlackboard` | Blackboard pattern sample (8 files) | Done 2026-11-25: [pattern 21](patterns-discovery/02-design-patterns/21-blackboard.md) |
 | `examples/OoBDev.MessageBroker`, `examples/Ssb.Modeling`, `examples/SQL` | SQL Server Service Broker tooling | Deferred until a Service Broker feature exists ([design](design/SqlServiceBroker/README.md)) |
 | `examples/CarMaintenanceLog`, `examples/SecondShooter` | Applications | Reference applications; extract only when a feature needs the same data-access or domain code |
 | `examples/NeedsReviewed` | 307 unsorted C# files | Triage once; unknown content |

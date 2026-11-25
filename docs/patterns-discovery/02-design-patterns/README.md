@@ -29,6 +29,7 @@ Each pattern lists **what it is here**, **where to see it**, **how to repeat it*
 19. [Pattern 18 — Replace-to-override in host layers](./18-replace-to-override-in-host-layers.md)
 20. [Pattern 19 — ASP.NET cross-cutting: middleware + request features](./19-aspnet-middleware-request-features.md)
 21. [Pattern 20 — `IConfigureOptions<>` classes for third-party options](./20-configure-options-classes.md)
+22. [Pattern 21 — Blackboard (worked example)](./21-blackboard.md)
 
 ### List of Figures
 
