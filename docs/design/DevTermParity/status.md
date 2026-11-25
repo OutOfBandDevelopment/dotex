@@ -39,3 +39,7 @@ dev-term `DevTerm.Wpf` is about 8,800 lines. Each slice is ported with view mode
 
 - `UserFlowTestsBase` and `IFrontEndDriver` live in `OoBDev.DevTerm.TestUtilities` ([plan](test-utilities-plan.md)).
 - The Web host keeps its own AsyncAPI document and viewer (owner, 2026-10-30).
+
+## Later: return to the original repository
+
+Owner, 2026-11-25: DevTerm is to move back to its original repository and use the dotex framework packages from NuGet, but not yet, because it is the integration-test bed for the framework while both are built together. Tracked in `BACKLOG.md` (section 2); a migration plan comes first.

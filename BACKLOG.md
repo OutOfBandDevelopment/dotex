@@ -24,6 +24,10 @@ Owner: all protocols and features of dev-term must exist here. Done means what d
 - [ ] Z-Wave panel: Enumerate, Describe node and the panel-lifetime ACK are built (2026-11-16, unit tests only); what is left is a hardware pass for them and for include, exclude and reset (spec `docs/applications/devterm/specs/zwave-panel.md`). Tried 2026-11-16: the stick host `overwatch.local` did not resolve, so the three Hardware tests skipped; rerun with the stick reachable (`ZWAVE_TCP_HOST`). 2026-11-24: the host resolves now but the bridge on port 4000 gave no reply to any of the three tests (15 s each, failed not skipped); check whether another program holds the single-client bridge.
 - [ ] Bench TCP Hardware tests: the retry (3 attempts, 1 s apart) fixed both Tektronix 2230 (2026-11-19); the HP 34401A and TDS2024 stay silent behind their bridges (hosts ping and accept TCP; power or remote mode to check on the bench) and COM6/COM7 (Korad) are not enumerated. [Report](docs/applications/devterm/test/2026-11-19-10-32-39.md).
 - [ ] Remote DevTerm (owner, 2026-11-25, Q41 A): the DevTerm web host beside the device, a remote-DevTerm connection in the Tui and WPF apps, the shared key exchanged for a short-lived JWT at a token endpoint (native clients send it as a header; the page keeps its cookie), HID and USBTMC reachable through it. Then [remove the raw USB bridge](docs/features/request/2026-11-25-remove-raw-usb-network-tunnels.md). Design doc first (`docs/design/`, web terminal spec).
+- [ ] **Move DevTerm back to its own repository on NuGet packages** (owner, 2026-11-25; deferred, not yet): DevTerm returns to its original home and consumes the dotex framework packages from `G:
+uget` (and later a feed), as a first outside consumer. Waits because DevTerm in this solution is the integration-test bed for the framework. Needs a migration plan first ([layering rule](.claude/rules/layering-and-migration-plans.md)): project, current and target location, packages, references that change, the protocol and device code that stays here, and how the package publish to `G:
+uget` is done (no script found; `G:
+pm` is empty).
 
 ## 3. Test infrastructure
 
