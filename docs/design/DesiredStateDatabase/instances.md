@@ -62,5 +62,5 @@ So no plan filtering code is needed in the deployer: `SqldefProvider` must pass 
 ## Open points
 
 - Check `mssqldef` with `target_schema`.
-- A per-instance history table and `{schema}`/`{prefix}` tokens in once and ensure scripts.
+- `{schema}`/`{prefix}` tokens in once and ensure scripts (the history table is per instance since 2026-11-25).
 - The other stores (RightAudit, Schedule, event store, AspNetCore, ComplexEvents) adopt the shared helper once Q42 is answered.

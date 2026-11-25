@@ -16,19 +16,22 @@ public sealed class AdoAppliedScriptStore(Func<DatabaseTarget, DbConnection> con
     public const string TableName = "__desired_state_history";
 
     /// <summary>The table as a schema script (no <c>IF NOT EXISTS</c>), identical to what the store creates.</summary>
-    public static string SchemaScript { get; } =
-        $"CREATE TABLE \"{TableName}\" (\"name\" varchar(400) NOT NULL, \"hash\" varchar(128) NOT NULL, \"applied_at\" varchar(40) NOT NULL, PRIMARY KEY (\"name\", \"hash\"));";
+    public static string SchemaScript { get; } = SchemaScriptFor(null);
+
+    /// <summary>The table script for a store instance: schema-qualified and/or prefixed like the instance's own tables (see <see cref="DatabaseTarget.ForInstance"/>).</summary>
+    public static string SchemaScriptFor(DatabaseTarget? target) =>
+        $"CREATE TABLE {Qualified(target)} (\"name\" varchar(400) NOT NULL, \"hash\" varchar(128) NOT NULL, \"applied_at\" varchar(40) NOT NULL, PRIMARY KEY (\"name\", \"hash\"));";
 
     public async Task<bool> HasAppliedAsync(DatabaseTarget target, string scriptName, string hash, CancellationToken cancellationToken = default)
     {
-        var result = await RunAsync(target, $"SELECT COUNT(*) FROM \"{TableName}\" WHERE \"name\" = @name AND \"hash\" = @hash", scriptName, hash, null, cancellationToken).ConfigureAwait(false);
+        var result = await RunAsync(target, $"SELECT COUNT(*) FROM {Qualified(target)} WHERE \"name\" = @name AND \"hash\" = @hash", scriptName, hash, null, cancellationToken).ConfigureAwait(false);
         return Convert.ToInt64(result, CultureInfo.InvariantCulture) > 0;
     }
 
     public async Task RecordAsync(DatabaseTarget target, string scriptName, string hash, CancellationToken cancellationToken = default)
     {
         var now = (time ?? TimeProvider.System).GetUtcNow().ToString("O", CultureInfo.InvariantCulture);
-        await RunAsync(target, $"INSERT INTO \"{TableName}\" (\"name\", \"hash\", \"applied_at\") VALUES (@name, @hash, @at)", scriptName, hash, now, cancellationToken).ConfigureAwait(false);
+        await RunAsync(target, $"INSERT INTO {Qualified(target)} (\"name\", \"hash\", \"applied_at\") VALUES (@name, @hash, @at)", scriptName, hash, now, cancellationToken).ConfigureAwait(false);
     }
 
     private async Task<object?> RunAsync(DatabaseTarget target, string sql, string name, string hash, string? at, CancellationToken cancellationToken)
@@ -38,15 +41,15 @@ public sealed class AdoAppliedScriptStore(Func<DatabaseTarget, DbConnection> con
         await using (connection.ConfigureAwait(false))
         {
             await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
-            await Execute(connection, CreateIfMissing(connection), null, cancellationToken).ConfigureAwait(false);
+            await Execute(connection, CreateIfMissing(connection, target), null, cancellationToken).ConfigureAwait(false);
             return await Execute(connection, sql, (name, hash, at), cancellationToken).ConfigureAwait(false);
         }
     }
 
-    private static string CreateIfMissing(DbConnection connection) =>
+    private static string CreateIfMissing(DbConnection connection, DatabaseTarget target) =>
         connection.GetType().Name == "SqlConnection"
-            ? $"IF OBJECT_ID(N'{TableName}', N'U') IS NULL {SchemaScript}"
-            : SchemaScript.Replace("CREATE TABLE", "CREATE TABLE IF NOT EXISTS", StringComparison.Ordinal);
+            ? $"IF OBJECT_ID(N'{Qualified(target).Replace("\"", string.Empty, StringComparison.Ordinal)}', N'U') IS NULL {SchemaScriptFor(target)}"
+            : SchemaScriptFor(target).Replace("CREATE TABLE", "CREATE TABLE IF NOT EXISTS", StringComparison.Ordinal);
 
     private static async Task<object?> Execute(DbConnection connection, string sql, (string Name, string Hash, string? At)? values, CancellationToken cancellationToken)
     {
@@ -76,5 +79,11 @@ public sealed class AdoAppliedScriptStore(Func<DatabaseTarget, DbConnection> con
         parameter.ParameterName = name;
         parameter.Value = value;
         command.Parameters.Add(parameter);
+    }
+
+    private static string Qualified(DatabaseTarget? target)
+    {
+        var name = $"\"{(target?.TablePrefix ?? string.Empty)}{TableName}\"";
+        return string.IsNullOrEmpty(target?.Schema) ? name : $"\"{target.Schema}\".{name}";
     }
 }
