@@ -1,6 +1,6 @@
 # USB bridge: USBTMC and HID over a framed TCP stream
 
-**Status:** design, nothing built yet (2026-11-24). Owner decision: a framing bridge with our own protocol; USB/IP is not wanted ("the usbip from Microsoft is absolute trash"). This reverses the scope part of owner Q16 (non-serial USB out of scope), at the owner's request of 2026-11-24.
+**Status:** built (project `OoBDev.System.IO.Usb.Bridge`, server, clients and CLI config; DevTerm connection options still open, see the backlog). Owner decision: a framing bridge with our own protocol; USB/IP is not wanted ("the usbip from Microsoft is absolute trash"). This reverses the scope part of owner Q16 (non-serial USB out of scope), at the owner's request of 2026-11-24.
 **Request:** [Ser2NetWin USB device passthrough](../../features/request/2026-11-10-ser2netwin-usb-device-passthrough.md)
 
 ## Contents

@@ -14,7 +14,7 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 
 ### Q33 — 2026-11-23 — Bench-hardware items: who runs them?
 
-**Question:** These need a person at the bench or a captured trace, which I cannot supply: DE-5000 BLE Hardware test (radio not fitted), Z-Wave include/exclude/reset pass, the silent HP 34401A and TDS2024 TCP bridges, the Ebyte and USR UDP config capture (Ebyte `IDeviceConfigEditor`), HP-GL scope and XBee bench checks, the Greaseweazle USB pass for Ser2NetWin. When you are at the bench, do you want me to run each pass through the `hardware-test` skill, or to leave them off the backlog?
+**Question:** These need a person at the bench or a captured trace, which I cannot supply: DE-5000 BLE Hardware test (radio not fitted), Z-Wave include/exclude/reset pass, the silent HP 34401A and TDS2024 TCP bridges, the Ebyte and USR UDP config capture (Ebyte `IDeviceConfigEditor`), HP-GL scope and XBee bench checks, and the Ser2NetWin bench pass with any COM-port device. When you are at the bench, do you want me to run each pass through the `hardware-test` skill, or to leave them off the backlog?
 
 **Options:**
 - A (recommended): keep them listed; run them when you say the bench is ready.

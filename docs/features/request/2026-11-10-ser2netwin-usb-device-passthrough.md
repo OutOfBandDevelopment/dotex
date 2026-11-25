@@ -29,7 +29,6 @@ for this whole class, so the scratch notes can be retired.
 - Given two devices with the same ids, when no serial number is configured, then the bridge refuses to start and the log names both.
 - Given `ser2net-win ports`, when run, then each row shows the COM name, vendor id, product id and serial number where Windows reports them.
 - Given the container recipe in the docs and a bridged port, when a Linux container follows it, then a program opening the device node can exchange bytes with the device (a Hardware-category test or a documented bench report).
-- Given a Greaseweazle or a USB serial adapter, when bridged, then it works for the read and write commands the owner uses, or the docs list what does not work.
 
 ## Existing code checked
 
@@ -51,12 +50,11 @@ listener per bridge. A raw device behind a TCP hop adds latency; some tools may 
 
 ## Open questions
 
-**Answered (checked 2026-11-23):** owner Q16: USB-id selection in the configuration, the container recipe in the Ser2NetWin docs only, non-serial USB out of scope. The Greaseweazle bench pass needs the device and is listed in owner question Q33.
+**Answered (checked 2026-11-23):** owner Q16: USB-id selection in the configuration, the container recipe in the Ser2NetWin docs only, non-serial USB out of scope. The bench pass runs with any COM-port device (owner question Q33); the Greaseweazle is not part of this request (owner, 2026-11-25: it uses its own tool).
 
 - Is selection by USB id wanted in the bridge configuration, or only in the `ports` listing?
 - Does the container recipe live in the Ser2NetWin docs only, or does dotex ship a small helper image (the `containers` repository is a candidate)?
 - Should non-serial USB (vendor protocols) be declared permanently out of scope, or is a USB/IP bridge ever wanted here?
-- Does the Greaseweazle case need its own bench pass before it is claimed in the docs?
 
 ## Triage notes
 
