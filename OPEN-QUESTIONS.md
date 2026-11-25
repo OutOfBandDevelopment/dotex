@@ -62,3 +62,16 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 **Default:** A.
 
 **Your answer:**
+
+### Q40 — 2026-11-24 — How should the example Overview show a tile per provider (Qdrant, SQL, mail)?
+
+**Question:** The Overview screen probes eight API endpoints but has no provider status tiles (screens.md, Table 2: "Dashboard reads a new health endpoint"). The example API has no health checks today. Which source feeds the tiles?
+
+**Options:**
+- A (recommended): ASP.NET Core health checks (`AddHealthChecks`, one check per configured provider, `GET /api/Operations/health` behind `operations.read`). Platform primitive, matches the rule to prefer `Microsoft.Extensions.*`; costs one check per provider.
+- B: a custom `GET /api/Operations/providers` that opens a TCP connection to each configured host. Less code per provider, but a hand-built abstraction.
+- C: leave the tiles out; the endpoint probes already show what answers.
+
+**Default:** C until you answer (nothing built).
+
+**Your answer:**
