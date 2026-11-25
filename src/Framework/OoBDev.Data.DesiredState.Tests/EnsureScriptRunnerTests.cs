@@ -50,13 +50,49 @@ public sealed class EnsureScriptRunnerTests
         Assert.HasCount(2, executor.Names);
     }
 
+    [TestMethod]
+    [TestCategory("Unit")]
+    public async Task RunAsync_TokensInAScript_AreReplacedWithTheInstance()
+    {
+        // Stage
+        var executor = new Recorder();
+        var runner = new EnsureScriptRunner(executor, new InMemoryAppliedScriptStore());
+        var scripts = new DesiredSchema([new DesiredScript("001.sql", "CREATE SCHEMA IF NOT EXISTS {schema}; -- {prefix}Tickets")]);
+        var target = _target.ForInstance("ticket", "t_");
+
+        // Test
+        await runner.RunAsync(scripts, target, TestContext.CancellationToken);
+        TestContext.WriteLine(executor.Texts[0]);
+
+        // Assert
+        Assert.AreEqual("CREATE SCHEMA IF NOT EXISTS ticket; -- t_Tickets", executor.Texts[0]);
+    }
+
+    [TestMethod]
+    [TestCategory("Unit")]
+    public async Task RunAsync_TokenWithoutAnInstanceValue_Throws()
+    {
+        // Stage
+        var runner = new EnsureScriptRunner(new Recorder(), new InMemoryAppliedScriptStore());
+        var scripts = new DesiredSchema([new DesiredScript("001.sql", "CREATE SCHEMA {schema}")]);
+
+        // Test
+        var error = await Assert.ThrowsExactlyAsync<global::System.InvalidOperationException>(() => runner.RunAsync(scripts, _target, TestContext.CancellationToken));
+        TestContext.WriteLine(error.Message);
+
+        // Assert
+        StringAssert.Contains(error.Message, "{schema}");
+    }
+
     private sealed class Recorder : IScriptExecutor
     {
         public List<string> Names { get; } = [];
+        public List<string> Texts { get; } = [];
 
         public Task ExecuteAsync(DatabaseTarget target, string scriptName, string scriptText, CancellationToken cancellationToken = default)
         {
             Names.Add(scriptName);
+            Texts.Add(scriptText);
             return Task.CompletedTask;
         }
     }

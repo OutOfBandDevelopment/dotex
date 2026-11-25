@@ -43,7 +43,7 @@ The command line is [`desired-state`](../../Tools/OoBDev.DesiredState.Cli/README
 
 ## Ensure scripts
 
-`EnsureScriptRunner` runs ensure scripts (extensions, queues, event streams) in file-name order through an `IScriptExecutor`. Scripts must be idempotent and run every time; a script named `*.once.sql` runs only until its name and SHA-512 content hash are recorded in the `IAppliedScriptStore` (in-memory by default; a database-table store is a consumer's adapter). The result is an `EnsureReport` of ran and skipped scripts.
+`EnsureScriptRunner` runs ensure scripts (extensions, queues, event streams) in file-name order through an `IScriptExecutor`. Scripts must be idempotent and run every time; a script named `*.once.sql` runs only until its name and SHA-512 content hash are recorded in the `IAppliedScriptStore` (in-memory by default; a database-table store is a consumer's adapter). Scripts may use `{schema}` and `{prefix}`, replaced from the `DatabaseTarget` instance (a missing value throws). The result is an `EnsureReport` of ran and skipped scripts.
 
 ## Schema packages (build plan phase D)
 
