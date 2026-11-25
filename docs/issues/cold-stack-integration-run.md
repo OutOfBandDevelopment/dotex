@@ -1,0 +1,5 @@
+# Cold-stack Integration run fails tests that pass alone
+
+**Status:** open, waiting for an owner-chosen approach. Found 2026-11-24.
+
+Whole-solution Integration run on a cold stack (about 15 containers starting at once) fails 5 to 15 tests that each pass alone (2026-11-24, three cold runs: Tika, ClamAV, STOMP, Keycloak, Docling, ServiceBroker, MailKit, Azure Service Bus; "response ended prematurely", "closed the connection", "no reply", SQL timeouts). Tried and not a cure: `-m:2`, a 2 s settle after a container reports ready. Run the warm-up script first (item above); a durable fix means the harness starting the stack in one ordered step before any project runs. Considered 2026-11-24 and not built: a cross-process mutex around `ComposeUpAsync` only staggers the starts by seconds (compose up detaches), and serializing start plus wait would push waiting tests past `CONTAINER_STARTUP_TIMEOUT_SECONDS`; a cure needs a 15-minute cold run per attempt to prove, so it waits for an owner-chosen approach.
