@@ -10,6 +10,7 @@ Derive migrations from plain `CREATE` scripts for SQL Server, Postgres, SQLite a
 2. [Architecture](architecture.md)
 3. [API design](api-design.md)
 4. [Testing strategy](testing-strategy.md)
+5. [Tool comparison](tool-comparison.md) (sqldef, pgschema, Atlas: configuration, deployment, safety, pros and cons)
 
 ### List of Tables
 
