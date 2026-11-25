@@ -131,29 +131,26 @@ What was needed to close this out. Tick items as they land, in the same change.
 - [x] Shared model (`ThemeFile.Save`, `ThemeBuilderState`, `ActiveTheme.Preview`)
 - [x] TUI `ThemeBuilderMode`
 - [x] WPF seed picker and builder windows
-- [x] Unit tests, spec (`docs/specs/theme-builder.md`) and user guide
+- [x] Unit tests, [spec](../../applications/devterm/specs/theme-builder.md) and [user guide](../../applications/devterm/user-guide/themes.md)
 - [x] Manual-use pass in both front ends (reviewed by the maintainer 2026-10-02: "looks great")
 
 ## Status
 
 **Implemented 2026-10-01; reviewed by hand in both front ends 2026-10-02.** Both front ends ship the full flow described above:
+- **Shared model** (`OoBDev.DevTerm.Core`, `Configuration/`): `ThemeFile.Save`, `ThemeBuilderState`,
+  `ActiveTheme.Preview`/`CancelPreview`, unit-tested in `ThemeBuilderStateTests`
+  (`OoBDev.DevTerm.Core.Tests`).
+- **TUI**: `ThemeBuilderMode` (`PickSeed`, `BuildWindow`, `EditColor`) with `ThemeBuilderWindowParts`, wired into
+  `TuiMode`'s View menu (`OoBDev.DevTerm.Tui`). Tested in `ThemeBuilderModeTests` (`OoBDev.DevTerm.Tui.Tests`).
+- **WPF**: `ThemeSeedPickerWindow` with `ThemeSeedPickerViewModel`, and `ThemeBuilderWindow` with
+  `ThemeBuilderDialogViewModel` (`OoBDev.DevTerm.Wpf`), wired into the View > Theme menu; per-role editing
+  reuses `ColorPickerWindow`. Tested in `ThemeBuilderDialogTests` (`OoBDev.DevTerm.Wpf.Tests`): seed choice, delete refusal, role edit, reserved name and a saved theme
+  run with no blocking
+  dialog because the view model asks through an injected `IConfirmPrompt` instead of calling
+  `MessageBox.Show` inline.
 
-- **Shared model** (`DevTerm.Configuration`): `ThemeFile.Save`, `ThemeBuilderState`,
-  `ActiveTheme.Preview`/`CancelPreview` — unit-tested in
-  `tests/DevTerm.Configuration.Tests/ThemeBuilderStateTests.cs`.
-- **TUI**: `DevTerm.Console.ThemeBuilderMode` (`PickSeed`, `BuildWindow`, `EditColor`), wired into
-  `TuiMode`'s View menu. Tested in `tests/DevTerm.Console.Tests/ThemeBuilderModeTests.cs`.
-- **WPF**: `DevTerm.Wpf.ThemeSeedPickerWindow` and `ThemeBuilderWindow` (per-role editing reuses
-  `ColorPickerWindow` instead of a plain hex field, as the front-end split above anticipated), wired
-  into `MainWindow`'s View > Theme menu. Tested in `tests/DevTerm.Wpf.Tests/ThemeSeedPickerWindowTests.cs`
-  and `ThemeBuilderWindowTests.cs` — every Save/Commit branch (empty name, reserved name, overwrite
-  decline/confirm) is directly testable with no blocking real dialog, since both windows expose their
-  `MessageBox.Show` calls as injectable delegate properties (`ReportValidationError`,
-  `ConfirmOverwrite`) rather than calling `MessageBox.Show` inline — a genuine testability
-  improvement over the TUI screen, which needs a nested `Application.Run` to exercise the equivalent
-  branches.
-
-Verified: whole-solution `dotnet build` (0 warnings/errors), `dotnet test` (every project green), and a manual-use
-pass in both front ends (the maintainer, 2026-10-02: "looks great"). It is a pure UI feature with no device
-dependency, so there is no hardware pass. See `docs/specs/theme-builder.md` for the field/action reference and
-`docs/user-guide/themes.md`'s "Building a theme in the app" section for the walkthrough.
+Verified at the time: whole-solution build, every project's tests, and a manual-use pass in both front ends
+(the maintainer, 2026-10-02: "looks great"). It is a pure UI feature with no device dependency, so there is no
+hardware pass. See the [spec](../../applications/devterm/specs/theme-builder.md) for the field and action
+reference and the [themes user guide](../../applications/devterm/user-guide/themes.md) ("Building a theme in the
+app") for the walkthrough.

@@ -201,7 +201,7 @@ menu) are themed too. Each attached window gets a merged `ThemeDictionary`:
   editor looks unthemed in legacy conhost: invisible field backgrounds, faint focus", fixed 2026-09-30).
   `selectionBackground` was brightened to `#2A66C2`, whose nearest named color is "BrightBlue" instead -
   see `BuiltInThemes.Dark`'s doc comment and
-  `DevTerm.Console.Tests.LegacyConsole16ColorTests`, which calls the real
+  `LegacyConsole16ColorTests` (`OoBDev.DevTerm.Tui.Tests`), which calls the real
   `Color.GetClosestNamedColor16()` (not a reimplementation) to lock this in. `light`'s equivalent roles
   collapse more severely under the same downgrade (`background`/`fieldBackground`/`selectionBackground`
   all landed on "White"). Fixed 2026-10-02 for the TUI only: `DevTermTheme.ForSixteenColors()` returns a variant
