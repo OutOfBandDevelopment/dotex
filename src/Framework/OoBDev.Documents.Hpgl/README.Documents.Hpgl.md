@@ -10,7 +10,17 @@ References `OoBDev.Documents.Abstractions` only. Moved from `OoBDev.DevTerm.Core
 
 ## Audio output (oscilloscope X-Y)
 
-`VectorSceneAudioWriter` writes a `VectorScene` as a stereo 16-bit WAV (left X, right Y, scaled to -1..1, aspect kept). `VectorSceneAudioOptions` sets `SampleRate` (48000), `Duration` (10 s), `FramesPerSecond` (25) and `JumpSamples` (4). There is no blanking track, so jumps between lines are short interpolated runs. Design: [HpglAudioSink](../../../docs/design/HpglAudioSink/README.md).
+`VectorSceneAudioWriter` writes a `VectorScene` as a stereo 16-bit WAV (left X, right Y, scaled to -1..1, aspect kept). `VectorSceneAudioOptions` sets `SampleRate` (48000), `Duration` (10 s), `FramesPerSecond` (25), `JumpSamples` (4) and `ZChannel` (off). By default there is no blanking track, so jumps between lines are short interpolated runs. With `ZChannel` the file is an extensible 3-channel WAV with +1 while drawing and -1 while jumping on the front-centre channel (never the LFE). An empty scene writes nothing. Design: [HpglAudioSink](../../../docs/design/HpglAudioSink/README.md).
+
+```csharp
+// A plotter capture becomes a scene, then a WAV that is played into the scope's X and Y inputs.
+var scene = HpglToSvgConverter.ParseScene(File.ReadAllBytes("hpgl-capture.plt"));
+using var wav = File.Create("hpgl-capture.wav");
+new VectorSceneAudioWriter(new VectorSceneAudioOptions { Duration = TimeSpan.FromSeconds(30) }).Write(scene, wav);
+```
+
+
+Limits: the scope must be in X-Y mode and the level may need attenuating (start low). Many line outputs are AC-coupled and lose the DC offset, so the image drifts; DC-coupled or USB audio devices draw steadier. Without a Z track jumps show as faint lines unless the scope has a Z input; a faster sample rate (check with a loopback test) makes fast jumps almost invisible. An S/PDIF decoder box cannot carry a discrete Z channel.
 
 ## PostScript and PCL scenes
 

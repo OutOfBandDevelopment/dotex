@@ -109,4 +109,31 @@ public sealed class VectorSceneAudioWriterTests
 
         Assert.IsTrue(draw > 0 && blank > 0, $"draw {draw}, blank {blank}");
     }
+
+    [TestMethod]
+    public void Write_HpglCapture_ParsedThenRenderedSpansBothChannels()
+    {
+        // Stage: the readme example, a plotter capture of a square
+        var capture = "IN;SP1;PU1000,1000;PD5000,1000,5000,5000,1000,5000,1000,1000;PU;"u8.ToArray();
+        var scene = HpglToSvgConverter.ParseScene(capture);
+
+        // Test
+        using var ms = new MemoryStream();
+        new VectorSceneAudioWriter(Short()).Write(scene, ms);
+        var b = ms.ToArray();
+        short minX = short.MaxValue, maxX = short.MinValue, minY = short.MaxValue, maxY = short.MinValue;
+        for (var i = 44; i + 3 < b.Length; i += 4)
+        {
+            var x = BitConverter.ToInt16(b, i);
+            var y = BitConverter.ToInt16(b, i + 2);
+            minX = Math.Min(minX, x);
+            maxX = Math.Max(maxX, x);
+            minY = Math.Min(minY, y);
+            maxY = Math.Max(maxY, y);
+        }
+
+        // Assert
+        Assert.IsGreaterThan(8000, maxX - minX, "X spans the screen.");
+        Assert.IsGreaterThan(8000, maxY - minY, "Y spans the screen.");
+    }
 }

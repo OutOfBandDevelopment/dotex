@@ -21,7 +21,9 @@ Status: **proposed design, written 2026-11-19 on the assumed answer A of Q20 (an
 
 ## Architecture
 
-The writer sits beside `VectorSceneSvgWriter` in `OoBDev.Documents.Hpgl` (host-free Framework). It has no sound-device dependency: output is 16-bit PCM WAV bytes, so tests compare bytes. Live playback is a later, separate adapter. A conversion handler `HpglToWavConversionHandler` mirrors `HpglToSvgConversionHandler` so the document converter reaches it by content type (`audio/wav`).
+The writer sits beside `VectorSceneSvgWriter` in `OoBDev.Documents.Hpgl` (host-free Framework). It has no sound-device dependency: output is 16-bit PCM WAV bytes, so tests compare bytes. Live playback is the separate tool [`hpgl-player`](../../../src/Tools/OoBDev.HpglPlayer.Cli/README.HpglPlayer.Cli.md) (built 2026-11-25, Windows only, stereo, loops until Ctrl+C; owner request). A conversion handler `HpglToWavConversionHandler` mirrors `HpglToSvgConversionHandler` so the document converter reaches it by content type (`audio/wav`).
+
+The tool plays stereo through `SoundPlayer` by default. With `--z` (3-channel signal) or `--device <name or index>` it plays through WASAPI (NAudio, shared mode, looping), and `--list-devices` prints the output devices. A device must already accept the channel count: shared mode does not up-mix, so a 3-channel signal needs the device set to 5.1 or more in the Windows sound settings; the tool reports the refusal and points to `--wav`. Owner decision 2026-11-25: the tool stays in `src/Tools`.
 
 ## API sketch
 

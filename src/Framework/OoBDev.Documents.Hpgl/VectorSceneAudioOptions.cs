@@ -24,9 +24,9 @@ public sealed class VectorSceneAudioOptions
     /// <exception cref="ArgumentOutOfRangeException">A value is zero or negative.</exception>
     public void Validate()
     {
-        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(SampleRate, 0, nameof(SampleRate));
-        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(Duration, TimeSpan.Zero, nameof(Duration));
-        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(FramesPerSecond, 0, nameof(FramesPerSecond));
-        ArgumentOutOfRangeException.ThrowIfNegative(JumpSamples, nameof(JumpSamples));
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(SampleRate, 0);
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(Duration, TimeSpan.Zero);
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(FramesPerSecond, 0);
+        ArgumentOutOfRangeException.ThrowIfNegative(JumpSamples);
     }
 }
