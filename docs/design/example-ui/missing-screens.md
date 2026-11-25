@@ -50,7 +50,7 @@ These have no row in [the plan](plan.md) or `screens.md`; whether each deserves 
 | Screen | Gap |
 | --- | --- |
 | Telemetry | Fixed 2026-11-20: the API now lists the `Microsoft.AspNetCore` and `System.Net.Http` sources, and request traces reach the Aspire dashboard (checked live); the page itself lists the recent traces |
-| Current user, Sign in | Fail against the Aspire host, which runs anonymously |
+| Current user, Sign in | Sign in shows only when an identity provider is configured; the Current user page says so when the host runs anonymously (2026-11-24) |
 | Developer | API and event references are links only |
 | Overview | Probes cover eight endpoints (vector store, operations and rights added 2026-11-20); a tile per provider (Qdrant, SQL, mail) stays planned (`screens.md`, Table 2) |
 

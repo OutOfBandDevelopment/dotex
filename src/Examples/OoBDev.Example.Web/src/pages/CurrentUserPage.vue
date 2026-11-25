@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
+import { authEnabled } from '../core/auth';
 import { CurrentUserViewModel } from './CurrentUserViewModel';
 
 const vm = new CurrentUserViewModel();
@@ -8,6 +9,7 @@ onMounted(() => vm.refresh.execute());
 
 <template>
   <h1>Current user</h1>
+  <p v-if="!authEnabled" class="note">This host runs anonymously (no identity provider is configured), so there is no signed-in user and the claim list stays empty.</p>
   <p v-if="vm.refresh.error.value" class="error">{{ vm.refresh.error.value }}</p>
   <table class="grid">
     <thead><tr><th>Type</th><th>Value</th><th>Issuer</th></tr></thead>
