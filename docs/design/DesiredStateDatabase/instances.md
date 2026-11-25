@@ -48,19 +48,19 @@ sqldef plans against the whole database, so another instance's tables look like 
 
 - `sqlite3def` skips drops unless asked (`-- Skipped: DROP TABLE`), and `--config-inline 'target_tables: a_.*'` removes the other prefix from the plan.
 - `psqldef` with `--enable-drop` planned `DROP TABLE "b"."Notes"` for a second schema; `--config-inline 'target_schema: a'` and `target_tables: a\..*` both removed it.
-- `mssqldef` has the same `--config` options but was not run here.
+- `mssqldef` 3.11.30 accepts `--config-inline` but ignores `target_schema` (checked 2026-11-25 against the SQL Server container: planning schema `b` still planned `DROP TABLE [a].[t]`).
 
-So no plan filtering code is needed in the deployer: `SqldefProvider` must pass a config (`target_schema` on PostgreSQL and SQL Server, `target_tables` on SQLite with a prefix).
+So no plan filtering code is needed for PostgreSQL and SQLite: `SqldefProvider` passes a config (`target_schema` on PostgreSQL, `target_tables` on SQLite with a prefix).
 
 ## Built 2026-11-25
 
-- `DatabaseTarget` carries `Schema` and `TablePrefix` (`ForInstance`); `SqldefProvider` passes `target_schema` (PostgreSQL, SQL Server) or `target_tables` (SQLite with a prefix) as `--config-inline`.
+- `DatabaseTarget` carries `Schema` and `TablePrefix` (`ForInstance`); `SqldefProvider` passes `target_schema` (PostgreSQL; SQL Server with a schema throws `NotSupportedException` because mssqldef ignores it, so SQL Server instances use the ensure scripts) or `target_tables` (SQLite with a prefix) as `--config-inline`.
 - `StoreInstance.UseStoreInstance(schema, tablePrefix)` in the new `OoBDev.Data.EntityFrameworkCore` (`src/Framework`, references EF Core Relational only; owner, 2026-11-25, Q42 A) names the instance on the context options and an `IModelCacheKeyFactory` keeps one model per instance. `StoreInstance.Of(this).ToTable(entity, name)` places each table. Suppressions, RightAudit, Schedule, event store, messaging inbox and outbox, templates and loaded rows all use it.
 - EF emits a `DO $EF$ ... CREATE SCHEMA` block for a schema, which sqldef cannot parse: the block is removed from the desired script and the schema is created by an ensure step.
 - Tests (`OoBDev.Data.Schema.Tests/StoreInstanceTests.cs`): model per instance (Unit), two prefixes in one SQLite file (Simulate), two schemas in one PostgreSQL database (Integration); each second plan is empty and skips nothing.
 
 ## Open points
 
-- Check `mssqldef` with `target_schema`.
+- (done 2026-11-25) `mssqldef` with `target_schema`: not honored, the provider refuses (see above).
 - (built 2026-11-25) `{schema}`/`{prefix}` tokens in once and ensure scripts: `EnsureScriptRunner` replaces them from the target and throws when a token has no value.
 - Migration plan (confirmed Q42 A): project `OoBDev.Data.EntityFrameworkCore`, from `OoBDev.Communications.EntityFrameworkCore` (`SuppressionsInstance`, removed), target `src/Framework`, namespace `OoBDev.Data.EntityFrameworkCore`, package unit `OoBDev.Data.EntityFrameworkCore`; new ProjectReference in the AspNetCore, Communications, ComplexEvents, DataLoader, EventSourcing, MessageQueueing and Text.Templating EntityFrameworkCore projects. Done 2026-11-25.

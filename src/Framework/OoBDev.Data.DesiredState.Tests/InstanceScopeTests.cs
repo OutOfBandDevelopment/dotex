@@ -35,6 +35,22 @@ public sealed class InstanceScopeTests
 
     [TestMethod]
     [TestCategory("Unit")]
+    public async Task PlanAsync_SqlServerWithASchema_RefusesBecauseMssqldefIgnoresTargetSchema()
+    {
+        // Stage
+        var runner = new Recorder();
+        var target = new DatabaseTarget("db.test", 1433, "app", "me").ForInstance(schema: "tickets");
+
+        // Test
+        var error = await Assert.ThrowsExactlyAsync<NotSupportedException>(() => SqldefProvider.ForSqlServer(runner).PlanAsync(new DesiredSchema([]), target, TestContext.CancellationToken));
+        TestContext.WriteLine(error.Message);
+
+        // Assert
+        Assert.IsEmpty(runner.Arguments);
+    }
+
+    [TestMethod]
+    [TestCategory("Unit")]
     public async Task PlanAsync_SqliteWithAPrefix_PassesAnEscapedTargetTables()
     {
         // Stage

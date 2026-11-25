@@ -68,6 +68,12 @@ public sealed class SqldefProvider(string engine, string executable, IToolRunner
             }
         }
 
+        if (Engine == SqlServer && !string.IsNullOrEmpty(target.Schema))
+        {
+            // mssqldef 3.11.30 ignores target_schema (verified 2026-11-25): its plan would drop the other schemas' tables.
+            throw new NotSupportedException("mssqldef cannot be scoped to one schema; run SQL Server store instances through the ensure scripts ({schema}) instead.");
+        }
+
         var scope = ScopeConfig(target);
         if (scope is not null)
         {
@@ -82,7 +88,7 @@ public sealed class SqldefProvider(string engine, string executable, IToolRunner
     private string? ScopeConfig(DatabaseTarget target) => Engine switch
     {
         Sqlite when !string.IsNullOrEmpty(target.TablePrefix) => $"target_tables: {System.Text.RegularExpressions.Regex.Escape(target.TablePrefix)}.*",
-        Postgres or SqlServer when !string.IsNullOrEmpty(target.Schema) => $"target_schema: {target.Schema}",
+        Postgres when !string.IsNullOrEmpty(target.Schema) => $"target_schema: {target.Schema}",
         _ => null,
     };
 
