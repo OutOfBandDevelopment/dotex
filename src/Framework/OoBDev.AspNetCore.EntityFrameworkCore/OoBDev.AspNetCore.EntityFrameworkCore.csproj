@@ -16,6 +16,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\OoBDev.Data.EntityFrameworkCore\OoBDev.Data.EntityFrameworkCore.csproj" />
 		<ProjectReference Include="..\OoBDev.AspNetCore.Abstractions\OoBDev.AspNetCore.Abstractions.csproj" />
 		<ProjectReference Include="..\OoBDev.System\OoBDev.System.csproj" />
 	</ItemGroup>

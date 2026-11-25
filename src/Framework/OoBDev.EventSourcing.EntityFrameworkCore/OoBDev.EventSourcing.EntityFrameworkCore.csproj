@@ -19,6 +19,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\OoBDev.Data.EntityFrameworkCore\OoBDev.Data.EntityFrameworkCore.csproj" />
 		<ProjectReference Include="..\OoBDev.EventSourcing.Abstractions\OoBDev.EventSourcing.Abstractions.csproj" />
 		<ProjectReference Include="..\OoBDev.EventSourcing\OoBDev.EventSourcing.csproj" />
 	</ItemGroup>

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using OoBDev.Data.EntityFrameworkCore;
 
 namespace OoBDev.System.Text.Templating.EntityFrameworkCore;
 
@@ -12,9 +13,10 @@ public sealed class TemplatesDbContext(DbContextOptions<TemplatesDbContext> opti
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        var instance = StoreInstance.Of(this);
         modelBuilder.Entity<TemplateRow>(e =>
         {
-            e.ToTable("Templates");
+            instance.ToTable(e, "Templates");
             e.HasKey(x => x.Id);
             e.Property(x => x.Id).ValueGeneratedOnAdd();
             e.Property(x => x.Name).HasMaxLength(200).IsRequired();

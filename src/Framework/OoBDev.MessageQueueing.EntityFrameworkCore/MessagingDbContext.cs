@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using OoBDev.Data.EntityFrameworkCore;
 
 namespace OoBDev.MessageQueueing.EntityFrameworkCore;
 
@@ -18,9 +19,10 @@ public sealed class MessagingDbContext(DbContextOptions<MessagingDbContext> opti
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        var instance = StoreInstance.Of(this);
         modelBuilder.Entity<InboxRow>(e =>
         {
-            e.ToTable("Inbox");
+            instance.ToTable(e, "Inbox");
             e.HasKey(x => new { x.Consumer, x.MessageId });
             e.Property(x => x.Consumer).HasMaxLength(200);
             e.Property(x => x.MessageId).HasMaxLength(200);

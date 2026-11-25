@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
 using OoBDev.Communications.EntityFrameworkCore;
+using OoBDev.Data.EntityFrameworkCore;
 using OoBDev.Data.DesiredState;
 using OoBDev.System.IO;
 using OoBDev.TestUtilities;
@@ -24,8 +25,8 @@ public class StoreInstanceTests
     public void Suppressions_PostgresSchemaInstance_PlacesTheTableInThatSchema()
     {
         // Test
-        var a = Script(b => b.UseNpgsql("Host=unused;Database=unused").UseSuppressionsInstance(schema: "a"));
-        var other = Script(b => b.UseNpgsql("Host=unused;Database=unused").UseSuppressionsInstance(schema: "b"));
+        var a = Script(b => b.UseNpgsql("Host=unused;Database=unused").UseStoreInstance(schema: "a"));
+        var other = Script(b => b.UseNpgsql("Host=unused;Database=unused").UseStoreInstance(schema: "b"));
         var plain = Script(b => b.UseNpgsql("Host=unused;Database=unused"));
         TestContext.WriteLine(a);
 
@@ -41,8 +42,8 @@ public class StoreInstanceTests
     public void Suppressions_SqlitePrefixInstance_PrefixesTableAndConstraintNames()
     {
         // Test
-        var a = Script(b => b.UseSqlite("Data Source=unused.db").UseSuppressionsInstance(tablePrefix: "a_"));
-        var other = Script(b => b.UseSqlite("Data Source=unused.db").UseSuppressionsInstance(tablePrefix: "b_"));
+        var a = Script(b => b.UseSqlite("Data Source=unused.db").UseStoreInstance(tablePrefix: "a_"));
+        var other = Script(b => b.UseSqlite("Data Source=unused.db").UseStoreInstance(tablePrefix: "b_"));
         TestContext.WriteLine(a);
 
         // Assert
@@ -70,7 +71,7 @@ public class StoreInstanceTests
         // Test
         foreach (var prefix in schemas)
         {
-            var desired = new DesiredSchema([new DesiredScript(prefix + ".sql", Script(b => b.UseSqlite("Data Source=unused.db").UseSuppressionsInstance(tablePrefix: prefix)))]);
+            var desired = new DesiredSchema([new DesiredScript(prefix + ".sql", Script(b => b.UseSqlite("Data Source=unused.db").UseStoreInstance(tablePrefix: prefix)))]);
             var target = file.ForInstance(tablePrefix: prefix);
             await provider.ApplyAsync(desired, target, await provider.PlanAsync(desired, target, TestContext.CancellationToken), new ApplyOptions(), TestContext.CancellationToken);
         }
@@ -78,7 +79,7 @@ public class StoreInstanceTests
         // Assert
         foreach (var prefix in schemas)
         {
-            var desired = new DesiredSchema([new DesiredScript(prefix + ".sql", Script(b => b.UseSqlite("Data Source=unused.db").UseSuppressionsInstance(tablePrefix: prefix)))]);
+            var desired = new DesiredSchema([new DesiredScript(prefix + ".sql", Script(b => b.UseSqlite("Data Source=unused.db").UseStoreInstance(tablePrefix: prefix)))]);
             var again = await provider.PlanAsync(desired, file.ForInstance(tablePrefix: prefix), TestContext.CancellationToken);
             TestContext.WriteLine($"{prefix}: statements={again.Statements.Count} skipped={again.Skipped.Count}");
             Assert.IsTrue(again.IsEmpty, string.Join("\n", again.Statements));
@@ -110,7 +111,7 @@ public class StoreInstanceTests
             // Test
             foreach (var schema in new[] { "a", "b" })
             {
-                var desired = new DesiredSchema([new DesiredScript(schema + ".sql", Script(b => b.UseNpgsql("Host=unused;Database=unused").UseSuppressionsInstance(schema: schema)))]);
+                var desired = new DesiredSchema([new DesiredScript(schema + ".sql", Script(b => b.UseNpgsql("Host=unused;Database=unused").UseStoreInstance(schema: schema)))]);
                 var target = root.ForInstance(schema: schema);
                 await provider.ApplyAsync(desired, target, await provider.PlanAsync(desired, target, TestContext.CancellationToken), new ApplyOptions(), TestContext.CancellationToken);
             }
@@ -118,7 +119,7 @@ public class StoreInstanceTests
             // Assert
             foreach (var schema in new[] { "a", "b" })
             {
-                var desired = new DesiredSchema([new DesiredScript(schema + ".sql", Script(b => b.UseNpgsql("Host=unused;Database=unused").UseSuppressionsInstance(schema: schema)))]);
+                var desired = new DesiredSchema([new DesiredScript(schema + ".sql", Script(b => b.UseNpgsql("Host=unused;Database=unused").UseStoreInstance(schema: schema)))]);
                 var again = await provider.PlanAsync(desired, root.ForInstance(schema: schema), TestContext.CancellationToken);
                 TestContext.WriteLine($"{schema}: statements={again.Statements.Count} skipped={again.Skipped.Count}");
                 Assert.IsTrue(again.IsEmpty, string.Join("\n", again.Statements));

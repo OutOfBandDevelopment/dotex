@@ -13,6 +13,6 @@ services.AddEmailSuppression(); // wraps ISendService; uses this list instead of
 services.AddUnsubscribeLinks();  // OoBDev.Communications: signed RFC 8058 links feeding the same list
 ```
 
-Register it before `AddEmailSuppression`. The consumer picks the provider and creates the schema (`EnsureCreated` or its own migrations; shipped migrations are not built).
+The table can live in a schema or behind a prefix: `o.UseStoreInstance(schema: "mail")` ([OoBDev.Data.EntityFrameworkCore](../OoBDev.Data.EntityFrameworkCore/README.Data.EntityFrameworkCore.md)). Register it before `AddEmailSuppression`. The consumer picks the provider and creates the schema (`EnsureCreated` or its own migrations; shipped migrations are not built).
 
 Tests: `OoBDev.Communications.EntityFrameworkCore.Tests` (Simulate, Sqlite in memory). Not run: SQL Server and PostgreSQL.

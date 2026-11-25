@@ -317,6 +317,8 @@
     <Project Path="Framework/OoBDev.Data.Common.Tests/OoBDev.Data.Common.Tests.csproj" />
     <Project Path="Framework/OoBDev.Data.DesiredState.Tests/OoBDev.Data.DesiredState.Tests.csproj" />
     <Project Path="Framework/OoBDev.Data.DesiredState/OoBDev.Data.DesiredState.csproj" />
+    <Project Path="Framework/OoBDev.Data.EntityFrameworkCore.Tests/OoBDev.Data.EntityFrameworkCore.Tests.csproj" />
+    <Project Path="Framework/OoBDev.Data.EntityFrameworkCore/OoBDev.Data.EntityFrameworkCore.csproj" />
     <Project Path="Framework/OoBDev.Data.Common/OoBDev.Data.Common.csproj" />
     <Project Path="Framework/OoBDev.Data.Schema.Tests/OoBDev.Data.Schema.Tests.csproj" />
     <Project Path="Framework/OoBDev.Data.Schema.SqlServer/OoBDev.Data.Schema.SqlServer.sqlproj" />

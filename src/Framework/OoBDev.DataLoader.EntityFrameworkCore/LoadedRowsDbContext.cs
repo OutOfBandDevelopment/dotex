@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using OoBDev.Data.EntityFrameworkCore;
 
 namespace OoBDev.DataLoader.EntityFrameworkCore;
 
@@ -12,9 +13,10 @@ public sealed class LoadedRowsDbContext(DbContextOptions<LoadedRowsDbContext> op
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        var instance = StoreInstance.Of(this);
         modelBuilder.Entity<LoadedRow>(e =>
         {
-            e.ToTable("LoadedRows");
+            instance.ToTable(e, "LoadedRows");
             e.HasKey(x => new { x.Dataset, x.Key });
             e.Property(x => x.Dataset).HasMaxLength(100);
             e.Property(x => x.Key).HasMaxLength(300);

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using OoBDev.Data.EntityFrameworkCore;
 
 namespace OoBDev.AspNetCore.EntityFrameworkCore;
 
@@ -13,7 +14,7 @@ public sealed class RightAuditDbContext(DbContextOptions<RightAuditDbContext> op
     protected override void OnModelCreating(ModelBuilder modelBuilder) =>
         modelBuilder.Entity<RightAuditRow>(e =>
         {
-            e.ToTable("RightAudit");
+            StoreInstance.Of(this).ToTable(e, "RightAudit");
             e.HasKey(x => x.Id);
             e.Property(x => x.Id).ValueGeneratedOnAdd();
             e.Property(x => x.Subject).HasMaxLength(200).IsRequired();

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using OoBDev.Data.EntityFrameworkCore;
 
 namespace OoBDev.EventSourcing.EntityFrameworkCore;
 
@@ -22,11 +23,12 @@ public sealed class EventSourcingDbContext(DbContextOptions<EventSourcingDbConte
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        var instance = StoreInstance.Of(this);
         var provider = Database.ProviderName;
 
         modelBuilder.Entity<EventRow>(e =>
         {
-            e.ToTable("Events");
+            instance.ToTable(e, "Events");
             e.HasKey(x => x.Position);
             e.Property(x => x.Position).ValueGeneratedOnAdd();
             e.Property(x => x.StreamId).HasMaxLength(200).IsRequired();
@@ -53,7 +55,7 @@ public sealed class EventSourcingDbContext(DbContextOptions<EventSourcingDbConte
 
         modelBuilder.Entity<EntityRow>(e =>
         {
-            e.ToTable("Entities");
+            instance.ToTable(e, "Entities");
             e.HasKey(x => new { x.Type, x.Key });
             e.Property(x => x.Type).HasMaxLength(100);
             e.Property(x => x.Key).HasMaxLength(200);

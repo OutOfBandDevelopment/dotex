@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using OoBDev.Data.EntityFrameworkCore;
 
 namespace OoBDev.ComplexEvents.EntityFrameworkCore;
 
@@ -15,16 +16,17 @@ public sealed class ScheduleDbContext(DbContextOptions<ScheduleDbContext> option
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        var instance = StoreInstance.Of(this);
         modelBuilder.Entity<LastRunRow>(e =>
         {
-            e.ToTable("ComplexEventLastRun");
+            instance.ToTable(e, "ComplexEventLastRun");
             e.HasKey(x => x.Key);
             e.Property(x => x.Key).HasMaxLength(200);
         });
 
         modelBuilder.Entity<ScheduleRow>(e =>
         {
-            e.ToTable("ComplexEventSchedule");
+            instance.ToTable(e, "ComplexEventSchedule");
             e.HasKey(x => x.Id);
             e.Property(x => x.Key).HasMaxLength(200).IsRequired();
             e.HasIndex(x => x.Key).IsUnique();
