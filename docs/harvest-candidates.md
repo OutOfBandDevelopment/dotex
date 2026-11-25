@@ -19,7 +19,6 @@ All under `C:\repo\mine\proving-grounds` (origin https://github.com/mwwhited/pro
 | `examples/AccountingEngine` | Billing, amortization, clearing and dunning engines behind interfaces (28 files) | Read-only reference for domain rules; a reference-application idea is [declined for now](features/rejected/2026-11-25-reference-domain-application.md) |
 | `design-patterns/BehaviorBlackboard` | Blackboard pattern sample (8 files) | A worked example for the patterns docs |
 | `examples/OoBDev.MessageBroker`, `examples/Ssb.Modeling`, `examples/SQL` | SQL Server Service Broker tooling | Deferred until a Service Broker feature exists ([design](design/SqlServiceBroker/README.md)) |
-| `examples/OoBDev.ScoreMachine` | Fencing scoring system (Favero, LANC relay, HID scanner, H4n CLI, web) | Libraries and emulators only (D8); its Kestrel host is one more place the CGI middleware could be tried |
 | `examples/CarMaintenanceLog`, `examples/SecondShooter` | Applications | Reference applications; extract only when a feature needs the same data-access or domain code |
 | `examples/NeedsReviewed` | 307 unsorted C# files | Triage once; unknown content |
 

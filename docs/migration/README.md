@@ -95,7 +95,7 @@ Map: [harvest-candidates.md](../harvest-candidates.md). Nothing is copied withou
 
 | Source item | Decision |
 |-------------|----------|
-| ScoreMachine and HomeSeer | Libraries and emulators only (D8); applications rejected |
+| ScoreMachine and HomeSeer | Libraries and emulators only (D8); applications rejected; the remaining ScoreMachine harvest rejected 2026-11-25 (Table 6) |
 | hybridsearch, BuildFirstOnce, postsql-playground | Compared 2026-11-10: [recommendations](harvest-d7-comparison.md) await the owner (D7); postsql informs `OoBDev.DacFx` |
 | Oobtainium (mocking and proxy framework, about 1,600 lines) | Not migrated; Moq and NSubstitute cover it. Reopen only with a fresh comparison against `proving-grounds/examples/OoBDev.Oobtainium` |
 | `OoBDev.MessageBroker`, `Ssb.Modeling`, `SQL` | Deferred until a Service Broker feature exists |
@@ -121,6 +121,7 @@ Map: [harvest-candidates.md](../harvest-candidates.md). Nothing is copied withou
 | BinaryDataDecoders badges, `RETIRED.md`, generated `docs/*`, report XSLT templates, GitHub workflows, `act` files | Retired GitHub or regenerated output; covered by `GitVersion.yml`, `OoBDev.Docs.Tests` and manual CI (`scripts/ci`) |
 | dev-term's "consume dotex as NuGet" plan | Superseded by the merge |
 | proving-grounds `examples/OsciRenderClient` (owner, 2026-11-25) | One-off demo client for the osci-render TCP port (wire format never confirmed); the HP-GL and SVG to stereo WAV sink ([request](../features/request/2026-11-10-hpgl-vector-display-sink.md)) replaces its purpose |
+| proving-grounds `examples/OoBDev.ScoreMachine` (owner, 2026-11-25) | A client-specific application; the Favero and Saint George decoders are already migrated as `OoBDev.Fencing.ScoreMachines`, and the rest would only be a specific client example (see the [reference application request](../features/rejected/2026-11-25-reference-domain-application.md): such examples belong in child repositories) |
 
 ## Decisions
 
