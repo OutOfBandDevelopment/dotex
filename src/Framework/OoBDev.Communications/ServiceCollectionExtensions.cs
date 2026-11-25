@@ -57,6 +57,27 @@ public static class ServiceCollectionExtensions
     }
 
     /// <summary>
+    /// Adds <see cref="TemplateEmailComposer"/> and <see cref="TemplateSmsComposer"/>, which render the registered
+    /// <c>ITemplateEngine</c> templates named <c>{MessageType}.email.html</c>, <c>.email.text</c>, <c>.email.subject</c> and <c>{MessageType}.sms</c>.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configure">Optional changes to <see cref="TemplateComposerOptions"/>.</param>
+    /// <returns>The modified <see cref="IServiceCollection"/>.</returns>
+    public static IServiceCollection TryAddTemplateComposers(this IServiceCollection services, Action<TemplateComposerOptions>? configure = null)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+        var options = services.AddOptions<TemplateComposerOptions>();
+        if (configure is not null)
+        {
+            options.Configure(configure);
+        }
+
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IMessageComposer, TemplateEmailComposer>());
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IMessageComposer, TemplateSmsComposer>());
+        return services;
+    }
+
+    /// <summary>
     /// Wraps the registered <see cref="ISendService"/> so suppressed addresses are removed before sending. Call it
     /// after <see cref="TryAddSendReceive"/>; register a durable <see cref="ISuppressionList"/> first to replace the in-memory one.
     /// </summary>
