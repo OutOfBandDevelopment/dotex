@@ -1,6 +1,6 @@
 # Migration plan
 
-**Last Updated:** 2026-11-10
+**Last Updated:** 2026-11-25
 
 One plan for what is still to bring into this framework from other repositories, organised by feature, not by source. Migrated and documented features are not listed: they live in their project readmes (`README.{Project}.md`), feature designs ([docs/design](../design/README.md)) and change documents ([docs/changes](../changes/README.md)). Open work is tracked in [BACKLOG.md](../../BACKLOG.md) and [TODO.md](../../TODO.md). The per-source notes were folded into this file on 2026-11-10 (`git log -- docs/migration` has them).
 
@@ -37,7 +37,7 @@ One plan for what is still to bring into this framework from other repositories,
 
 | Source | Location | State |
 |--------|----------|-------|
-| BinaryDataDecoders | `C:\repo\mine\binary-data-decoders` at `e590b420` (the old `Incoming/BinaryDecoders` subset copy was removed 2026-11-10) | Libraries, tools and eight devices migrated and checked; the generic TCP services continue as a DevTerm feature request ([backlog](../../BACKLOG.md)) |
+| BinaryDataDecoders | The repository is no longer on disk (the old `Incoming/BinaryDecoders` subset copy was removed 2026-11-10) | Migrated and checked: libraries, tools and eight devices; what is left is the hardware work in [Table 2](#table-2) |
 | dev-term | `C:\repo\oobdev\dev-term` at `8c66e74` | Base for devices; shells and transports in progress ([parity status](../design/DevTermParity/status.md)) |
 | SharedFramework | (removed from `Incoming/`; history in `git log`) | Replaced by designs ([Table 4](#table-4)) |
 | proving-grounds, learning repositories, `_storage`, notes | `C:\repo\mine`, `C:\repo\oobdev` | Read-only references ([Table 5](#table-5)) |

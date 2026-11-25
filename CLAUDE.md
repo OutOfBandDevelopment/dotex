@@ -38,7 +38,7 @@ Read first:
 - `/docs/architecture/README.md` and `/docs/architecture/architectural-standards.md`
 
 Key principles:
-- ALL features from BinaryDataDecoders migrate (phases = priority order, not selection); the newest source is `C:\repo\mine\binary-data-decoders`; the old `Incoming/BinaryDecoders` copy was removed 2026-11-10
+- ALL features from BinaryDataDecoders migrate (phases = priority order, not selection); migrated, the source repository is no longer on disk and the remaining work is hardware checks ([migration plan](docs/migration/README.md))
 - Provider/factory pattern for extensibility; DI with `TryAdd*`
 - `README.{Project}.md` (upper-case `README`) per project; `PackageReadmeFile` derives from it (`src/Directory.Build.props`), and a missing file is only warning OBDPK001
 - Nullable enabled, ImplicitUsings disabled
