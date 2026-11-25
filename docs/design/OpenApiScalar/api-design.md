@@ -42,6 +42,7 @@ app.MapApiReference();                                    // /openapi/{name}.jso
 | `OAuthDocumentTransformer` | Declares the `oauth2` authorization code scheme |
 | `OAuthApiReferenceConfigurator` | Scalar authorization code flow with PKCE |
 | `ConfigureOAuthOpenApiOptions` | Adds the document transformer |
+| `OpenIdConfigurationDiscovery`, `OpenIdEndpoints` | Read the authorization and token URLs from the authority's `.well-known/openid-configuration` (5-second timeout) when they are not configured |
 
 ## Configuration
 

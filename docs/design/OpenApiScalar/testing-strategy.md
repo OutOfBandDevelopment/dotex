@@ -18,6 +18,8 @@
 | `Transform_AssemblyDocumentWithoutController_FallsBackToDocumentNameAsync` (Unit, REQ-007) | Assembly document title and the `v0.0.0.0` fallback |
 | `Configure_AudienceSet_UsesAuthorizationCodeWithPkceAndTheAudienceAsClientId` (Unit, REQ-006) | Scalar gets the authorization code flow, SHA-256 PKCE, the audience as client id and the configured scope |
 | `Configure_NoAudience_LeavesSignInUnconfigured` (Unit, REQ-006) | No sign-in without an audience |
+| `Transform_AuthorityWithoutUrls_ReadsThemFromTheDiscoveryDocumentAsync`, `Transform_ConfiguredUrls_WinOverTheAuthorityAsync`, `Transform_DiscoveryFails_LeavesTheSchemeOutAndRetriesNextTimeAsync` (Unit, REQ-006) | The `oauth2` scheme takes its URLs from the authority discovery document, configured URLs win, and a failed discovery leaves the scheme out and retries |
+| `Get_SuccessfulDiscovery_IsCachedAsync`, `Get_DocumentWithoutEndpoints_ReturnsNullAsync` (Unit, REQ-006) | `OpenIdConfigurationDiscovery` caches a success and returns null for a document without endpoints |
 
 The test project generates its XML documentation file so the XML transformers have input. Test controllers must be top-level public classes, because MVC does not discover nested ones.
 
