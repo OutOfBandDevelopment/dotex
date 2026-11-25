@@ -18,6 +18,8 @@ public sealed record SchemaPackage(
     DesiredSchema PostDeploy,
     IReadOnlyList<RefactorEntry> Refactors)
 {
+    private static readonly System.Text.Json.JsonSerializerOptions _json = new(System.Text.Json.JsonSerializerDefaults.Web);
+
 
     /// <summary>Reads a folder laid out like the zip: <c>schema/</c>, <c>predeploy/</c>, <c>postdeploy/</c> (each optional, <c>*.sql</c>) and an optional <c>refactorlog.json</c>.</summary>
     public static SchemaPackage FromDirectory(string directory, string name, string version)
@@ -25,7 +27,7 @@ public sealed record SchemaPackage(
         ArgumentException.ThrowIfNullOrWhiteSpace(directory);
         var log = Path.Combine(directory, "refactorlog.json");
         var refactors = File.Exists(log)
-            ? System.Text.Json.JsonSerializer.Deserialize<List<RefactorEntry>>(File.ReadAllText(log), new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web)) ?? []
+            ? System.Text.Json.JsonSerializer.Deserialize<List<RefactorEntry>>(File.ReadAllText(log), _json) ?? []
             : [];
         return new SchemaPackage(name, version, Scripts(directory, "schema"), Scripts(directory, "predeploy"), Scripts(directory, "postdeploy"), refactors);
     }

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
+using Microsoft.Data.Sqlite;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -134,6 +136,41 @@ public sealed class DesiredStateCommandTests
         Assert.AreEqual(0, code);
         Assert.AreEqual(1, package.Schema.Scripts.Count);
         Assert.AreEqual("r1", package.Refactors.Single().Id);
+    }
+
+    [TestMethod]
+    [TestCategory("Simulate")]
+    public async Task Deploy_PackageOnSqlite_AppliesItAndTheRepeatChangesNothing()
+    {
+        if (!(Environment.GetEnvironmentVariable("PATH") ?? string.Empty).Split(Path.PathSeparator).Any(d => d.Length > 0 && (File.Exists(Path.Combine(d, "sqlite3def")) || File.Exists(Path.Combine(d, "sqlite3def.exe")))))
+        {
+            Assert.Inconclusive("sqlite3def (sqldef, MIT) is not on PATH.");
+        }
+
+        using var work = new TempDirectoryHandle();
+        var zip = Path.Combine(work.DirectoryPath, "p.zip");
+        var package = new SchemaPackage("app", "1.0", new DesiredSchema([new DesiredScript("001.sql", "CREATE TABLE \"a\" (\"id\" integer NOT NULL PRIMARY KEY);")]), new DesiredSchema([]), new DesiredSchema([]), []);
+        await using (var stream = File.Create(zip))
+        {
+            SchemaPackageFormat.Write(package, stream);
+        }
+
+        var db = Path.Combine(work.DirectoryPath, "app.db");
+        using var services = new ServiceCollection().AddDesiredStateDatabase().BuildServiceProvider();
+        var factory = services.GetRequiredService<DesiredStateProviderFactory>();
+        string[] args = ["deploy", "--package", zip, "--engine", "sqlite", "--database", db];
+        static DbConnection Connect(string engine, DatabaseTarget t) => new SqliteConnection($"Data Source={t.Database};Pooling=False");
+
+        using var first = new StringWriter();
+        using var second = new StringWriter();
+        var code1 = await DesiredStateCommand.RunAsync(args, factory, _ => null, first, TextWriter.Null, Connect, TestContext.CancellationToken);
+        var code2 = await DesiredStateCommand.RunAsync(args, factory, _ => null, second, TextWriter.Null, Connect, TestContext.CancellationToken);
+        TestContext.WriteLine(first + second.ToString());
+
+        Assert.AreEqual(0, code1);
+        Assert.AreEqual(0, code2);
+        Assert.DoesNotContain("0 statements applied", first.ToString());
+        StringAssert.Contains(second.ToString(), "0 statements applied");
     }
 
     private static TempDirectoryHandle Schema()

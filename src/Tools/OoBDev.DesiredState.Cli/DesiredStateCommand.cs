@@ -1,4 +1,5 @@
 using System;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -9,7 +10,7 @@ using OoBDev.Data.DesiredState;
 namespace OoBDev.DesiredState.Cli;
 
 /// <summary>
-/// <c>desired-state plan|apply|pack</c>. Exit codes: 0 nothing to do or applied, 1 refused or hazards in the plan, 2 error, 3 plan has pending safe changes.
+/// <c>desired-state plan|apply|pack|deploy</c>. Exit codes: 0 nothing to do or applied, 1 refused or hazards in the plan, 2 error, 3 plan has pending safe changes.
 /// </summary>
 internal static class DesiredStateCommand
 {
@@ -17,13 +18,14 @@ internal static class DesiredStateCommand
         desired-state plan  --engine postgres|sqlserver|sqlite --scripts <dir> --database <name> [--host h] [--port p] [--user u] [--password-env NAME]
         desired-state apply (same options) [--allow-data-loss true] [--allow-type-change true]
         The password is read from the environment variable named by --password-env (default DESIRED_STATE_PASSWORD), never from the command line.
+        desired-state deploy --package <file.zip> --engine postgres|sqlite --database <name> [--host h] [--port p] [--user u] [--password-env NAME] [--allow-data-loss true] [--allow-type-change true]
         desired-state pack  --source <dir> --name <n> --version <v> --out <file.zip>   (source: schema/, predeploy/, postdeploy/, refactorlog.json)
         For sqlite, --database is the file path. Exit: 0 done or nothing to do, 1 refused or hazards, 2 error, 3 plan has pending changes.
         """;
 
-    public static async Task<int> RunAsync(string[] args, DesiredStateProviderFactory factory, Func<string, string?> environment, TextWriter output, TextWriter error, CancellationToken cancellationToken = default)
+    public static async Task<int> RunAsync(string[] args, DesiredStateProviderFactory factory, Func<string, string?> environment, TextWriter output, TextWriter error, Func<string, DatabaseTarget, DbConnection>? connect = null, CancellationToken cancellationToken = default)
     {
-        if (args.Length == 0 || args[0] is not ("plan" or "apply" or "pack"))
+        if (args.Length == 0 || args[0] is not ("plan" or "apply" or "pack" or "deploy"))
         {
             await error.WriteLineAsync(Usage).ConfigureAwait(false);
             return 2;
@@ -32,6 +34,11 @@ internal static class DesiredStateCommand
         try
         {
             var config = new ConfigurationBuilder().AddCommandLine(args[1..]).Build();
+            if (args[0] == "deploy")
+            {
+                return await DeployAsync(config, factory, environment, connect, output, cancellationToken).ConfigureAwait(false);
+            }
+
             if (args[0] == "pack")
             {
                 return await PackAsync(config, output).ConfigureAwait(false);
@@ -70,6 +77,36 @@ internal static class DesiredStateCommand
             return 2;
         }
     }
+
+    private static async Task<int> DeployAsync(IConfiguration config, DesiredStateProviderFactory factory, Func<string, string?> environment, Func<string, DatabaseTarget, DbConnection>? connect, TextWriter output, CancellationToken cancellationToken)
+    {
+        var engine = Required(config, "engine");
+        if (connect is null)
+        {
+            throw new NotSupportedException("deploy needs a database connection factory.");
+        }
+
+        SchemaPackage package;
+        await using (var stream = File.OpenRead(Required(config, "package")))
+        {
+            package = SchemaPackageFormat.Read(stream);
+        }
+
+        var target = TargetOf(config, engine, environment);
+        DbConnection Connect(DatabaseTarget t) => connect(engine, t);
+        var executor = new AdoScriptExecutor(Connect);
+        var store = new AdoAppliedScriptStore(Connect);
+        var deployer = new SchemaPackageDeployer(factory, new EnsureScriptRunner(executor, store), executor, store);
+        var options = new ApplyOptions(Flag(config, "allow-data-loss"), Flag(config, "allow-type-change"));
+        var result = await deployer.DeployAsync(package, engine, target, options, cancellationToken).ConfigureAwait(false);
+        await output.WriteLineAsync($"Deployed {package.Name} {package.Version}: {result.RefactorsRun.Count} refactors run, {result.RefactorsRecorded.Count} recorded, {result.Plan.Statements.Count} statements applied.").ConfigureAwait(false);
+        return 0;
+    }
+
+    private static DatabaseTarget TargetOf(IConfiguration config, string engine, Func<string, string?> environment) =>
+        engine.Equals(SqldefProvider.Sqlite, StringComparison.OrdinalIgnoreCase)
+            ? DatabaseTarget.File(Required(config, "database"))
+            : new DatabaseTarget(config["host"] ?? "localhost", int.TryParse(config["port"], global::System.Globalization.CultureInfo.InvariantCulture, out var port) ? port : 0, Required(config, "database"), config["user"], environment(config["password-env"] ?? "DESIRED_STATE_PASSWORD"));
 
     private static async Task<int> PackAsync(IConfiguration config, TextWriter output)
     {
