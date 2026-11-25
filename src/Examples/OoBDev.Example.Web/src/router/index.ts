@@ -19,6 +19,7 @@ export const router = createRouter({
     { path: '/operations/info', component: () => import('../pages/OperationsPage.vue'), meta: { crumbs: ['Operations', 'Runtime and configuration'] } },
     { path: '/data/geocode', component: () => import('../pages/GeocodePage.vue'), meta: { crumbs: ['Data', 'Address lookup'] } },
     { path: '/data/distance', component: () => import('../pages/DistancePage.vue'), meta: { crumbs: ['Data', 'Distance'] } },
+    { path: '/data/generation', component: () => import('../pages/GenerationPage.vue'), meta: { crumbs: ['Data', 'Test data generation'] } },
     { path: '/data/query', component: () => import('../pages/QueryPage.vue'), meta: { crumbs: ['Data', 'Query'] } },
     { path: '/data/load', component: () => import('../pages/DataLoadPage.vue'), meta: { crumbs: ['Data', 'Data loading'] } },
     { path: '/data/access', component: () => import('../pages/DataAccessPage.vue'), meta: { crumbs: ['Data', 'Data access'] } },

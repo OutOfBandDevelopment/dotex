@@ -1135,6 +1135,31 @@ export const journeys: Journey[] = [
     ],
   },
   {
+    id: 'generate-test-data',
+    title: 'Generate test data',
+    persona: 'A developer who needs repeatable sample data',
+    goal: 'Build a sample object graph that is the same every time for the same seed.',
+    start: '/data/generation',
+    prerequisites: ['The signed-in user holds the generation.use right (the admin role).'],
+    features: ['OoBDev.Generations (`Generator`)'],
+    why: 'Show seeded generation: the same type and seed give the same graph, so tests and demos are repeatable.',
+    problems: [
+      { symptom: 'Seed refused', cause: 'The seed is not a whole number', fix: 'Enter an integer such as 42' },
+      { symptom: 'Forbidden', cause: 'The user lacks the generation.use right', fix: 'Sign in with the admin role' },
+    ],
+    steps: [
+      {
+        title: 'Generate',
+        narrative: 'The customer sample and seed 42 are filled in; press Generate.',
+        expect: ['The generated customer, with its orders and lines, is shown as JSON.'],
+        run: async page => {
+          await press(page, 'Generate');
+          await expect(page.getByLabel('Result')).toContainText('Person');
+        },
+      },
+    ],
+  },
+  {
     id: 'measure-a-distance',
     title: 'Measure a distance',
     persona: 'A developer trying the spatial services',

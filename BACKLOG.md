@@ -60,7 +60,6 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 
 ### Waiting on the owner
 
-- [ ] Example screens, owner answer A 2026-11-21: the address lookup (2026-11-20), data loading and distance (2026-11-23) are built; the seeded data generation screen can be built, the library core exists since 2026-11-19 ([missing-screens](docs/design/example-ui/missing-screens.md)).
 - [ ] **Harvest candidates** (D7, owner answers 2026-11-25): [comparison](docs/migration/harvest-d7-comparison.md), map in [harvest-candidates.md](docs/harvest-candidates.md). AccountingEngine and NeedsReviewed stay read-only references; OsciRenderClient is rejected (migration Table 6; the HP-GL WAV sink replaces it). To do:
     - postsql-playground (PgProj desired-state PostgreSQL packages): compare with the built package and refactor log of [DesiredStateDatabase](docs/design/DesiredStateDatabase/plan.md) when the repository is on disk (it was not on 2026-11-10 and is not under `proving-grounds` now).
 - [x] Plugin sandbox: migrated to `OoBDev.System.Sandbox*` (2026-11-20, [plan](docs/design/PluginSandbox/migration-plan.md)); Linux run in the `dotnet/sdk:10.0` container with bubblewrap: 107 passed, 17 skipped (the Windows-only ones); coverage on Windows: core 94%, Windows 93% (Linux project needs the container run, MacOS 26% and deferred); left: macOS.

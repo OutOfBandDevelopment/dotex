@@ -6,4 +6,4 @@ Seeded test and demo data: the same seed and type always give the same object gr
 var person = new Generator(seed: 7, TimeProvider.System).Create<Person>();
 ```
 
-A test-support library: reference it from test projects only. Not built yet: the `GeneratorBuilder` provider hooks, nullable null probability, `TryAddGenerations()` registration and a separate Abstractions project. Design: [TestDataGeneration](../../../docs/design/TestDataGeneration/README.md).
+A test-support library: reference it from test projects only (the Example web API is the one exception: it uses it to show seeded generation on `/data/generation`). Not built yet: the `GeneratorBuilder` provider hooks, nullable null probability, `TryAddGenerations()` registration and a separate Abstractions project. Design: [TestDataGeneration](../../../docs/design/TestDataGeneration/README.md).

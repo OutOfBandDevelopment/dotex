@@ -77,6 +77,8 @@ Unhandled exceptions return RFC 9457 problem details with the trace, correlation
 
 `POST api/Geocode` (right `geocode.use`, admin role) looks up the coordinates of a US address through `ILocationServices` (`OoBDev.Census.Geocoding`). The typed address is sent from the server to the public Census geocoder; unit tests use a mocked service, a live lookup is a manual check.
 
+`POST api/Generation` (right `generation.use`, admin role) builds a seeded sample graph (`person`, `customer` or `order`) with `OoBDev.Generations`; the same type and seed give the same JSON, and an unknown type is a 400 problem.
+
 `GET api/SampleCatalog` (right `catalog.read`, admin role) serves ten in-memory rows through `[OoBDevEnableQuery]`, so `$filter`, `$orderby`, `$top`, `$skip`, `$select` and `$count` work over `GET`, the HTTP `QUERY` verb and its `POST` fallback (`OoBDev.AspNetCore.OData`, limits in `OoBDev:OData`). The `/data/query` screen drives it.
 
 `POST api/DataLoad/preview` (right `data.load`, admin role) loads a small CSV or JSON text (up to 100000 characters) into a throwaway in-memory table with `OoBDev.DataLoader` and returns the load report (read, written, replaced, skipped, rejected lines) with the stored rows; the key column and the duplicate policy (Skip, Replace, Fail) come with the request, and nothing is kept between requests. Unit tests run the real loader.
