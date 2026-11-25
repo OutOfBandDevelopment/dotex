@@ -1,6 +1,6 @@
 # Feature request: Desired-state database tooling
 
-- **Status:** triaged
+- **Status:** done (2026-11-25; providers, gates, ensure scripts, manifest compiler, CLI and the bake-off decision are built, see the [design](../../design/DesiredStateDatabase/README.md) and [change documents](../../changes/README.md); the sqldef binary bundling is tracked on its own backlog item)
 - **Requested by:** owner (filed from the notes repository, `projects/dotex-consolidation/desired-state-database-tooling.md` and `sqldef-evaluation/`)
 - **Date:** 2026-10-28
 - **Area:** `OoBDev.DacFx`, `OoBDev.DacPacCompiler.Cli`, `OoBDev.ComplexEvents.DatabaseExtensions` (nearest existing areas); new area unknown
@@ -50,12 +50,6 @@ containers for testing. The cost is mostly test infrastructure: containers for P
 
 **Answered (checked 2026-11-23):** scope is schema objects first (triage defaults, [design](../../design/DesiredStateDatabase/README.md)); the design covers SQL Server, Postgres and SQLite, with queues and event streams as idempotent ensure scripts; the stack is .NET; the sqldef evaluation was merged into the phase 0 bake-off. Owner answers (2026-11-23): Q34 A, wrap sqldef and add the drop and type-change gates; Oracle rejected (2026-11-24). Built: the providers and gates (`OoBDev.Data.DesiredState`); left in `BACKLOG.md`: ensure-script runner, manifest compiler and CLI (since built); Oracle is rejected.
 
-- Schema only, or also functions, triggers and views?
-- Wrap existing diff engines, or write a custom one?
-- Queues and streams: portable tables first, or native objects per database?
-- Oracle: rejected by the owner on 2026-11-24 (no provider, executor, driver or container); the question is closed.
-- Is .NET the stack? The owner has not answered.
-- Do the sqldef evaluation and this effort merge? The notes leave it open.
 
 ## Triage notes
 

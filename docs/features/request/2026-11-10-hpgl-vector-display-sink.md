@@ -1,6 +1,6 @@
 # Feature request: HP-GL vector scene to a stereo audio signal for an X-Y oscilloscope
 
-- **Status:** triaged
+- **Status:** triaged (built: WAV writer with the optional Z channel, readme example, tests, the looping player `hpgl-player`; open: the scope bench check, hardware only)
 - **Requested by:** owner (notes repository project mapping, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `OoBDev.Documents.Hpgl` (or a new project, see open questions)

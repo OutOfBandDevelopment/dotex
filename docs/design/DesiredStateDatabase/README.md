@@ -1,6 +1,6 @@
 # Desired-State Database Tooling — Overview
 
-**Status:** Draft · **Date:** 2026-10-29 · **Request:** [Desired-state database tooling](../../features/request/2026-10-28-desired-state-database-tooling.md) · **Related:** `OoBDev.DacFx`, `OoBDev.DacPacCompiler.Cli`, `OoBDev.ComplexEvents.DatabaseExtensions`, [design standard](../../patterns-discovery/06-design-document-standard.md)
+**Status:** Built (see the [plan](plan.md)) · **Date:** 2026-10-29 · **Request:** [Desired-state database tooling](../../features/completed/2026-10-28-desired-state-database-tooling.md) · **Related:** `OoBDev.DacFx`, `OoBDev.DacPacCompiler.Cli`, `OoBDev.ComplexEvents.DatabaseExtensions`, [design standard](../../patterns-discovery/06-design-document-standard.md)
 
 Derive migrations from plain `CREATE` scripts for SQL Server, Postgres and SQLite, and manage the objects a schema diff cannot model (extensions, queues, event streams) with idempotent ensure scripts.
 

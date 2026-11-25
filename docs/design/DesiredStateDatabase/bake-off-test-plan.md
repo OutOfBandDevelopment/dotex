@@ -22,7 +22,7 @@
 
 ## Purpose
 
-Phase 0 of the [architecture](architecture.md#phases): decide per engine whether to wrap an existing diff tool or build one, covering REQ-001 to REQ-005 and REQ-008. The criteria come from the acceptance criteria of the [feature request](../../features/request/2026-10-28-desired-state-database-tooling.md). The earlier sqldef test plan in the notes repository was not available (owner, 2026-11-06, Q2), so this plan stands alone. Nothing runs until the owner has reviewed it.
+Phase 0 of the [architecture](architecture.md#phases): decide per engine whether to wrap an existing diff tool or build one, covering REQ-001 to REQ-005 and REQ-008. The criteria come from the acceptance criteria of the [feature request](../../features/completed/2026-10-28-desired-state-database-tooling.md). The earlier sqldef test plan in the notes repository was not available (owner, 2026-11-06, Q2), so this plan stands alone. Nothing runs until the owner has reviewed it.
 
 ## Candidates and engines
 

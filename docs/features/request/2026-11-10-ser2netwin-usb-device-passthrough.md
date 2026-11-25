@@ -1,6 +1,6 @@
 # Feature request: Ser2NetWin as the way to reach a Windows USB device from a Linux container
 
-- **Status:** triaged
+- **Status:** triaged (built: USB-id selection, container recipe, scope statement; the USB bridge was removed 2026-11-25; open: a bench pass with a COM-port device, hardware only)
 - **Requested by:** owner (notes repository, `projects/windows-usb-passthough`, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Applications/Ser2NetWin`, `OoBDev.System.IO.Ports.Bridge`, `docs/applications/ser2netwin`

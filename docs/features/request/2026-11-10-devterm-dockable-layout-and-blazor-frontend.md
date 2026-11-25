@@ -1,6 +1,6 @@
 # Feature request: DevTerm dockable layout (WPF) and Blazor web front end
 
-- **Status:** triaged (WPF docking and the Blazor `/dock` page built with user guide; open: a two-browser pass on a real device, bench, Q33)
+- **Status:** triaged (WPF docking and the Blazor `/dock` page built with user guide; open: a two-browser pass on a real device, hardware only)
 - **Requested by:** owner (retire dev-term, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Applications/DevTerm` (WPF shell, Web host)

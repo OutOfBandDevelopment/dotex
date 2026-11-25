@@ -1,6 +1,6 @@
 # Feature request: DevTerm network device config editors and discovery probes
 
-- **Status:** triaged
+- **Status:** triaged (blocked on a fresh capture from a real Ebyte unit, hardware only)
 - **Requested by:** owner (retire dev-term, 2026-11-10)
 - **Date:** 2026-11-10
 - **Area:** `src/Applications/DevTerm` (`Configuration/Discovery`, device manifests)

@@ -21,7 +21,7 @@ Remove `OoBDev.System.IO.Usb.Bridge` and its tests, the `UsbBridges` configurati
 
 ## Existing code checked
 
-- The bridge was built 2026-11-24 (server, clients, CLI config) and bench-tested on the DG1022 and the Busylight; the DM3058E bulk-IN `Pipe` error is [an issue](../../issues/usbtmc-dm3058e-bulk-in-pipe-error.md) that also fails without the bridge and stays.
+- The bridge was built 2026-11-24 (server, clients, CLI config) and bench-tested on the DG1022 and the Busylight; the DM3058E bulk-IN `Pipe` error also fails without the bridge; its issue file was rejected as unnecessary (owner, 2026-11-25).
 - Remote DevTerm web host: WebSocket tunnel, session and panel APIs, shared bearer token; no JWT yet.
 
 ## Security and operations
