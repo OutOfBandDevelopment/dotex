@@ -25,4 +25,15 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 **Your answer:**
 
 
+### Q37 — 2026-11-24 — Retire the EF migration projects for final-state scripts?
 
+**Question:** You prefer final (desired) state over migrations. The [plan](docs/design/DesiredStateDatabase/final-state-plan.md) replaces the generated EF migrations of PostgreSQL and SQLite (`OoBDev.Data.Migrations.Postgres`, `.Sqlite`, and the event store provider migrations) with generated final-state scripts applied through `OoBDev.Data.DesiredState`, as SQL Server already is. Do you confirm the project table in the plan, and how should data changes be handled?
+
+**Options:**
+- A (recommended): confirm the table; remove the migrations projects once the scripts and tests exist; data changes are hand-written `*.once.sql` ensure scripts. Cost: renames need an annotation for one release, and no per-change history except `git log`.
+- B: confirm, but keep the event store providers on EF migrations (their contract is separate) and convert only the three stores. Cost: two schema mechanisms stay.
+- C: change the plan (say what).
+
+**Default:** A is planned but nothing is removed until you answer; the PostgreSQL and SQLite scripts and their tests (which remove nothing) are built meanwhile.
+
+**Your answer:**

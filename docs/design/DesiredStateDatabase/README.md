@@ -10,7 +10,8 @@ Derive migrations from plain `CREATE` scripts for SQL Server, Postgres and SQLit
 2. [Architecture](architecture.md)
 3. [API design](api-design.md)
 4. [Testing strategy](testing-strategy.md)
-5. [Tool comparison](tool-comparison.md) (sqldef, pgschema, Atlas: configuration, deployment, safety, pros and cons)
+5. [Final-state plan](final-state-plan.md) (replace EF migrations with final-state scripts; waiting for Q37)
+6. [Tool comparison](tool-comparison.md) (sqldef, pgschema, Atlas: configuration, deployment, safety, pros and cons)
 
 ### List of Tables
 

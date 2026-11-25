@@ -19,3 +19,4 @@
 - [Embedded PlantUML only](feedback-embedded-plantuml.md) — no ASCII diagrams anywhere; hook blocks them
 - [Model licences and cache](feedback-model-licences.md) — ONNX + Hugging Face cache, MIT-compatible, copyleft models deployed separately
 - [Tests log progress](feedback-tests-log-progress.md) — TestContext.WriteLine per phase, reason before Inconclusive, no secrets
+- [Final state over migrations](feedback-final-state-over-migrations.md) — schema as desired final state (sqldef wrapper), not EF migration chains
