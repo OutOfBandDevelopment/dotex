@@ -50,3 +50,15 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 **Default:** A.
 
 **Your answer:**
+
+### Q39 — 2026-11-24 — Build the native differ spike (plan phase G)?
+
+**Question:** Phases A to D show sqldef plus the package deployer covers the scenarios tried (create, add, rename with refactor log, gated drop and narrowing, repeat is empty) on PostgreSQL and SQLite. Phase G would add a spike project `src/Spikes/...` (native inspector and typed plan steps). It creates a project, so it needs your confirmed migration plan first.
+
+**Options:**
+- A (recommended): skip for now; stay on sqldef (the plan's own default: "stay on sqldef until phase D shows a gap", and none showed). Revisit if a scenario fails.
+- B: build the spike anyway to compare. Costs a project and a written result; no production effect.
+
+**Default:** A.
+
+**Your answer:**
