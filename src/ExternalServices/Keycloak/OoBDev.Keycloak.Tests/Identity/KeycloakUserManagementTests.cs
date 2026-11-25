@@ -1,4 +1,5 @@
 ﻿using Keycloak.ApiClient.Net;
+using OoBDev.TestUtilities.Containers;
 using Keycloak.ApiClient.Net.Models.Users;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
@@ -40,7 +41,7 @@ public class KeycloakUserManagementTests
     [TestInitialize]
     public async Task Setup()
     {
-        _baseUrl = TestContext.GetRequiredProperty<string>("KEYCLOAK_URL");
+        _baseUrl = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("KEYCLOAK_URL"));
         var adminUsername = TestContext.GetRequiredProperty<string>("KEYCLOAK_ADMIN_USERNAME");
         var adminPassword = TestContext.GetRequiredProperty<string>("KEYCLOAK_ADMIN_PASSWORD");
         _realm = TestContext.GetRequiredProperty<string>("KEYCLOAK_REALM");
@@ -102,7 +103,7 @@ public class KeycloakUserManagementTests
     /// <summary>
     /// Creates a new user in Keycloak and verifies it was created successfully.
     /// </summary>
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-keycloak")]
     [TestCategory(TestCategories.Integration)]
     public async Task CreateUser_WithValidData_CreatesSuccessfully()
     {
@@ -149,7 +150,7 @@ public class KeycloakUserManagementTests
     /// <summary>
     /// Creates a user with credentials inline and verifies the user can authenticate.
     /// </summary>
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-keycloak")]
     [TestCategory(TestCategories.Integration)]
     public async Task CreateUserWithCredentials_CanAuthenticate()
     {
@@ -199,7 +200,7 @@ public class KeycloakUserManagementTests
     /// <summary>
     /// Creates a user, sets password using SetUserPasswordAsync, and verifies authentication.
     /// </summary>
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-keycloak")]
     [TestCategory(TestCategories.Integration)]
     public async Task SetUserPassword_CanAuthenticate()
     {
@@ -241,7 +242,7 @@ public class KeycloakUserManagementTests
     /// <summary>
     /// Creates a user and assigns realm roles using the library.
     /// </summary>
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-keycloak")]
     [TestCategory(TestCategories.Integration)]
     public async Task CreateUser_AssignRealmRoles_RolesAssignedCorrectly()
     {
@@ -296,7 +297,7 @@ public class KeycloakUserManagementTests
     /// <summary>
     /// Creates a user, updates their information, and verifies the update.
     /// </summary>
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-keycloak")]
     [TestCategory(TestCategories.Integration)]
     public async Task UpdateUser_ModifiesUserData()
     {
@@ -342,7 +343,7 @@ public class KeycloakUserManagementTests
     /// <summary>
     /// Lists users in the realm with pagination.
     /// </summary>
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-keycloak")]
     [TestCategory(TestCategories.Integration)]
     public async Task GetUsers_ReturnsPaginatedList()
     {
@@ -363,7 +364,7 @@ public class KeycloakUserManagementTests
     /// <summary>
     /// Searches for users by username pattern.
     /// </summary>
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-keycloak")]
     [TestCategory(TestCategories.Integration)]
     public async Task SearchUsers_FindsByUsername()
     {
@@ -402,7 +403,7 @@ public class KeycloakUserManagementTests
     /// <summary>
     /// Creates a disabled user and verifies authentication fails.
     /// </summary>
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-keycloak")]
     [TestCategory(TestCategories.Integration)]
     public async Task DisabledUser_CannotAuthenticate()
     {
@@ -448,7 +449,7 @@ public class KeycloakUserManagementTests
     /// <summary>
     /// Gets the total count of users in the realm.
     /// </summary>
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-keycloak")]
     [TestCategory(TestCategories.Integration)]
     public async Task GetUsersCount_ReturnsCount()
     {

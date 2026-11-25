@@ -16,7 +16,9 @@ Provides extension methods for the `OllamaSharp.OllamaApiClient` class.
 
 ### Methods
 
-- **EnsureModelExistsAsync(ollama, modelName, logger)**: Ensures that the specified model exists in the Ollama API client.
+- **EnsureModelExistsAsync(ollama, modelName, logger, sourceModel = null)**: Ensures that the specified model exists; when it does not, it is copied from `sourceModel` or, when none is named, from the first local model (no local model throws `InvalidOperationException`).
+- **OllamaEmbeddingProvider**: the `IEmbeddingProvider` registered under the key `ollama` (never as the default). It embeds with `OllamaApiClientOptions.EmbeddingModel` (default `all-minilm`, not the chat model) and pulls that model once when the server lacks it.
+- **Timeout**: `OllamaApiClientOptions.Timeout` (default five minutes) is the HTTP timeout of one request; the plain 100 s of an `HttpClient` was too short for phi3 on a loaded CPU.
 - **GetEmbeddingSingle(client, text, modelName)**: Retrieves the embedding for the specified text using the specified model synchronously.
 - **GetEmbeddingSingleAsync(client, text, modelName)**: Retrieves the embedding for the specified text using the specified model asynchronously.
 - **GetEmbeddingDouble(client, text, modelName)**: Retrieves the embedding for the specified text using the specified model synchronously.

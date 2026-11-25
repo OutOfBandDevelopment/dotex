@@ -1,0 +1,31 @@
+@page "/"
+@implements IDisposable
+
+<h1>UiDefinitions controls: Blazor</h1>
+<p class="lede">The form below is generated from <code>ControlsSampleSettings</code>. Every control writes the settings object; the preview and the bound-model table read it back.</p>
+<div class="layout">
+    <FormView Form="_form" />
+    <div class="side">
+        <SamplePreview Settings="_settings" Form="_form" />
+        <ModelReadout Form="_form" Binding="_binding" />
+    </div>
+</div>
+<LiveSample />
+
+@code {
+    private readonly ControlsSampleSettings _settings = new();
+    private FormBinding _binding = default!;
+    private FormViewModel _form = default!;
+
+    protected override void OnInitialized()
+    {
+        _binding = new FormBinding(_settings);
+        _form = new FormViewModel(FormDefinitionGenerator.Generate(_settings), _binding);
+    }
+
+    public void Dispose()
+    {
+        _form.Dispose();
+        _binding.Dispose();
+    }
+}

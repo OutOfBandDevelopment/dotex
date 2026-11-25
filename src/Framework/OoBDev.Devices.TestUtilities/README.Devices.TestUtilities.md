@@ -1,0 +1,7 @@
+# OoBDev.Devices.TestUtilities
+
+Shared test helpers for the device libraries (owner decision 2026-10-28).
+
+## Description
+
+`DevicePreflight.RequireSerialPort(testContext, parameter)` returns the serial port named by a `.runsettings` run parameter (for example `ZWAVE_SERIAL_PORT`) or ends a `Hardware` test with `Assert.Inconclusive` when it is blank or not listed; `RequireUsbHid(definition)` opens the first HID device matching a `[UsbHid]` attribute or ends the test the same way. `SegmentPump<TMessage>` pushes received bytes through a device definition's segmenter and decoder like the stream pipeline, with no port or `StreamDevice`, and collects the decoded `Messages`, keeping the undecoded `Pending` bytes. `ScriptedDeviceAdapter` is an in-memory `IDeviceAdapter` that plays a device: `When(request, replies...)` rules answer matching writes on `Input`, `Written` and `Unmatched` record what was sent, and `PushAsync` sends unprompted bytes. `RecordedTrace.Bytes` and `Frames` parse hex traces written as text (comments with `#`). Tests: `OoBDev.Devices.TestUtilities.Tests`. The `Hardware` category is `TestCategories.Hardware` in `OoBDev.TestUtilities`. Design: [testing strategy](../../../docs/design/DeviceDecoding/testing-strategy.md).

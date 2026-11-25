@@ -1,6 +1,6 @@
 # LlmCodeGen
 
-**Status:** Design · **Owner decision:** consolidate the two BulkLlm tools (Q12, answered 2026-10-09)
+**Status:** Implemented (reconciled with the code 2026-10-22; gaps marked Planned) · **Owner decision:** consolidate the two BulkLlm tools (Q12, answered 2026-10-09)
 
 A single command-line tool, `OoBDev.LlmCodeGen.Cli`, that walks a source tree, builds one prompt per folder from a template, sends it to a configured LLM provider and saves the response. It replaces the two retired prototypes `BulkLlm.GroqNet.Cli` and `BulkLlm.Ollama.Cli`, which were 95% identical and differed only in the LLM client (removed in `438b2885`, recoverable from git history).
 

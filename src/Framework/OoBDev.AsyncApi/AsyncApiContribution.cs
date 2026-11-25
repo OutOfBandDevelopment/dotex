@@ -1,5 +1,4 @@
-using Microsoft.Extensions.Configuration;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 
 namespace OoBDev.AsyncApi;
 

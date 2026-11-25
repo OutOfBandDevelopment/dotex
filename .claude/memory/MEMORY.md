@@ -1,0 +1,23 @@
+- [Docs use PlantUML](feedback-docs-plantuml.md) — diagrams PlantUML, mockups Salt
+- [No Claude in commits](feedback-no-claude-in-commits.md) — never mention Claude/AI or add Co-Authored-By
+- [UI prefers MVVM](user-ui-mvvm-preference.md) — MVVM + command binding (WPF); JS/TS frameworks with similar binding
+- [Auth: OAuth/OIDC/JWT + STS](user-auth-oauth-oidc-sts.md) — token exchange from SSO to app tokens when required
+- [HTTP API and authorization](user-http-api-authz-preferences.md) — REST first; OData/QUERY and GraphQL under evaluation; RBAC app rights via middleware
+- [Rejected third-party deps](user-rejected-third-party-deps.md) — no third-party DI/logging, avoid Polly, SHA-512, OpenTelemetry
+- [Integration tests marked](feedback-integration-tests-marked.md) — external-service tests must be Integration/DevLocal, not Unit
+- [Breaking changes OK](feedback-breaking-changes-ok.md) — unreleased framework; rename/remove outright, no forwarders
+- [Git: bare repo, branch, no gh](feedback-stack-one-branch.md) — origin is the local bare repo; commit as you work on a branch; no PRs, no gh
+- [Merge with --no-ff](feedback-merge-no-ff.md) — merges into main are always merge commits, never fast-forward (versioning)
+- [Layering questions early](feedback-layering-questions-early.md) — ask layering questions and show a migration plan before work; spikes
+- [Test hardware map](reference-test-hardware.md) — COM/USB/LXI ports of Korad, Z-Stick, Radex, H4n, scopes and generators
+- [Migrate the whole project](feedback-migrate-whole-project.md) — review guides, agent config, docs, TODO/backlog, plans, not just code
+- [Commit user guides](feedback-commit-user-guides.md) — generated docs/user-guide and screenshots go in with the protocol/app work
+- [Migration docs pattern](feedback-migration-docs-pattern.md) — import under docs/applications/{app}, keep history, transient map, cleanup later
+- [Generated guides and esproj](feedback-generated-guides-esproj.md) — journey-driven guides for all modes, API guides from specs, JS/TS as esproj
+- [Define once, issues folder](feedback-define-once-issues.md) — backlog items link feature docs; docs/issues for working detail
+- [Change doc per day](feedback-change-doc-by-date.md) — log work in docs/changes/{today}.md, a new file when the date rolls over
+- [Embedded PlantUML only](feedback-embedded-plantuml.md) — no ASCII diagrams anywhere; hook blocks them
+- [Model licences and cache](feedback-model-licences.md) — ONNX + Hugging Face cache, MIT-compatible, copyleft models deployed separately
+- [Tests log progress](feedback-tests-log-progress.md) — TestContext.WriteLine per phase, reason before Inconclusive, no secrets
+- [Final state over migrations](feedback-final-state-over-migrations.md) — schema as desired final state (sqldef wrapper), not EF migration chains
+- [No floating changes](feedback-no-floating-changes.md) — commit missed related changes later; never leave modified files lingering

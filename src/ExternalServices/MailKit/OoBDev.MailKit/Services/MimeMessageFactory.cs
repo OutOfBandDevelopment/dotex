@@ -1,8 +1,13 @@
+using OoBDev.Communications.Abstractions;
 using OoBDev.Communications.Models;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace OoBDev.MailKit.Services;
 
@@ -21,7 +26,22 @@ public class MimeMessageFactory(
     /// </summary>
     /// <param name="message">The email message model containing information for creating the MimeMessage.</param>
     /// <returns>A MimeMessage instance representing the email message.</returns>
-    public MimeMessage Create(EmailMessageModel message)
+    public MimeMessage Create(EmailMessageModel message) => Build(message, []);
+
+    /// <inheritdoc />
+    public async Task<MimeMessage> CreateAsync(EmailMessageModel message, IReadOnlyList<IEmailAttachment> attachments, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(attachments);
+        var resolved = new List<(IEmailAttachment Attachment, ReadOnlyMemory<byte> Content)>(attachments.Count);
+        foreach (var attachment in attachments)
+        {
+            resolved.Add((attachment, await attachment.GetContentAsync(cancellationToken).ConfigureAwait(false)));
+        }
+
+        return Build(message, resolved);
+    }
+
+    private MimeMessage Build(EmailMessageModel message, IReadOnlyList<(IEmailAttachment Attachment, ReadOnlyMemory<byte> Content)> attachments)
     {
         var email = new MimeMessage
         {
@@ -60,44 +80,56 @@ public class MimeMessageFactory(
         {
             bodyBuilder.HtmlBody = message.HtmlContent;
         }
-        email.Body = bodyBuilder.ToMessageBody();
+        foreach (var (attachment, content) in attachments)
+        {
+            var contentType = ContentType.Parse(attachment.ContentType);
+            var part = (MimePart)bodyBuilder.Attachments.Add(attachment.FileName, content.ToArray(), contentType);
+            part.ContentId = attachment.ContentId;
+            if (attachment.ContentId is not null)
+            {
+                part.ContentDisposition = new ContentDisposition(ContentDisposition.Inline) { FileName = attachment.FileName };
+            }
+        }
 
-        //TODO: add attachment support
+        email.Body = bodyBuilder.ToMessageBody();
 
         return email;
     }
 
     /// <summary>
-    /// Creates a <see cref="ReceivedEmailMessageModel"/> from the specified <see cref="MimeMessage"/>.
-    /// and inbound metadata such as host and mailbox path.
+    /// Creates an <see cref="EmailMessage"/> from the specified <see cref="MimeMessage"/>; the host and mailbox path go into <c>Metadata</c> (<c>server</c>, <c>path</c>).
     /// </summary>
-    /// <param name="message"></param>
-    /// <param name="server"></param>
-    /// <param name="path"></param>
-    /// <returns></returns>
-    public ReceivedEmailMessageModel ToReceived(MimeMessage message, string server, string path)
+    /// <param name="message">The received MIME message.</param>
+    /// <param name="server">The server the message came from.</param>
+    /// <param name="path">The mailbox path.</param>
+    /// <returns>The email message.</returns>
+    public EmailMessage ToReceived(MimeMessage message, string server, string path)
     {
-        var received = new ReceivedEmailMessageModel
+        ArgumentNullException.ThrowIfNull(message);
+        var received = new EmailMessage
         {
-            FromAddress = string.Join(';', message.From.Cast<InternetAddress>()),
-            Subject = message.Subject,
+            MessageId = message.MessageId ?? Guid.NewGuid().ToString("N"),
+            Timestamp = message.Date,
+            From = message.From.Count == 0 ? null : string.Join(';', message.From.Cast<InternetAddress>()),
+            To = [.. message.To.Cast<InternetAddress>().Select(a => a.ToString())],
+            Cc = [.. message.Cc.Cast<InternetAddress>().Select(a => a.ToString())],
+            Bcc = [.. message.Bcc.Cast<InternetAddress>().Select(a => a.ToString())],
+            ReplyTo = message.ReplyTo.Count == 0 ? null : string.Join(';', message.ReplyTo.Cast<InternetAddress>()),
+            Subject = message.Subject ?? string.Empty,
             TextContent = message.TextBody,
             HtmlContent = message.HtmlBody,
-            ReferenceId = message.MessageId,
-
-            Server = server,
-            Path = path,
+            Attachments = [.. message.BodyParts.OfType<MimePart>().Where(p => p.IsAttachment || p.ContentId is not null && p.ContentType.MediaType != "text").Select(ToAttachment)],
         };
-        foreach (var address in message.To.Cast<InternetAddress>().Select(a => a.ToString())) received.ToAddresses.Add(address);
-        foreach (var address in message.Cc.Cast<InternetAddress>().Select(a => a.ToString())) received.CcAddresses.Add(address);
-        foreach (var address in message.Bcc.Cast<InternetAddress>().Select(a => a.ToString())) received.BccAddresses.Add(address);
-
-        foreach (var header in message.Headers)
-        {
-            received.Headers.Add(header.Field, header.Value);
-        }
-
+        received.Metadata["server"] = server;
+        received.Metadata["path"] = path;
         return received;
+    }
+
+    private static EmailAttachment ToAttachment(MimePart part)
+    {
+        using var buffer = new MemoryStream();
+        part.Content?.DecodeTo(buffer);
+        return EmailAttachment.FromBytes(part.FileName ?? part.ContentId ?? "attachment", part.ContentType.MimeType, buffer.ToArray(), part.ContentId);
     }
 
 }

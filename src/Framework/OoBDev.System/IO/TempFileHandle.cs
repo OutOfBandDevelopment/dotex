@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
-using System.Runtime.InteropServices;
 
 namespace OoBDev.System.IO;
 
@@ -49,9 +48,7 @@ public partial record TempFileHandle : ITempFile
         GC.SuppressFinalize(this);
     }
 
-#pragma warning disable IDE0060 // Remove unused parameter
     private void Dispose(bool disposing)
-#pragma warning restore IDE0060 // Remove unused parameter
     {
         if (!File.Exists(FilePath)) return;
 
@@ -62,8 +59,11 @@ public partial record TempFileHandle : ITempFile
         }
         catch
         {
+            // A finalizer must never throw: an unhandled exception there ends the process.
+            if (!disposing) return;
+
             //Note: yeah, I don't care why it failed.
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (!OperatingSystem.IsWindows())
                 throw;
 
             try

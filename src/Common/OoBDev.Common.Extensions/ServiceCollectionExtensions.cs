@@ -20,7 +20,7 @@ using OoBDev.WkHtmlToPdf;
 using OoBDev.Microsoft.Azure.StorageAccount;
 using OoBDev.Microsoft.Caching;
 using OoBDev.Redis.Caching;
-using OoBDev.OpenTelemetry;
+using OoBDev.Telemetry;
 
 namespace OoBDev.Common.Extensions;
 
@@ -71,11 +71,15 @@ public static class ServiceCollectionExtensions
 
         services.TryAddApacheTikaServices(configuration, externalBuilder.ApacheTikaClientOptionSection);
 
-        services.TryAddWkHtmlToPdfServices();
+        if (externalBuilder.IncludeWkHtmlToPdf)
+            services.TryAddWkHtmlToPdfServices();
+
         services.TryAddMarkdigServices();
         services.TryAddHandlebarServices();
         services.TryAddMysticMindServices();
-        services.TryAddHtmlToOpenXmlServices();
+        if (externalBuilder.IncludeHtmlToOpenXml)
+            services.TryAddHtmlToOpenXmlServices();
+
         services.TryAddMicrosoftSqlServerExtensions();
 
         services.TryAddMicrosoftCachingServices();

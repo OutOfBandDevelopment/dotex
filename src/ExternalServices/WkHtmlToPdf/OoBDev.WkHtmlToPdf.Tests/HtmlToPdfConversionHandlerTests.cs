@@ -14,7 +14,7 @@ public class HtmlToPdfConversionHandlerTests
 {
     public required TestContext TestContext { get; set; }
 
-    [TestCategory(TestCategories.Unit)]
+    [TestCategory(TestCategories.DevLocal)]
     [TestMethod]
     [DataRow("HelloWorld.html", "text/html", "application/pdf")]
     [DataRow("HelloWorld.html", "text/xhtml", "application/pdf")]
@@ -23,8 +23,7 @@ public class HtmlToPdfConversionHandlerTests
     {
         if (Environment.OSVersion.Platform != PlatformID.Win32NT)
         {
-            //TODO: fix this better
-            Assert.Inconclusive();
+            Assert.Inconclusive("WkHtmlToPdfDotNet bundles the native wkhtmltopdf library for Windows only; Linux needs the library installed in the container");
             return;
         }
 

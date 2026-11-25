@@ -2,9 +2,9 @@
 using OoBDev.System.IO.Segmenters;
 using OoBDev.System.Threading;
 using System;
-using System.Collections.Concurrent;
 using System.IO;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace OoBDev.System.IO.Pipelines;
@@ -15,9 +15,10 @@ namespace OoBDev.System.IO.Pipelines;
 /// <typeparam name="TMessage">The type of messages to send and receive.</typeparam>
 public class StreamDevice<TMessage> : IStreamDevice<TMessage>
 {
-    private readonly IProducerConsumerCollection<TMessage> _transmissionQueue = new ConcurrentQueue<TMessage>();
+    private const int DefaultMinimumTransmissionDelay = 1000;
 
-    private Stream AdapterStream => _adapter.Stream;
+    private readonly Channel<TMessage> _transmissionQueue = Channel.CreateUnbounded<TMessage>(new UnboundedChannelOptions { SingleReader = true });
+
     private readonly IDeviceAdapter _adapter;
     private readonly IDeviceDefinition _device;
     private readonly ISegmentBuildDefinition? _segmentDefintion;
@@ -30,14 +31,14 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
     /// <summary>
     /// Initializes a new instance of the StreamDevice class.
     /// </summary>
-    /// <param name="adapter">The device adapter providing access to the underlying stream.</param>
+    /// <param name="adapter">The opened device adapter providing the pipes; the device disposes it.</param>
     /// <param name="device">The device definition describing the device's behavior.</param>
-    /// <param name="minimumTransmissionDelay">Minimum delay between message transmissions in milliseconds (default is 1000ms).</param>
+    /// <param name="minimumTransmissionDelay">Minimum delay between message transmissions in milliseconds. When null the device definition's <see cref="IDeviceDefinitionTransmissionDelay"/> is used, else 1000ms.</param>
     /// <param name="token">Optional cancellation token to stop the device operations.</param>
     public StreamDevice(
         IDeviceAdapter adapter,
         IDeviceDefinition device,
-        int minimumTransmissionDelay = 1000, //TODO should this default be overideable from the devicedefinition or it's attributes?
+        int? minimumTransmissionDelay = null,
         CancellationToken token = default
         )
     {
@@ -46,7 +47,9 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
 
         _adapter = adapter;
         _device = device;
-        _minimumTransmissionDelay = minimumTransmissionDelay;
+        _minimumTransmissionDelay = minimumTransmissionDelay
+            ?? (device as IDeviceDefinitionTransmissionDelay)?.MinimumTransmissionDelay
+            ?? DefaultMinimumTransmissionDelay;
 
         Task? messageReceiver = null;
         Task? messageTransmitter = null;
@@ -113,7 +116,7 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
     /// </summary>
     /// <param name="message">The message to transmit.</param>
     /// <returns>A task that resolves to true if the message was successfully queued, false otherwise.</returns>
-    public Task<bool> Transmit(TMessage message) => Task.FromResult(_transmissionQueue.TryAdd(message));
+    public Task<bool> Transmit(TMessage message) => Task.FromResult(_transmissionQueue.Writer.TryWrite(message));
 
     private Task OnMessageReceived(TMessage message)
     {
@@ -145,17 +148,21 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
             try
             {
                 await ReportDeviceStatus(StreamDeviceStatus.Receiving).ConfigureAwait(false);
-                await AdapterStream.Follow()
+                await _adapter.Input.AsStream().Follow()
                              .With(_segmentDefintion!.ThenAs(_decoder!, OnMessageReceived))
                              .RunAsync(_token)
                              .ConfigureAwait(false);
                 _tokenSource.Cancel(true);
                 await ReportDeviceStatus(StreamDeviceStatus.Received).ConfigureAwait(false);
             }
+            catch (OperationCanceledException) when (_token.IsCancellationRequested)
+            {
+                return;
+            }
             catch (Exception ex)
             {
                 var eventArg = new DeviceErrorEventArgs(exception: ex, errorHandling: ErrorHandling.Throw);
-                MessageReceivedError?.Invoke(AdapterStream, eventArg);
+                MessageReceivedError?.Invoke(this, eventArg);
                 switch (eventArg.ErrorHandling)
                 {
                     case ErrorHandling.Ignore:
@@ -180,20 +187,32 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
         while (!_token.IsCancellationRequested)
         {
             await mre.WaitAsync().ConfigureAwait(false);
-            while (!_token.IsCancellationRequested && _transmissionQueue.TryTake(out var item))
+            try
+            {
+                if (!await _transmissionQueue.Reader.WaitToReadAsync(_token).ConfigureAwait(false)) return;
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
+
+            while (!_token.IsCancellationRequested && _transmissionQueue.Reader.TryRead(out var item))
             {
                 try
                 {
                     await ReportDeviceStatus(StreamDeviceStatus.Transmitting).ConfigureAwait(false);
                     var requestBuffer = encoder.Encode(ref item);
-                    await AdapterStream.WriteAsync(requestBuffer, _token)
-                                 .ConfigureAwait(false);
+                    await _adapter.Output.WriteAsync(requestBuffer, _token).ConfigureAwait(false);
                     await ReportDeviceStatus(StreamDeviceStatus.Transmitted).ConfigureAwait(false);
+                }
+                catch (OperationCanceledException) when (_token.IsCancellationRequested)
+                {
+                    return;
                 }
                 catch (Exception ex)
                 {
                     var eventArg = new DeviceErrorEventArgs(exception: ex, errorHandling: ErrorHandling.Throw);
-                    MessageTransmitterError?.Invoke(AdapterStream, eventArg);
+                    MessageTransmitterError?.Invoke(this, eventArg);
                     switch (eventArg.ErrorHandling)
                     {
                         case ErrorHandling.Ignore:
@@ -223,7 +242,7 @@ public class StreamDevice<TMessage> : IStreamDevice<TMessage>
     {
         Runner.GetAwaiter().GetResult();
         _tokenSource.Cancel(false);
-        AdapterStream.Dispose();
+        _adapter.DisposeAsync().AsTask().GetAwaiter().GetResult();
         GC.SuppressFinalize(this);
     }
 }

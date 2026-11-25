@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "OoBDev.Ser2NetWin.Cli": {
+      "commandName": "Project"
+    },
+    "config": {
+      "commandName": "Project",
+      "commandLineArgs": "config"
+    }
+  }
+}

@@ -82,6 +82,7 @@ public class CachedProxyTests
         decorated.Setup(s => s.IsCacheable()).Returns(realResult);
         mockCachingManager.Setup(s => s.BuildKey(It.IsAny<MethodInfo>(), It.IsAny<object[]>())).Returns(cacheKey);
         mockCachingManager.Setup(s => s.RetrieveAsync(cacheKey, typeof(int?))).ReturnsAsync(cachedResult);
+        mockCachingManager.Setup(s => s.TryLockAsync(cacheKey, It.IsAny<TimeSpan>())).ReturnsAsync(NoLock.Instance);
         mockCachingManager.Setup(s => s.StoreAsync(cacheKey, realResult, new TimeSpan(0, 11, 22))).Returns(Task.FromResult(0));
 
         // Test

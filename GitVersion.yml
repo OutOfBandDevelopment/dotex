@@ -1,22 +1,24 @@
-# Versioning policy
-#   Major: bumped by hand: a commit message containing "+semver: major" (or "next-version: 1.0.0" below)
-#   Minor: bumped by every merge into main; the build tags main with vX.Y.0
-#   Patch: on any other branch, the number of commits past the last tag on main (the workflow builds
-#          major.minor.patch-branch from CommitsSinceVersionSource; dev builds are not tagged)
-mode: ContinuousDelivery
+# Versioning policy (GitVersion 6, Mainline strategy)
+#   Major.Minor: from the last release tag (v0.5.0 today); change them by tagging the new base once
+#   Patch: increments with every commit that reaches main (a merge adds its branch commits plus the merge commit), so it only goes up
+#   The patch counts every commit that reaches main, not only merges: merging a long branch jumps it (0.5.74 to 0.5.1056 on 2026-11-17 was the merge of a branch with about 980 commits; 75 first-parent commits vs 1316 total since v0.5.0). That is the policy working, not a fault.
+#   Other branches: Major.Minor.Patch-{branch}.1+{commits in the branch}; main carries no label
+mode: ContinuousDeployment
+
+strategies:
+  - Mainline
+  - Fallback
 
 branches:
   main:
     regex: ^main$
-    increment: Minor
+    increment: Patch
     label: ''
-    track-merge-target: false
 
   feature:
     regex: ^(?!main$)(?<BranchName>.+)
     increment: Patch
     label: '{BranchName}'
-    track-merge-target: false
     source-branches: ['main']
 
 ignore:

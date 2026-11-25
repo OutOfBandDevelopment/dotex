@@ -1,4 +1,5 @@
 ﻿using OoBDev.MessageQueueing;
+using OoBDev.TestUtilities.Containers;
 using OoBDev.MessageQueueing.Tests;
 using OoBDev.RabbitMQ.MessageQueueing;
 using OoBDev.TestUtilities;
@@ -10,8 +11,6 @@ using System.Threading.Tasks;
 
 namespace OoBDev.RabbitMQ.Tests.MessageQueueing;
 
-#warning is this needed
-
 [TestClass]
 [MessageQueue(QueueConfig)]
 public class RabbitMQQueueMessageSenderProviderTests
@@ -20,7 +19,7 @@ public class RabbitMQQueueMessageSenderProviderTests
 
     public required TestContext TestContext { get; set; }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-rabbitmq")]
     [TestCategory(TestCategories.Integration)]
     public async Task SendAsyncTest_ByFullType()
     {
@@ -54,7 +53,7 @@ public class RabbitMQQueueMessageSenderProviderTests
         TestContext.Write($"correlationId: {correlationId}");
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-rabbitmq")]
     [TestCategory(TestCategories.Integration)]
     public async Task SendAsyncTest_ByKeyed()
     {

@@ -1,0 +1,80 @@
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.TestUtilities;
+using System;
+using System.Buffers;
+using System.IO;
+using System.Threading.Tasks;
+
+namespace OoBDev.Velleman.K8055.Tests;
+
+[TestClass]
+[TestCategory(TestCategories.Velleman_K8055)]
+public class K8055HardwareTests
+{
+    private static async Task SendAsync(Stream stream, K8055Command command)
+    {
+        var bytes = new K8055MessageEncoder().Encode(ref command);
+        await stream.WriteAsync(bytes).ConfigureAwait(false);
+        await stream.FlushAsync().ConfigureAwait(false);
+    }
+
+    [TestMethod, TestCategory(TestCategories.Hardware)]
+    [DataRow(0)]
+    [DataRow(1)]
+    [DataRow(2)]
+    [DataRow(3)]
+    public async Task ResetCounter1_OnTheBoard_CompletesWithoutFaultTest(int address)
+    {
+        // Stage
+        await using var stream = K8055Boards.Require(address);
+
+        // Test: a fixed frame that touches no output, so the safest real action; there is no reply to wait for
+        await SendAsync(stream, K8055Command.ResetCounter1).ConfigureAwait(false);
+    }
+
+    [TestMethod, TestCategory(TestCategories.Hardware)]
+    [DataRow(0)]
+    [DataRow(1)]
+    [DataRow(2)]
+    [DataRow(3)]
+    public async Task SetOutputs_OnTheBoard_ThenAllOffTest(int address)
+    {
+        // Stage
+        await using var stream = K8055Boards.Require(address);
+        var outputs = new K8055Outputs(0, 0, 0).WithDigital(1, true).WithDigital(3, true) with { AnalogOut1 = 128, AnalogOut2 = 255 };
+
+        try
+        {
+            // Test: watch outputs 1 and 3 and both analogue outputs
+            await SendAsync(stream, K8055Command.SetOutputs(outputs)).ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
+        }
+        finally
+        {
+            // Verify: the board is left with every output off
+            await SendAsync(stream, K8055Command.SetOutputs(default)).ConfigureAwait(false);
+        }
+    }
+
+    [TestMethod, TestCategory(TestCategories.Hardware)]
+    [DataRow(0)]
+    [DataRow(1)]
+    [DataRow(2)]
+    [DataRow(3)]
+    public async Task Board_StreamsInputReports_DecodedTest(int address)
+    {
+        // Stage
+        await using var stream = K8055Boards.Require(address);
+        var buffer = new byte[K8055Reading.Length];
+
+        // Test: the board sends its inputs without being asked
+        var read = await stream.ReadAsync(buffer).AsTask().WaitAsync(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
+
+        // Assert
+        Assert.AreEqual(K8055Reading.Length, read);
+        var reading = new K8055MessageDecoder().Decode(new ReadOnlySequence<byte>(buffer));
+        TestContext?.WriteLine(reading.ToString());
+    }
+
+    public TestContext? TestContext { get; set; }
+}

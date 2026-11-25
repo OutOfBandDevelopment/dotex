@@ -1,0 +1,200 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Threading;
+using System.Threading.Tasks;
+using OoBDev.UiDefinitions;
+
+namespace OoBDev.Kuando.Busylight.Panels;
+
+/// <summary>
+/// <see cref="IControlSurface"/> for the Kuando Busylight. Only <c>apply</c> sends: the single-command frame (9 bytes: report id 0x00,
+/// NextStep, Repeat, R, G, B, On, Off, packed Audio). Every other command only changes the state the next apply sends.
+/// <c>color</c> takes a preset name or an <c>r,g,b</c> triple (0-255); <c>customColor</c> and <c>programSequence</c> are accepted no-ops
+/// (the program mode had no visible effect on hardware, so its button was removed). Only <c>apply</c> has a command preview.
+/// </summary>
+public sealed class BusylightControlSurface : IControlSurface, ICommandPreview
+{
+    private static readonly Dictionary<string, (byte R, byte G, byte B)> _colors = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Red"] = (0xFF, 0x00, 0x00),
+        ["Green"] = (0x00, 0xFF, 0x00),
+        ["Blue"] = (0x00, 0x00, 0xFF),
+        ["Yellow"] = (0xFF, 0xFF, 0x00),
+        ["Off"] = (0x00, 0x00, 0x00),
+    };
+
+    private static readonly string[] _tracks = ["Funky", "Nordic", "Quiet", "Open Office", "Kuando"];
+
+    private readonly DeviceSend _send;
+    private readonly Lock _stateLock = new();
+    private byte _r;
+    private byte _g;
+    private byte _b;
+    private byte _on = 0x01;
+    private byte _off;
+    private bool _muted;
+    private int _trackIndex;
+    private byte _volume;
+
+    /// <summary>Creates a surface that writes its frames through <paramref name="send"/>.</summary>
+    /// <param name="send">The device write.</param>
+    public BusylightControlSurface(DeviceSend send)
+    {
+        ArgumentNullException.ThrowIfNull(send);
+        _send = send;
+    }
+
+    /// <inheritdoc />
+    public Task InvokeAsync(string commandId, string? value, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(commandId);
+
+        if (commandId is "customColor" or "programSequence")
+        {
+            return Task.CompletedTask;
+        }
+
+        if (commandId == "apply")
+        {
+            byte[] frame;
+            lock (_stateLock)
+            {
+                frame = BuildFrame();
+            }
+
+            return _send(frame, cancellationToken);
+        }
+
+        lock (_stateLock)
+        {
+            switch (commandId)
+            {
+                case "color":
+                    SetColor(value);
+                    break;
+                case "blinkMode":
+                    SetBlinkPreset(value);
+                    break;
+                case "onMs":
+                    _on = ParseByte(value);
+                    break;
+                case "offMs":
+                    _off = ParseByte(value);
+                    break;
+                case "mute":
+                    _muted = ParseBool(value);
+                    break;
+                case "track":
+                    SetTrack(value);
+                    break;
+                case "volume":
+                    _volume = ParseByte(value);
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown Busylight command '{commandId}'.", nameof(commandId));
+            }
+        }
+
+        return Task.CompletedTask;
+    }
+
+    /// <summary>The frame "apply" would send right now, as hex bytes (report-ID byte included); null for every other command, since none of them send anything themselves.</summary>
+    public string? PreviewCommand(string commandId, string? value)
+    {
+        ArgumentNullException.ThrowIfNull(commandId);
+
+        if (commandId != "apply")
+        {
+            return null;
+        }
+
+        lock (_stateLock)
+        {
+            return CommandPreviewFormat.ToHex(BuildFrame());
+        }
+    }
+
+    private void SetColor(string? value)
+    {
+        if (value is null)
+        {
+            return;
+        }
+
+        if (_colors.TryGetValue(value, out var rgb))
+        {
+            (_r, _g, _b) = rgb;
+            return;
+        }
+
+        if (TryParseRgbTriple(value, out var r, out var g, out var b))
+        {
+            (_r, _g, _b) = (r, g, b);
+        }
+    }
+
+    private static bool TryParseRgbTriple(string value, out byte r, out byte g, out byte b)
+    {
+        r = g = b = 0;
+        var parts = value.Split(',');
+        if (parts.Length != 3)
+        {
+            return false;
+        }
+
+        if (!byte.TryParse(parts[0], NumberStyles.None, CultureInfo.InvariantCulture, out r)
+            || !byte.TryParse(parts[1], NumberStyles.None, CultureInfo.InvariantCulture, out g)
+            || !byte.TryParse(parts[2], NumberStyles.None, CultureInfo.InvariantCulture, out b))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private void SetBlinkPreset(string? value)
+    {
+        switch (value)
+        {
+            case "Solid":
+                _on = 0x01;
+                _off = 0x00;
+                break;
+            case "Slow":
+                _on = 0x50;
+                _off = 0x50;
+                break;
+            case "Fast":
+                _on = 0x10;
+                _off = 0x10;
+                break;
+        }
+    }
+
+    private void SetTrack(string? value)
+    {
+        var index = value is null ? -1 : Array.IndexOf(_tracks, value);
+        if (index >= 0)
+        {
+            _trackIndex = index;
+        }
+    }
+
+    private static bool ParseBool(string? value) => value == "1" || string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
+
+    private static byte ParseByte(string? value)
+    {
+        var number = double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var parsed) ? parsed : 0;
+        return (byte)Math.Clamp(number, 0, 255);
+    }
+
+    private byte[] BuildFrame()
+    {
+        const byte NextStep = 0x00;
+        const byte Repeat = 0x00;
+        var playBit = _muted ? 0 : 1;
+        var audio = (byte)((playBit << 7) | (_trackIndex << 3) | (_volume & 0x07));
+        return [0x00, NextStep, Repeat, _r, _g, _b, _on, _off, audio];
+    }
+}

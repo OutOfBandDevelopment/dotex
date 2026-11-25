@@ -13,6 +13,11 @@ This directory contains Docker-based testing infrastructure for running integrat
 - [CI/CD Integration](#cicd-integration)
 - [Troubleshooting](#troubleshooting)
 
+**List of figures**
+
+1. Container deployment diagram
+2. Network topology
+
 ---
 
 ## Overview
@@ -31,7 +36,7 @@ The nginx reverse proxy provides a unified web interface to all services with di
 | **Stateless** | Apache Tika, SMTP4Dev |
 | **Stateful** | MongoDB, SQL Server, RabbitMQ, Redis, OpenSearch, Qdrant |
 | **Visualization** | OpenSearch Dashboards |
-| **Emulators** | Azurite (Azure Storage), Moto (AWS), Azure Service Bus Emulator, Grafana LGTM (OpenTelemetry) |
+| **Emulators** | Azurite (Azure Storage), Moto (AWS), Azure Service Bus Emulator, Aspire dashboard (OpenTelemetry) |
 | **Identity** | Keycloak |
 | **AI/ML** | SBert (CPU-only), Ollama (CPU-only) |
 
@@ -116,8 +121,8 @@ package "oobd-integration-test-net (Bridge Network)" {
     }
 
     ' Monitoring Emulator
-    component "OTel LGTM\n:3000 :4317 :4318" <<Container>> #E8F4F8 {
-        [OTLP receiver, Tempo,\nLoki, Grafana]
+    component "Aspire dashboard\n:18888 :4317 :4318" <<Container>> #E8F4F8 {
+        [OTLP receiver, traces,\nlogs, metrics UI]
     }
 }
 
@@ -183,45 +188,53 @@ end note
 @enduml
 ```
 
+*Figure 1 — Container deployment diagram*
+
 ### Network Topology
 
-```plaintext
-┌─────────────────────────────────────────────────────────────┐
-│  oobd-integration-test-net (Bridge Network)                 │
-│                                                             │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐     │
-│  │  Tika    │  │  SMTP    │  │  Mongo   │  │   SQL    │     │
-│  │  :9998   │  │  :25     │  │  :27017  │  │  :1433   │     │
-│  └──────────┘  └──────────┘  └──────────┘  └──────────┘     │
-│                                                             │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐     │
-│  │ RabbitMQ │  │  Redis   │  │OpenSearch│  │  Qdrant  │     │
-│  │  :5673   │  │  :6379   │  │  :9200   │  │  :6333   │     │
-│  └──────────┘  └──────────┘  └──────────┘  └──────────┘     │
-│                                                             │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐     │
-│  │ Azurite  │  │Moto│  │ Keycloak │  │  SBert   │     │
-│  │  :10000  │  │  :4566   │  │  :8081   │  │  :5080   │     │
-│  └──────────┘  └──────────┘  └──────────┘  └──────────┘     │
-│                                                             │
-│  ┌──────────┐  ┌──────────┐                                 │
-│  │ Service  │  │  Ollama  │                                 │
-│  │   Bus    │  │ :11434   │                                 │
-│  │  :5672   │  │          │                                 │
-│  └──────────┘  └──────────┘                                 │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-         ↑
-         │ (port mapping)
-         ↓
-    Docker Host
-    (localhost)
-         ↑
-         │
-         ↓
-  .NET Integration Tests
-  (TestCategory=Integration)
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "oobd-integration-test-net (Bridge Network)" as net {
+  rectangle "Tika\n:9998" as tika
+  rectangle "SMTP\n:25" as smtp
+  rectangle "Mongo\n:27017" as mongo
+  rectangle "SQL\n:1433" as sql
+  rectangle "RabbitMQ\n:5673" as rabbit
+  rectangle "Redis\n:6379" as redis
+  rectangle "OpenSearch\n:9200" as os
+  rectangle "Qdrant\n:6333" as qdrant
+  rectangle "Azurite\n:10000" as azurite
+  rectangle "Moto\n:4566" as moto
+  rectangle "Keycloak\n:8081" as keycloak
+  rectangle "SBert\n:5080" as sbert
+  rectangle "Service Bus\n:5672" as sb
+  rectangle "Ollama\n:11434" as ollama
+  tika -[hidden]right- smtp
+  smtp -[hidden]right- mongo
+  mongo -[hidden]right- sql
+  rabbit -[hidden]right- redis
+  redis -[hidden]right- os
+  os -[hidden]right- qdrant
+  azurite -[hidden]right- moto
+  moto -[hidden]right- keycloak
+  keycloak -[hidden]right- sbert
+  sb -[hidden]right- ollama
+  tika -[hidden]down- rabbit
+  rabbit -[hidden]down- azurite
+  azurite -[hidden]down- sb
+}
+rectangle "Docker Host\n(localhost)" as host
+rectangle ".NET Integration Tests\n(TestCategory=Integration)" as tests
+net <--> host : port mapping
+host <--> tests
+@enduml
 ```
+
+*Figure 2 — Network topology*
 
 ---
 
@@ -248,9 +261,22 @@ cd containers/testing
 # Run integration tests
 cd ../../src
 dotnet test --filter "TestCategory=Integration"
+```
 
-# Stop services and cleanup
-cd ../containers/testing
+### Start with Aspire instead of compose
+
+`src/Tools/OoBDev.Testing.AppHost` starts the same services, ports and credentials (see its `README.Testing.AppHost.md`):
+
+```bash
+dotnet run --project src/Tools/OoBDev.Testing.AppHost
+```
+
+Run either the compose stack or the Aspire host, not both (same host ports).
+
+Stop and clean up the compose stack:
+
+```bash
+cd containers/testing
 ./scripts/integration-down.sh --clean
 ```
 
@@ -286,6 +312,9 @@ scripts\integration-down.bat --clean
 | Service | Image | Port(s) | Purpose | Health Check |
 |---------|-------|---------|---------|--------------|
 | **Apache Tika** | `apache/tika` | 9998 | Document content detection | `curl http://localhost:9998/tika` |
+| **Docling serve** | `quay.io/docling-project/docling-serve-cpu` | 5001 | Document conversion and OCR | `curl http://localhost:5001/health` |
+| **ClamAV** | `clamav/clamav:stable` | 3310 | Virus scanning (clamd INSTREAM) | `/usr/local/bin/clamdcheck.sh` inside the container |
+| **SonarQube** | `sonarqube:community` | 9002 | Static analysis (`scripts/ci/sonar.ps1`) | `curl http://localhost:9002/api/system/status` |
 | **SMTP4Dev** | `rnwood/smtp4dev` | 25 (SMTP)<br>7777 (Web) | Email testing | `curl http://localhost:7777` |
 
 ### Stateful Services
@@ -296,10 +325,13 @@ scripts\integration-down.bat --clean
 |---------|-------|---------|---------|--------------|
 | **MongoDB** | `mongo:latest` | 27017 | NoSQL document database | `mongosh --eval "db.adminCommand('ping')"` |
 | **SQL Server** | `mcr.microsoft.com/mssql/server:2022-latest` | 1433 | Relational database | `sqlcmd -Q "SELECT 1"` |
-| **RabbitMQ** | `rabbitmq:latest` | 5673 (AMQP)<br>15672 (Management) | Message broker | `rabbitmq-diagnostics ping` |
-| **Redis** | `redis:7-alpine` | 6379 | In-memory cache store | `redis-cli ping` |
+| **RabbitMQ** | `rabbitmq:latest` | 5673 (AMQP)<br>15672 (Management) | Message broker | `rabbitmq-diagnostics check_port_connectivity` |
+| **Redis** | `valkey/valkey:8-alpine` | 6379 | In-memory cache store | `valkey-cli ping` |
+| **PostgreSQL** | `ghcr.io/pgmq/pg17-pgmq:v1.8.0` | 5434 | Relational store with the pgmq queue extension | `pg_isready` |
+| **PostgreSQL (pgvector)** | `pgvector/pgvector:0.8.1-pg17` | 5435 | Relational store with the vector extension for embedding stores and the work queue tests | `pg_isready` |
 | **OpenSearch** | `opensearchproject/opensearch:latest` | 9200 (HTTP)<br>9600 (Performance) | Search engine | `curl https://localhost:9200/_cluster/health` |
 | **Qdrant** | `qdrant/qdrant` | 6333 (HTTP)<br>6334 (gRPC) | Vector database | `curl http://localhost:6333/health` |
+| **Neo4j** | `neo4j:5-community` | 7687 (Bolt)<br>7474 (Browser) | Graph database | `cypher-shell "RETURN 1"` |
 
 ### Emulators
 
@@ -310,7 +342,21 @@ scripts\integration-down.bat --clean
 | **Azurite** | `mcr.microsoft.com/azure-storage/azurite` | 10000 (Blob)<br>10001 (Queue)<br>10002 (Table) | Azure Storage emulator | `nc -z localhost 10000` |
 | **Moto** | `motoserver/moto` | 4566 | AWS services emulator (SQS, S3, etc.) | `curl http://localhost:4566/moto-api/` |
 | **Service Bus Emulator** | `mcr.microsoft.com/azure-messaging/servicebus-emulator` | 5672 (AMQP) | Azure Service Bus emulator | `nc -z localhost 5672` |
-| **OpenTelemetry** | `grafana/otel-lgtm:latest` | 3000, 4317, 4318 | OTLP receiver, Tempo, Loki, Grafana | `curl http://localhost:3000/api/health` |
+| **Event Hubs Emulator** | `mcr.microsoft.com/azure-messaging/eventhubs-emulator` | 5674 (AMQP) | Azure Event Hubs emulator (uses Azurite) | `nc -z localhost 5674` |
+| **OpenTelemetry** | `mcr.microsoft.com/dotnet/aspire-dashboard:latest` | 18888, 4317, 4318 | OTLP receiver, dashboard UI, telemetry API | `curl http://localhost:18888/` |
+
+### DevTerm peers
+
+**Disposable peers for the DevTerm transports** (config in `containers/testing/devterm/`; the TLS listeners need `sh containers/testing/devterm/make-test-certs.sh` first, which writes a git-ignored `devterm/certs/ca.pem`)
+
+| Service | Image | Port(s) | Purpose | Health Check |
+|---------|-------|---------|---------|--------------|
+| **Mosquitto** | `eclipse-mosquitto` | 1883 (MQTT, anonymous) | MQTT transport and broker bridge | `nc -z localhost 1883` |
+| **ser2net** | Custom | 2217 (RFC 2217) | RFC 2217 client and server bridge; the port behind it echoes every byte | `nc -z localhost 2217` |
+| **loopback-device** | Custom | 7778 (TCP) | Line device (`hello`, `STATUS?`, `help`) for the TCP transport without hardware | `nc -z localhost 7778` |
+| **RabbitMQ** (shared) | `rabbitmq` | 5673 AMQP, 5671 AMQPS, 21613 STOMP, 21614 STOMP over TLS | AMQP and STOMP transports (STOMP's usual 61613 is in a Windows reserved range) | `rabbitmq-diagnostics check_port_connectivity` |
+
+Tests: `TestCategory=Integration` in `OoBDev.System.IO.{Mqtt,Brokers,Tcp}.Tests` and `OoBDev.DevTerm.Core.Tests`; each ends Inconclusive when its port is unreachable. Settings: `MOSQUITTO_*`, `SER2NET_*`, `LOOPBACK_DEVICE_*`, `RABBITMQ_*` in `src/.runsettings`.
 
 ### Identity & AI/ML
 
@@ -374,26 +420,31 @@ dotnet test --filter "TestCategory=Integration" --collect:"XPlat Code Coverage"
 ## Environment Variables
 
 ### Connection Strings
-
+Tests use environment variables for connection strings. See `.env.integration` for defaults. The values use `127.0.0.1`, not `localhost`: .NET resolves `localhost` to `::1` first, where a WSL relay listens on the same ports and stalls the connection.
 Tests use environment variables for connection strings. See `.env.integration` for defaults.
 
 | Variable | Default | Purpose |
 |----------|---------|---------|
-| `SQL_CONNECTION_STRING` | `Server=localhost,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=True` | SQL Server connection |
-| `MONGODB_CONNECTION_STRING` | `mongodb://localhost:27017` | MongoDB connection |
-| `RABBITMQ_CONNECTION_STRING` | `amqp://guest:guest@localhost:5673/` | RabbitMQ connection |
-| `REDIS_CONNECTION_STRING` | `localhost:6379` | Redis connection |
-| `OPENSEARCH_URL` | `https://localhost:9200` | OpenSearch endpoint |
-| `QDRANT_URL` | `http://localhost:6333` | Qdrant HTTP endpoint |
-| `TIKA_URL` | `http://localhost:9998` | Apache Tika endpoint |
-| `SMTP_HOST` | `localhost` | SMTP server host |
+| `SQL_CONNECTION_STRING` | `Server=127.0.0.1,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=True` | SQL Server connection |
+| `MONGODB_CONNECTION_STRING` | `mongodb://127.0.0.1:27017` | MongoDB connection |
+| `RABBITMQ_CONNECTION_STRING` | `amqp://guest:guest@127.0.0.1:5673/` | RabbitMQ connection |
+| `REDIS_CONNECTION_STRING` | `127.0.0.1:6379` | Redis connection |
+| `POSTGRES_CONNECTION_STRING` | `Host=127.0.0.1;Port=5434;...` | PostgreSQL connection |
+| `PGVECTOR_CONNECTION_STRING` | `Host=127.0.0.1;Port=5435;...` | PostgreSQL with pgvector connection |
+| `OPENSEARCH_URL` | `https://127.0.0.1:9200` | OpenSearch endpoint |
+| `QDRANT_URL` | `http://127.0.0.1:6333` | Qdrant HTTP endpoint |
+| `TIKA_URL` | `http://127.0.0.1:9998` | Apache Tika endpoint |
+| `DOCLING_URL` | `http://127.0.0.1:5001` | docling-serve endpoint |
+| `CLAMAV_HOST` / `CLAMAV_PORT` | `127.0.0.1` / `3310` | clamd endpoint |
+| `SONARQUBE_URL` | `http://127.0.0.1:9002` | SonarQube endpoint |
+| `SMTP_HOST` | `127.0.0.1` | SMTP server host |
 | `AZURITE_CONNECTION_STRING` | (see .env file) | Azurite connection |
-| `MOTO_URL` | `http://localhost:4566` | Moto endpoint |
-| `SQS_QUEUE_URL` | `http://localhost:4566/000000000000/{queue-name}` | AWS SQS queue URL |
-| `SERVICEBUS_CONNECTION_STRING` | `Endpoint=sb://localhost;...;UseDevelopmentEmulator=true;` | Azure Service Bus connection |
-| `KEYCLOAK_URL` | `http://localhost:8081` | Keycloak endpoint |
-| `SBERT_URL` | `http://localhost:5080` | SBert endpoint |
-| `OLLAMA_URL` | `http://localhost:11435` | Ollama LLM endpoint |
+| `MOTO_URL` | `http://127.0.0.1:4566` | Moto endpoint |
+| `SQS_QUEUE_URL` | `http://127.0.0.1:4566/000000000000/{queue-name}` | AWS SQS queue URL |
+| `SERVICEBUS_CONNECTION_STRING` | `Endpoint=sb://127.0.0.1;...;UseDevelopmentEmulator=true;` | Azure Service Bus connection |
+| `KEYCLOAK_URL` | `http://127.0.0.1:8081` | Keycloak endpoint |
+| `SBERT_URL` | `http://127.0.0.1:5080` | SBert endpoint |
+| `OLLAMA_URL` | `http://127.0.0.1:11435` | Ollama LLM endpoint |
 | `OLLAMA_MODEL` | `phi3` | Ollama model name |
 
 ### Auto-Initialized Resources
@@ -447,67 +498,16 @@ public async Task TestMongoDBOperation()
 
 ## CI/CD Integration
 
-### GitHub Actions Workflow
+### Local runner
 
-Integration tests run **daily at 4 PM UTC** via `.github/workflows/integration-tests.yml`:
+GitHub is no longer the primary repository, so the build and the Integration run happen locally with `scripts/ci/run-tests.ps1` ([readme](../../scripts/ci/README.md)). It restores, builds and tests `src/`, starts the Docker stack when `Integration` is included and always stops it afterwards.
 
-```yaml
-# Triggered by:
-# - Scheduled: Daily at 4 PM UTC (cron: '0 16 * * *')
-# - Manual: workflow_dispatch
-
-steps:
-  - name: Start Integration Test Services
-    working-directory: ./containers/testing
-    run: |
-      docker compose -f docker-compose.integration-tests.yml up -d
-
-  - name: Wait for Services
-    working-directory: ./containers/testing
-    run: ./scripts/wait-for-services.sh
-    timeout-minutes: 5
-
-  - name: Run Integration Tests
-    working-directory: ./src
-    env:
-      MONGODB_CONNECTION_STRING: mongodb://localhost:27017
-      SQL_CONNECTION_STRING: Server=localhost,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=True
-      # ... (other environment variables)
-    run: >
-      dotnet test
-      --configuration Release
-      --filter "TestCategory=Integration"
-      --collect:"XPlat Code Coverage"
-
-  - name: Stop Docker Services
-    if: always()
-    working-directory: ./containers/testing
-    run: docker compose -f docker-compose.integration-tests.yml down -v
+```powershell
+pwsh scripts/ci/run-tests.ps1                          # Unit and Simulate
+pwsh scripts/ci/run-tests.ps1 -Category Integration    # Docker stack, then Integration
 ```
 
-### Pipeline Flow
-
-```
-Build Pipeline (dotnet.yml)
-  ├─ Push/PR trigger
-  ├─ Build + Unit/Simulate tests
-  ├─ Create packages
-  ├─ Upload artifacts (90 days)
-  └─ Tag: v{version}
-          ↓
-Daily at 4 PM UTC
-          ↓
-Integration Tests (integration-tests.yml)
-  ├─ Start Docker services
-  ├─ Wait for health checks
-  ├─ Run Integration tests
-  ├─ Stop Docker services
-  └─ Tag: validated-v{version} (on success)
-          ↓
-Manual Release (release.yml)
-  ├─ Find validated artifact
-  └─ Deploy to NuGet
-```
+Results go to `artifacts/test-results`. The `.github/workflows/` files are legacy and no longer gate work; the release workflows have no local replacement yet.
 
 ---
 
@@ -605,17 +605,23 @@ netstat -ano | findstr :27017
 |----------|---------|---------|
 | `TEST_PORT_SMTP_WEB`, `TEST_PORT_SMTP`, `TEST_PORT_IMAP` | 7777, 25, 143 | smtp4dev |
 | `TEST_PORT_TIKA` | 9998 | Apache Tika |
+| `TEST_PORT_DOCLING` | 5001 | docling-serve |
+| `TEST_PORT_CLAMAV` | 3310 | ClamAV |
+| `TEST_PORT_SONARQUBE` | 9002 | SonarQube |
 | `TEST_PORT_MONGODB` | 27017 | MongoDB |
 | `TEST_PORT_SQLSERVER` | 1433 | SQL Server |
 | `TEST_PORT_RABBITMQ`, `TEST_PORT_RABBITMQ_MGMT` | 5673, 15672 | RabbitMQ (AMQP, management) |
 | `TEST_PORT_REDIS` | 6379 | Redis |
+| `TEST_PORT_POSTGRES` | 5434 | PostgreSQL with pgmq |
+| `TEST_PORT_PGVECTOR` | 5435 | PostgreSQL with pgvector |
 | `TEST_PORT_OPENSEARCH`, `TEST_PORT_OPENSEARCH_PERF` | 9200, 9600 | OpenSearch |
 | `TEST_PORT_OPENSEARCH_DASHBOARDS` | 5601 | OpenSearch Dashboards |
 | `TEST_PORT_QDRANT`, `TEST_PORT_QDRANT_GRPC` | 6333, 6334 | Qdrant |
+| `TEST_PORT_NEO4J_BOLT`, `TEST_PORT_NEO4J` | 7687, 7474 | Neo4j |
 | `TEST_PORT_AZURITE_BLOB`, `TEST_PORT_AZURITE_QUEUE`, `TEST_PORT_AZURITE_TABLE` | 10000, 10001, 10002 | Azurite |
 | `TEST_PORT_MOTO` | 4566 | Moto |
 | `TEST_PORT_SERVICEBUS` | 5672 | Service Bus emulator |
-| `TEST_PORT_GRAFANA`, `TEST_PORT_OTLP_GRPC`, `TEST_PORT_OTLP_HTTP` | 3000, 4317, 4318 | Grafana LGTM |
+| `TEST_PORT_OTEL_DASHBOARD`, `TEST_PORT_OTLP_GRPC`, `TEST_PORT_OTLP_HTTP` | 18888, 4317, 4318 | Aspire dashboard |
 | `TEST_PORT_KEYCLOAK` | 8081 | Keycloak |
 | `TEST_PORT_NGINX` | 8080 | Dashboard |
 | `TEST_PORT_SBERT` | 5080 | SBert |
@@ -681,6 +687,9 @@ cd ../containers/testing
 ### Service URLs
 
 - **Apache Tika**: http://localhost:9998
+- **Docling serve**: http://localhost:5001
+- **ClamAV**: localhost:3310 (TCP, clamd)
+- **SonarQube**: http://localhost:9002
 - **SMTP4Dev Web UI**: http://localhost:7777
 - **RabbitMQ Management**: http://localhost:15672 (guest/guest)
 - **OpenSearch**: https://localhost:9200 (admin/IntegrationTest123!)
@@ -692,16 +701,22 @@ cd ../containers/testing
 
 All containers are prefixed with `oobd-test-`:
 - `oobd-test-tika`
+- `oobd-test-docling`
+- `oobd-test-clamav`
+- `oobd-test-sonarqube`
 - `oobd-test-smtp`
 - `oobd-test-mongodb`
 - `oobd-test-sqlserver`
 - `oobd-test-rabbitmq`
 - `oobd-test-redis`
+- `oobd-test-postgres`
+- `oobd-test-pgvector`
 - `oobd-test-opensearch`
 - `oobd-test-qdrant`
 - `oobd-test-azurite`
 - `oobd-test-moto`
 - `oobd-test-servicebus`
+- `oobd-test-eventhubs`
 - `oobd-test-keycloak`
 - `oobd-test-sbert`
 - `oobd-test-ollama`

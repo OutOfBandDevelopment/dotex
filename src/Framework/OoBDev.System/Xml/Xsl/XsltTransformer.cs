@@ -6,12 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using System.Xml.Xsl;
 
-//TODO: should make this async/await
 namespace OoBDev.System.Xml.Xsl;
 
 /// <summary>
@@ -35,7 +36,7 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
     {
         try
         {
-            var xmlreader = XmlReader.Create(fileName, new XmlReaderSettings
+            using var xmlreader = XmlReader.Create(fileName, new XmlReaderSettings
             {
                 DtdProcessing = DtdProcessing.Ignore,
                 ConformanceLevel = ConformanceLevel.Document,
@@ -48,7 +49,6 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
         catch
         {
             return null;
-            //TODO: do something smart
         }
     }
 
@@ -58,6 +58,46 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
     /// <param name="template">path for XSLT style-sheet</param>
     /// <param name="input">source XML file</param>
     /// <param name="output">resulting text content</param>
+    /// <summary>
+    /// Transforms without blocking the caller's thread on file access: the result is built in memory (XSLT itself is synchronous) and written asynchronously.
+    /// </summary>
+    /// <param name="template">The XSLT file.</param>
+    /// <param name="input">The input XML file.</param>
+    /// <param name="output">The output file.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public async Task TransformAsync(string template, string input, string output, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var inputPath = PathEx.FixUpPath(input) ?? input;
+        IXPathNavigable? document;
+        await using (var stream = new FileStream(inputPath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.Asynchronous))
+        using (var reader = XmlReader.Create(stream, new XmlReaderSettings
+        {
+            Async = true,
+            DtdProcessing = DtdProcessing.Ignore,
+            ConformanceLevel = ConformanceLevel.Document,
+            NameTable = new NameTable(),
+        }))
+        {
+            var xmlDocument = new XmlDocument();
+            xmlDocument.Load(reader);
+            document = xmlDocument;
+        }
+
+        var outputPath = PathEx.FixUpPath(output) ?? output;
+        var temp = outputPath + "." + Guid.NewGuid().ToString("N") + ".tmp";
+        try
+        {
+            await Task.Run(() => Transform(template, input, document, temp), cancellationToken);
+            File.Move(temp, outputPath, true);
+        }
+        finally
+        {
+            if (File.Exists(temp))
+                File.Delete(temp);
+        }
+    }
+
     public void Transform(string template, string input, string output) => Transform(template, input, ReadAsXml(input), output);
 
     /// <summary>
@@ -74,8 +114,26 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
         template = PathEx.FixUpPath(template) ?? template;
         inputSource = PathEx.FixUpPath(inputSource) ?? inputSource;
         output = PathEx.FixUpPath(output) ?? output;
-        var sandbox = PathEx.FixUpPath(_sandbox);
+        var sandboxPath = PathEx.FixUpPath(_sandbox);
 
+        var xsltArgumentList = BuildArguments(template, inputSource, input, output, sandboxPath);
+
+        var xslt = Compile(template);
+
+        var outputDir = Path.GetDirectoryName(output) ?? throw new NotSupportedException($"{nameof(output)} not set");
+        if (!Directory.Exists(outputDir))
+            Directory.CreateDirectory(outputDir);
+        using var resultStream = File.Create(output);
+
+        var inputNavigator = input.CreateNavigator() ?? throw new NotSupportedException($"Could not resolve navigator for {nameof(input)}");
+        inputNavigator.MoveToRoot();
+
+        xslt.Transform(inputNavigator, xsltArgumentList, resultStream);
+    }
+    private static Exception innerMost(Exception ex) => ex.InnerException == null ? ex : innerMost(ex.InnerException);
+
+    private XsltArgumentList BuildArguments(string template, string inputSource, IXPathNavigable input, string output, string? sandboxPath)
+    {
         var xsltArgumentList = new XsltArgumentList().AddExtensions(extensions);
 
         xsltArgumentList.XsltMessageEncountered += (sender, eventArgs) => Console.WriteLine($"\t\t[{Environment.CurrentManagedThreadId}]{eventArgs.Message}");
@@ -87,9 +145,13 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
             new XAttribute(nameof(input) + "Type", input.GetType().AssemblyQualifiedName ?? "UNKNOWN"),
             new XAttribute(nameof(output), Path.GetFullPath(output)),
             new XAttribute(nameof(output) + "Path", Path.GetDirectoryName(Path.GetFullPath(output)) ?? "."),
-            new XAttribute("sandbox", Path.GetFullPath(sandbox ?? "."))
+            new XAttribute("sandbox", Path.GetFullPath(sandboxPath ?? "."))
             ).ToXPathNavigable().CreateNavigator() ?? throw new NotSupportedException());
+        return xsltArgumentList;
+    }
 
+    private static XslCompiledTransform Compile(string template)
+    {
         var xslt = new XslCompiledTransform(false);
         using var xmlreader = XmlReader.Create(template, new XmlReaderSettings
         {
@@ -100,36 +162,29 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
         var xsltSettings = new XsltSettings(false, false);
 
         xslt.Load(xmlreader, xsltSettings, null);
+        return xslt;
+    }
 
-        var outputDir = Path.GetDirectoryName(output) ?? throw new NotSupportedException($"{nameof(output)} not set");
-        if (!Directory.Exists(outputDir))
-            Directory.CreateDirectory(outputDir);
-        using var resultStream = File.Create(output);
-
-        var currentDirectory = Environment.CurrentDirectory;
+    private static Exception LogFailure(Exception ex, int tid, string inputFileClean, string outFileName, string outputFile)
+    {
+        var rex = innerMost(ex);
+        Console.Error.WriteLine($"!!! ERROR[{tid}]: \"{inputFileClean}\" => \"{outFileName}\" :: {rex.Message}");
         try
         {
-            var localOutfolder = Path.GetDirectoryName(output) ?? throw new NotSupportedException($"{nameof(output)} not set");
-            if (!Directory.Exists(localOutfolder))
-            {
-                Directory.CreateDirectory(localOutfolder);
-            }
-            Environment.CurrentDirectory = localOutfolder;
-
-            var inputNavigator = input.CreateNavigator() ?? throw new NotSupportedException($"Could not resolve navigator for {nameof(input)}");
-            inputNavigator.MoveToRoot();
-
-            //var x = xslt.GetType();
-            //var pf = x.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
-            //var pfc = pf.First(i => i.Name == "_command");
-            //var pfv = pfc.GetValue(xslt);
-
-            xslt.Transform(inputNavigator, xsltArgumentList, resultStream);
+            File.AppendAllLines(outputFile,
+            [
+                "",
+                new string('=', 60),
+               $"!!! ERROR !!!: {ex.Message}",
+                new string('=', 60),
+                ex.ToString()
+            ]);
         }
-        finally
+        catch
         {
-            Environment.CurrentDirectory = currentDirectory;
+            // Eat and errors!
         }
+        return rex;
     }
 
     /// <summary>
@@ -165,8 +220,6 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
         if (!inputFiles.Any())
             throw new FileNotFoundException($"File Not Found Exception: input");
 
-        static Exception innerMost(Exception ex) => ex.InnerException == null ? ex : innerMost(ex.InnerException);
-
         var errors = new List<Exception>();
 #if PARALLEL
         inputFiles.AsParallel().ForAll(inputFile =>
@@ -190,24 +243,7 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
             }
             catch (Exception ex)
             {
-                var rex = innerMost(ex);
-                errors.Add(rex);
-                Console.Error.WriteLine($"!!! ERROR[{tid}]: \"{inputFileClean}\" => \"{outFileName}\" :: {rex.Message}");
-                try
-                {
-                    File.AppendAllLines(outputFile,
-                    [
-                        "",
-                        new string('=', 60),
-                       $"!!! ERROR !!!: {ex.Message}",
-                        new string('=', 60),
-                        ex.ToString()
-                    ]);
-                }
-                catch
-                {
-                    // Eat and errors!
-                }
+                errors.Add(LogFailure(ex, tid, inputFileClean, outFileName, outputFile));
             }
         }
 #if PARALLEL
@@ -239,10 +275,8 @@ public class XsltTransformer(string sandbox, params object[] extensions) : IXslt
             if (!inputFiles.Any())
                 throw new FileNotFoundException($"input");
 
-            //TODO: should probably add the file to the input navigator
             var navigators = inputFiles.Select(f => (f, (IXPathNavigable?)inputNavigatorFactory(f))).ToList();
 
-            //TODO: need to figure out why this won't navigate correctly.
             var merged = navigators.MergeNavigators().CreateNavigator();
             if (merged == null) return;
             var doc = new XmlDocument();

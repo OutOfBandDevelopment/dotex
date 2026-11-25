@@ -1,0 +1,379 @@
+﻿using System;
+using System.Buffers;
+using System.Collections.Generic;
+using System.IO.Pipelines;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using OoBDev.TestUtilities;
+
+namespace OoBDev.System.IO.Tcp.Tests;
+
+[TestCategory("Unit")]
+[TestClass]
+[TestCategory(TestCategories.Tcp)]
+public sealed class TcpTransportTests
+{
+    private static IOptions<TcpEndpointOptions> Options(TcpEndpointMode mode, string? host = "device.local", int port = 502, int writeTimeoutMs = 5000, bool softwareFlowControl = false) =>
+        Microsoft.Extensions.Options.Options.Create(new TcpEndpointOptions { Mode = mode, Host = host, Port = port, WriteTimeoutMs = writeTimeoutMs, SoftwareFlowControl = softwareFlowControl });
+
+    /// <summary>
+    /// A connection double whose <see cref="ITcpConnection.Stream"/> is backed by a real
+    /// <see cref="Pipe"/>: the transport's background pump reads from it for real, and the test
+    /// plays "bytes arrived on the wire" by writing to <c>WirePipe.Writer</c>.
+    /// </summary>
+    private static (Mock<ITcpConnection> Connection, Pipe WirePipe) CreateConnection()
+    {
+        var wirePipe = new Pipe();
+        var connection = new Mock<ITcpConnection>();
+        connection.SetupGet(c => c.Stream).Returns(wirePipe.Reader.AsStream());
+        return (connection, wirePipe);
+    }
+
+    [TestMethod]
+    public async Task OpenAsync_InClientMode_DialsOutViaConnectionSource()
+    {
+        var (connection, _) = CreateConnection();
+        var source = new Mock<ITcpConnectionSource>();
+        source.Setup(s => s.ConnectAsync(It.IsAny<TcpEndpointOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(connection.Object);
+
+        var transport = new TcpEndpointDeviceAdapter(source.Object, Options(TcpEndpointMode.Client));
+
+        await transport.OpenAsync(TestContext.CancellationToken);
+
+        source.Verify(s => s.ConnectAsync(It.Is<TcpEndpointOptions>(o => o.Host == "device.local"), It.IsAny<CancellationToken>()), Times.Once);
+        source.Verify(s => s.AcceptAsync(It.IsAny<TcpEndpointOptions>(), It.IsAny<CancellationToken>()), Times.Never);
+        Assert.AreEqual(ConnectionState.Open, transport.State);
+
+        await transport.CloseAsync(TestContext.CancellationToken);
+    }
+
+    [TestMethod]
+    public async Task OpenAsync_InListenerMode_AcceptsViaConnectionSource()
+    {
+        var (connection, _) = CreateConnection();
+        var source = new Mock<ITcpConnectionSource>();
+        source.Setup(s => s.AcceptAsync(It.IsAny<TcpEndpointOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(connection.Object);
+
+        var transport = new TcpEndpointDeviceAdapter(source.Object, Options(TcpEndpointMode.Listener, host: null, port: 9000));
+
+        await transport.OpenAsync(TestContext.CancellationToken);
+
+        source.Verify(s => s.AcceptAsync(It.Is<TcpEndpointOptions>(o => o.Port == 9000), It.IsAny<CancellationToken>()), Times.Once);
+        source.Verify(s => s.ConnectAsync(It.IsAny<TcpEndpointOptions>(), It.IsAny<CancellationToken>()), Times.Never);
+        Assert.AreEqual(ConnectionState.Open, transport.State);
+
+        await transport.CloseAsync(TestContext.CancellationToken);
+    }
+
+    [TestMethod]
+    public async Task OpenAsync_RaisesStateChangedThroughOpeningToOpen()
+    {
+        var (connection, _) = CreateConnection();
+        var source = new Mock<ITcpConnectionSource>();
+        source.Setup(s => s.ConnectAsync(It.IsAny<TcpEndpointOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(connection.Object);
+
+        var transport = new TcpEndpointDeviceAdapter(source.Object, Options(TcpEndpointMode.Client));
+        var states = new List<ConnectionState>();
+        transport.StateChanged += (_, e) => states.Add(e.Current);
+
+        await transport.OpenAsync(TestContext.CancellationToken);
+
+        Assert.AreSequenceEqual([ConnectionState.Opening, ConnectionState.Open], states);
+
+        await transport.CloseAsync(TestContext.CancellationToken);
+    }
+
+    [TestMethod]
+    public async Task OpenAsync_WhenConnectionSourceThrows_TransitionsToFaultedAndRethrows()
+    {
+        var source = new Mock<ITcpConnectionSource>();
+        source.Setup(s => s.ConnectAsync(It.IsAny<TcpEndpointOptions>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new SocketExceptionStub());
+
+        var transport = new TcpEndpointDeviceAdapter(source.Object, Options(TcpEndpointMode.Client));
+
+        await Assert.ThrowsExactlyAsync<SocketExceptionStub>(() => transport.OpenAsync(TestContext.CancellationToken));
+        Assert.AreEqual(ConnectionState.Faulted, transport.State);
+    }
+
+    [TestMethod]
+    public async Task WriteAsync_WhenNotOpen_Throws()
+    {
+        var transport = new TcpEndpointDeviceAdapter(Mock.Of<ITcpConnectionSource>(), Options(TcpEndpointMode.Client));
+
+        await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => transport.WriteAsync(new byte[] { 1 }, TestContext.CancellationToken));
+    }
+
+    [TestMethod]
+    public async Task WriteAsync_WhenOpen_WritesBytesToConnection()
+    {
+        var (connection, _) = CreateConnection();
+        var source = new Mock<ITcpConnectionSource>();
+        source.Setup(s => s.ConnectAsync(It.IsAny<TcpEndpointOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(connection.Object);
+
+        var transport = new TcpEndpointDeviceAdapter(source.Object, Options(TcpEndpointMode.Client));
+        await transport.OpenAsync(TestContext.CancellationToken);
+
+        var payload = new byte[] { 0x01, 0x02, 0x03 };
+        await transport.WriteAsync(payload, TestContext.CancellationToken);
+
+        connection.Verify(c => c.WriteAsync(payload, It.IsAny<CancellationToken>()), Times.Once);
+
+        await transport.CloseAsync(TestContext.CancellationToken);
+    }
+
+    [TestMethod]
+    public async Task WriteAsync_WithZeroByteDelay_WritesOneByteAtATimeThroughTheStream()
+    {
+        var incoming = new Pipe();
+        var outgoing = new Pipe();
+        var duplexStream = new DuplexPipeStream(incoming, outgoing);
+        var connection = new Mock<ITcpConnection>();
+        connection.SetupGet(c => c.Stream).Returns(duplexStream);
+        var source = new Mock<ITcpConnectionSource>();
+        source.Setup(s => s.ConnectAsync(It.IsAny<TcpEndpointOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(connection.Object);
+
+        var options = Microsoft.Extensions.Options.Options.Create(new TcpEndpointOptions { Mode = TcpEndpointMode.Client, Host = "device.local", Port = 502, WriteByteDelayMs = 0 });
+        var transport = new TcpEndpointDeviceAdapter(source.Object, options);
+        await transport.OpenAsync(TestContext.CancellationToken);
+
+        await transport.WriteAsync(new byte[] { 1, 2, 3 }, TestContext.CancellationToken);
+        await outgoing.Writer.FlushAsync(TestContext.CancellationToken);
+
+        var result = await outgoing.Reader.ReadAsync(TestContext.CancellationToken).AsTask().WaitAsync(TimeSpan.FromSeconds(5), TestContext.CancellationToken);
+        Assert.AreSequenceEqual(new byte[] { 1, 2, 3 }, result.Buffer.ToArray());
+        outgoing.Reader.AdvanceTo(result.Buffer.End);
+
+        await transport.CloseAsync(TestContext.CancellationToken);
+    }
+
+    [TestCategory(TestCategories.BugRegression)]
+    [TestMethod]
+    [TestCategory("Unit")]
+    public async Task WriteAsync_ConnectionNeverDrains_ThrowsTimeoutExceptionAfterWriteTimeoutMs()
+    {
+        var (connection, _) = CreateConnection();
+        connection.Setup(c => c.WriteAsync(It.IsAny<ReadOnlyMemory<byte>>(), It.IsAny<CancellationToken>()))
+            .Returns<ReadOnlyMemory<byte>, CancellationToken>((_, ct) => Task.Delay(Timeout.Infinite, ct));
+        var source = new Mock<ITcpConnectionSource>();
+        source.Setup(s => s.ConnectAsync(It.IsAny<TcpEndpointOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(connection.Object);
+
+        var transport = new TcpEndpointDeviceAdapter(source.Object, Options(TcpEndpointMode.Client, writeTimeoutMs: 50));
+        await transport.OpenAsync(TestContext.CancellationToken);
+
+        await Assert.ThrowsExactlyAsync<TimeoutException>(() => transport.WriteAsync(new byte[] { 1 }, TestContext.CancellationToken));
+
+        await transport.CloseAsync(TestContext.CancellationToken);
+    }
+
+    [TestMethod]
+    public async Task IncomingBytes_AreAvailableThroughInput()
+    {
+        var (connection, wirePipe) = CreateConnection();
+        var source = new Mock<ITcpConnectionSource>();
+        source.Setup(s => s.ConnectAsync(It.IsAny<TcpEndpointOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(connection.Object);
+
+        var transport = new TcpEndpointDeviceAdapter(source.Object, Options(TcpEndpointMode.Client));
+        await transport.OpenAsync(TestContext.CancellationToken);
+
+        var payload = "ޭ"u8.ToArray();
+        await wirePipe.Writer.WriteAsync(payload, TestContext.CancellationToken);
+
+        var result = await transport.Input.ReadAsync(TestContext.CancellationToken).AsTask().WaitAsync(TimeSpan.FromSeconds(5), TestContext.CancellationToken);
+        Assert.AreSequenceEqual(payload, result.Buffer.ToArray());
+        transport.Input.AdvanceTo(result.Buffer.End);
+
+        await transport.CloseAsync(TestContext.CancellationToken);
+    }
+
+    [TestMethod]
+    public async Task RemoteClosesTheConnection_TransportTransitionsToClosed()
+    {
+        var (connection, wirePipe) = CreateConnection();
+        var source = new Mock<ITcpConnectionSource>();
+        source.Setup(s => s.ConnectAsync(It.IsAny<TcpEndpointOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(connection.Object);
+
+        var transport = new TcpEndpointDeviceAdapter(source.Object, Options(TcpEndpointMode.Client));
+        var closedTcs = new TaskCompletionSource();
+        transport.StateChanged += (_, e) =>
+        {
+            if (e.Current == ConnectionState.Closed)
+            {
+                closedTcs.TrySetResult();
+            }
+        };
+
+        await transport.OpenAsync(TestContext.CancellationToken);
+        await wirePipe.Writer.CompleteAsync();
+
+        await closedTcs.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.CancellationToken);
+        Assert.AreEqual(ConnectionState.Closed, transport.State);
+    }
+
+    [TestMethod]
+    public async Task CloseAsync_ClosesAndDisposesConnection()
+    {
+        var (connection, _) = CreateConnection();
+        var source = new Mock<ITcpConnectionSource>();
+        source.Setup(s => s.ConnectAsync(It.IsAny<TcpEndpointOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(connection.Object);
+
+        var transport = new TcpEndpointDeviceAdapter(source.Object, Options(TcpEndpointMode.Client));
+        await transport.OpenAsync(TestContext.CancellationToken);
+
+        await transport.CloseAsync(TestContext.CancellationToken).WaitAsync(TimeSpan.FromSeconds(5), TestContext.CancellationToken);
+
+        connection.Verify(c => c.Dispose(), Times.Once);
+        Assert.AreEqual(ConnectionState.Closed, transport.State);
+    }
+
+    [TestMethod]
+    public async Task CloseAsync_WhenNeverOpened_DoesNothing()
+    {
+        var source = new Mock<ITcpConnectionSource>();
+        var transport = new TcpEndpointDeviceAdapter(source.Object, Options(TcpEndpointMode.Client));
+
+        await transport.CloseAsync(TestContext.CancellationToken);
+
+        source.Verify(s => s.ConnectAsync(It.IsAny<TcpEndpointOptions>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [TestMethod]
+    public async Task SoftwareFlowControl_WhenDisabled_PassesXonXoffBytesThroughUnfiltered()
+    {
+        var (connection, wirePipe) = CreateConnection();
+        var source = new Mock<ITcpConnectionSource>();
+        source.Setup(s => s.ConnectAsync(It.IsAny<TcpEndpointOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(connection.Object);
+
+        var transport = new TcpEndpointDeviceAdapter(source.Object, Options(TcpEndpointMode.Client, softwareFlowControl: false));
+        await transport.OpenAsync(TestContext.CancellationToken);
+
+        var payload = new byte[] { 0x13, (byte)'A', 0x11, (byte)'B' };
+        await wirePipe.Writer.WriteAsync(payload, TestContext.CancellationToken);
+
+        var result = await transport.Input.ReadAsync(TestContext.CancellationToken).AsTask().WaitAsync(TimeSpan.FromSeconds(5), TestContext.CancellationToken);
+        Assert.AreSequenceEqual(payload, result.Buffer.ToArray());
+        transport.Input.AdvanceTo(result.Buffer.End);
+
+        await transport.CloseAsync(TestContext.CancellationToken);
+    }
+
+    [TestMethod]
+    public async Task SoftwareFlowControl_WhenEnabled_StripsXonXoffBytesFromInput()
+    {
+        var (connection, wirePipe) = CreateConnection();
+        var source = new Mock<ITcpConnectionSource>();
+        source.Setup(s => s.ConnectAsync(It.IsAny<TcpEndpointOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(connection.Object);
+
+        var transport = new TcpEndpointDeviceAdapter(source.Object, Options(TcpEndpointMode.Client, softwareFlowControl: true));
+        await transport.OpenAsync(TestContext.CancellationToken);
+
+        var payload = new byte[] { 0x13, (byte)'A', 0x11, (byte)'B' }; // XOFF, 'A', XON, 'B'
+        await wirePipe.Writer.WriteAsync(payload, TestContext.CancellationToken);
+
+        var result = await transport.Input.ReadAsync(TestContext.CancellationToken).AsTask().WaitAsync(TimeSpan.FromSeconds(5), TestContext.CancellationToken);
+        Assert.AreSequenceEqual("AB"u8.ToArray(), result.Buffer.ToArray());
+        transport.Input.AdvanceTo(result.Buffer.End);
+
+        await transport.CloseAsync(TestContext.CancellationToken);
+    }
+
+    [TestMethod]
+    public async Task SoftwareFlowControl_WhenEnabled_PausesWritesAfterXoff_AndResumesAfterXon()
+    {
+        var (connection, wirePipe) = CreateConnection();
+        var source = new Mock<ITcpConnectionSource>();
+        source.Setup(s => s.ConnectAsync(It.IsAny<TcpEndpointOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(connection.Object);
+
+        var transport = new TcpEndpointDeviceAdapter(source.Object, Options(TcpEndpointMode.Client, softwareFlowControl: true));
+        await transport.OpenAsync(TestContext.CancellationToken);
+
+        await wirePipe.Writer.WriteAsync(new byte[] { 0x13 }, TestContext.CancellationToken); // XOFF from the peer
+        await Task.Delay(100, TestContext.CancellationToken); // let the background pump observe it
+
+        var writeTask = transport.WriteAsync(new byte[] { 1, 2, 3 }, TestContext.CancellationToken);
+
+        await Task.Delay(100, TestContext.CancellationToken);
+        Assert.IsFalse(writeTask.IsCompleted, "Write should stay paused until an XON is received.");
+        connection.Verify(c => c.WriteAsync(It.IsAny<ReadOnlyMemory<byte>>(), It.IsAny<CancellationToken>()), Times.Never);
+
+        await wirePipe.Writer.WriteAsync(new byte[] { 0x11 }, TestContext.CancellationToken); // XON resumes writes
+
+        await writeTask.WaitAsync(TimeSpan.FromSeconds(5), TestContext.CancellationToken);
+        connection.Verify(c => c.WriteAsync(It.IsAny<ReadOnlyMemory<byte>>(), It.IsAny<CancellationToken>()), Times.Once);
+
+        await transport.CloseAsync(TestContext.CancellationToken);
+    }
+
+    [TestMethod]
+    public async Task SoftwareFlowControl_ToggledOnLiveConnection_TakesEffectWithoutReconnecting()
+    {
+        var (connection, wirePipe) = CreateConnection();
+        var source = new Mock<ITcpConnectionSource>();
+        source.Setup(s => s.ConnectAsync(It.IsAny<TcpEndpointOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(connection.Object);
+
+        var transport = new TcpEndpointDeviceAdapter(source.Object, Options(TcpEndpointMode.Client, softwareFlowControl: false));
+        await transport.OpenAsync(TestContext.CancellationToken);
+        Assert.IsFalse(transport.SoftwareFlowControl);
+
+        transport.SoftwareFlowControl = true;
+        Assert.IsTrue(transport.SoftwareFlowControl);
+
+        var payload = new byte[] { 0x13, (byte)'A', 0x11, (byte)'B' }; // XOFF, 'A', XON, 'B'
+        await wirePipe.Writer.WriteAsync(payload, TestContext.CancellationToken);
+
+        var result = await transport.Input.ReadAsync(TestContext.CancellationToken).AsTask().WaitAsync(TimeSpan.FromSeconds(5), TestContext.CancellationToken);
+        Assert.AreSequenceEqual("AB"u8.ToArray(), result.Buffer.ToArray());
+        transport.Input.AdvanceTo(result.Buffer.End);
+
+        await transport.CloseAsync(TestContext.CancellationToken);
+    }
+
+    [TestMethod]
+    public async Task SoftwareFlowControl_DisablingWhilePaused_ReleasesTheStuckWriteImmediately()
+    {
+        var (connection, wirePipe) = CreateConnection();
+        var source = new Mock<ITcpConnectionSource>();
+        source.Setup(s => s.ConnectAsync(It.IsAny<TcpEndpointOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(connection.Object);
+
+        var transport = new TcpEndpointDeviceAdapter(source.Object, Options(TcpEndpointMode.Client, softwareFlowControl: true));
+        await transport.OpenAsync(TestContext.CancellationToken);
+
+        await wirePipe.Writer.WriteAsync(new byte[] { 0x13 }, TestContext.CancellationToken); // XOFF from the peer
+        await Task.Delay(100, TestContext.CancellationToken); // let the background pump observe it
+
+        var writeTask = transport.WriteAsync(new byte[] { 1, 2, 3 }, TestContext.CancellationToken);
+
+        await Task.Delay(100, TestContext.CancellationToken);
+        Assert.IsFalse(writeTask.IsCompleted, "Write should stay paused until flow control is resolved.");
+
+        transport.SoftwareFlowControl = false; // disabling must release the stuck write, not leave it paused forever
+
+        await writeTask.WaitAsync(TimeSpan.FromSeconds(5), TestContext.CancellationToken);
+        connection.Verify(c => c.WriteAsync(It.IsAny<ReadOnlyMemory<byte>>(), It.IsAny<CancellationToken>()), Times.Once);
+
+        await transport.CloseAsync(TestContext.CancellationToken);
+    }
+
+    /// <summary>Stand-in for a real socket exception so the test doesn't depend on actual networking.</summary>
+    private sealed class SocketExceptionStub : Exception;
+
+    public required TestContext TestContext { get; set; }
+}

@@ -1,0 +1,117 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace OoBDev.UiDefinitions.ViewModels;
+
+/// <summary>
+/// A live display control (indicator, bar graph, strip chart, vector) as the view sees it: the
+/// <see cref="LiveDisplayState"/> plus a <see cref="Revision"/> that changes with each published value,
+/// so a view redraws from <see cref="State"/> on that notification.
+/// </summary>
+public sealed class LiveDisplayViewModel : ViewModelBase
+{
+    private int _revision;
+
+    /// <summary>Creates the view model for <paramref name="control"/>.</summary>
+    /// <param name="control">An indicator, bar graph, strip chart or vector control.</param>
+    /// <exception cref="NotSupportedException">The control is not a live display control.</exception>
+    public LiveDisplayViewModel(UiControl control)
+    {
+        ArgumentNullException.ThrowIfNull(control);
+        Control = control;
+        State = LiveDisplayState.For(control) ?? throw new NotSupportedException($"'{control.GetType().Name}' is not a live display control.");
+        Bars = control is BarGraphControl bar ? [.. bar.Channels.Select((c, i) => new BarViewModel(c, ChartPalette.ColorFor(c, i)))] : [];
+        Lines = control is StripChartControl chart ? [.. chart.Channels.Select((c, i) => new ChartLineViewModel(c, ChartPalette.ColorFor(c, i)))] : [];
+    }
+
+    /// <summary>Whether this shows an indicator (<see cref="Text"/>).</summary>
+    public bool IsIndicator => State is IndicatorState;
+
+    /// <summary>Whether this shows a bar graph (<see cref="Bars"/>).</summary>
+    public bool IsBarGraph => State is BarGraphState;
+
+    /// <summary>The bars of a bar graph; empty for the other kinds.</summary>
+    public IReadOnlyList<BarViewModel> Bars { get; }
+
+    /// <summary>Whether this shows a strip chart (<see cref="Lines"/>).</summary>
+    public bool IsStripChart => State is StripChartState;
+
+    /// <summary>Whether this shows a vector (<see cref="Readout"/>).</summary>
+    public bool IsVector => State is VectorState;
+
+    /// <summary>The lines of a strip chart; empty for the other kinds.</summary>
+    public IReadOnlyList<ChartLineViewModel> Lines { get; }
+
+    /// <summary>A vector's readout text, or null for the other kinds.</summary>
+    public string? Readout => (State as VectorState)?.Readout();
+
+    /// <summary>A vector's trail and current point as <c>x,y x,y</c> text in a 100 by 100 box (origin top left); empty for the other kinds.</summary>
+    public string PlotTrail => State is VectorState vector ? VectorPlot.Trail(vector) : string.Empty;
+
+    /// <summary>The horizontal position of a vector's current point in the 100 by 100 box.</summary>
+    public double PlotX => State is VectorState vector ? VectorPlot.Project(vector, vector.Point).X : 50;
+
+    /// <summary>The vertical position of a vector's current point in the 100 by 100 box (origin top left).</summary>
+    public double PlotY => State is VectorState vector ? VectorPlot.Project(vector, vector.Point).Y : 50;
+
+    /// <summary>The colour a vector's point is drawn in, as a hex string.</summary>
+    public string PlotColor => State is VectorState vector ? VectorPlot.ColorOf(vector) : VectorPlot.DefaultColor;
+
+    /// <summary>An indicator's display text, or null before a value arrives and for the other kinds.</summary>
+    public string? Text => (State as IndicatorState)?.Text;
+
+    /// <summary>The control definition.</summary>
+    public UiControl Control { get; }
+
+    /// <summary>The label text.</summary>
+    public string Label => Control.Label;
+
+    /// <summary>The current values; read it when <see cref="Revision"/> changes.</summary>
+    public LiveDisplayState State { get; }
+
+    /// <summary>Counts the published updates that changed the state.</summary>
+    public int Revision
+    {
+        get => _revision;
+        private set => SetProperty(ref _revision, value);
+    }
+
+    /// <summary>Publishes one value; returns whether the state changed.</summary>
+    public bool Apply(string id, string text) => ApplyAll([new KeyValuePair<string, string>(id, text)]);
+
+    /// <summary>Publishes several values as one update; returns whether the state changed.</summary>
+    public bool ApplyAll(IEnumerable<KeyValuePair<string, string>> values)
+    {
+        if (!State.ApplyAll(values))
+        {
+            return false;
+        }
+
+        if (State is BarGraphState bars)
+        {
+            foreach (var bar in Bars)
+            {
+                bar.Update(bars);
+            }
+        }
+
+        if (State is StripChartState chart)
+        {
+            foreach (var line in Lines)
+            {
+                line.Update(chart);
+            }
+        }
+
+        Revision++;
+        OnPropertyChanged(nameof(State));
+        OnPropertyChanged(nameof(Text));
+        OnPropertyChanged(nameof(Readout));
+        OnPropertyChanged(nameof(PlotTrail));
+        OnPropertyChanged(nameof(PlotX));
+        OnPropertyChanged(nameof(PlotY));
+        OnPropertyChanged(nameof(PlotColor));
+        return true;
+    }
+}

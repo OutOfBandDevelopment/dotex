@@ -59,26 +59,10 @@ public static partial class ResponseFileExtractor
             }
 
             var marker = fence.Groups["m"].Value;
-            var body = new List<string>();
-            var j = i + 1;
-            while (j < lines.Length && !lines[j].TrimStart().StartsWith(marker, StringComparison.Ordinal))
-            {
-                body.Add(lines[j]);
-                j++;
-            }
-            i = j;
+            var body = ReadBody(lines, ref i, marker);
 
-            var name = pendingName;
+            var name = NameOf(pendingName, body);
             pendingName = null;
-            if (name == null && body.Count > 0)
-            {
-                var comment = CommentName().Match(body[0]);
-                if (comment.Success)
-                {
-                    name = comment.Groups["n"].Value;
-                    body.RemoveAt(0);
-                }
-            }
 
             var content = string.Join("\n", body);
             if (name == null)
@@ -100,6 +84,34 @@ public static partial class ResponseFileExtractor
         }
 
         return result;
+    }
+
+    private static List<string> ReadBody(string[] lines, ref int i, string marker)
+    {
+        var body = new List<string>();
+        var j = i + 1;
+        while (j < lines.Length && !lines[j].TrimStart().StartsWith(marker, StringComparison.Ordinal))
+        {
+            body.Add(lines[j]);
+            j++;
+        }
+        i = j;
+        return body;
+    }
+
+    private static string? NameOf(string? pendingName, List<string> body)
+    {
+        if (pendingName != null || body.Count == 0)
+        {
+            return pendingName;
+        }
+        var comment = CommentName().Match(body[0]);
+        if (!comment.Success)
+        {
+            return null;
+        }
+        body.RemoveAt(0);
+        return comment.Groups["n"].Value;
     }
 
     private static bool TryNormalize(string name, out string path)

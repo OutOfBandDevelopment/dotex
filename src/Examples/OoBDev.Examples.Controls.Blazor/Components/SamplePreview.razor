@@ -1,0 +1,30 @@
+@implements IDisposable
+
+@* The sample settings made visible: each control changes something on this card, so a dead control shows at once. *@
+<section class="preview @(Settings.Enabled ? "on" : "off")" data-id="preview">
+    <h2>Preview</h2>
+    <p class="title" data-preview="name">@(string.IsNullOrWhiteSpace(Settings.Name) ? "(no name)" : Settings.Name)</p>
+    <p><span class="badge mode-@Settings.Mode.ToLowerInvariant()" data-preview="mode">@Settings.Mode</span> <span data-preview="state">@(Settings.Enabled ? "enabled" : "disabled")</span></p>
+    <div class="bar" title="Level @Settings.Level"><div class="fill" data-preview="level" style="width: @(Percent)%"></div></div>
+    <p class="dots" data-preview="count" aria-label="@Settings.Count items">@string.Concat(Enumerable.Repeat("● ", Math.Min(Settings.Count, 20)))@(Settings.Count > 20 ? "+" + (Settings.Count - 20) : string.Empty)</p>
+    @if (Settings.ShowAdvanced)
+    {
+        <p class="notes" data-preview="notes">@(string.IsNullOrEmpty(Settings.Notes) ? "(no notes)" : Settings.Notes)</p>
+    }
+</section>
+
+@code {
+    [Parameter, EditorRequired]
+    public ControlsSampleSettings Settings { get; set; } = default!;
+
+    [Parameter, EditorRequired]
+    public FormViewModel Form { get; set; } = default!;
+
+    private double Percent => Math.Clamp(Settings.Level / 10 * 100, 0, 100);
+
+    protected override void OnInitialized() => Form.PropertyChanged += OnChanged;
+
+    private void OnChanged(object? sender, global::System.ComponentModel.PropertyChangedEventArgs e) => _ = InvokeAsync(StateHasChanged);
+
+    public void Dispose() => Form.PropertyChanged -= OnChanged;
+}

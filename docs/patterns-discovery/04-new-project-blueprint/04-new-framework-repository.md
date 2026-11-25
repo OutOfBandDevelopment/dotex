@@ -19,7 +19,7 @@ To carry the same approach to a new framework (different prefix, different domai
 | `OoBDev.TestUtilities` equivalent | `TestCategories`, `TestContext` extensions and configuration provider |
 | `containers/testing` | compose stack, scripts, health checks |
 | `.github/workflows` | build, integration, release workflows |
-| `.claude/protocols` and `CLAUDE.md` | working agreements, including [documentation rules](../06-design-document-standard.md) |
+| `.claude/rules`, `.claude/skills`, `.claude/hooks` and `CLAUDE.md` | working agreements, including [documentation rules](../06-design-document-standard.md) |
 | `scripts/docs` | validation and index scripts |
 | `.vscode` | recommended extensions, PlantUML server, tasks |
 

@@ -1,0 +1,65 @@
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
+using OoBDev.DevTerm.Configuration;
+using TgColor = Terminal.Gui.Drawing.Color;
+namespace OoBDev.DevTerm.Tui.Tests;
+
+/// <summary>
+/// Legacy Windows conhost sessions (no VT processing enabled at startup) get permanently forced into
+/// Terminal.Gui's 16-color mode (<c>WindowsOutput</c>/<c>OutputBase.IsLegacyConsole</c> -&gt;
+/// <c>Force16Colors</c>, irreversible for the session). Every truecolor value then renders as whichever
+/// of the 16 named ANSI colors is closest by Euclidean RGB distance
+/// (<see cref="TgColor.GetClosestNamedColor16"/>). Two theme roles that must stay visually distinct
+/// (a focused field vs. a merely-editable one) collapse onto the same rendered color if they snap to
+/// the same named color - this is the root cause behind TODO.md's "startup editor looks unthemed in
+/// legacy conhost: invisible field backgrounds, faint focus". See docs/design/Theming/theming.md and
+/// <see cref="BuiltInThemes.Dark"/>'s doc comment on <see cref="ThemeRole.SelectionBackground"/>.
+/// </summary>
+[TestCategory("Unit")]
+[TestClass]
+public sealed class LegacyConsole16ColorTests
+{
+    private static TgColor Closest(DevTermTheme theme, ThemeRole role)
+    {
+        var color = theme[role];
+        return new TgColor(color.R, color.G, color.B).GetClosestNamedColor16();
+    }
+
+    [TestMethod]
+    public void Dark_FocusedFieldBackground_DoesNotCollapseOntoAnUnfocusedFieldBackground()
+    {
+        var selection = Closest(BuiltInThemes.Dark, ThemeRole.SelectionBackground);
+        var field = Closest(BuiltInThemes.Dark, ThemeRole.FieldBackground);
+        var hover = Closest(BuiltInThemes.Dark, ThemeRole.ControlHoverBackground);
+
+        Assert.AreNotEqual(field, selection, "A focused field must not render the same as a merely-editable one under a 16-color downgrade.");
+        Assert.AreNotEqual(hover, selection, "A focused field must not render the same as a hovered-but-unfocused one under a 16-color downgrade.");
+    }
+
+    [TestMethod]
+    public void Light_SixteenColorVariant_KeepsFieldHoverSelectionAndBackgroundDistinct()
+    {
+        var theme = BuiltInThemes.Light.ForSixteenColors();
+        var roles = new[] { ThemeRole.Background, ThemeRole.FieldBackground, ThemeRole.ControlHoverBackground, ThemeRole.SelectionBackground };
+        var rendered = roles.Select(role => Closest(theme, role)).ToList();
+
+        CollectionAssert.AreEqual(rendered.Distinct().ToList(), rendered, "Each role must render as its own ANSI color.");
+        Assert.AreEqual(0, theme.ContrastWarnings().Count, string.Join("; ", theme.ContrastWarnings()));
+    }
+
+    [TestMethod]
+    public void SixteenColorVariant_LeavesDarkAndWpfLightUnchanged()
+    {
+        Assert.AreSame(BuiltInThemes.Dark, BuiltInThemes.Dark.ForSixteenColors());
+        Assert.AreEqual(ThemeColor.Parse("#E4E4E4"), BuiltInThemes.Light[ThemeRole.FieldBackground]);
+    }
+
+    [TestMethod]
+    public void Dark_FocusedFieldBackground_AlsoDiffersFromTheWindowBackground()
+    {
+        var selection = Closest(BuiltInThemes.Dark, ThemeRole.SelectionBackground);
+        var background = Closest(BuiltInThemes.Dark, ThemeRole.Background);
+
+        Assert.AreNotEqual(background, selection);
+    }
+}

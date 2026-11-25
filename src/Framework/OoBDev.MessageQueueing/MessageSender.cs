@@ -52,7 +52,7 @@ public partial class MessageSender<TChannel>(
         messageId = resolver.MessageId(targetType, messageType, messageId);
         var requestId = resolver.GenerateId(targetType, messageType);
         var config = resolver.Configuration(targetType, messageType);
-        var context = _context.Create(
+        var messageContext = _context.Create(
             targetType,
             messageType,
             originMessageId,
@@ -63,17 +63,17 @@ public partial class MessageSender<TChannel>(
             callerLine,
             callerFile
         );
-        var provider = _provider.Sender(targetType, messageType);
+        var senderProvider = _provider.Sender(targetType, messageType);
 
         LogSending(message, originMessageId, messageId, targetType, callerFile, callerMember);
 
         try
         {
-            var sentId = await provider.SendAsync(message, context).ConfigureAwait(false);
+            var sentId = await senderProvider.SendAsync(message, messageContext).ConfigureAwait(false);
 
             LogSent(originMessageId, messageId, sentId);
 
-            context.SentId = sentId;
+            messageContext.SentId = sentId;
         }
         catch (Exception ex)
         {
@@ -83,7 +83,7 @@ public partial class MessageSender<TChannel>(
 
             throw;
         }
-        return context.SentId ?? context.CorrelationId ?? originMessageId ?? requestId;
+        return messageContext.SentId ?? messageContext.CorrelationId ?? originMessageId ?? requestId;
     }
 
     [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Sending: \"{message}\" [{orgMessageId} -> {messageId}] to \"{targetType}\" from \"{callerFile}::{callerMember}\"")]

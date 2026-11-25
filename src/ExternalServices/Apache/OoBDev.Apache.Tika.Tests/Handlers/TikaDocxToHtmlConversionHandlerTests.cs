@@ -1,4 +1,5 @@
 ﻿using OoBDev.Apache.Tika.Handlers;
+using OoBDev.TestUtilities.Containers;
 using OoBDev.TestUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ public class TikaDocxToHtmlConversionHandlerTests :
     public required TestContext TestContext { get; set; }
 
     [TestCategory(TestCategories.Integration)]
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-tika")]
     [DataRow("sample1.docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "text/html", ".html")]
     [DataRow("sample4.docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "text/html", ".html")]
 

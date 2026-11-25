@@ -20,7 +20,7 @@ public static class ServiceCollectionExtensions
     /// <returns>The modified <see cref="IServiceCollection"/>.</returns>
     public static IServiceCollection TryAddWkHtmlToPdfServices(this IServiceCollection services)
     {
-        //TODO: consider switching to TIKA or at the very lease making it so thsi can be excluded from common
+        services.AddOptions<HtmlToPdfOptions>();
         services.AddTransient<IDocumentConversionHandler, HtmlToPdfConversionHandler>();
         services.AddTransient<ITools, PdfTools>();
         services.AddSingleton<IConverter>(sp => _converter ??= ActivatorUtilities.CreateInstance<SynchronizedConverter>(sp));

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using System.Xml.XPath;
 using System.Xml.Linq;
 
 namespace OoBDev.System.Xml.Linq;
@@ -12,7 +13,7 @@ namespace OoBDev.System.Xml.Linq;
 /// Represents a collection of XML nodes that can be treated as a fragment without a single root element.
 /// Provides parsing, serialization, and list operations for XML fragments.
 /// </summary>
-public class XFragment : IList<XNode>
+public class XFragment : IList<XNode>, IXPathNavigable
 {
     // https://github.com/OutOfBandDevelopment/Samples/blob/master/HandyClasses/XFragment.cs
     private IList<XNode> Nodes { get; } = [];
@@ -119,6 +120,16 @@ public class XFragment : IList<XNode>
     /// <returns>An enumerator for the nodes in the fragment.</returns>
     public IEnumerator<XNode> GetEnumerator() => (Nodes ?? Enumerable.Empty<XNode>()).Where(n => n != null).GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    /// <summary>
+    /// Creates an XPath navigator over the fragment loaded as a document, so it needs a single root element.
+    /// </summary>
+    /// <returns>A navigator over the fragment loaded as a document.</returns>
+    public XPathNavigator? CreateNavigator()
+    {
+        using var reader = CreateReader();
+        return XDocument.Load(reader).CreateNavigator();
+    }
 
     #endregion
 

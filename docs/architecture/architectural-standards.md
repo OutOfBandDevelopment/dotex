@@ -106,7 +106,7 @@ src/
 - ✅ Build fails if README.md is missing
 - ✅ Build task `CheckReadMeSize` validates README is not empty
 
-**Reference:** `/docs/code/*/README.md` for examples
+**Reference:** the `README.{Project}.md` files beside the projects for examples
 
 ---
 
@@ -165,27 +165,14 @@ src/
 
 **Standard:** Dependencies MUST flow downward through layers.
 
-**Layer Hierarchy (Top to Bottom):**
-1. Common (depends on everything)
-2. Framework (depends on Extensions, ExternalServices)
-3. Extensions (depends on ExternalServices)
-4. ExternalServices (depends on nothing in OoBDev)
+**Layer Hierarchy (a layer may depend only on the layers below it):**
+1. Applications (`src/Applications`)
+2. Common (roll-up of everything below)
+3. ExternalServices (adapters; Framework `*.Abstractions` only)
+4. Extensions (optional features)
+5. Framework (vendor-neutral capabilities; depends on Common contracts and its own abstractions)
 
-**Allowed Dependencies:**
-```
-✅ Common → Framework
-✅ Common → Extensions
-✅ Common → ExternalServices
-✅ Framework → Extensions
-✅ Framework → ExternalServices
-✅ Extensions → ExternalServices
-
-❌ Framework → Common
-❌ Extensions → Framework
-❌ ExternalServices → Framework
-❌ ExternalServices → Extensions
-❌ ExternalServices → Common
-```
+Nothing below Applications may reference it. Placement rules (reusable means Framework, host-free by default, accessors instead of host types): [five source layers](../patterns-discovery/01-architecture/02-five-source-layers.md#placement-rules-owner-2026-10-29).
 
 **Validation:**
 - Code review checks project references
@@ -712,13 +699,13 @@ OoBDev.MyProject.Tests/
 - ✅ Build fails if README is missing
 - Code review verifies README completeness
 
-**Reference:** `/docs/code/*/README.md`
+**Reference:** the `README.{Project}.md` files beside the projects
 
 ---
 
 ### 6.2 Framework Documentation
 
-**Standard:** New patterns MUST be documented in `/docs/Framework/`.
+**Standard:** New patterns MUST be documented in `docs/design/<Feature>/`.
 
 **Required Documentation:**
 - PlantUML diagram showing architecture
@@ -727,13 +714,13 @@ OoBDev.MyProject.Tests/
 - Extension points
 - Related patterns
 
-**Reference:** `/docs/Framework/MessageQueueing.md`, `/docs/Framework/TextTemplating.md`
+**Reference:** `docs/design/MessageQueuing`, `docs/design/TextTemplating`
 
 ---
 
 ### 6.3 Library Documentation
 
-**Standard:** New integrations MUST be documented in `/docs/Libraries/`.
+**Standard:** New integrations MUST be documented in their project `README.{Project}.md`.
 
 **Required Content:**
 - Provider description
@@ -742,7 +729,7 @@ OoBDev.MyProject.Tests/
 - Limitations
 - External service requirements
 
-**Reference:** `/docs/Libraries/*.md`
+**Reference:** the `README.{Project}.md` files beside the projects
 
 ---
 

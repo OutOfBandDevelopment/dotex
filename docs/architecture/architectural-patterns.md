@@ -46,17 +46,23 @@ Organize the codebase into distinct layers with clear responsibilities and unidi
 ### Implementation
 
 **Layer Structure:**
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Common (Orchestration Layer)\nAll-in-one packages, service wiring" <<layer>> as common
+rectangle "Framework (Domain Libraries)\nCore business logic, abstractions" <<layer>> as framework
+rectangle "Extensions (System Extensions)\nCustom .NET extensions" <<layer>> as extensions
+rectangle "ExternalServices (Integrations)\nThird-party service wrappers" <<layer>> as external
+common -[hidden]down- framework
+framework -[hidden]down- extensions
+extensions -[hidden]down- external
+@enduml
 ```
-┌─────────────────────────────────────┐
-│   Common (Orchestration Layer)     │  ← All-in-one packages, service wiring
-├─────────────────────────────────────┤
-│   Framework (Domain Libraries)     │  ← Core business logic, abstractions
-├─────────────────────────────────────┤
-│   Extensions (System Extensions)   │  ← Custom .NET extensions
-├─────────────────────────────────────┤
-│  ExternalServices (Integrations)   │  ← Third-party service wrappers
-└─────────────────────────────────────┘
-```
+
+*Figure 1 — Layer structure*
 
 **Dependency Rule:** Dependencies flow downward only.
 
@@ -309,7 +315,7 @@ public static IServiceCollection TryAddSystemExtensions(
     this IServiceCollection services,
     IConfiguration configuration)
 {
-    services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
+    services.TryAddSingleton(TimeProvider.System);
     services.TryAddSingleton<IGuidProvider, GuidProvider>();
     services.TryAddSingleton<IJsonSerializer, JsonSerializer>();
     services.TryAddSingleton<ITempFileFactory, TempFileFactory>();
@@ -1340,7 +1346,7 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
+        services.TryAddSingleton(TimeProvider.System);
         services.TryAddSingleton<IGuidProvider, GuidProvider>();
         return services;
     }
@@ -1483,7 +1489,7 @@ These patterns work together to create a consistent, extensible, and maintainabl
 - [architectural-guidelines.md](./architectural-guidelines.md) - High-level principles
 - [architectural-standards.md](./architectural-standards.md) - Concrete standards
 - [layering-architecture.md](./layering-architecture.md) - Layer details
-- [provider-factory-pattern.md](./provider-factory-pattern.md) - Detailed provider pattern guide
+- [provider-factory-pattern.md](../patterns-discovery/02-design-patterns/03-provider-factory-keyed.md) - Detailed provider pattern guide
 
 ---
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.Extensions.Configuration;
@@ -33,12 +34,12 @@ public class RedisCachingProviderDevLocalTests
         return redis;
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-redis")]
     [TestCategory(TestCategories.Integration)]
     public async Task FlushAsyncTest()
     {
         // Stage
-        var connectionString = TestContext.GetRequiredProperty<string>("REDIS_CONNECTION_STRING");
+        var connectionString = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("REDIS_CONNECTION_STRING"));
 
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
@@ -62,12 +63,12 @@ public class RedisCachingProviderDevLocalTests
         // Assert - no exception thrown
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-redis")]
     [TestCategory(TestCategories.Integration)]
     public async Task RetrieveAsyncTest()
     {
         // Stage
-        var connectionString = TestContext.GetRequiredProperty<string>("REDIS_CONNECTION_STRING");
+        var connectionString = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("REDIS_CONNECTION_STRING"));
 
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
@@ -99,12 +100,12 @@ public class RedisCachingProviderDevLocalTests
         await provider.FlushAsync(key);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-redis")]
     [TestCategory(TestCategories.Integration)]
     public async Task StoreAsyncTest()
     {
         // Stage
-        var connectionString = TestContext.GetRequiredProperty<string>("REDIS_CONNECTION_STRING");
+        var connectionString = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("REDIS_CONNECTION_STRING"));
 
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>

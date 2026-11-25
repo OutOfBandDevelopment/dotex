@@ -29,7 +29,7 @@ using OoBDev.System.IO.UsbHids;
 [UsbHid(VendorId = 0x1234, ProductId = 0x5678)]
 public class MyUsbDevice { }
 
-// Get device using factory
+// The factory matches VendorId and (ProductId & ProductMask) and returns a UsbHidEndpointDeviceAdapter per device path
 var factory = new UsbHidFactory();
 var device = factory.GetDevice(new MyUsbDevice());
 
@@ -37,10 +37,14 @@ var device = factory.GetDevice(new MyUsbDevice());
 var deviceNames = factory.GetDeviceNames();
 ```
 
-## License
+## Configured adapter
 
-See repository license file for details.
+`UsbHidEndpointDeviceAdapter` is an options-driven `IDeviceAdapter` (type `UsbHid`) for one HID device chosen by `UsbHidEndpointOptions`: `VendorId` and `ProductId` (decimal), then an optional `SerialNumber`, then an optional `DevicePath` (for devices that report no serial descriptor, such as the Velleman K8055), with `ReadTimeoutMs` and `WriteTimeoutMs`. Reports are read on a dedicated thread into a channel (`UsbHidReadStream`) and pumped into `Input`; `Output` writes one report per flush, and an empty write is ignored.
 
-## Repository
+```csharp
+services.AddUsbHidEndpointDeviceAdapter();
+services.Configure<UsbHidEndpointOptions>(o => { o.VendorId = 0x1915; o.ProductId = 0xAFDA; });
+```
 
-[OoBDev Repository](https://github.com/yourusername/oobdev)
+`IUsbHidDiscovery` (`SystemUsbHidDiscovery`) lists connected devices as `UsbHidDeviceDescriptor`. `AddUsbHidEndpointDeviceAdapter()` registers the adapter and its options. `IUsbHidDevice` and `IUsbHidDeviceFactory` are the test seams; the adapter is unit tested against a pipe-backed fake, and hardware tests are not part of this library.
+

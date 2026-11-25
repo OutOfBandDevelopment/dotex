@@ -1,4 +1,5 @@
 ﻿using OoBDev.TestUtilities;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenSearch.Net;
 using System;
@@ -40,7 +41,7 @@ public class OpenSearchTests
 
     private OpenSearchLowLevelClient GetClient()
     {
-        var url = TestContext.GetRequiredProperty<string>("OPENSEARCH_URL");
+        var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("OPENSEARCH_URL"));
         var username = TestContext.GetRequiredProperty<string>("OPENSEARCH_USERNAME");
         var password = TestContext.GetRequiredProperty<string>("OPENSEARCH_PASSWORD");
 
@@ -55,7 +56,7 @@ public class OpenSearchTests
         return _client;
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-opensearch")]
     [TestCategory(TestCategories.Integration)]
     public async Task CreateIndexTest()
     {
@@ -75,7 +76,7 @@ public class OpenSearchTests
         Assert.IsTrue(result.Success);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-opensearch")]
     [TestCategory(TestCategories.Integration)]
     public async Task SearchIndexTest()
     {

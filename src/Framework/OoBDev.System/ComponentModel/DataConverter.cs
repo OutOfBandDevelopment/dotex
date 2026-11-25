@@ -180,7 +180,7 @@ public class DataConverter : IDataConverter
             }
             else if (jsonNode is JsonValue jsonValue && jsonValue.GetValueKind() == JsonValueKind.String)
             {
-                //TODO: try parse
+                return Split(jsonValue.GetValue<string>());
             }
         }
 

@@ -30,7 +30,7 @@ public static class ServiceCollectionExtensions
     {
         var apiKey =
             configuration.GetSection(groqCloudApiClientOptionSection)?[nameof(GroqCloudApiClientOptions.ApiKey)] ??
-            Environment.GetEnvironmentVariable("API_Key_Groq", EnvironmentVariableTarget.User);
+            GroqCloudApiKey.FromEnvironment();
         if (apiKey == null)
         {
             return services;

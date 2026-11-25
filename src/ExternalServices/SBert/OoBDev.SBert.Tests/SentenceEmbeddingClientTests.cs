@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
@@ -13,8 +14,6 @@ namespace OoBDev.SBert.Tests;
 [TestClass]
 public class SentenceEmbeddingClientTests
 {
-    //TODO: I think I want to do away with ISentenceEmbeddingClient
-
     public required TestContext TestContext { get; set; }
 
     private ISentenceEmbeddingClient BuildClient(string url)
@@ -32,10 +31,10 @@ public class SentenceEmbeddingClientTests
         return client;
     }
 
-    [TestMethod, TestCategory(TestCategories.Integration),Ignore]
+    [IntegrationTestMethod("oobd-test-sbert"), TestCategory(TestCategories.Integration),Ignore]
     public async Task GetEmbeddingAsyncTest()
     {
-        var url = TestContext.GetRequiredProperty<string>("SBERT_URL");
+        var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("SBERT_URL"));
         var message = "Hello World!";
 
         var client = BuildClient(url);
@@ -43,10 +42,10 @@ public class SentenceEmbeddingClientTests
         TestContext.WriteLine(string.Join(';', embedding));
     }
 
-    [TestMethod, TestCategory(TestCategories.Integration), Ignore]
+    [IntegrationTestMethod("oobd-test-sbert"), TestCategory(TestCategories.Integration), Ignore]
     public async Task GetAllTest()
     {
-        var url = TestContext.GetRequiredProperty<string>("SBERT_URL");
+        var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("SBERT_URL"));
         var client = BuildClient(url);
 
         var resource = GetType().Assembly.GetManifestResourceNames().FirstOrDefault(l => l.EndsWith(".Sentences.txt"))

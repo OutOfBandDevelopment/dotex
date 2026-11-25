@@ -1,0 +1,10 @@
+#!/bin/sh
+# Packs the solution into the NuGet output folder when a merge commit lands on main.
+# Git ignores a post-merge failure, so a failed pack never undoes the merge; read the output.
+branch=$(git symbolic-ref --short -q HEAD) || exit 0
+[ "$branch" = "main" ] || exit 0
+[ "$(git rev-list --parents -n 1 HEAD | wc -w)" -gt 2 ] || exit 0
+
+root=$(git rev-parse --show-toplevel)
+echo "post-merge: merge commit on main, running dotnet pack"
+exec pwsh -NoProfile -File "$root/scripts/ci/pack.ps1"

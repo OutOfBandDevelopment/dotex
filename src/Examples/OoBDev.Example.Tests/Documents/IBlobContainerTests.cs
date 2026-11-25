@@ -1,4 +1,5 @@
 ﻿using Azure.Storage.Blobs;
+using OoBDev.TestUtilities.Containers;
 using OoBDev.Common;
 using OoBDev.Documents;
 using OoBDev.Documents.Containers;
@@ -55,7 +56,7 @@ public class IBlobContainerTests
         return serviceProvider;
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-azurite")]
     [TestCategory(TestCategories.Integration)]
     public async Task Create_IBlobContainer__Docs_Test()
     {
@@ -90,7 +91,7 @@ public class IBlobContainerTests
         Assert.IsNotNull(wrapper);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-azurite")]
     [TestCategory(TestCategories.Integration)]
     public async Task Create_IBlobContainer__Summary_List_Test()
     {

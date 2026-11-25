@@ -4,6 +4,8 @@
 
 ## Unit tests
 
+`AsyncApiDocumentBuilderTests` (in `OoBDev.AsyncApi.Tests`, 9 tests) covers the builder with a mocked `IMessagePropertyResolver`: document names, unknown name, receive operation, payload schema with enums, title and version, contributor wiring, provider-only description, and sender operations from configuration. The contributor rows exist as Unit tests in the adapter test projects (`SqsAsyncApiContributorTests` 5, `ServiceBusAsyncApiContributorTests` 3, `RabbitMQAsyncApiContributorTests` 3), including the secrets check per contributor. Config resolution order and the `[MessageQueue]` name override are behaviors of `IMessagePropertyResolver` (OoBDev.MessageQueueing) and are covered by `MessagePropertyResolverTests` there.
+
 **Table 1 — Builder and contributors**
 
 | Test | Checks |
@@ -17,7 +19,7 @@
 
 ## Simulate tests
 
-`AsyncApiDocumentTests` starts a Kestrel host (as `OpenApiDocumentTests` does) with in-process handlers and stub provider configuration, then requests:
+`AsyncApiDocumentTests` (in `OoBDev.AspNetCore.Tests`, 7 tests) starts a Kestrel host (as `OpenApiDocumentTests` does) with in-process handlers and stub provider configuration, then requests:
 
 - `/asyncapi/all.json`: `asyncapi` is `3.0.0`, expected channels, operations and servers.
 - `/asyncapi/{assembly}.json`: only that assembly's channels (case-insensitive name).

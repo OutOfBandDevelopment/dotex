@@ -370,7 +370,7 @@ public class MyIntegrationTests
 - Supports prefix filtering
 - Works with configuration validation
 
-See [OoBDev.TestUtilities README](../../src/Framework/OoBDev.TestUtilities/README.md#1-testcontext-configuration-provider) for complete documentation.
+See [OoBDev.TestUtilities README](../../src/Framework/OoBDev.TestUtilities/README.TestUtilities.md#test-parameters) for complete documentation.
 
 ---
 
@@ -626,7 +626,7 @@ Then use relative path:
 
 ### Related OoBDev Documentation
 
-- [TEST_VARIABLES.md](../TEST_VARIABLES.md) - Complete list of test parameters
+- [TEST_VARIABLES.md](../../TEST_VARIABLES.md) - Complete list of test parameters
 - [containers/testing/README.md](../../containers/testing/README.md) - Docker infrastructure
 - [TESTING-CHECKLIST.md](../../containers/testing/TESTING-CHECKLIST.md) - Local validation
 

@@ -22,15 +22,30 @@ public class PlantUmlRenderer
     /// Initializes a new instance of the PlantUmlRenderer class.
     /// </summary>
     /// <param name="pipeline">The Markdown pipeline configuration.</param>
-    public PlantUmlRenderer(MarkdownPipeline pipeline)
+    /// <param name="options">The renderer settings; <see cref="PlantUmlRendererOptions.RemoteUrl"/> must be set.</param>
+    public PlantUmlRenderer(MarkdownPipeline pipeline, PlantUmlRendererOptions options)
     {
+        ArgumentNullException.ThrowIfNull(options);
+        if (string.IsNullOrWhiteSpace(options.RemoteUrl))
+            throw new InvalidOperationException("No PlantUML server is configured. Set PlantUmlRendererOptions.RemoteUrl (the local plantuml container is http://localhost:8086/); diagram source is not sent to a public server unless you set one.");
+
         var renderFactory = new RendererFactory();
         _render = renderFactory.CreateRenderer(new PlantUmlSettings
         {
-            RemoteUrl = "https://www.plantuml.com/plantuml/", //TODO: expose these are configurable
+            RemoteUrl = options.RemoteUrl,
             RenderingMode = RenderingMode.Remote,
         });
 
+        _pipeline = pipeline;
+    }
+
+    /// <summary>Initializes the renderer with an explicit PlantUML back end (for example one that does not call a public server).</summary>
+    /// <param name="pipeline">The Markdown pipeline configuration.</param>
+    /// <param name="render">The PlantUML renderer to use.</param>
+    public PlantUmlRenderer(MarkdownPipeline pipeline, IPlantUmlRenderer render)
+    {
+        ArgumentNullException.ThrowIfNull(render);
+        _render = render;
         _pipeline = pipeline;
     }
 
@@ -62,7 +77,7 @@ public class PlantUmlRenderer
         renderer.Write("<details>" + Environment.NewLine);
         renderer.Write("\t<summary>PlantUML - Details</summary>" + Environment.NewLine + Environment.NewLine);
         renderer.Write("<pre><code type=\"plantuml\">" + Environment.NewLine);
-        renderer.Write(script);
+        renderer.WriteEscape(script);
         renderer.Write("</code></pre></details>" + Environment.NewLine + Environment.NewLine);
     }
 

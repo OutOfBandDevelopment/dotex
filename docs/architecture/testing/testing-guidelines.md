@@ -74,7 +74,7 @@ public class MyTests
 
     [TestMethod]
     [TestCategory(TestCategories.LiveIntegration)]
-    public async Task AzureB2CTest()
+    public async Task AzureOpenAiTest()
     {
         // Requires live Azure credentials, manual execution only
     }
@@ -108,8 +108,8 @@ else (yes)
   if (Can run in Docker\nor use emulators?) then (no)
     :LiveIntegration;
     note right
-      Azure B2C
-      App Insights
+      Azure OpenAI
+      Cloud telemetry backends
       Groq Cloud
     end note
     stop
@@ -567,83 +567,16 @@ cd ../containers/testing
 ./scripts/integration-down.sh --clean
 ```
 
-### GitHub Actions Workflow
+### Local runner
 
-Integration tests run **daily at 4 PM UTC** via `.github/workflows/integration-tests.yml`:
+GitHub is no longer the primary repository, so the build and the Integration run happen locally with `scripts/ci/run-tests.ps1` ([readme](../../../scripts/ci/README.md)). It restores, builds and tests `src/`, starts the Docker stack when `Integration` is included and always stops it afterwards.
 
-```yaml
-name: Integration Tests
-
-on:
-  schedule:
-    - cron: '0 16 * * *'  # Daily at 4 PM UTC
-  workflow_dispatch:      # Manual trigger
-
-jobs:
-  integration-tests:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Start Docker Services
-        working-directory: ./containers/testing
-        run: docker compose -f docker-compose.integration-tests.yml up -d
-
-      - name: Wait for Services
-        working-directory: ./containers/testing
-        run: ./scripts/wait-for-services.sh
-        timeout-minutes: 5
-
-      - name: Run Integration Tests
-        working-directory: ./src
-        run: |
-          dotnet test \
-            --configuration Release \
-            --filter "TestCategory=Integration" \
-            --logger "trx;LogFileName=integration-tests.trx"
-
-      - name: Stop Docker Services
-        if: always()
-        working-directory: ./containers/testing
-        run: docker compose -f docker-compose.integration-tests.yml down -v
-
-      - name: Upload Test Results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: integration-test-results
-          path: '**/TestResults/**/*.trx'
+```powershell
+pwsh scripts/ci/run-tests.ps1                          # Unit and Simulate
+pwsh scripts/ci/run-tests.ps1 -Category Integration    # Docker stack, then Integration
 ```
 
-### Test Execution Flow
-
-```
-┌─────────────────────────────────────────┐
-│ Build Pipeline (dotnet.yml)             │
-│ - Every PR/push                          │
-│ - Unit + Simulate tests                  │
-│ - Create artifacts                       │
-│ - Tag: v{version}                        │
-└──────────────┬──────────────────────────┘
-               │
-               ▼
-┌─────────────────────────────────────────┐
-│ Integration Tests (integration-tests.yml)│
-│ - Daily at 4 PM UTC                      │
-│ - Manual trigger available               │
-│ - Integration tests                      │
-│ - Tag: validated-v{version}              │
-└──────────────┬──────────────────────────┘
-               │
-               ▼
-┌─────────────────────────────────────────┐
-│ Release Pipeline (release.yml)           │
-│ - Manual trigger                         │
-│ - Deploy validated builds                │
-└─────────────────────────────────────────┘
-```
+Results go to `artifacts/test-results`. The `.github/workflows/` files are legacy and no longer gate work; the release workflows have no local replacement yet.
 
 ---
 
@@ -836,7 +769,7 @@ public void MathOperation_ShouldReturnExpectedValue()
 - [TEST_VARIABLES.md](../../../TEST_VARIABLES.md) - Complete test property reference
 - [TestCategories.cs](../../../src/Framework/OoBDev.TestUtilities/TestCategories.cs) - Category definitions
 - [Docker Infrastructure](../../../containers/testing/README.md) - Docker setup guide
-- [Integration Test Protocol](../../../.claude/protocols/software/integration-test-maintenance.md) - Maintenance checklist
+- [Add-integration-service skill](../../../.claude/skills/add-integration-service/SKILL.md) - Maintenance checklist
 
 ---
 

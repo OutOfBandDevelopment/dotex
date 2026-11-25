@@ -1,49 +1,23 @@
 # OoBDev.Microsoft.SqlServer.DacFx
 
-DacPac compilation and merging utilities for SQL Server projects.
+Merges several DacPacs into one package (`IDacpacMergeCompiler`) and expands a merge template into the list of files to merge. The contracts are in [OoBDev.DacFx.Abstractions](../../Framework/OoBDev.DacFx.Abstractions/README.DacFx.Abstractions.md).
 
-## Description
-
-This package provides tools for creating and merging SQL Server Data-tier Application packages (DacPac). It enables programmatic manipulation of DacPac files, including merging multiple packages and managing deployment scripts.
-
-## Key Features
-
-- DacPac file merging and compilation
-- Pre and post-deployment script management
-- Build version tracking
-- Package metadata customization
-- Template-based DacPac generation
-- SQL Server versioning support
-- Integration with Microsoft DacFx
-
-## Installation
-
-```xml
-<PackageReference Include="OoBDev.Microsoft.SqlServer.DacFx" Version="*" />
-```
-
-## Basic Usage
+## Registration
 
 ```csharp
-using OoBDev.Microsoft.SqlServer.DacFx;
-using Microsoft.Extensions.DependencyInjection;
-
-services.AddDacPacMergeCompiler(configuration);
-
-// Create merge definition
-var definition = factory.CreateDefinition(
-    sourceFiles: new[] { "package1.dacpac", "package2.dacpac" },
-    targetPath: "merged.dacpac",
-    targetBuildVersion: "1.0.0");
-
-// Compile merged package
-compiler.CreatePackage(definition);
+services.AddDacPacCompilerServices();
 ```
 
-## License
+Registers as singletons (`TryAdd`): `IDacpacMergeCompiler`, `IDacPacCompilerConfig`, `IDacPacMergeTemplateFactory`, `IDacPacMergeDefinitionFactory`, and the `IDacPacMergeTemplate` and `IDacPacMergeDefinition` they produce. The template factory needs an `IObjectConverter` (`OoBDev.System.ComponentModel`) and an `ILogger`; `IDacPacCompilerConfig` is bound from configuration.
 
-See repository license file for details.
+## How a merge runs
 
-## Repository
+1. `DacPacMergeTemplateFactory.Create()` reads the template file named by `IDacPacCompilerConfig.TemplatePath` through the object converter (an empty path gives an empty template, a missing file throws `FileNotFoundException`), then lets every non-empty config property override the template: source path and patterns, target path, version, build version, name, description and model option source. YAML extensions are not detected yet; the converter decides the format.
+2. `DacPacMergeDefinitionFactory.Create(template)` resolves `SourcePatterns` against `SourcePath` with file globbing (a pattern starting with `!` excludes), picks the model options (`First` and `Last` take them from the first or last matched DacPac, otherwise the template's), and fills the package metadata: name defaults to the target file name, version to `0.0.0`, build version to the version, description to the local time.
+3. `DacpacMergeCompiler.CreatePackage(definition)` opens each source DacPac, adds its objects to one `TSqlModel`, collects the pre- and post-deployment scripts of every source, appends a build-version script when `TargetBuildVersion` is set, writes the package (creating the folder) and then adds the combined scripts.
 
-[OoBDev Repository](https://github.com/yourusername/oobdev)
+```csharp
+compiler.CreatePackage(definitionFactory.Create(template));
+```
+
+Object options (`TSqlObjectOptions`) are not carried over from the sources (a TODO in the code). `DacTools` holds the helpers: model options, reading objects and scripts from a DacPac, adding script content and generating the build-version script. The `dacpactools` CLI calls this merge with `--tool Merge`; see [its readme](../../../Tools/OoBDev.DacPacCompiler.Cli/README.DacPacCompiler.Cli.md).

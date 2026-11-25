@@ -1,0 +1,56 @@
+# Feature request: Desired-state database tooling
+
+- **Status:** done (2026-11-25; providers, gates, ensure scripts, manifest compiler, CLI and the bake-off decision are built, see the [design](../../design/DesiredStateDatabase/README.md) and [change documents](../../changes/README.md); the sqldef binary bundling is tracked on its own backlog item)
+- **Requested by:** owner (filed from the notes repository, `projects/dotex-consolidation/desired-state-database-tooling.md` and `sqldef-evaluation/`)
+- **Date:** 2026-10-28
+- **Area:** `OoBDev.DacFx`, `OoBDev.DacPacCompiler.Cli`, `OoBDev.ComplexEvents.DatabaseExtensions` (nearest existing areas); new area unknown
+
+## Need
+
+Derive migrations from plain `CREATE` scripts for Postgres, SQL Server and SQLite with free, MIT-compatible tooling, and also manage what a schema diff cannot model:
+extensions, queues and event streams. dotex has a dacpac builder and validator for SQL Server, but nothing for the other three databases. The owner expects past tools to have
+failed in ways not described to me.
+
+## Proposed behavior
+
+Three layers (from the notes, not confirmed against current docs):
+
+1. Schema diff, delegated to existing tools (sqldef, DacFx, pg-schema-diff) behind one provider interface.
+2. Idempotent, ordered "ensure" scripts per provider for what the diff cannot see, for example `001_extensions.sql` and `020_queues.sql`.
+3. Optional feature manifest (`queue: orders`, `extension: pgmq`) that compiles to the layer 2 scripts.
+
+First step in the notes: a short bake-off of sqldef, pgschema and Atlas on a real schema (`sqldef-evaluation/01-test-plan.md`), then build only what is missing.
+
+## Acceptance criteria
+
+- Given a folder of `CREATE` scripts and an empty database, when the tool runs, then the database matches the scripts, for each supported engine.
+- Given a changed script, when the tool runs, then it applies only the difference and refuses unsafe changes without an explicit flag.
+- Given an ensure script, when run twice, then the second run changes nothing.
+- Given the bake-off, when scored against the test plan, then it records a buy or build decision per engine with the date and tool versions.
+
+## Existing code checked
+
+- `OoBDev.DacFx` and `OoBDev.DacPacCompiler.Cli` cover SQL Server dacpacs. `OoBDev.ComplexEvents.DatabaseExtensions` has post-deployment scripts. I did not check how they would plug in.
+- `docs/harvest-candidates.md` lists `postsql-playground` (PgProj, a desired-state PostgreSQL experiment) as relevant; it was not run.
+- No dotex doc mentions sqldef or desired-state tooling beyond the harvest list and the suggested-names note.
+- The tool survey in the notes was written from memory; licences and paid tiers are unverified.
+
+## Security and operations
+
+Runs DDL against databases, so it needs credentials with schema rights and a plan-then-apply step with hazard gates (data loss, locks). SQL Server needs a licence or
+containers for testing. The cost is mostly test infrastructure: containers for Postgres 14 to 18, and SQL Server.
+
+## Priority
+
+- **Impact:** nothing is blocked.
+- **Needed by:** no date.
+- **Workaround today:** dacpacs for SQL Server; hand-written migrations elsewhere.
+
+## Open questions
+
+**Answered (checked 2026-11-23):** scope is schema objects first (triage defaults, [design](../../design/DesiredStateDatabase/README.md)); the design covers SQL Server, Postgres and SQLite, with queues and event streams as idempotent ensure scripts; the stack is .NET; the sqldef evaluation was merged into the phase 0 bake-off. Owner answers (2026-11-23): Q34 A, wrap sqldef and add the drop and type-change gates; Oracle rejected (2026-11-24). Built: the providers and gates (`OoBDev.Data.DesiredState`); left in `BACKLOG.md`: ensure-script runner, manifest compiler and CLI (since built); Oracle is rejected.
+
+
+## Triage notes
+
+2026-10-29: accepted as a phased design; phase 0 is the sqldef/pgschema/Atlas bake-off, nothing else is built before its result. Scope, wrap versus write, Oracle and stack follow the defaults wrap, schema objects first and a .NET host (the question left `OPEN-QUESTIONS.md` without a recorded change; the bake-off confirms or reverses them). Design: [docs/design/DesiredStateDatabase](../../design/DesiredStateDatabase/README.md). Backlog: BACKLOG.md, database.

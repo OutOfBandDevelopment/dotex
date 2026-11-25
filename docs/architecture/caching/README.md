@@ -143,47 +143,31 @@ public class ProductService
 
 ## Architecture Overview
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Application Layer" <<layer>> as app {
+  rectangle "[IsCacheable] Attributes on Repository Methods" as attrs
+}
+rectangle "CacheableFactory<TInterface, TImpl>\nCreates dynamic proxy instances with caching behavior" as factory
+rectangle "CachedProxy<TInterface, TImpl>\nIntercepts method calls, checks cache, invokes methods" as proxy
+rectangle "ICachingManager\n- BuildKey(method, args)\n- StoreAsync(key, data, expiration)\n- RetrieveAsync(key, type)\n- FlushAsync(key)" as manager
+rectangle "ICachingProvider\nAbstraction for cache storage backends" as provider
+rectangle "RedisCachingProvider\n- Distributed\n- JSON Serialization\n- Multi-Instance" as redis
+rectangle "MicrosoftMemoryCachingProvider\n- In-Memory\n- Fast\n- Single-Instance" as memory
+app --> factory
+factory --> proxy
+proxy --> manager
+manager --> provider
+provider --> redis
+provider --> memory
+@enduml
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    Application Layer                         │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  [IsCacheable] Attributes on Repository Methods      │   │
-│  └──────────────────────────────────────────────────────┘   │
-└─────────────────────┬───────────────────────────────────────┘
-                      │
-┌─────────────────────▼───────────────────────────────────────┐
-│              CacheableFactory<TInterface, TImpl>             │
-│  Creates dynamic proxy instances with caching behavior      │
-└─────────────────────┬───────────────────────────────────────┘
-                      │
-┌─────────────────────▼───────────────────────────────────────┐
-│           CachedProxy<TInterface, TImpl>                     │
-│  Intercepts method calls, checks cache, invokes methods     │
-└─────────────────────┬───────────────────────────────────────┘
-                      │
-┌─────────────────────▼───────────────────────────────────────┐
-│                  ICachingManager                             │
-│  - BuildKey(method, args)                                    │
-│  - StoreAsync(key, data, expiration)                         │
-│  - RetrieveAsync(key, type)                                  │
-│  - FlushAsync(key)                                           │
-└─────────────────────┬───────────────────────────────────────┘
-                      │
-┌─────────────────────▼───────────────────────────────────────┐
-│                  ICachingProvider                            │
-│  Abstraction for cache storage backends                     │
-└─────────────────────┬───────────────────────────────────────┘
-                      │
-        ┌─────────────┴─────────────┐
-        │                           │
-┌───────▼──────────┐    ┌───────────▼────────────┐
-│ RedisCachingProvider│  │MicrosoftMemoryCaching│
-│                      │  │Provider              │
-│ - Distributed        │  │ - In-Memory          │
-│ - JSON Serialization │  │ - Fast               │
-│ - Multi-Instance     │  │ - Single-Instance    │
-└──────────────────────┘  └──────────────────────┘
-```
+
+*Figure 1 — Caching architecture overview*
 
 **Flow:**
 1. **Factory** creates a dynamic proxy wrapping the implementation

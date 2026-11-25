@@ -50,17 +50,23 @@ The OoBDev framework provides shared libraries and extensions for faster, more c
 
 ### Architectural Layers
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Common (Orchestration Layer)\nAll-in-one packages" <<layer>> as common
+rectangle "Framework (Domain Libraries)\nCore business logic" <<layer>> as framework
+rectangle "Extensions (System Extensions)\nCustom .NET extensions" <<layer>> as extensions
+rectangle "ExternalServices (Integrations)\nThird-party wrappers" <<layer>> as external
+common -[hidden]down- framework
+framework -[hidden]down- extensions
+extensions -[hidden]down- external
+@enduml
 ```
-┌─────────────────────────────────────┐
-│   Common (Orchestration Layer)     │  ← All-in-one packages
-├─────────────────────────────────────┤
-│   Framework (Domain Libraries)     │  ← Core business logic
-├─────────────────────────────────────┤
-│   Extensions (System Extensions)   │  ← Custom .NET extensions
-├─────────────────────────────────────┤
-│  ExternalServices (Integrations)   │  ← Third-party wrappers
-└─────────────────────────────────────┘
-```
+
+*Figure 1 — Architectural layers*
 
 **Dependency Rule:** Lower layers cannot depend on higher layers.
 
@@ -168,9 +174,9 @@ IMessageQueueHandler<TChannel, TMessage> where TMessage : class
 ### For Adding New Features
 
 1. Determine the appropriate layer (Common, Framework, Extensions, ExternalServices)
-2. Follow the [provider-factory-pattern.md](./provider-factory-pattern.md) if adding integrations
-3. Use the [dependency-injection.md](./dependency-injection.md) builder pattern
-4. Follow [testing-architecture.md](./testing-architecture.md) for test coverage
+2. Follow the [provider-factory-pattern.md](../patterns-discovery/02-design-patterns/03-provider-factory-keyed.md) if adding integrations
+3. Use the [dependency-injection.md](../patterns-discovery/02-design-patterns/01-abstractions-implementation-registration.md) builder pattern
+4. Follow [testing-architecture.md](./testing/testing-guidelines.md) for test coverage
 5. Document according to [../Libraries/](../Libraries/) examples
 
 ### For Integrating External Services
@@ -181,7 +187,7 @@ IMessageQueueHandler<TChannel, TMessage> where TMessage : class
 4. Add configuration options class
 5. Create extension builder
 6. Add comprehensive tests
-7. Document in `/docs/Libraries/`
+7. Document in the project `README.{Project}.md`
 
 ---
 
@@ -211,7 +217,6 @@ What makes OoBDev unique:
   - [Variables and Configuration in .runsettings](../how-tos/runsettings-variables-and-configuration.md)
 
 ### Framework Documentation
-- [../Framework/MajorFunctionality.md](../Framework/MajorFunctionality.md)
 - [../Framework/MessageQueueing.md](../Framework/MessageQueueing.md)
 - [../Framework/TextTemplating.md](../Framework/TextTemplating.md)
 - [../Framework/DocumentConversion.md](../Framework/DocumentConversion.md)
@@ -221,9 +226,6 @@ What makes OoBDev unique:
 
 ### Code Documentation
 - [../code/](../code/) - Per-project README files
-
-### Feature Tracking
-- [../FEATURE_INVENTORY.md](../FEATURE_INVENTORY.md) - Comprehensive feature comparison
 
 ---
 

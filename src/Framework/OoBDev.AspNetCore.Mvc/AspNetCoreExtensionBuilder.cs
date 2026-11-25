@@ -1,5 +1,6 @@
 using OoBDev.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Authorization;
+using OoBDev.System.Security.Claims;
 using System;
 
 namespace OoBDev.AspNetCore.Mvc;
@@ -19,13 +20,13 @@ public record AspNetCoreExtensionBuilder
     public bool RequireAuthenticatedByDefault { get; init; } = UserAuthorizationRequirement.RequireAuthenticatedByDefault;
 
     /// <summary>
-    /// Gets or sets a value indicating whether an application user ID is required.
+    /// Gets or sets the claim that carries the application user ID.
     /// </summary>
     /// <remarks>
-    /// Set to <c>true</c> to require an application user ID; otherwise, set to <c>false</c>.
-    /// The default value is <see cref="UserAuthorizationRequirement.RequireApplicationUserId"/>.
+    /// A token without this claim is not authorized. Set to <c>null</c> when the application has no user ID of its own;
+    /// the requirement is then off. The default is <see cref="CommonClaims.UserId"/>.
     /// </remarks>
-    public bool RequireApplicationUserId { get; init; } = true; //TODO: should be able to detect if mapping claim is configured and use that instead
+    public string? ApplicationUserIdClaim { get; init; } = CommonClaims.UserId;
 
     /// <summary>
     /// Gets or sets the delegate for configuring an <see cref="AuthorizationPolicyBuilder"/>.

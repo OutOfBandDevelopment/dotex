@@ -1,0 +1,76 @@
+# OoBDev example application: SPA + API + the backend services they use.
+#
+# Usage:  docker compose -f containers/example/docker-compose.example.yml up -d --build
+# The SPA is on http://localhost:${EXAMPLE_PORT_WEB:-8088}; the backend services are the
+# integration test stack (see containers/testing/README.md) so there is one set of definitions.
+
+name: oobd-example
+
+include:
+  - path: ../testing/docker-compose.integration-tests.yml
+
+services:
+  example-api:
+    build:
+      context: ../..
+      dockerfile: src/Examples/OoBDev.Example.WebApi/Dockerfile
+    container_name: oobd-example-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      # Sign-in is on by default: the SPA signs in against the oobdev-example realm and the API validates the JWT.
+      # Set EXAMPLE_IDENTITY_PROVIDER=None (and an empty EXAMPLE_OIDC_AUTHORITY) to run anonymously.
+      - IDENTITY_PROVIDER=${EXAMPLE_IDENTITY_PROVIDER:-Keycloak}
+      - Keycloak__JwtBearerOptions__Authority=http://keycloak:8080/realms/oobdev-example
+      - Keycloak__JwtBearerOptions__Audience=oobdev-example-api
+      - Keycloak__JwtBearerOptions__RequireHttpsMetadata=false
+      - Keycloak__JwtBearerOptions__TokenValidationParameters__ValidIssuers__0=http://localhost:${TEST_PORT_KEYCLOAK:-8081}/realms/oobdev-example
+      - Keycloak__OAuth2OpenApiOptions__AuthorizationUrl=http://localhost:${TEST_PORT_KEYCLOAK:-8081}/realms/oobdev-example/protocol/openid-connect/auth/
+      - Keycloak__OAuth2OpenApiOptions__TokenUrl=http://localhost:${TEST_PORT_KEYCLOAK:-8081}/realms/oobdev-example/protocol/openid-connect/token
+      - Keycloak__OAuth2OpenApiOptions__ClientId=oobdev-example-scalar
+      # Backend services by compose service name (the appsettings defaults point at localhost).
+      - MailKitSmtpClientOptions__Host=smtp4dev
+      - MailKitSmtpClientOptions__Port=25
+      - MailKitImapClientOptions__Host=smtp4dev
+      - MessageQueue__ExampleMessageProvider__Config__HostName=rabbitmq
+      - MessageQueue__EmailMessageModel__Config__HostName=rabbitmq
+      - MessageQueue__ReceivedEmailMessageModel__Config__HostName=rabbitmq
+      - OllamaApiClientOptions__Url=http://ollama:11434
+      - OllamaApiClientOptions__DefaultModel=phi3
+      # Traces and logs go to the Aspire dashboard (UI on http://localhost:${TEST_PORT_OTEL_DASHBOARD:-18888}).
+      - OpenTelemetryOptions__OtlpEndpoint=http://otel-dashboard:18890
+      - OpenTelemetryOptions__ServiceName=oobdev-example-api
+      - OpenTelemetryOptions__Sources__0=Microsoft.AspNetCore
+      - Telemetry__DashboardUrl=http://otel-dashboard:18888
+      - Telemetry__PublicUrl=http://localhost:${TEST_PORT_OTEL_DASHBOARD:-18888}
+      - Telemetry__ApiKey=${OTEL_DASHBOARD_API_KEY:-oobdev-test-key}
+    # Optional secrets and overrides, kept out of git: copy .env.example to .env in this folder.
+    # Names use the .NET configuration form, e.g. GroqCloudApiClientOptions__ApiKey.
+    env_file:
+      - path: .env
+        required: false
+    networks:
+      - integration-test-net
+    depends_on:
+      ollama:
+        condition: service_started
+      redis:
+        condition: service_started
+      otel-dashboard:
+        condition: service_started
+      keycloak:
+        condition: service_healthy
+
+  example-web:
+    build:
+      context: ../../src/Examples/OoBDev.Example.Web
+    container_name: oobd-example-web
+    ports:
+      - "${EXAMPLE_PORT_WEB:-8088}:80"
+    environment:
+      - OIDC_AUTHORITY=${EXAMPLE_OIDC_AUTHORITY-http://localhost:${TEST_PORT_KEYCLOAK:-8081}/realms/oobdev-example}
+      - OIDC_CLIENT_ID=oobdev-example-web
+    networks:
+      - integration-test-net
+    depends_on:
+      - example-api
+      - keycloak

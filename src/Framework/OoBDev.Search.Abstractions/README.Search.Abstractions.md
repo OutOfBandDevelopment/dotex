@@ -29,28 +29,36 @@ Specifies types of search.
 Interface for creating instances of IVectorStore.
 
 ### Methods
-- **Create**: Creates a new instance of IVectorStore with the specified container name.
+- **Create**: Creates a new instance of IVectorStore with the specified collection name.
 - **Create``1**: Creates a new instance of IVectorStore of the specified type.
 
 ## IVectorStoreProvider
 Interface for a vector store provider that implements IVectorStore.
 
 ### Properties
-- **ContainerName**: The name of the container.
+- **CollectionName**: The collection the provider reads and writes.
 
 ### Methods
-- **Create**: Creates a new instance of IVectorStoreProvider with the specified container name.
+- **Create**: Creates a new instance of IVectorStoreProvider with the specified collection name.
 
 ## IVectorStoreProviderFactory
 Interface for creating instances of IVectorStoreProvider.
 
 ### Methods
-- **Create**: Creates a new instance of IVectorStoreProvider with the specified container name.
+- **Create**: Creates a new instance of IVectorStoreProvider with the specified collection name.
 
 ## VectorStoreAttribute
-Attribute for specifying the container name for a vector store.
+Attribute for specifying the collection name of a vector store.
 
 ### Properties
-- **ContainerName**: The name of the container.
+- **CollectionName**: The collection the provider reads and writes.
 
-OoBDev.Search.Abstractions offers a robust framework for vector storage and querying, facilitating efficient retrieval and manipulation of vector data.
+## Graph
+
+`IGraphStore` (`UpsertNodeAsync`, `ConnectAsync`, `NeighborsAsync`, `ShortestPathAsync`, `DeleteNodeAsync`) over `GraphNode` (id, label, properties) is the graph contract; see the [GraphQueries](../../../docs/design/GraphQueries/README.md) design.
+
+`SearchTypes` is a flags enum: `Semantic` (1), `Lexical` (2) and `Hybrid` (3, both). No lexical or hybrid provider exists yet.
+
+## Search requests
+
+`ISearchProvider.SearchAsync(SearchRequest)` returns a `SearchResult` page of `SearchItem` (score and `SearchExplanation`). `IScoreFusion` combines `FusionInput` lists from several sources. `FieldFilter`, `FilterComparator` and `SearchAnchor` build the request, and `UnsupportedFilterException` names a filter a provider rejects. The text parser, the fusion strategies and `HybridSearchProvider` are in `OoBDev.Search`.

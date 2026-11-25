@@ -42,30 +42,6 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
         CollectionName = _collectionName = containerName;
     }
 
-    //TODO: this should be done a different way
-    private async Task EnsureCollectionExistsAsync(int vectorLength)
-    {
-        if (!(await _client.Collections.CollectionExistsAsync(new()
-        {
-            CollectionName = _collectionName,
-        }).ConfigureAwait(false)).Result.Exists)
-        {
-            await _client.Collections.CreateAsync(new()
-            {
-                CollectionName = _collectionName,
-
-                VectorsConfig = new()
-                {
-                    Params = new()
-                    {
-                        Size = (ulong)vectorLength,
-                        Distance = Distance.Cosine, //TODO: these are configs or redefined
-                    },
-                }
-            }).ConfigureAwait(false);
-        }
-    }
-
     /// <summary>
     /// Gets or sets the name of the container.
     /// </summary>
@@ -84,9 +60,10 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
         )
     {
         if (_options.Value.EnsureCollectionExists)
-            await EnsureCollectionExistsAsync(items.First().embedding.Length).ConfigureAwait(false);
+            await _client.EnsureCollectionExistsAsync(_collectionName, (ulong)items.First().embedding.Length, _options.Value.Distance).ConfigureAwait(false);
 
         List<PointStruct> points = [];
+        List<string> ids = [];
 
         foreach (var item in items)
         {
@@ -100,7 +77,7 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
 
             var point = new PointStruct
             {
-                Id = new PointId { Uuid = Guid.NewGuid().ToString() },
+                Id = new PointId { Uuid = NewId(ids) },
                 Payload =
                 {
                      map
@@ -120,7 +97,30 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
             Points = { points },
         }).ConfigureAwait(false);
 
-        return [];  //Note: want to return IDs but its not possible as the actual persistence is out of process.  
+        return [.. ids];
+    }
+
+    private static string NewId(List<string> ids)
+    {
+        var id = Guid.NewGuid().ToString();
+        ids.Add(id);
+        return id;
+    }
+
+    /// <inheritdoc/>
+    public virtual async Task DeleteAsync(IEnumerable<string> ids)
+    {
+        var selector = new PointsIdsList();
+        foreach (var id in ids)
+            selector.Ids.Add(ulong.TryParse(id, NumberStyles.None, CultureInfo.InvariantCulture, out var n) ? new PointId { Num = n } : new PointId { Uuid = id });
+        if (selector.Ids.Count == 0)
+            return;
+
+        await _client.Points.DeleteAsync(new DeletePoints
+        {
+            CollectionName = _collectionName,
+            Points = new PointsSelector { Points = selector },
+        }).ConfigureAwait(false);
     }
 
     private Value? Convert(object value) =>
@@ -207,7 +207,7 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
         var results = await _client.Points.ScrollAsync(new()
         {
             CollectionName = _collectionName,
-            Limit = (uint)1000,
+            Limit = (uint)_options.Value.ResultLimit,
             WithPayload = true,
             // WithVectors = true,
         }).ConfigureAwait(false);
@@ -225,7 +225,7 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
         var results = await _client.Points.QueryAsync(new()
         {
             CollectionName = _collectionName,
-            Limit = (uint)1000,
+            Limit = (uint)_options.Value.ResultLimit,
             Query = ToQuery(find),
             WithPayload = true,
             //  WithVectors = true,
@@ -245,7 +245,7 @@ public class QdrantVectorStoreProvider : IVectorStoreProvider
         var results = await _client.Points.QueryGroupsAsync(new()
         {
             CollectionName = _collectionName,
-            Limit = (uint)1000,
+            Limit = (uint)_options.Value.ResultLimit,
             Query = ToQuery(find),
             WithPayload = true,
             // WithVectors = true,

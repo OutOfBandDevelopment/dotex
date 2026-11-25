@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml.XPath;
 
 namespace OoBDev.System.Xml.Xsl;
@@ -22,6 +24,16 @@ public interface IXsltTransformer
     /// <param name="input">source XML file</param>
     /// <param name="output">resulting text content</param>
     void Transform(string template, string input, string output);
+
+    /// <summary>
+    /// Transforms an input file to an output file without blocking on file access.
+    /// </summary>
+    /// <param name="template">The XSLT file.</param>
+    /// <param name="input">The input XML file.</param>
+    /// <param name="output">The output file.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that completes when the output is written.</returns>
+    Task TransformAsync(string template, string input, string output, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Single action transform

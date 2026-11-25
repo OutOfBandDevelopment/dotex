@@ -35,7 +35,6 @@ public class ObjectConverter : IObjectConverter
     /// <param name="input">The object to convert.</param>
     /// <param name="target">The target type to convert to.</param>
     /// <returns>The converted object, or null if conversion fails.</returns>
-    //TODO: this is a bit nutty and should be tossed.
     public object? Convert(object? input, Type target) =>
         input switch
         {

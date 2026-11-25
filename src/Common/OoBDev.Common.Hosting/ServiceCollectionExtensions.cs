@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OoBDev.Data.Vectors.Hosting;
-#if DEBUG
-using OoBDev.MailKit.Hosting;
-#endif
+using OoBDev.Communications.Hosting;
 using OoBDev.MessageQueueing.Hosting;
 
 namespace OoBDev.Common.Hosting;
@@ -32,11 +30,8 @@ public static class ServiceCollectionExtensions
     {
         builder ??= new();
 
-#warning Mailkit hosting is not supported at this time.
-#if DEBUG
-        if (!builder.DisableMailKit)
-            services.TryAddMailKitHosting();
-#endif
+        if (!builder.DisableCommunications)
+            services.TryAddCommunicationsHosting();
 
         if (!builder.DisableMessageQueueing)
             services.TryAddMessageQueueingHosting();

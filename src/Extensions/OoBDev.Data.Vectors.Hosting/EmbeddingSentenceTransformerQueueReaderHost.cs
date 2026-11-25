@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace OoBDev.Data.Vectors.Hosting;
 
@@ -11,6 +12,7 @@ public partial class EmbeddingSentenceTransformerQueueReaderHost : IHostedServic
 {
     private readonly IEmbeddingSentenceTransformerQueueReader _reader;
     private readonly ILogger _logger;
+    private readonly TimeSpan _restartDelay;
     private readonly CancellationTokenSource _tokenSource = new();
 
     private Task? _task;
@@ -20,13 +22,16 @@ public partial class EmbeddingSentenceTransformerQueueReaderHost : IHostedServic
     /// </summary>
     /// <param name="reader">The queue reader to host.</param>
     /// <param name="logger">The logger for diagnostics.</param>
+    /// <param name="options">The options that set the restart delay.</param>
     public EmbeddingSentenceTransformerQueueReaderHost(
         IEmbeddingSentenceTransformerQueueReader reader,
-        ILogger<EmbeddingSentenceTransformerQueueReaderHost> logger
+        ILogger<EmbeddingSentenceTransformerQueueReaderHost> logger,
+        IOptions<EmbeddingSentenceTransformerQueueReaderOptions> options
         )
     {
         _reader = reader;
         _logger = logger;
+        _restartDelay = options.Value.RestartDelay;
     }
 
     private bool _disposed;
@@ -89,13 +94,24 @@ public partial class EmbeddingSentenceTransformerQueueReaderHost : IHostedServic
                     LogStarted(reader);
                     await task.ConfigureAwait(false);
                 }
+                catch (OperationCanceledException) when (token.IsCancellationRequested)
+                {
+                    break;
+                }
                 catch (Exception ex)
                 {
                     LogException(reader, ex.Message);
                     LogError(reader, ex);
 
                     LogWaitingForRestart(reader);
-                    await Task.Delay(10000, token).ConfigureAwait(false); // TODO: this should be configurable
+                    try
+                    {
+                        await Task.Delay(_restartDelay, token).ConfigureAwait(false);
+                    }
+                    catch (OperationCanceledException) when (token.IsCancellationRequested)
+                    {
+                        break;
+                    }
                 }
             }
         }, cancellationToken);

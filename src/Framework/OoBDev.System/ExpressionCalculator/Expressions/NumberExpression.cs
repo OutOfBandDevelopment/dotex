@@ -48,7 +48,7 @@ public sealed class NumberExpression<T>(T value) : ExpressionBase<T>
     /// <param name="obj">The object to compare with.</param>
     /// <returns>True if the objects are equal; otherwise, false.</returns>
     public override bool Equals(object? obj) =>
-        this == obj ||
+        ReferenceEquals(this, obj) ||
         obj is NumberExpression<T> no && Value.Equals(no.Value) ||
         obj is T && Value.Equals(obj);
 

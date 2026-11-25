@@ -1,0 +1,316 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace OoBDev.TestUtilities.Containers;
+
+/// <summary>
+/// Makes sure the containers of the integration test stack are up before an Integration test class runs, and stops
+/// the ones the tests started when the class is done. Call <see cref="EnsureAsync"/> from a
+/// <c>[ClassInitialize]</c> method and <see cref="ReleaseAsync"/> from a <c>[ClassCleanup]</c> method.
+/// </summary>
+/// <remarks>
+/// A container that is already running and healthy is used as it is and never stopped. A stopped or missing one is
+/// started (<c>docker start</c>, or <c>docker compose up</c> for one that was never created) and watched until its
+/// health check passes. When that does not happen within the startup timeout, or Docker is not available, the tests
+/// end <c>Inconclusive</c>. Test parameters: <c>CONTAINER_STARTUP_TIMEOUT_SECONDS</c> (default 5),
+/// <c>CONTAINER_AUTOSTART</c> (default true: start what is down), <c>CONTAINER_STOP_AFTER_TESTS</c> (default true:
+/// stop what the tests started), <c>CONTAINER_WAVES</c> (default true: when no stack container runs, start the whole stack once in
+/// dependency waves, scripts/ci/start-integration-waves.ps1, because starting about 15 containers at once fails tests that pass alone; the stack stays up)
+/// and <c>CONTAINER_WAVES_TIMEOUT_SECONDS</c> (default 900).
+/// </remarks>
+public static class IntegrationContainers
+{
+    /// <summary>The default time to wait for a container to become healthy.</summary>
+    public const int DefaultStartupSeconds = 5;
+
+    /// <summary>The default time to wait for the whole stack to start in waves.</summary>
+    public const int DefaultWavesSeconds = 900;
+
+    private const string WavesGateName = "oobd-test-stack-waves.lock";
+
+    private const string ComposeFileName = "docker-compose.integration-tests.yml";
+    private static readonly Lock _gate = new();
+    private static readonly HashSet<string> _leased = new(StringComparer.Ordinal);
+    private static readonly Dictionary<string, DateTimeOffset> _readyUntil = new(StringComparer.Ordinal);
+    private static readonly TimeSpan _readyCache = TimeSpan.FromSeconds(30);
+    private static bool _exitHookRegistered;
+    private static bool _wavesTried;
+
+    internal static void ResetWaves() => _wavesTried = false;
+
+    private static readonly Dictionary<string, string> _readyMarkers = new(StringComparer.Ordinal)
+    {
+        ["oobd-test-servicebus"] = "Emulator Service is Successfully Up!",
+        ["oobd-test-smtp"] = "IMAP Server is listening",
+        ["oobd-test-rabbitmq"] = "started STOMP TCP listener",
+        ["oobd-test-docling"] = "Application startup complete",
+    };
+    private static bool _stopAfterTests = true;
+    private static IDockerCli _docker = new ProcessDockerCli();
+    private static ContainerLeases _leases = new(ContainerLeases.DefaultDirectory);
+
+    /// <summary>The lease directory shared between test processes; replaced in unit tests.</summary>
+    internal static string LeaseDirectory
+    {
+        set => _leases = new ContainerLeases(value);
+    }
+
+    /// <summary>The Docker client; replaced in unit tests.</summary>
+    internal static IDockerCli Docker
+    {
+        get => _docker;
+        set
+        {
+            _docker = value;
+            lock (_gate)
+                _readyUntil.Clear();
+        }
+    }
+
+    /// <summary>Settings that win over the test parameters; used by unit tests.</summary>
+    internal static Dictionary<string, string> Overrides { get; } = new(StringComparer.Ordinal);
+
+    /// <summary>Polling interval while waiting for a health check.</summary>
+    internal static TimeSpan PollInterval { get; set; } = TimeSpan.FromMilliseconds(250);
+
+    /// <summary>
+    /// Ensures the named containers (for example <c>oobd-test-redis</c>) are ready, or ends the tests of the class as Inconclusive.
+    /// </summary>
+    public static async Task EnsureAsync(TestContext testContext, params string[] containers)
+    {
+        ArgumentNullException.ThrowIfNull(testContext);
+        var seconds = Overrides.TryGetValue("CONTAINER_STARTUP_TIMEOUT_SECONDS", out var overridden)
+            ? int.Parse(overridden, global::System.Globalization.CultureInfo.InvariantCulture)
+            : testContext.GetPropertyOrDefault("CONTAINER_STARTUP_TIMEOUT_SECONDS", DefaultStartupSeconds);
+        var autostart = Flag(testContext, "CONTAINER_AUTOSTART");
+        _stopAfterTests = Flag(testContext, "CONTAINER_STOP_AFTER_TESTS");
+        await StartStackInWavesWhenDownAsync(testContext, autostart);
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(seconds));
+
+        foreach (var container in containers)
+        {
+            lock (_gate)
+            {
+                if (_readyUntil.TryGetValue(container, out var until) && until > DateTimeOffset.UtcNow)
+                    continue;
+            }
+
+            // Take the lease before looking at the container: a process finishing its tests must see this one as a user,
+            // or it stops the container between our inspect and our lease.
+            _leases.Acquire(container, false);
+            var started = false;
+            var problem = await TryEnsureAsync(container, autostart, timeout.Token, () => started = true);
+            if (problem is null)
+            {
+                Lease(container, started);
+                continue;
+            }
+
+            if (started)
+                Lease(container, true);
+
+            if (problem is not null)
+                Assert.Inconclusive($"Container {container} is not available: {problem} (waited at most {seconds} s; CONTAINER_STARTUP_TIMEOUT_SECONDS changes the wait).");
+        }
+    }
+
+    /// <summary>
+    /// Ends this process's use of the containers. A container the tests started is stopped only when no other test process
+    /// still uses it (and <c>CONTAINER_STOP_AFTER_TESTS</c> is not false); one that was already running is never stopped.
+    /// </summary>
+    public static async Task ReleaseAsync(TestContext testContext, params string[] containers)
+    {
+        ArgumentNullException.ThrowIfNull(testContext);
+        await ReleaseCoreAsync(Flag(testContext, "CONTAINER_STOP_AFTER_TESTS"), containers);
+    }
+
+    private static async Task ReleaseCoreAsync(bool stopAllowed, IEnumerable<string> containers)
+    {
+        var owned = new List<string>();
+        foreach (var container in containers.ToArray())
+        {
+            lock (_gate)
+            {
+                _readyUntil.Remove(container);
+                if (_leased.Remove(container))
+                    owned.Add(container);
+            }
+        }
+
+        // In parallel: the process may be torn down soon after exit begins, so a slow stop must not hold back the others.
+        await Task.WhenAll(owned.Select(container => Task.Run(() =>
+            _leases.Release(container, stopAllowed ? () => Docker.StopAsync(container, TimeSpan.FromSeconds(10), CancellationToken.None).GetAwaiter().GetResult() : null))));
+    }
+
+    private static void Lease(string container, bool startedByTests)
+    {
+        _leases.Acquire(container, startedByTests);
+        lock (_gate)
+        {
+            _leased.Add(container);
+            _readyUntil[container] = DateTimeOffset.UtcNow + _readyCache;
+            if (!_exitHookRegistered)
+            {
+                _exitHookRegistered = true;
+                AppDomain.CurrentDomain.ProcessExit += (_, _) => ReleaseCoreAsync(_stopAfterTests, LeasedContainers()).GetAwaiter().GetResult();
+            }
+        }
+    }
+
+    private static string[] LeasedContainers()
+    {
+        lock (_gate)
+            return [.. _leased];
+    }
+
+    private static async Task<string?> TryEnsureAsync(string container, bool autostart, CancellationToken cancellationToken, Action onStarted)
+    {
+        try
+        {
+            var state = await Docker.InspectAsync(container, cancellationToken);
+            if (state is { Ready: true } && await MarkerSeenAsync(container, cancellationToken))
+                return null;
+
+            if (state is not { Running: true })
+            {
+                if (!autostart)
+                    return "it is not running and CONTAINER_AUTOSTART is false";
+
+                if (state is null)
+                {
+                    var compose = FindComposeFile();
+                    if (compose is null)
+                        return "it does not exist and the compose file was not found (start the stack with containers/testing/scripts/integration-up.sh)";
+                    var service = ServiceOf(compose, container);
+                    if (service is null)
+                        return "it is not defined in the integration compose file";
+                    await Docker.ComposeUpAsync(compose, service, cancellationToken);
+                }
+                else
+                {
+                    await Docker.StartAsync(container, cancellationToken);
+                }
+
+                onStarted();
+            }
+
+            while (true)
+            {
+                state = await Docker.InspectAsync(container, cancellationToken);
+                if (state is null)
+                    return "Docker does not know the container";
+                if (state.Ready && await MarkerSeenAsync(container, cancellationToken))
+                    return null;
+                if (!state.Running)
+                    return "it stopped while starting (see docker logs)";
+                if (state.Health == "unhealthy")
+                    return "its health check reports unhealthy";
+                await Task.Delay(PollInterval, cancellationToken);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            return "it did not become healthy in time";
+        }
+    }
+
+    private static async Task<bool> MarkerSeenAsync(string container, CancellationToken cancellationToken) =>
+        !_readyMarkers.TryGetValue(container, out var marker) || await Docker.LogContainsAsync(container, marker, cancellationToken);
+
+    private static bool Flag(TestContext testContext, string name) =>
+        !bool.TryParse(Overrides.TryGetValue(name, out var overridden) ? overridden : testContext.GetPropertyOrDefault(name, "true"), out var value) || value;
+
+    internal static string? ServiceOf(string composeFile, string container)
+    {
+        string? service = null;
+        foreach (var line in File.ReadLines(composeFile))
+        {
+            if (line.Length > 2 && line[0] == ' ' && line[1] == ' ' && line[2] != ' ' && line.TrimEnd().EndsWith(':'))
+                service = line.Trim().TrimEnd(':');
+            else if (line.Trim() == "container_name: " + container)
+                return service;
+        }
+
+        return null;
+    }
+
+    private static async Task StartStackInWavesWhenDownAsync(TestContext testContext, bool autostart)
+    {
+        if (!autostart || _wavesTried || !Flag(testContext, "CONTAINER_WAVES"))
+            return;
+
+        _wavesTried = true;
+        var script = FindUp("scripts", "ci", "start-integration-waves.ps1");
+        if (script is null || await Docker.NoneRunningAsync("oobd-test-", CancellationToken.None) is not true)
+            return;
+
+        var seconds = Overrides.TryGetValue("CONTAINER_WAVES_TIMEOUT_SECONDS", out var overridden)
+            ? int.Parse(overridden, global::System.Globalization.CultureInfo.InvariantCulture)
+            : testContext.GetPropertyOrDefault("CONTAINER_WAVES_TIMEOUT_SECONDS", DefaultWavesSeconds);
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(seconds));
+        await using var gate = await TakeGateAsync(timeout.Token);
+        if (gate is null)
+            return;
+
+        try
+        {
+            // Another test process may have started the stack while this one waited for the gate.
+            if (await Docker.NoneRunningAsync("oobd-test-", CancellationToken.None) is not true)
+                return;
+
+            testContext.WriteLine("The integration stack is down: starting it in waves (scripts/ci/start-integration-waves.ps1).");
+            var started = await Docker.StartWavesAsync(script, timeout.Token);
+            if (started)
+                _leases.ClearMarkers();
+
+            testContext.WriteLine(started ? "The stack started in waves; it stays up for the test processes still to come (stop it with integration-down)." :"The waves start failed; starting the needed containers one by one.");
+        }
+        catch (OperationCanceledException)
+        {
+            testContext.WriteLine($"The waves start did not finish within {seconds} s; starting the needed containers one by one.");
+        }
+    }
+
+    /// <summary>An exclusive lock file shared by the test processes of the machine; it has no thread affinity (unlike a mutex) and the system frees it when the process dies. Null when it was not free in time.</summary>
+    private static async Task<FileStream?> TakeGateAsync(CancellationToken cancellationToken)
+    {
+        var path = Path.Combine(Path.GetTempPath(), WavesGateName);
+        try
+        {
+            while (true)
+            {
+                try
+                {
+                    return new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
+                }
+                catch (IOException)
+                {
+                    await Task.Delay(500, cancellationToken);
+                }
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            return null;
+        }
+    }
+
+    private static string? FindComposeFile() => FindUp("containers", "testing", ComposeFileName);
+
+    private static string? FindUp(params string[] parts)
+    {
+        for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)
+        {
+            var candidate = Path.Combine([directory.FullName, .. parts]);
+            if (File.Exists(candidate))
+                return candidate;
+        }
+
+        return null;
+    }
+}

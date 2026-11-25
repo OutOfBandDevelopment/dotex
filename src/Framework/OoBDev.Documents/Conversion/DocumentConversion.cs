@@ -59,18 +59,7 @@ public partial class DocumentConversion : IDocumentConversion
             return true;
         }
 
-        ChainStep[] steps;
-        if (_cache.TryGetValue((sourceContentType, destinationContentType), out var cached))
-        {
-            LogCachedChain(sourceContentType, destinationContentType);
-            steps = cached;
-        }
-        else
-        {
-            LogBuildChain(sourceContentType, destinationContentType);
-            steps = _chain.Steps(sourceContentType, destinationContentType);
-            _cache.TryAdd((sourceContentType, destinationContentType), steps);
-        }
+        var steps = GetSteps(sourceContentType, destinationContentType);
 
         #pragma warning disable CA1873 // guarded by IsEnabled
         if (_logger.IsEnabled(LogLevel.Information))
@@ -102,20 +91,39 @@ public partial class DocumentConversion : IDocumentConversion
         }
         else
         {
-            MemoryStream? temp = null;
-            foreach (var step in steps)
-            {
-                temp = new MemoryStream();
-                await step.Handler.ConvertAsync(source, step.SourceContentType, temp, step.DestinationContentType).ConfigureAwait(false);
-                temp.Position = 0;
-                source = temp;
-            }
-            await (temp ?? source).CopyToAsync(destination).ConfigureAwait(false);
-            destination.Position = 0;
-            return steps.Length != 0;
+            await RunStepsAsync(steps, source, destination).ConfigureAwait(false);
+            return true;
         }
 
         return false;
+    }
+
+    private ChainStep[] GetSteps(string sourceContentType, string destinationContentType)
+    {
+        if (_cache.TryGetValue((sourceContentType, destinationContentType), out var cached))
+        {
+            LogCachedChain(sourceContentType, destinationContentType);
+            return cached;
+        }
+
+        LogBuildChain(sourceContentType, destinationContentType);
+        var steps = _chain.Steps(sourceContentType, destinationContentType);
+        _cache.TryAdd((sourceContentType, destinationContentType), steps);
+        return steps;
+    }
+
+    private static async Task RunStepsAsync(ChainStep[] steps, Stream source, Stream destination)
+    {
+        MemoryStream? temp = null;
+        foreach (var step in steps)
+        {
+            temp = new MemoryStream();
+            await step.Handler.ConvertAsync(source, step.SourceContentType, temp, step.DestinationContentType).ConfigureAwait(false);
+            temp.Position = 0;
+            source = temp;
+        }
+        await (temp ?? source).CopyToAsync(destination).ConfigureAwait(false);
+        destination.Position = 0;
     }
 
     [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Bypass as input and output types match {source} -> {destination}")]

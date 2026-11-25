@@ -1,0 +1,48 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace OoBDev.System.IO.UsbHids;
+
+/// <summary>Configuration for a USB HID device session. Bound via the Options pattern.</summary>
+public sealed class UsbHidEndpointOptions
+{
+    /// <summary>
+    /// USB Vendor ID, decimal. Windows Device Manager shows this in hex (e.g. "VID_1915" is 6421
+    /// decimal) — convert before setting this.
+    /// </summary>
+    [Range(1, 0xFFFF)]
+    public int VendorId { get; set; }
+
+    /// <summary>
+    /// USB Product ID, decimal. Windows Device Manager shows this in hex (e.g. "PID_AFDA" is
+    /// 45018 decimal) — convert before setting this.
+    /// </summary>
+    [Range(1, 0xFFFF)]
+    public int ProductId { get; set; }
+
+    /// <summary>Disambiguates when more than one connected device matches VendorId/ProductId. Optional.</summary>
+    public string? SerialNumber { get; set; }
+
+    /// <summary>
+    /// OS device-instance path, tied to a physical USB hub/port rather than the device itself.
+    /// Fallback disambiguator used only when <see cref="SerialNumber"/> is null/blank — some
+    /// devices (e.g. a Velleman K8055) report no real serial descriptor at all, so this is the
+    /// only thing that distinguishes two otherwise-identical VID/PID devices plugged into
+    /// different ports. See <see cref="SystemUsbHidDevice"/>'s matching logic.
+    /// </summary>
+    public string? DevicePath { get; set; }
+
+    /// <summary>
+    /// Milliseconds a read blocks before timing out. Unlike serial, HID has no event to wait on
+    /// for "a report is ready" — <see cref="SystemUsbHidDevice"/>'s read-loop thread has to block on
+    /// a real read and this timeout is how it periodically notices it should stop on close,
+    /// rather than relying on cancelling an in-flight native read directly (that's not reliable
+    /// for <c>SerialPort</c> either — see
+    /// <c>SerialPortReadStream</c> — and hasn't been verified one way or
+    /// the other for HidSharp against real hardware, so the same conservative approach is used
+    /// here without assuming it's unnecessary).
+    /// </summary>
+    public int ReadTimeoutMs { get; set; } = 1000;
+
+    /// <summary>Bounds a blocked write so it fails with a <see cref="TimeoutException"/> instead of hanging forever.</summary>
+    public int WriteTimeoutMs { get; set; } = 5000;
+}

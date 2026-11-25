@@ -22,6 +22,7 @@ The repository has text embeddings only. Image search, duplicate detection and l
 | REQ-008 | Bad input (corrupt, empty, huge, animated) fails with a clear exception for that item or returns a defined result, never a process crash |
 | REQ-009 | Public API is `Microsoft.Extensions.AI` types where one exists |
 | REQ-010 | Decoder is replaceable; no new dependency in the runner |
+| REQ-011 | Emit `ActivitySource` and `Meter` telemetry named `OoBDev.Onnx.ImageEmbeddings` (span `images.batch`; `oobdev.images.duration`, `oobdev.images.batch_size`) |
 
 ## Non-goals
 

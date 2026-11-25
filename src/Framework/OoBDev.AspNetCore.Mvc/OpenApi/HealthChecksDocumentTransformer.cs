@@ -1,6 +1,8 @@
 using System;
 using Microsoft.AspNetCore.OpenApi;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi;
+using OoBDev.AspNetCore.Mvc.Diagnostics.HealthChecks;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
@@ -16,8 +18,6 @@ public class HealthChecksDocumentTransformer : IOpenApiDocumentTransformer
     /// <summary>
     /// The endpoint for health check.
     /// </summary>
-    public const string HealthCheckEndpoint = @"/health"; //TODO: make so this can be looked up
-
     /// <summary>
     /// Adds the health check path to the document.
     /// </summary>
@@ -57,7 +57,7 @@ public class HealthChecksDocumentTransformer : IOpenApiDocumentTransformer
         var pathItem = new OpenApiPathItem();
         pathItem.AddOperation(HttpMethod.Get, operation);
         document.Paths ??= [];
-        document.Paths[HealthCheckEndpoint] = pathItem;
+        document.Paths[context.ApplicationServices.GetService<HealthCheckPath>()?.Value ?? HealthCheckPath.Default] = pathItem;
         return Task.CompletedTask;
     }
 }

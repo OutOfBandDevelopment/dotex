@@ -1,6 +1,4 @@
-using System;
-
-namespace OoBDev.Onnx.ImageEmbeddings;
+﻿namespace OoBDev.Onnx.ImageEmbeddings;
 
 /// <summary>
 /// Decoded pixels in row-major order, three bytes (R, G, B) per pixel.

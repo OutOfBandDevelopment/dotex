@@ -19,7 +19,19 @@ public class Program
     /// </summary>
     /// <param name="args">Command-line arguments.</param>
     /// <returns>A task representing the application lifetime.</returns>
-    private static async Task Main(string[] args) =>
+    private static async Task<int> Main(string[] args)
+    {
+        if (CommandLine.IsHelpRequest(args))
+        {
+            global::System.Console.WriteLine(CommandLine.Usage("templateengine", "Renders a Handlebars or XSLT template over input files.", typeof(TemplateEngineOptions), typeof(FileTemplatingOptions)));
+            return 0;
+        }
+
+        await RunHostAsync(args);
+        return 0;
+    }
+
+    private static async Task RunHostAsync(string[] args) =>
         await Host.CreateDefaultBuilder(args)
             .ConfigureAppConfiguration((context, config) => config.AddCommandLine(args,
                     CommandLine.BuildParameters<TemplateEngineOptions>()

@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace OoBDev.System.Retro.Apple2.ApplesoftBASIC;
 
@@ -13,6 +15,20 @@ public class TokenMap
     /// <param name="code"></param>
     /// <returns></returns>
     public string? GetToken(byte code) => tokens.Where(t => t.code == code).Select(t => t.token).FirstOrDefault();
+
+    /// <summary>
+    /// Gets the keywords as typed (no spaces, so <c>PR#</c> and <c>DEFFN</c>) with their token codes, longest first, for matching source text.
+    /// </summary>
+    public IReadOnlyList<(byte Code, string Keyword)> Keywords { get; }
+
+    /// <summary>
+    /// Creates the map.
+    /// </summary>
+    public TokenMap() =>
+        Keywords = [.. tokens
+            .Where(t => t.code < 0xFD)
+            .Select(t => ((byte)t.code, Keyword: string.Concat(t.token.Where(ch => !char.IsWhiteSpace(ch)))))
+            .OrderByDescending(t => t.Keyword.Length)];
 
     private readonly (int code, string token)[] tokens =
     [

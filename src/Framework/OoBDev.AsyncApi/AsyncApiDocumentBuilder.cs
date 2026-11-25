@@ -20,7 +20,8 @@ public class AsyncApiDocumentBuilder(
     IEnumerable<IMessageQueueHandler> handlers,
     IMessagePropertyResolver resolver,
     IConfiguration configuration,
-    IEnumerable<IAsyncApiContributor> contributors)
+    IEnumerable<IAsyncApiContributor> contributors,
+    IEnumerable<AsyncApiSendMessage>? sendMessages = null)
 {
     /// <summary>The name of the document that contains everything.</summary>
     public const string AllDocumentName = "all";
@@ -91,12 +92,41 @@ public class AsyncApiDocumentBuilder(
             };
         }
 
+        foreach (var send in (sendMessages ?? []).Where(s => isAll || string.Equals(s.Message.Assembly.GetName().Name, name, StringComparison.OrdinalIgnoreCase)))
+        {
+            AddSendMessage(document, covered, send);
+        }
+
         if (isAll)
         {
             AddConfiguredSenders(document, covered);
         }
 
         return document;
+    }
+
+    private void AddSendMessage(AsyncApiDocument document, HashSet<string> covered, AsyncApiSendMessage send)
+    {
+        var (config, target, message, path) = resolver.ConfigurationSafe(send.Channel, send.Message);
+        var key = $"{target}.{message}";
+        if (document.Channels.ContainsKey(key))
+        {
+            return;
+        }
+
+        if (path != null)
+        {
+            covered.Add(ParentPath(path));
+        }
+
+        var providerKey = resolver.ProviderSafe(send.Channel, send.Message).providerKey;
+        var channel = AddChannel(document, config, target, message, providerKey);
+        channel.Messages[message] = new AsyncApiMessage { Payload = SchemaRef(document, message, send.Message) };
+        document.Operations[$"send{Safe(target)}{Safe(message)}"] = new AsyncApiOperation
+        {
+            Action = "send",
+            Channel = new AsyncApiReference { Ref = $"#/channels/{key}" },
+        };
     }
 
     // Senders are open generics (IMessageQueueSender<T>), so queues with no handler come from configuration only.

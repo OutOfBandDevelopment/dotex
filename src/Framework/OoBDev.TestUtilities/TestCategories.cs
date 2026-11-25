@@ -38,4 +38,59 @@ public static class TestCategories
     /// active service subscriptions. Manual execution only, not run in CI/CD pipelines.
     /// </summary>
     public const string LiveIntegration = nameof(LiveIntegration);
+
+    /// <summary>
+    /// Tests that need a physical device (serial, USB HID, instruments). They run in the normal test run
+    /// and end with <c>Assert.Inconclusive</c> when the device is not detected, so the default run never
+    /// depends on hardware.
+    /// </summary>
+    public const string Hardware = nameof(Hardware);
+
+    // Secondary categories (owner, 2026-11-04, from DevTerm): optional, added beside the one tier above, so
+    // dotnet test --filter TestCategory=Serial selects a transport, a feature or a device across every tier.
+
+    // Transports.
+    public const string Serial = nameof(Serial);
+    public const string Tcp = nameof(Tcp);
+    public const string Hid = nameof(Hid);
+    public const string Usbtmc = nameof(Usbtmc);
+    public const string Ble = nameof(Ble);
+    public const string Loopback = nameof(Loopback);
+    public const string Rfc2217 = nameof(Rfc2217);
+    public const string Vxi11 = nameof(Vxi11);
+    public const string Mqtt = nameof(Mqtt);
+    public const string Brokers = nameof(Brokers);
+    public const string Web = nameof(Web);
+
+    // Device profile types.
+    public const string Scpi = nameof(Scpi);
+
+    // Features.
+
+    /// <summary>Session logging and log playback: the format, recorder, engine and each front end.</summary>
+    public const string Logging = nameof(Logging);
+
+    /// <summary>
+    /// A regression test written from a bug report. Added at the method level beside the test's own tier, so
+    /// <c>--filter TestCategory=BugRegression</c> runs every bug regression test.
+    /// </summary>
+    public const string BugRegression = nameof(BugRegression);
+
+    // Device make and model: one physical unit each, on the tests that exercise that device.
+    public const string Tektronix_2230 = nameof(Tektronix_2230);
+    public const string Tektronix_Tds2024 = nameof(Tektronix_Tds2024);
+    public const string Korad_Ka3005p = nameof(Korad_Ka3005p);
+    public const string Korad_Ka6003p = nameof(Korad_Ka6003p);
+    public const string Hp_34401a = nameof(Hp_34401a);
+    public const string Rigol_Ds1102e = nameof(Rigol_Ds1102e);
+    public const string Rigol_Dm3058e = nameof(Rigol_Dm3058e);
+    public const string Rigol_Dg1022 = nameof(Rigol_Dg1022);
+    public const string Rigol_Dg1062z = nameof(Rigol_Dg1062z);
+    public const string Velleman_K8055 = nameof(Velleman_K8055);
+    public const string Kuando_Busylight = nameof(Kuando_Busylight);
+    public const string Radex_One = nameof(Radex_One);
+    public const string Zoom_H4n = nameof(Zoom_H4n);
+    public const string DerEe_De5000 = nameof(DerEe_De5000);
+    public const string Delorme_EarthmateBt20 = nameof(Delorme_EarthmateBt20);
+    public const string Aeotec_ZStickS2 = nameof(Aeotec_ZStickS2);
 }

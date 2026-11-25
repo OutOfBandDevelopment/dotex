@@ -1,8 +1,7 @@
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OllamaSharp;
 using OoBDev.TestUtilities;
-using System.Linq;
 
 namespace OoBDev.Ollama.Tests;
 
@@ -40,5 +39,15 @@ public class OllamaApiClientFactoryTests
         var client = Build(apiKey);
 
         Assert.IsFalse(client.DefaultRequestHeaders.Keys.Contains("Authorization"));
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public void Options_Timeout_DefaultsToFiveMinutes()
+    {
+        var options = new OllamaApiClientOptions { Url = "http://localhost:11434", DefaultModel = "phi3" };
+
+        Assert.AreEqual(global::System.TimeSpan.FromMinutes(5), options.Timeout);
+        Assert.IsNotNull(new OllamaApiClientFactory(Options.Create(options)).Build());
     }
 }

@@ -14,45 +14,23 @@ The OoBDev framework is organized into four distinct layers, each with specific 
 
 ## Architecture Diagram
 
+```plantuml
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #444444
+}
+rectangle "Common Layer\n(Orchestration, All-in-One Packages)\n- OoBDev.Common.Abstractions\n- OoBDev.Common\n- OoBDev.Common.AspNetCore\n- OoBDev.Common.Complete\n- OoBDev.Common.Extensions\n- OoBDev.Common.Hosting" <<layer>> as common
+rectangle "Framework Layer\n(Domain-Specific Libraries, Core Business Logic)\n- AI, AspNetCore, Communications\n- Database, Documents, Identity\n- MessageQueueing, Search, System\n- TestUtilities" <<layer>> as framework
+rectangle "Extensions Layer\n(Custom .NET System Extensions)\n- OoBDev.Data.Vectors\n- OoBDev.System.Text.Html\n- OoBDev.System.Text.Markdown\n- OoBDev.System.Text.Yaml" <<layer>> as extensions
+rectangle "ExternalServices Layer\n(Third-Party Integrations, Vendor Wrappers)\n- Apache, Azure, GroqCloud, Handlebars\n- Keycloak, MailKit, Markdig, Microsoft\n- MongoDB, Ollama, OpenSearch, Qdrant\n- RabbitMQ, SBert, WkHtmlToPdf" <<layer>> as external
+common --> framework : depends on
+framework --> extensions : depends on
+extensions --> external : depends on
+@enduml
 ```
-┌─────────────────────────────────────────────────────────┐
-│                 Common Layer                            │
-│  (Orchestration, All-in-One Packages)                   │
-│  - OoBDev.Common.Abstractions                           │
-│  - OoBDev.Common                                        │
-│  - OoBDev.Common.AspNetCore                             │
-│  - OoBDev.Common.Complete                               │
-│  - OoBDev.Common.Extensions                             │
-│  - OoBDev.Common.Hosting                                │
-└─────────────────────────────────────────────────────────┘
-                          ↓ depends on
-┌─────────────────────────────────────────────────────────┐
-│                Framework Layer                          │
-│  (Domain-Specific Libraries, Core Business Logic)       │
-│  - AI, AspNetCore, Communications                       │
-│  - Database, Documents, Identity                        │
-│  - MessageQueueing, Search, System                      │
-│  - TestUtilities                                        │
-└─────────────────────────────────────────────────────────┘
-                          ↓ depends on
-┌─────────────────────────────────────────────────────────┐
-│               Extensions Layer                          │
-│  (Custom .NET System Extensions)                        │
-│  - OoBDev.Data.Vectors                                  │
-│  - OoBDev.System.Text.Html                              │
-│  - OoBDev.System.Text.Markdown                          │
-│  - OoBDev.System.Text.Yaml                              │
-└─────────────────────────────────────────────────────────┘
-                          ↓ depends on
-┌─────────────────────────────────────────────────────────┐
-│            ExternalServices Layer                       │
-│  (Third-Party Integrations, Vendor Wrappers)            │
-│  - Apache, Azure, GroqCloud, Handlebars                 │
-│  - Keycloak, MailKit, Markdig, Microsoft                │
-│  - MongoDB, Ollama, OpenSearch, Qdrant                  │
-│  - RabbitMQ, SBert, WkHtmlToPdf                         │
-└─────────────────────────────────────────────────────────┘
-```
+
+*Figure 1 — Layering architecture*
 
 **Dependency Rule:** Dependencies flow downward only. Lower layers cannot depend on higher layers.
 
@@ -187,14 +165,13 @@ Framework projects are organized by domain:
 **Reference:** `src/Framework/OoBDev.AspNetCore/`
 
 #### Communications (3 projects)
-- **OoBDev.Communications.Abstractions** - Email/SMS models
+- **OoBDev.Communications.Abstractions** - send/receive contracts, email message and models
 - **OoBDev.Communications** - Core implementation
 - **OoBDev.Communications.MessageQueueing** - Message queue integration
 
 **Key Interfaces:**
-- `ICommunicationSender<T>` - Send communication
-- `EmailMessageModel` - Email message
-- `SmsMessageModel` - SMS message
+- `ISendService` - Send a message through a named channel
+- `IChannelProvider` - Delivery by one provider (MailKit for email)
 
 **Reference:** `src/Framework/OoBDev.Communications.Abstractions/`
 
@@ -257,7 +234,7 @@ Framework projects are organized by domain:
 
 **Coverage:** 90.4% (excellent)
 
-**Reference:** `src/Framework/OoBDev.MessageQueueing/`, `/docs/Framework/MessageQueueing.md`
+**Reference:** `src/Framework/OoBDev.MessageQueueing/`, `docs/design/MessageQueuing`
 
 #### Search (3 projects)
 - **OoBDev.Search.Abstractions** - Vector store, search
@@ -385,7 +362,7 @@ The Extensions layer provides custom .NET system extensions that enhance base .N
 - SQL CLR functions for SQL Server
 - Vector normalization and operations
 
-**Reference:** `src/Extensions/OoBDev.Data.Vectors/`, `/docs/Framework/VectorSqlClr.md`
+**Reference:** `src/Extensions/OoBDev.Data.Vectors/`, `docs/design/VectorSearch`
 
 #### Text Processing (6 projects)
 - **OoBDev.System.Text.Html.** (2) - HTML processing
@@ -527,7 +504,7 @@ Projects are organized by vendor/technology:
 
 **Purpose:** MongoDB database integration
 
-**Reference:** `src/ExternalServices/MongoDB/OoBDev.MongoDB/`, `/docs/Framework/MongoDbExtensions.md`
+**Reference:** `src/ExternalServices/MongoDB/OoBDev.MongoDB/`, `README.MongoDB.md`
 
 #### MysticMind (2 projects)
 - **OoBDev.MysticMind.Abstractions**
@@ -636,12 +613,25 @@ OoBDev.{Vendor}/
 - [ ] Create `{Vendor}Options` configuration class
 - [ ] Create `TryAdd{Vendor}Services` extension method
 - [ ] Add README with usage examples
-- [ ] Add to `/docs/Libraries/{vendor}.md`
+- [ ] Add to the project `README.{Project}.md`
 - [ ] Create test project (optional but recommended)
 
 ---
 
 ## 5. Supporting Layers
+
+### 5.0 Applications Layer
+
+**Purpose:** Deployable applications built on the framework. Nothing references `src/Applications`; the Framework never depends on it.
+
+**Projects (DevTerm, see [the restructure plan](../design/DevTermParity/restructure-plan.md)):**
+- **OoBDev.DevTerm.Core** - session engine, presenters, logging, device manifests, configuration, schemas, loopback and session servers (one assembly, one `Core.Tests`)
+- **OoBDev.DevTerm.Wpf**, **OoBDev.DevTerm.Tui** (Terminal.Gui), **OoBDev.DevTerm.Web** (Blazor) - the three front ends, each with its own tests
+- **OoBDev.DevTerm.Plugins.KeyValue**, **OoBDev.DevTerm.Core.TestPlugin** - plugin assemblies (merge into Core is an open owner question)
+
+**Dependencies:** Framework and Extensions (device transports are `OoBDev.System.IO.*` libraries that never reference DevTerm)
+
+**Reference:** `src/Applications/`
 
 ### 5.1 Examples Layer
 
@@ -871,7 +861,7 @@ This architecture enables:
 - [architectural-guidelines.md](./architectural-guidelines.md) - High-level principles
 - [architectural-standards.md](./architectural-standards.md) - Concrete standards
 - [architectural-patterns.md](./architectural-patterns.md) - Pattern documentation
-- [provider-factory-pattern.md](./provider-factory-pattern.md) - Provider pattern details
+- [provider-factory-pattern.md](../patterns-discovery/02-design-patterns/03-provider-factory-keyed.md) - Provider pattern details
 
 ---
 

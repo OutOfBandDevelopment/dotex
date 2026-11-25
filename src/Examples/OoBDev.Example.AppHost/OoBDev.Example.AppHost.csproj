@@ -1,0 +1,37 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.6.5">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>false</ImplicitUsings>
+    <UserSecretsId>oobdev-example-apphost</UserSecretsId>
+    <IsPackable>false</IsPackable>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <!-- The shared build props add the analyzers project to every project; it is not an app resource. Not using the CLI bundle. -->
+    <NoWarn>$(NoWarn);ASPIRE004;ASPIRE010</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- GHSA-qhrr-8q5h-9q3h: MessagePack 2.5.302 comes in through Aspire.Hosting RPC; the AppHost is a local development tool that never takes untrusted input and is not shipped. Remove when Aspire updates it. -->
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-qhrr-8q5h-9q3h" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.Docker" />
+    <PackageReference Include="Aspire.Hosting.JavaScript" />
+    <PackageReference Include="Aspire.Hosting.Redis" />
+    <PackageReference Include="Aspire.Hosting.RabbitMQ" />
+    <PackageReference Include="Aspire.Hosting.SqlServer" />
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+    <PackageReference Include="Microsoft.SqlServer.DacFx" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OoBDev.Example.WebApi\OoBDev.Example.WebApi.csproj" />
+    <!-- Builds the vector database dacpac the host publishes; its output is a file, not an assembly. -->
+    <ProjectReference Include="..\..\Extensions\OoBDev.Data.Vectors.DB\OoBDev.Data.Vectors.DB.csproj" ReferenceOutputAssembly="false" IsAspireProjectResource="false" />
+  </ItemGroup>
+
+</Project>

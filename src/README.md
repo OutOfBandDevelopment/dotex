@@ -2,21 +2,12 @@
 
 ## Summary
 
-This project contains shared libraries and examples on how to use those libraries.
+This folder holds the shared libraries, applications and examples. Layers: Common, Framework, Extensions, HardwareDevices, ExternalServices, Applications, Tools and Examples (see [the architecture docs](../docs/architecture/README.md)).
 
 ## Useful Scripts
 
-* [build.bat](.\build.bat) - build solution into [.\publish\libs](.\Publish\libs)
-* [generate-docs.bat](.\generate-docs.bat) - update generated documentation into [.\docs](.\docs)
-* [package.bat](.\package.bat) - build nuget packages into [.\publish\packages](.\publish\packages)
-* [test.bat](.\test.bat) - execute unit tests and output results into [.\TestResults](.\TestResults)
+* `build.bat`, `build.sh` - build the solution into `publish/libs`
+* `test.sh` - run the tests and merge the results into `LatestTestResults.trx`
+* `../scripts/ci` - the manual CI (build, test, Docker integration stack); there is no hosted pipeline
 
-## Additional Documentation
-
-* [Source code Documentation](.\docs)
-  * This documentation is mostly generated from the source code and related files within these 
-	projects. To update the documentation run the `generate-docs.bat` script.
-
-## Status
-
-[![.NET](https://github.com/OoBDevInnovation/dotnet-libs/actions/workflows/dotnet.yml/badge.svg)](https://github.com/OoBDevInnovation/dotnet-libs/actions/workflows/dotnet.yml)
+Run `dotnet` commands from this folder: `Directory.Build.props` finds the solution directory from the working directory.

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net10.0-windows</TargetFramework>
+		<UseWindowsForms>true</UseWindowsForms>
+		<ImplicitUsings>false</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="GitVersion.MsBuild">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Extensions\OoBDev.Extensions.Windows.Forms\OoBDev.Extensions.Windows.Forms.csproj" />
+		<ProjectReference Include="..\..\Framework\OoBDev.UiDefinitions.WinForms\OoBDev.UiDefinitions.WinForms.csproj" />
+		<Compile Include="../OoBDev.Examples.Controls.Shared/ControlsSampleSettings.cs" Link="ControlsSampleSettings.cs" />
+		<Compile Include="../OoBDev.Examples.Controls.Shared/LiveSampleFeed.cs" Link="LiveSampleFeed.cs" />
+	</ItemGroup>
+
+</Project>

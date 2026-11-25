@@ -1,6 +1,6 @@
 # Integration Test Variables
 
-**Last Updated:** 2026-01-24
+**Last Updated:** 2026-11-11
 
 This document lists all test properties used by Integration tests. These properties can be configured via:
 - `.runsettings` file (`TestRunParameters` section)
@@ -20,25 +20,30 @@ This document lists all test properties used by Integration tests. These propert
 1. [Test Categories](#test-categories)
 2. [Integration Test Variables](#integration-test-variables)
    - [Apache Tika (Document Processing)](#apache-tika-document-processing)
+   - [Docling serve (Document Conversion and OCR)](#docling-serve-document-conversion-and-ocr)
+   - [ClamAV (Virus Scanning)](#clamav-virus-scanning)
+   - [SonarQube (Static Analysis)](#sonarqube-static-analysis)
    - [SMTP/IMAP (Email Testing)](#smtpimap-email-testing)
    - [MongoDB (NoSQL Database)](#mongodb-nosql-database)
    - [SQL Server (Relational Database)](#sql-server-relational-database)
    - [RabbitMQ (Message Queue)](#rabbitmq-message-queue)
+   - [PostgreSQL (with pgmq)](#postgresql-with-pgmq)
    - [Redis (Cache Store)](#redis-cache-store)
    - [OpenSearch (Search Engine)](#opensearch-search-engine)
    - [SBert (Sentence Embeddings)](#sbert-sentence-embeddings---aiml)
    - [Ollama (LLM Inference)](#ollama-llm-inference---aiml)
-   - [OpenTelemetry (Grafana LGTM)](#opentelemetry-grafana-lgtm)
+   - [OpenTelemetry (Aspire dashboard)](#opentelemetry-aspire-dashboard)
    - [Qdrant (Vector Database)](#qdrant-vector-database)
    - [Azurite (Azure Storage Emulator)](#azurite-azure-storage-emulator)
    - [Moto (AWS Emulator)](#moto-aws-emulator)
    - [Keycloak (Identity & Access Management)](#keycloak-identity--access-management)
-3. [LiveIntegration Test Variables](#liveintegration-test-variables)
+3. [Host, port and extra parameters](#host-port-and-extra-parameters)
+4. [LiveIntegration Test Variables](#liveintegration-test-variables)
    - [Groq Cloud (LLM API)](#groq-cloud-llm-api)
-4. [Configuration Examples](#configuration-examples)
-5. [Test Pattern Guidelines](#test-pattern-guidelines)
-6. [Docker Integration Stack](#docker-integration-stack)
-7. [Related Documentation](#related-documentation)
+5. [Configuration Examples](#configuration-examples)
+6. [Test Pattern Guidelines](#test-pattern-guidelines)
+7. [Docker Integration Stack](#docker-integration-stack)
+8. [Related Documentation](#related-documentation)
 
 ---
 
@@ -46,6 +51,18 @@ This document lists all test properties used by Integration tests. These propert
 
 ### Integration Tests (Docker-Based)
 Tests that run against Docker containers. See `/containers/testing/` for Docker infrastructure.
+
+#### Container start-up
+
+Integration tests marked `[IntegrationTestMethod("oobd-test-redis")]` check their containers first: a running, healthy container is used as it is; a stopped or missing one is started (`docker start` or `docker compose up` of the one service) and watched until its health check passes. If that takes longer than the timeout, or Docker is missing, the test ends Inconclusive. Only containers the tests started are stopped, by the last test process still using them (shared lease files), when its run ends.
+
+| Parameter | Default | Meaning |
+|-----------|---------|---------|
+| `CONTAINER_STARTUP_TIMEOUT_SECONDS` | `5` | Seconds to wait for a container to become healthy |
+| `CONTAINER_AUTOSTART` | `true` | Start containers that are down; `false` makes the tests Inconclusive instead |
+| `CONTAINER_STOP_AFTER_TESTS` | `true` | Stop the containers the tests started when the run ends |
+| `CONTAINER_WAVES` | `true` | When no stack container runs, start the whole stack once in dependency waves (`scripts/ci/start-integration-waves.ps1`; the stack stays up) before the per-container start |
+| `CONTAINER_WAVES_TIMEOUT_SECONDS` | `900` | How long the waves start may take before the harness falls back to starting containers one by one |
 
 ### LiveIntegration Tests (Cloud-Based)
 Tests that require live cloud credentials. Manual execution only.
@@ -60,12 +77,55 @@ Tests that require live cloud credentials. Manual execution only.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `TIKA_URL` | `http://localhost:9998` | Apache Tika server URL |
+| `TIKA_URL` | `http://127.0.0.1:9998` | Apache Tika server URL |
 
 **Docker Container:** `apache/tika` (Port 9998)
 
 **Tests Using:**
 - `OoBDev.Apache.Tika.Tests` (6 handlers: PDF, DOC, DOCX, EPUB, ODT, RTF)
+
+### Docling serve (Document Conversion and OCR)
+
+**Service:** docling-serve (CPU image, English Tesseract only)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DOCLING_URL` | `http://127.0.0.1:5001` | docling-serve base URL |
+
+**Docker Container:** `quay.io/docling-project/docling-serve-cpu` (Port 5001, override `TEST_PORT_DOCLING`)
+
+**Tests Using:**
+- `OoBDev.Docling.Tests` (`DoclingIntegrationTests`)
+
+### ClamAV (Virus Scanning)
+
+**Service:** ClamAV daemon (clamd)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `CLAMAV_HOST` | `127.0.0.1` | clamd host |
+| `CLAMAV_PORT` | `3310` | clamd TCP port |
+
+**Docker Container:** `clamav/clamav:stable` (Port 3310, override `TEST_PORT_CLAMAV`). The first start downloads the signature database, so the health check allows a few minutes.
+
+**Tests Using:**
+- `OoBDev.ClamAv.Tests` (`ClamAvIntegrationTests`)
+
+### SonarQube (Static Analysis)
+
+**Service:** SonarQube Community build
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `SONARQUBE_URL` | `http://127.0.0.1:9002` | SonarQube base URL |
+
+The analysis token is a user secret (`dotnet user-secrets` or the `SONAR_TOKEN` shell variable read by `scripts/ci/sonar.ps1`), never a test parameter and never committed.
+
+**Docker Container:** `sonarqube:community` (Port 9000 inside, 9002 on the host, override `TEST_PORT_SONARQUBE`)
+
+**Tests Using:** none; `scripts/ci/sonar.ps1` is the client.
+
+---
 
 ---
 
@@ -75,9 +135,9 @@ Tests that require live cloud credentials. Manual execution only.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `SMTP_HOST` | `localhost` | SMTP server hostname |
+| `SMTP_HOST` | `127.0.0.1` | SMTP server hostname |
 | `SMTP_PORT` | `25` | SMTP server port |
-| `IMAP_HOST` | `localhost` | IMAP server hostname |
+| `IMAP_HOST` | `127.0.0.1` | IMAP server hostname |
 | `IMAP_PORT` | `143` | IMAP server port |
 
 **Docker Container:** `rnwood/smtp4dev` (Ports 25 SMTP, 143 IMAP, 7777 Web UI)
@@ -94,7 +154,7 @@ Tests that require live cloud credentials. Manual execution only.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `MONGODB_CONNECTION_STRING` | `mongodb://localhost:27017?collation={locale:'en_US',caseLevel:false,strength:2 }` | MongoDB connection string with collation settings |
+| `MONGODB_CONNECTION_STRING` | `mongodb://127.0.0.1:27017?collation={locale:'en_US',caseLevel:false,strength:2 }` | MongoDB connection string with collation settings |
 
 **Docker Container:** `mongo:latest` (Port 27017)
 
@@ -119,7 +179,7 @@ Tests that require live cloud credentials. Manual execution only.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `SQL_CONNECTION_STRING` | `Server=localhost,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=True` | SQL Server connection string |
+| `SQLSERVER_CONNECTION_STRING` | `Server=127.0.0.1,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=True` | SQL Server connection string |
 
 **Docker Container:** `mcr.microsoft.com/mssql/server:2022-latest` (Port 1433)
 
@@ -138,10 +198,10 @@ Tests that require live cloud credentials. Manual execution only.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `RABBITMQ_HOST` | `localhost` | RabbitMQ server hostname |
+| `RABBITMQ_HOST` | `127.0.0.1` | RabbitMQ server hostname |
 | `RABBITMQ_PORT` | `5673` | RabbitMQ AMQP port (5672 used by Service Bus emulator) |
 
-**Docker Container:** `rabbitmq:latest` (Ports 5673 AMQP, 15672 Management UI)
+**Docker Container:** `rabbitmq:latest` (Ports 5673 AMQP, 15672 Management UI, 21613 STOMP, 5671 AMQPS, 21614 STOMP TLS). DevTerm peers (Mosquitto 1883, ser2net 2217, loopback-device 7778) use `MOSQUITTO_*`, `SER2NET_*` and `LOOPBACK_DEVICE_*` (HOST and PORT each), see `src/.runsettings`.
 
 **Tests Using:**
 - `OoBDev.RabbitMQ.Tests.MessageQueueing.RabbitMQQueueMessageSenderProviderTests.SendAsyncTest_ByFullType`
@@ -154,13 +214,39 @@ Tests that require live cloud credentials. Manual execution only.
 
 ---
 
+### PostgreSQL (with pgmq)
+
+**Service:** PostgreSQL 17 with the pgmq extension (`ghcr.io/pgmq/pg17-pgmq`).
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `POSTGRES_CONNECTION_STRING` | `Host=127.0.0.1;Port=5434;Database=oobdev_test;Username=postgres;Password=IntegrationTest123!` | Npgsql connection string of the test database |
+
+**Docker Container:** `oobd-test-postgres` (host port 5434, override with `TEST_PORT_POSTGRES`)
+
+**Tests Using:** `OoBDev.EventSourcing.EntityFrameworkCore.Tests` (`PostgresIntegrationTests`).
+
+### PostgreSQL with pgvector
+
+**Service:** PostgreSQL 17 with the pgvector extension (`pgvector/pgvector`).
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PGVECTOR_CONNECTION_STRING` | `Host=127.0.0.1;Port=5435;Database=oobdev_test;Username=postgres;Password=IntegrationTest123!` | Npgsql connection string of the vector test database |
+
+**Docker Container:** `oobd-test-pgvector` (host port 5435, override with `TEST_PORT_PGVECTOR`)
+
+**Tests Using:** `OoBDev.PostgreSql.WorkQueue.Tests` (work queue, throwaway schema per test); the pgvector store tests will use it too.
+
+---
+
 ### Redis (Cache Store)
 
 **Service:** Redis in-memory data store
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `REDIS_CONNECTION_STRING` | `localhost:6379` | Redis connection string |
+| `REDIS_CONNECTION_STRING` | `127.0.0.1:6379` | Redis connection string |
 
 **Docker Container:** `redis:7-alpine` (Port 6379)
 
@@ -181,7 +267,7 @@ Tests that require live cloud credentials. Manual execution only.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `OPENSEARCH_URL` | `http://localhost:9200` | OpenSearch HTTP endpoint |
+| `OPENSEARCH_URL` | `http://127.0.0.1:9200` | OpenSearch HTTP endpoint |
 | `OPENSEARCH_USERNAME` | `admin` | OpenSearch admin username |
 | `OPENSEARCH_PASSWORD` | `admin` | OpenSearch admin password |
 
@@ -203,7 +289,7 @@ Tests that require live cloud credentials. Manual execution only.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `SBERT_URL` | `http://localhost:5080` | SBert HTTP API endpoint |
+| `SBERT_URL` | `http://127.0.0.1:5080` | SBert HTTP API endpoint |
 
 **Docker Container:** Custom SBert image (Port 5080)
 
@@ -223,11 +309,12 @@ Tests that require live cloud credentials. Manual execution only.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `OLLAMA_URL` | `http://localhost:11435` | Ollama HTTP API endpoint |
-| `OLLAMA_HOST` | `localhost` | Ollama host |
+| `OLLAMA_URL` | `http://127.0.0.1:11435` | Ollama HTTP API endpoint |
+| `OLLAMA_HOST` | `127.0.0.1` | Ollama host |
 | `OLLAMA_PORT` | `11435` | Ollama port |
 | `OLLAMA_MODEL` | `phi3` | Model name to use for testing |
 | `OLLAMA_EMBEDDING_MODEL` | `all-minilm` | Embedding model (chat models such as phi3 reject embedding requests) |
+| `OLLAMA_VISION_MODEL` | `llava-phi3` | Vision model for the image chat tests (pulled on first run, about 3 GB, CPU-slow) |
 
 **Docker Container:** `ollama/ollama:latest` (Host port 11435, container 11434)
 
@@ -249,25 +336,81 @@ Tests that require live cloud credentials. Manual execution only.
 
 ---
 
-### OpenTelemetry (Grafana LGTM)
+### OpenTelemetry (Aspire dashboard)
 
-**Service:** `grafana/otel-lgtm` - OTLP receiver with Tempo (traces), Loki (logs), Prometheus (metrics) and Grafana
+**Service:** `mcr.microsoft.com/dotnet/aspire-dashboard` - OTLP receiver, dashboard UI and telemetry API
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `OTEL_EXPORTER_OTLP_ENDPOINT` | `http://localhost:4318` | OTLP HTTP endpoint the tests export to |
-| `OTEL_GRAFANA_URL` | `http://localhost:3000` | Grafana, used to read spans and logs back through the Tempo and Loki proxies |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | `http://127.0.0.1:4318` | OTLP HTTP endpoint the tests export to |
+| `OTEL_DASHBOARD_URL` | `http://127.0.0.1:18888` | Aspire dashboard, used to read spans and logs back through its telemetry API |
+| `OTEL_DASHBOARD_API_KEY` | `oobdev-test-key` | API key sent as `x-api-key` to the telemetry API |
 
-**Docker Container:** `grafana/otel-lgtm:latest` (4317 OTLP gRPC, 4318 OTLP HTTP, 3000 Grafana)
+**Docker Container:** `mcr.microsoft.com/dotnet/aspire-dashboard:latest` (4317 OTLP gRPC, 4318 OTLP HTTP, 18888 dashboard)
 
 **Tests Using:**
-- `OoBDev.OpenTelemetry.Tests.OtlpIntegrationTests` (Integration): a span reaches Tempo and a log record reaches Loki, both with the correlation id
+- `OoBDev.OpenTelemetry.Tests.OtlpIntegrationTests` (Integration): a span and a log record reach the dashboard, both with the correlation id
 - `OoBDev.OpenTelemetry.Tests.TelemetryProcessorTests` (Unit): processors and registration, no container needed
 
 **Notes:**
-- Anonymous Grafana access is enabled in the test image, so no credentials are needed
+- The dashboard UI is unsecured in the test stack; the telemetry API uses the API key above
 - Each test uses a unique `service.name` so runs never see each other's data
 - Replaces the former Azurinsight emulator (2026-10-09)
+
+---
+
+### PlantUML and docs validation
+
+**Service:** PlantUML server used by `OoBDev.Docs.Tests`
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PLANTUML_URL` | `http://127.0.0.1:8086` | The PlantUML server already running on the system (container `plantuml`); the test stack does not start its own |
+| `DOCS_VALIDATE_PATHS` | `docs/patterns-discovery;docs/applications` | `;`-separated repo-relative folders or files to validate |
+| `DOCS_CHECK_SCREENSHOTS` | `false` | `true` compares each guide screenshot's last commit with the newest commit of the code it shows (`images/sources.json`) |
+| `DOCS_SCREENSHOT_TOLERANCE_DAYS` | `30` | days the code may be newer than its screenshot before the check reports it |
+
+**Tests Using:** `OoBDev.Docs.Tests` (Unit for structure, links and captions; Integration for rendering)
+
+---
+
+### Hardware (physical devices)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `ZWAVE_SERIAL_PORT` | `COM13` | Serial port of the plugged-in Z-Wave stick; used by the `Serial` Hardware tests; blank or unlisted ends them Inconclusive |
+| `ZWAVE_TCP_HOST` | `overwatch.local:4000` | Z-Wave stick behind a serial-to-Ethernet bridge (`host:port`); used by the separate `Tcp` Hardware tests; blank or unreachable ends them Inconclusive |
+| `RADEX_ONE_SERIAL_PORT` | `COM8` | Serial port of the Radex One (9600 8-N-1); blank or unlisted ends its Hardware tests Inconclusive |
+| `ZOOM_H4N_SERIAL_PORT` | `COM3` | Serial port of the h4n2rs485 adapter on the Zoom H4n remote port (2400 8-N-1); blank or unlisted ends its Hardware test Inconclusive |
+| `HC08_SERIAL_PORT` | `COM4` | Serial port (9600 8-N-1) of the SH-HC-08 BLE module used for the BLE round-trip Hardware tests; blank or unlisted ends them Inconclusive |
+| `ZWAVE_SWITCH_NODE` | `2` | Node id (2 to 232) of a Binary Switch relay; the toggle Hardware test actuates it and restores it, and ends Inconclusive while it is `0` |
+| `KORAD_KA3005P_SERIAL_PORT` | `COM6` | Korad KA3005P (9600 8-N-1) |
+| `KORAD_KA6003P_SERIAL_PORT` | `COM7` | Korad KA6003P (9600 8-N-1) |
+| `TCP_DEVICE_PORT` | `23` | Port of the serial-to-Ethernet bridges below |
+| `HP34401A_TCP_HOST` | `192.168.0.109` | HP 34401A multimeter |
+| `TDS2024_TCP_HOST` | `192.168.0.110` | Tektronix TDS2024 oscilloscope (SCPI, `*IDN?`) |
+| `TEK2230_1_TCP_HOST` | `192.168.0.108` | Tektronix 2230 oscilloscope (`ID?`) |
+| `TEK2230_2_TCP_HOST` | `192.168.0.107` | Second Tektronix 2230 (offline at times) |
+
+The device list with connections is in [docs/how-tos/test-hardware.md](docs/how-tos/test-hardware.md).
+
+**Tests Using:** `OoBDev.ZWave.Tests` (category `Hardware`)
+
+---
+
+### Neo4j (Graph Database)
+
+**Service:** Neo4j community, Cypher over Bolt
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `NEO4J_URI` | `bolt://127.0.0.1:7687` | Bolt endpoint |
+| `NEO4J_USER` | `neo4j` | User |
+| `NEO4J_PASSWORD` | `oobdev-test-pass` | Password (test instance only) |
+
+**Docker Container:** `neo4j:5-community` (Ports 7687 Bolt, 7474 browser)
+
+**Tests Using:** `OoBDev.Neo4j.Tests` (`Integration`)
 
 ---
 
@@ -277,8 +420,7 @@ Tests that require live cloud credentials. Manual execution only.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `QDRANT_URL` | `http://localhost:6333` | Qdrant HTTP API endpoint |
-| `QDRANT_GRPC_URL` | `http://localhost:6334` | Qdrant gRPC endpoint |
+| `QDRANT_URL` | `http://127.0.0.1:6333` | Qdrant HTTP API endpoint |
 
 **Docker Container:** `qdrant/qdrant` (Ports 6333 HTTP, 6334 gRPC)
 
@@ -297,9 +439,7 @@ Tests that require live cloud credentials. Manual execution only.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `AZURITE_BLOB_URL` | `http://localhost:10000` | Blob storage endpoint |
-| `AZURITE_QUEUE_URL` | `http://localhost:10001` | Queue storage endpoint |
-| `AZURITE_TABLE_URL` | `http://localhost:10002` | Table storage endpoint |
+| `AZURITE_URL` | `http://127.0.0.1:10000` | Azurite base endpoint (blob on 10000) |
 
 **Docker Container:** `mcr.microsoft.com/azure-storage/azurite` (Ports 10000-10002)
 
@@ -312,13 +452,47 @@ Tests that require live cloud credentials. Manual execution only.
 
 ---
 
+### Service Bus emulator
+
+**Service:** Azure Service Bus emulator (queues, topics and sessions; no management API)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `SERVICEBUS_CONNECTION_STRING` | `Endpoint=sb://127.0.0.1;...;UseDevelopmentEmulator=true;` | Emulator connection string (AMQP on port 5672) |
+| `SERVICEBUS_TEST_QUEUE` | `integration-test-queue` | Plain queue from `containers/testing/servicebus-config/Config.json` |
+| `SERVICEBUS_TEST_TOPIC` | `integration-test-topic` | Topic from the same file |
+| `SERVICEBUS_TEST_SUBSCRIPTION` | `test-subscription` | Subscription on the test topic |
+| `SERVICEBUS_SESSION_QUEUE` | `integration-test-session-queue` | Session-enabled queue |
+
+**Docker Container:** `mcr.microsoft.com/azure-messaging/servicebus-emulator` (needs the SQL Server container; restart it if SQL was recreated)
+
+**Tests Using:** `AzureServiceBusIntegrationTests` (send and receive on queue, topic subscription and session queue)
+
+---
+
+### Azure Event Hubs emulator
+
+**Service:** Azure Event Hubs emulator (AMQP on host port 5674, `TEST_PORT_EVENTHUBS`; metadata in the Azurite container)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `EVENTHUB_CONNECTION_STRING` | `Endpoint=sb://127.0.0.1:5674;...;UseDevelopmentEmulator=true;` | Emulator connection string |
+| `EVENTHUB_NAME` | `integration-test-hub` | Hub (two partitions) from `containers/testing/eventhubs-config/Config.json` |
+| `EVENTHUB_CONSUMER_GROUP` | `integration-test-group` | Consumer group on that hub |
+
+**Docker Container:** `mcr.microsoft.com/azure-messaging/eventhubs-emulator` (needs Azurite; no health check, the scripts probe the port)
+
+**Tests Using:** `AzureEventHubIntegrationTests` (publish and read back one event with its type)
+
+---
+
 ### Moto (AWS Emulator)
 
 **Service:** AWS cloud service emulator for local development
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `MOTO_URL` | `http://localhost:4566` | Moto unified endpoint |
+| `MOTO_URL` | `http://127.0.0.1:4566` | Moto unified endpoint |
 
 **Docker Container:** `motoserver/moto` (Port 4566)
 
@@ -337,7 +511,7 @@ Tests that require live cloud credentials. Manual execution only.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `KEYCLOAK_URL` | `http://localhost:8081` | Keycloak server base URL |
+| `KEYCLOAK_URL` | `http://127.0.0.1:8081` | Keycloak server base URL |
 | `KEYCLOAK_REALM` | `integration-test` | Keycloak realm name for tests |
 | `KEYCLOAK_CLIENT_ID` | `integration-test-client` | OAuth confidential client ID |
 | `KEYCLOAK_CLIENT_SECRET` | `test-client-secret-12345` | OAuth client secret |
@@ -364,12 +538,41 @@ Tests that require live cloud credentials. Manual execution only.
 - To be migrated
 
 **Notes:**
-- Admin console: `http://localhost:8081` (admin/admin)
+- Admin console: `http://127.0.0.1:8081` (admin/admin)
 - Realm auto-imported on startup from `keycloak-config/integration-test-realm.json`
 - See [KEYCLOAK-TESTING.md](containers/testing/KEYCLOAK-TESTING.md) for detailed testing guide
-- Token endpoint: `http://localhost:8081/realms/integration-test/protocol/openid-connect/token`
+- Token endpoint: `http://127.0.0.1:8081/realms/integration-test/protocol/openid-connect/token`
 
 ---
+
+## Host, port and extra parameters
+
+These parameters are in `src/.runsettings` beside the URL and connection-string parameters above. Tests that need only a host and a port read these; every host port can be overridden with `TEST_PORT_<NAME>` (see `containers/testing/README.md`).
+
+| Variable | Default | Used for |
+|----------|---------|----------|
+| `TIKA_HOST`, `TIKA_PORT` | `127.0.0.1`, `9998` | Apache Tika |
+| `SBERT_HOST`, `SBERT_PORT` | `127.0.0.1`, `5080` | SBert embeddings |
+| `REDIS_HOST`, `REDIS_PORT` | `127.0.0.1`, `6379` | Redis |
+| `QDRANT_HOST`, `QDRANT_PORT` | `127.0.0.1`, `6333` | Qdrant |
+| `OPENSEARCH_HOST`, `OPENSEARCH_PORT`, `OPENSEARCH_USE_HTTPS` | `127.0.0.1`, `9200`, `true` | OpenSearch |
+| `OPENSEARCH_DASHBOARDS_URL`, `OPENSEARCH_DASHBOARDS_HOST`, `OPENSEARCH_DASHBOARDS_PORT` | `http://127.0.0.1:5601`, `127.0.0.1`, `5601` | OpenSearch Dashboards |
+| `SQLSERVER_HOST`, `SQLSERVER_PORT`, `SQLSERVER_USERNAME`, `SQLSERVER_PASSWORD` | `127.0.0.1`, `1433`, `sa`, test password | SQL Server |
+| `MONGODB_DATABASE_NAME` | `integration_tests` | MongoDB database for tests |
+| `RABBITMQ_AMQP_PORT`, `RABBITMQ_MANAGEMENT_PORT`, `RABBITMQ_USERNAME`, `RABBITMQ_PASSWORD`, `RABBITMQ_CONNECTION_STRING` | `5673`, `15672`, `guest`, `guest`, `amqp://guest:guest@127.0.0.1:5673/` | RabbitMQ AMQP and management |
+| `RABBITMQ_STOMP_PORT`, `RABBITMQ_AMQPS_PORT`, `RABBITMQ_STOMP_TLS_PORT` | `21613`, `5671`, `21614` | DevTerm broker tests (STOMP, TLS) |
+| `MOSQUITTO_HOST`, `MOSQUITTO_PORT` | `127.0.0.1`, `1883` | MQTT broker for DevTerm tests |
+| `SER2NET_HOST`, `SER2NET_PORT` | `127.0.0.1`, `2217` | RFC 2217 serial server |
+| `LOOPBACK_DEVICE_HOST`, `LOOPBACK_DEVICE_PORT` | `127.0.0.1`, `7778` | Loopback device peer |
+| `AZURITE_BLOB_SERVICE_URL`, `AZURITE_CONNECTION_STRING` | development storage account | Azurite blob service and connection string |
+| `MOTO_HOST`, `MOTO_PORT` | `127.0.0.1`, `4566` | Moto AWS emulator |
+| `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` | `us-east-1`, `test`, `test` | Test credentials for Moto |
+| `SQS_ENDPOINT`, `SQS_TEST_QUEUE` | `http://127.0.0.1:4566`, `integration-test-queue` | SQS tests |
+| `SERVICEBUS_HOST`, `SERVICEBUS_PORT` | `127.0.0.1`, `5672` | Service Bus emulator |
+| `SMTP_URL` | `http://127.0.0.1:7777` | SMTP4Dev web API |
+| `NGINX_URL`, `NGINX_HOST`, `NGINX_PORT` | `http://127.0.0.1:8080` | Test web server |
+| `DOCKER_NETWORK`, `DOCKER_COMPOSE_FILE` | `oobd-integration-test-net`, `docker-compose.integration-tests.yml` | Stack scripts |
+| `TestConfig_*`, `TestConfig:*`, `TestConfig__*` | sample values | Fixtures for the `TestContext` configuration provider tests; no service behind them |
 
 ## LiveIntegration Test Variables
 
@@ -385,6 +588,15 @@ Tests that require live cloud credentials. Manual execution only.
 
 **Tests Using:**
 - `OoBDev.GroqCloud.Tests` (manual execution only, `LiveIntegration`)
+
+### Azure AI Search (vector store)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `AZURE_SEARCH_ENDPOINT` | *(none)* | Service URL; environment variable also read |
+| `AZURE_SEARCH_API_KEY` | *(none)* | Admin key |
+
+**Tests Using:** `OoBDev.Microsoft.Azure.AISearch.Tests` (`LiveIntegration`, inconclusive when unset)
 
 **Setup:**
 1. Create Groq account at https://groq.com
@@ -402,50 +614,48 @@ Tests that require live cloud credentials. Manual execution only.
 <RunSettings>
   <TestRunParameters>
     <!-- Apache Tika -->
-    <Parameter name="TIKA_URL" value="http://localhost:9998" />
+    <Parameter name="TIKA_URL" value="http://127.0.0.1:9998" />
 
     <!-- SMTP/IMAP -->
-    <Parameter name="SMTP_HOST" value="localhost" />
+    <Parameter name="SMTP_HOST" value="127.0.0.1" />
     <Parameter name="SMTP_PORT" value="25" />
-    <Parameter name="IMAP_HOST" value="localhost" />
+    <Parameter name="IMAP_HOST" value="127.0.0.1" />
     <Parameter name="IMAP_PORT" value="143" />
 
     <!-- MongoDB -->
-    <Parameter name="MONGODB_CONNECTION_STRING" value="mongodb://localhost:27017?collation={locale:'en_US',caseLevel:false,strength:2 }" />
+    <Parameter name="MONGODB_CONNECTION_STRING" value="mongodb://127.0.0.1:27017?collation={locale:'en_US',caseLevel:false,strength:2 }" />
 
     <!-- SQL Server -->
-    <Parameter name="SQL_CONNECTION_STRING" value="Server=localhost,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=True" />
+    <Parameter name="SQLSERVER_CONNECTION_STRING" value="Server=127.0.0.1,1433;User Id=sa;Password=IntegrationTest123!;TrustServerCertificate=True" />
 
     <!-- RabbitMQ -->
-    <Parameter name="RABBITMQ_HOST" value="localhost" />
+    <Parameter name="RABBITMQ_HOST" value="127.0.0.1" />
     <Parameter name="RABBITMQ_PORT" value="5673" />
 
     <!-- OpenSearch -->
-    <Parameter name="OPENSEARCH_URL" value="http://localhost:9200" />
+    <Parameter name="OPENSEARCH_URL" value="http://127.0.0.1:9200" />
     <Parameter name="OPENSEARCH_USERNAME" value="admin" />
     <Parameter name="OPENSEARCH_PASSWORD" value="admin" />
 
     <!-- SBert -->
-    <Parameter name="SBERT_URL" value="http://localhost:5080" />
+    <Parameter name="SBERT_URL" value="http://127.0.0.1:5080" />
 
     <!-- Qdrant -->
-    <Parameter name="QDRANT_URL" value="http://localhost:6333" />
-    <Parameter name="QDRANT_GRPC_URL" value="http://localhost:6334" />
+    <Parameter name="QDRANT_URL" value="http://127.0.0.1:6333" />
 
     <!-- Azurite -->
-    <Parameter name="AZURITE_BLOB_URL" value="http://localhost:10000" />
-    <Parameter name="AZURITE_QUEUE_URL" value="http://localhost:10001" />
-    <Parameter name="AZURITE_TABLE_URL" value="http://localhost:10002" />
+    <Parameter name="AZURITE_URL" value="http://127.0.0.1:10000" />
 
     <!-- Moto -->
-    <Parameter name="MOTO_URL" value="http://localhost:4566" />
+    <Parameter name="MOTO_URL" value="http://127.0.0.1:4566" />
 
     <!-- Keycloak -->
-    <Parameter name="KEYCLOAK_URL" value="http://localhost:8081" />
+    <Parameter name="KEYCLOAK_URL" value="http://127.0.0.1:8081" />
 
-    <!-- OpenTelemetry (Grafana LGTM) -->
-    <Parameter name="OTEL_EXPORTER_OTLP_ENDPOINT" value="http://localhost:4318" />
-    <Parameter name="OTEL_GRAFANA_URL" value="http://localhost:3000" />
+    <!-- OpenTelemetry (Aspire dashboard) -->
+    <Parameter name="OTEL_EXPORTER_OTLP_ENDPOINT" value="http://127.0.0.1:4318" />
+    <Parameter name="OTEL_DASHBOARD_URL" value="http://127.0.0.1:18888" />
+    <Parameter name="OTEL_DASHBOARD_API_KEY" value="oobdev-test-key" />
 
     <!-- Groq Cloud (LiveIntegration) -->
     <Parameter name="GROQ_API_KEY" value="your-api-key" />
@@ -494,7 +704,7 @@ public async Task MyIntegrationTest()
     var port = TestContext.GetPropertyOrDefault("SERVICE_PORT", 8080);
 
     // ❌ WRONG: Don't use Environment.GetEnvironmentVariable()
-    // var url = Environment.GetEnvironmentVariable("SERVICE_URL") ?? "http://localhost:8080";
+    // var url = Environment.GetEnvironmentVariable("SERVICE_URL") ?? "http://127.0.0.1:8080";
 
     // Your test logic...
 }
@@ -536,7 +746,7 @@ See `/containers/testing/README.md` for detailed Docker infrastructure documenta
 - [Docker Infrastructure](./containers/testing/README.md) - Docker setup and usage
 - [Test Categories](./src/Framework/OoBDev.TestUtilities/TestCategories.cs) - Test category definitions
 - [.runsettings](./src/.runsettings) - Default test run configuration
-- [Integration Test Protocol](./src/.claude/protocols/software/integration-test-maintenance.md) - Maintenance checklist
+- [Add-integration-service skill](./.claude/skills/add-integration-service/SKILL.md) - Maintenance checklist
 
 ---
 
@@ -545,3 +755,9 @@ See `/containers/testing/README.md` for detailed Docker infrastructure documenta
 - New test properties are introduced
 - Docker services are added/modified
 - Default values change
+
+### RAW development (DevLocal)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `RAW_TEST_FILE` | empty | Path of a camera RAW file for the `OoBDev.ImageMagick.Tests` DevLocal test; the test is inconclusive when unset |

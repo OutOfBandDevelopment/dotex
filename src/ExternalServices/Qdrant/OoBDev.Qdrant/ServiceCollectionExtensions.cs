@@ -35,6 +35,7 @@ public static class ServiceCollectionExtensions
 
         services.AddTransient<IVectorStoreProviderFactory, QdrantVectorStoreProviderFactory>();
 
+        services.AddTransient<IVectorStoreCollectionCatalog, QdrantVectorStoreCollectionCatalog>();
         services.TryAddTransient<IPointStructFactory, PointStructFactory>();
 
         return services;

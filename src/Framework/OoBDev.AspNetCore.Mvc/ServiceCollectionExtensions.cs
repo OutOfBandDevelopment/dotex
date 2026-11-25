@@ -1,12 +1,17 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication;
+using OoBDev.AspNetCore.Mvc.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.OpenApi;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using OoBDev.AspNetCore.Authorization;
 using OoBDev.AspNetCore.Mvc.Authorization;
+using OoBDev.System;
 using OoBDev.AspNetCore.Mvc.Filters;
 using OoBDev.AspNetCore.Mvc.Middleware;
 using OoBDev.AspNetCore.Mvc.Providers.SearchQuery;
@@ -16,6 +21,7 @@ using OoBDev.System.Linq.Search;
 using OoBDev.System.Net.Http;
 using OoBDev.System.Security;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Security.Claims;
@@ -47,6 +53,7 @@ public static class ServiceCollectionExtensions
         builder ??= new();
 
         services.AddHealthChecks();
+        services.TryAddSingleton<HealthCheckPath>();
 
         services.TryAddCommonOpenApiExtensions();
         services.TryAddAspNetCoreSearchQuery();
@@ -81,7 +88,7 @@ public static class ServiceCollectionExtensions
         if (builder.RequireAuthenticatedByDefault)
         {
             services.AddRequireAuthenticatedUser(
-                builder.RequireApplicationUserId,
+                builder.ApplicationUserIdClaim,
                 builder.AuthorizationPolicyBuilder
                 );
         }
@@ -90,19 +97,95 @@ public static class ServiceCollectionExtensions
     }
 
     /// <summary>
+    /// Adds the options of <see cref="Middleware.CultureInfoMiddleware"/> (<c>OoBDev:Culture</c>: <c>DefaultCulture</c>, <c>SupportedCultures</c>).
+    /// Without them the middleware accepts any valid culture and keeps the process culture for a request that names none.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configuration">The configuration holding the <c>OoBDev:Culture</c> section.</param>
+    /// <returns>The modified service collection.</returns>
+    public static IServiceCollection TryAddCultureNegotiation(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddValidatedOptions<Middleware.CultureInfoMiddlewareOptions>(configuration, "OoBDev:Culture");
+        return services;
+    }
+
+    /// <summary>
+    /// Adds <see cref="ProblemDetailsExceptionHandler"/> and its options (<c>OoBDev:ProblemDetails</c>: <c>IncludeErrorLocation</c>).
+    /// Pair with <see cref="ApplicationBuilderExtensions.UseProblemDetailsExceptionHandler"/>.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configuration">The configuration holding the <c>OoBDev:ProblemDetails</c> section.</param>
+    /// <returns>The modified service collection.</returns>
+    public static IServiceCollection TryAddProblemDetailsExceptionHandler(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddValidatedOptions<ProblemDetailsExceptionHandlerOptions>(configuration, "OoBDev:ProblemDetails");
+        services.AddProblemDetails();
+        services.AddExceptionHandler<ProblemDetailsExceptionHandler>();
+        return services;
+    }
+
+    /// <summary>
+    /// Adds role to application right mapping: validated options (<c>OoBDev:Authorization</c>), the configuration mapper,
+    /// the claims transformation and the shared right checker.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="configuration">The configuration holding the <c>OoBDev:Authorization</c> section.</param>
+    /// <returns>The modified service collection.</returns>
+    public static IServiceCollection TryAddRoleRightMapping(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddValidatedOptions<RoleRightOptions>(configuration, "OoBDev:Authorization");
+        services.TryAddSingleton<IRoleRightMapper, ConfigurationRoleRightMapper>();
+        services.TryAddSingleton<IApplicationRightChecker, ApplicationRightChecker>();
+        // AddAuthentication registers a no-op transformation with TryAdd, so when it ran first our TryAdd would be skipped and no role would ever become a right.
+        foreach (var noop in services.Where(d => d.ServiceType == typeof(IClaimsTransformation) && d.ImplementationType?.Name == "NoopClaimsTransformation").ToArray())
+        {
+            services.Remove(noop);
+        }
+
+        services.TryAddTransient<IClaimsTransformation, RoleRightClaimsTransformation>();
+        return services;
+    }
+
+    /// <summary>
+    /// Writes one log entry per application right check (subject, required rights, outcome) by wrapping the registered
+    /// <see cref="IApplicationRightChecker"/>. Call it after the checker is registered.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <returns>The modified service collection.</returns>
+    public static IServiceCollection AddRightAuditLog(this IServiceCollection services)
+    {
+        var existing = services.LastOrDefault(d => d.ServiceType == typeof(IApplicationRightChecker))
+            ?? throw new InvalidOperationException("Register an IApplicationRightChecker (for example with TryAddRoleRightMapping) before AddRightAuditLog.");
+        services.Remove(existing);
+        services.Add(ServiceDescriptor.Describe(typeof(AuditedInner), sp => new AuditedInner(CreateInner(sp, existing)), existing.Lifetime));
+        services.Add(ServiceDescriptor.Describe(
+            typeof(IApplicationRightChecker),
+            sp => new AuditingApplicationRightChecker(sp.GetRequiredService<AuditedInner>().Checker, sp.GetRequiredService<Microsoft.Extensions.Logging.ILogger<AuditingApplicationRightChecker>>(), sp.GetService<IRightAuditSink>(), sp.GetService<TimeProvider>()),
+            existing.Lifetime));
+        return services;
+    }
+
+    private sealed record AuditedInner(IApplicationRightChecker Checker);
+
+    private static IApplicationRightChecker CreateInner(IServiceProvider sp, ServiceDescriptor descriptor) =>
+        descriptor.ImplementationInstance as IApplicationRightChecker
+        ?? (descriptor.ImplementationFactory?.Invoke(sp) as IApplicationRightChecker)
+        ?? (IApplicationRightChecker)ActivatorUtilities.CreateInstance(sp, descriptor.ImplementationType!);
+
+    /// <summary>
     /// Adds authentication requirements to the service collection.
     /// </summary>
     /// <param name="services">The service collection to which authentication requirements should be added.</param>
-    /// <param name="requireApplicationUserId">Indicates whether the application user ID is required.</param>
+    /// <param name="applicationUserIdClaim">The claim that carries the application user ID; <c>null</c> turns the requirement off.</param>
     /// <param name="authorizationPolicyBuilder">Action to configure the authorization policy builder.</param>
     /// <returns>The modified service collection.</returns>
     public static IServiceCollection AddRequireAuthenticatedUser(
         this IServiceCollection services,
 #if DEBUG
-        bool requireApplicationUserId,
+        string? applicationUserIdClaim,
         Action<AuthorizationPolicyBuilder>? authorizationPolicyBuilder
 #else
-        bool requireApplicationUserId = true, //TODO: fix this too
+        string? applicationUserIdClaim = CommonClaims.UserId,
         Action<AuthorizationPolicyBuilder>? authorizationPolicyBuilder = null
 #endif
     )
@@ -113,7 +196,7 @@ public static class ServiceCollectionExtensions
         // Policy builder
         var policyBuilder = new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
-                .AddRequirements(new UserAuthorizationRequirement(requireApplicationUserId));
+                .AddRequirements(new UserAuthorizationRequirement(applicationUserIdClaim));
         authorizationPolicyBuilder?.Invoke(policyBuilder);
 
         var authorizationPolicy = policyBuilder.Build();

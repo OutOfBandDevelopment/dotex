@@ -389,3 +389,8 @@ FodyWeavers.xsd
 .scratchpad/
 # Live (cloud) integration test settings and credentials
 .env.liveintegration
+
+containers/example/.env
+
+# Autonomous mode flag
+.claude/autonomous.on

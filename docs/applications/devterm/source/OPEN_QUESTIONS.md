@@ -1,0 +1,103 @@
+# Open questions
+
+Every genuinely undecided question across `docs/design/`, `docs/specs/`, `TODO.md`, `BACKLOG.md` and `docs/bugs/`,
+collected in one place so none gets lost in a doc nobody is reading. **Last swept: 2026-10-09** (proposals, TODO and BACKLOG re-checked against the code and `docs/changes/`; two lines added for open questions that had no pointer here, and the ES51919 and web-versus-pipe questions struck in their proposals as decided; the design-doc, feature and spec sections are unchanged since the 2026-10-03 full sweep; `docs/bugs/` has no open reports).
+
+How this file works (see CLAUDE.md "Documentation" and the `docs-sync` / `work-docs-audit` skills):
+
+- The **source doc stays the home of the full reasoning**; this file holds a one-line pointer to it, grouped by what is
+  needed to answer it. Don't copy the analysis here.
+- A question is **answered** by editing the source doc (strike it through, say what was decided and when), then
+  **deleting its line here in the same change**. Resolved questions are not kept here; the decision lives in the source
+  doc and `docs/changes/`.
+- A **new** open question added to any doc gets a line here in the same change.
+- Questions that are really tasks ("needs a capture") belong in `TODO.md`/`BACKLOG.md`; they are listed here only when
+  the *answer* changes a design decision.
+
+## Needs your decision
+
+Choices only the project owner can make (scope, direction, priorities).
+
+- **Next interview round (added 2026-10-08):**
+  - Which hardware can be put on the bench next (DE-5000, an MQTT broker or device, the E810, the BT-UP01), and in what order? — [TODO.md](TODO.md) "Manual review"
+
+## Needs hardware or a capture
+
+Blocked on a real device or a deliberate packet capture; the TODO "Manual review" list tracks the bench side.
+
+- [Z-Wave network-management bytes unverified](../../../design/ZWave/z-wave-support.md): learn/reset/neighbor-update/remove-failed payloads are unit-tested only (switch, enumerate, add and remove are verified); run them on the Z-Stick with a reachable node.
+
+- **DE-5000:** the BLE adapter's GATT profile (Nordic UART or custom); live-check the DE-5000, K8055 and Zoom H4n
+  `.ksy` layouts. — [de5000](../../../protocols/de5000-lcr-meter-protocol.md), TODO Manual review #1
+- **EByte E810-DTU:** why `FD01` appears instead of `FD00`; what the "short link switch" byte and trailing 6-byte block
+  are; whether RS-422 variants share the format; confirm the corrected 203-byte layout with a fresh capture. Read-only
+  support first. — [ebyte-e810-dtu-config-protocol](../../../protocols/ebyte-e810-dtu-config-protocol.md)
+- **USR-TCP232-302 configuration channel** (setup protocol versus HTTP page) and the **USR UDP search packet**. —
+  [network-device-config-editors](../../../design/NetworkDevices/network-device-config-editors.md),
+  [network-device-discovery](../../../design/NetworkDevices/network-device-discovery.md)
+- **Which discovery probes answer on the bench:** mDNS, SSDP, EByte broadcast, USR search; subnet choice with several adapters. —
+  [network-device-discovery](../../../design/NetworkDevices/network-device-discovery.md)
+- **BYTECC BT-UP01:** does vendor software still run; does it speak standard `usbip`; what is on the wire; is a
+  URB-tunnel USB transport a new kind of thing rather than an `ITransport`? —
+  [bytecc-bt-up01](../../../protocols/bytecc-bt-up01-usb-network-bridge.md)
+- **Kuando Busylight:** jump/Repeat semantics and the footer bytes (a single-step batch works with opcode `0x10`, and the user reports a multi-step sequence working, 2026-10-03, with no bytes recorded); on/off time units (100 ms, user-observed 2026-10-03, untimed); meaning of the
+  poll reply's two strings. — [kuando-busylight-protocol](../../../protocols/kuando-busylight-protocol.md)
+- **K8055:** units of the two trailing Set bytes; I3 to I5 bit mapping; why the DAC-to-ADC loop reads about
+  0.16 of the sent value; PID mask support in `HidTransportOptions`. —
+  [velleman-k8055-protocol](../../../protocols/velleman-k8055-protocol.md)
+- **NMEA/Earthmate BT-20:** exact HID report framing (decoder strips NULs defensively); gate serial/TCP receivers? —
+  [nmea-gps-protocol](../../../protocols/nmea-gps-protocol.md)
+- **Radex One:** reserved bytes in the Read Serial/Version reply; generic repeat-3x command mode; polled "live"
+  Read Data. — [radex-one-protocol](../../../protocols/radex-one-protocol.md)
+- **Tektronix 2230:** whether remote setting is possible at all; whether a full
+  command reference exists. The 2230 HP-GL fix is also unverified on hardware (a plot must be started on the scope). —
+  [tektronix-2230-protocol](../../../protocols/tektronix-2230-protocol.md)
+- **Zoom H4n:** encode per-mode LED blink timing; one shared decoder for the H2n/H4n family? —
+  [zoom-h4n-remote-protocol](../../../protocols/zoom-h4n-remote-protocol.md)
+- **USBTMC:** do the DG1022/DS1102E need a Zadig swap; is USB488 SRQ/serial-poll worth building; does the Zadig step
+  belong in `docs/user-guide/`; GPIB is out of scope. —
+  [usbtmc-transport](../../../design/Transports/usbtmc-transport.md)
+- **Stream Monitor against real hardware:** the DG1062Z BMP and the TDS2024 `HARDCopy` BMP both work in the Stream Monitor (user-reported 2026-10-03; the DG1062Z over LXI). The DG1062Z USB/USBTMC capture also works (Claude, 2026-10-03; Stream Monitor over USB not run). —
+  [stream-monitor spec](../../../applications/devterm/specs/stream-monitor.md)
+- **Capture correlation:** a detected-but-unsolicited stream, and queueing within one device. —
+  [stream-content-detection](../../../design/StreamTools/stream-content-detection.md)
+
+## Design questions (architecture, schema, model)
+
+Answerable by thinking and a prototype; no owner decision or hardware needed.
+
+
+- **Out-of-process plugins:** JSON-with-hex for bulk streams. — [out-of-process-plugins](../../../design/Plugins/out-of-process-plugins.md)
+
+- **Presenters:** shared drawing/canvas/plot models;
+  one mapping-file format; where mappings live. —
+  [presenters](../../../design/Presenters/presenters.md)
+- **Control modules:** a general Kaitai-backed binary response schema. —
+  [device-control-modules](../../../design/UiDefinitions/device-control-modules.md),
+  [stream-content-detection](../../../design/StreamTools/stream-content-detection.md)
+- **UI definitions:** nested `Sections`;
+  `VisibleWhen` in the panel renderers. —
+  [ui-definitions](../../../design/UiDefinitions/ui-definitions.md)
+- **Format schemas:** confirm the
+  polymorphic `UiControl` `oneOf` export. — [format-schema-files](../../../design/UiDefinitions/format-schema-files.md)
+- **Transports:** the BLE adapter contract before a second OS backend. — [transports](../../../design/Transports/transports.md)
+- **Session logging:** the `IPresenter` snapshot/restore contract the checkpoints need. —
+  [session-logging](../../../design/SessionLogging/session-logging.md), [playback-window spec](../../../applications/devterm/specs/playback-window.md)
+- **Theming:** color the TUI Connection Editor's "(not found)" hints. — [theming](../../../design/Theming/theming.md)
+
+## Known gaps in shipped screens
+
+"Open items" from `docs/specs/`; each is a missing capability, not a contested decision.
+
+- **Control panel:** chart sizes are fixed. —
+  [device-control-panel](../../../applications/devterm/specs/device-control-panel.md)
+- **Expression picker:** no picking inside a channel segment or a button's parameter fields; no operators/regex
+  helpers or CEL-style extension. — [expression-picker](../../../applications/devterm/specs/expression-picker.md)
+- **Manifest editor:** `.xml` panel forms and binary `.ksy` layouts are not editable. —
+  [manifest-editor](../../../applications/devterm/specs/manifest-editor.md)
+- **Stream Monitor:** no `--presenter` selection. — [stream-monitor](../../../applications/devterm/specs/stream-monitor.md)
+- **Theme builder:** no manual-use verification pass. — [theme-builder](../../../applications/devterm/specs/theme-builder.md)
+
+## Open bugs
+
+None. `docs/bugs/` holds only open work and is currently empty (see [docs/bugs/README.md](../../../applications/devterm/bugs/README.md)).

@@ -1,0 +1,12 @@
+<Window x:Class="DevTermApp.MergedLogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Merged log" Width="640" Height="400" WindowStartupLocation="CenterOwner">
+    <DockPanel Margin="8">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
+            <Button Content="Clear" Command="{Binding Clear}" Padding="8,2" />
+            <Button Content="Close" IsCancel="True" Margin="4,0" Padding="8,2" />
+        </StackPanel>
+        <ListBox AutomationProperties.Name="Merged log lines" ItemsSource="{Binding Lines}" FontFamily="Consolas" />
+    </DockPanel>
+</Window>

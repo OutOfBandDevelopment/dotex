@@ -1,326 +1,128 @@
-# Migration Documentation
+# Migration plan
 
-**Last Updated:** 2026-01-12
+**Last Updated:** 2026-11-25
 
----
+One plan for what is still to bring into this framework from other repositories, organised by feature, not by source. Migrated and documented features are not listed: they live in their project readmes (`README.{Project}.md`), feature designs ([docs/design](../design/README.md)) and change documents ([docs/changes](../changes/README.md)). Open work is tracked in [BACKLOG.md](../../BACKLOG.md) and [TODO.md](../../TODO.md). The per-source notes were folded into this file on 2026-11-10 (`git log -- docs/migration` has them).
 
-## Overview
+## Contents
 
-This directory contains migration plans and feature mappings for integrating code from legacy repositories into the OoBDev (dotex) framework.
-
----
+- [Rules](#rules)
+- [Sources](#sources)
+- [Devices](#devices)
+- [Transports, DevTerm and plugins](#transports-devterm-and-plugins)
+- [SharedFramework epics](#sharedframework-epics)
+- [Harvest candidates](#harvest-candidates)
+- [Rejected, with reasons](#rejected-with-reasons)
+- [Decisions](#decisions)
 
-## Active Migrations
-
-### BinaryDataDecoders Migration
-
-**Status:** Planning Complete
-**Priority:** HIGH
-**Documents:**
-- [Feature Mapping](./binarydatadecoders-feature-mapping.md) - Comprehensive feature-by-feature comparison
-- [Migration Plan](./binarydatadecoders-migration-plan.md) - Detailed actionable migration steps
-
-**Quick Summary:**
+### List of Tables
 
-**Source:** `Incomming/BinaryDecoders` (41 projects, ~800 C# files)
-
-**Key Features to Migrate:**
-1. **CRITICAL (Phase 0):** 5 bug fixes in existing OoBDev code
-2. **HIGH (Phase 1):** Foundation utilities (endianness, BCD, collections)
-3. **HIGH (Phase 2):** CodeAnalysis (Roslyn XPath), ExpressionCalculator, Archives
-4. **MEDIUM (Phase 3):** NMEA GPS protocol, Drawing (selective)
-5. **LOW (Phase 4):** Specialized features (FileSystems, Cryptography, Apple II)
+1. [Table 1 — Sources](#table-1)
+2. [Table 2 — Device work left](#table-2)
+3. [Table 3 — Transports, DevTerm and plugins](#table-3)
+4. [Table 4 — SharedFramework epics](#table-4)
+5. [Table 5 — Harvest candidates](#table-5)
+6. [Table 6 — Rejections](#table-6)
 
-**Critical Bugs Identified:**
-- BUG-001: PathEx lambda bug (HIGH) - Wildcard matching broken
-- BUG-002: StreamDevice nullable annotations (MEDIUM)
-- BUG-003: StreamDevice event typo (MEDIUM)
-- BUG-004: SerialPortFactory verbose ternary (LOW)
-- BUG-005: ShiftCommutativeVariablesRight stub (CRITICAL) - Expression normalization broken
+## Rules
 
-**Migration Status by Feature:**
-
-| Feature | Status | Priority | Action |
-|---------|--------|----------|--------|
-| Bug Fixes (5) | UPDATE | CRITICAL | Fix immediately |
-| ToolKit Foundation | UPDATE | CRITICAL | Merge into OoBDev.System |
-| CodeAnalysis | NEW | HIGH | Create OoBDev.CodeAnalysis |
-| ExpressionCalculator | UPDATE | CRITICAL | Fix broken optimizer |
-| Archives (TAR/ZIP) | UPDATE | MEDIUM | Create OoBDev.Archives |
-| NMEA GPS | NEW | MEDIUM | Create OoBDev.Protocols.Nmea |
-| Drawing/Barcodes | NEW | MEDIUM | Evaluate need, modernize |
-| Network Utils | EXISTS | LOW | Keep OoBDev |
-| FileSystems (ISO) | NEW | LOW | Migrate (Phase 4) |
-| Cryptography (Classic) | NEW | LOW | Migrate (Phase 4, educational) |
-| Apple II | NEW | VERY LOW | Migrate (Phase 4) |
-| Hardware (8 devices) | NEW | VERY LOW | Migrate (Phase 4) |
-| WinForms UI | NEW | LOW | Migrate (Phase 4/5) |
-| CLI Tools (4 tools) | MIXED | LOW | Migrate/Merge (Phase 4/5) |
-
-**Migration Scope:** ALL features will be migrated. Phases indicate priority order, not feature selection.
-
----
-
-## Migration Phases
-
-### Phase 0: Critical Bug Fixes (IMMEDIATE)
-**Blocking:** All other phases
-**Effort:** Small
-
-Tasks:
-1. Fix PathEx lambda bug
-2. Fix StreamDevice nullable annotations
-3. Fix StreamDevice event typo
-4. Fix SerialPortFactory verbose ternary
-5. Replace ShiftCommutativeVariablesRight stub
+- Everything migrates except stubs with no implementation, obsolete platforms (Silverlight, UWP, Compact Framework) and code with no net10.0 equivalent (`CLAUDE.md`, Migration Scope). Phases are priority order, not selection.
+- Best coverage (`owner-decisions`): compare every source and use the best-covered, tested implementation as the base; merge what the others add. A rejection carries its reason ([Table 6](#table-6)).
+- Surroundings migrate too (guides, agent configuration, docs, scripts, plans). The dev-term and BinaryDataDecoders surroundings are migrated or rejected.
+- A layering change needs a confirmed plan first (rule `layering-and-migration-plans`). Copies of code inside this repository may be deleted once migrated; older repositories stay untouched (owner, 2026-11-09).
 
-**Completion Criteria:**
-- All bugs fixed
-- All tests pass
-- No warnings
+## Sources
 
----
-
-### Phase 1: Foundation Enhancement
-**Dependencies:** Phase 0
-**Effort:** Medium
-
-Tasks:
-1. Migrate endianness types (BigEndianInt32, etc.)
-2. Migrate FormattableNumber<T>
-3. Migrate BCD converter
-4. Migrate collections (DoubleLinkedList, ObservableDictionary)
-5. Migrate threading utilities
-
-**Completion Criteria:**
-- All utilities merged into OoBDev.System
-- 90%+ test coverage
-- Documentation complete
-
----
-
-### Phase 2: High-Value Features
-**Dependencies:** Phase 0
-**Effort:** Large
+<a id="table-1"></a>**Table 1 — Sources**
 
-Tasks:
-1. Migrate CodeAnalysis (Roslyn XPath navigation)
-2. Complete ExpressionCalculator migration
-3. Migrate Archives support (TAR/ZIP)
-
-**Completion Criteria:**
-- New Framework projects created
-- Provider/factory pattern implemented
-- 80%+ test coverage
-- Full documentation
-
----
-
-### Phase 3: Protocols & Extensions
-**Dependencies:** Phase 0
-**Effort:** Medium
-
-Tasks:
-1. Migrate NMEA GPS protocol decoder
-2. Evaluate and migrate Drawing features (selective)
-
-**Completion Criteria:**
-- NMEA protocol operational
-- Drawing uses modern library (SkiaSharp/ImageSharp)
-- Tests comprehensive
-
----
+| Source | Location | State |
+|--------|----------|-------|
+| BinaryDataDecoders | The repository is no longer on disk (the old `Incoming/BinaryDecoders` subset copy was removed 2026-11-10) | Migrated and checked: libraries, tools and eight devices; what is left is the hardware work in [Table 2](#table-2) |
+| dev-term | `C:\repo\oobdev\dev-term` at `8c66e74` | Base for devices; shells and transports in progress ([parity status](../design/DevTermParity/status.md)) |
+| SharedFramework | (removed from `Incoming/`; history in `git log`) | Replaced by designs ([Table 4](#table-4)) |
+| proving-grounds, learning repositories, `_storage`, notes | `C:\repo\mine`, `C:\repo\oobdev` | Read-only references ([Table 5](#table-5)) |
 
-### Phase 4: Specialized Domain Features
-**Dependencies:** Phase 0
-**Effort:** Medium
 
-Tasks:
-1. Migrate FileSystems (ISO 9660)
-2. Migrate Classic Cryptography (with security warnings)
-3. Migrate Apple II support
-4. Migrate Hardware devices (8 devices)
-5. Migrate Windows Forms components
-6. Migrate/Merge CLI Tools (4 tools)
-
-**Completion Criteria:**
-- ALL specialized features migrated
-- Packaged separately for specialized audiences
-- Clear documentation on use cases
-- Security warnings where appropriate
+Where two sources hold the same feature, dev-term is newer and tested, so it is the base. Migrated libraries were behaviour-checked by running the source tests against main (2026-11-03).
 
----
+## Devices
 
-### Phase 5: Cleanup & Documentation
-**Dependencies:** Phases 0-4
-**Effort:** Small
-
-Tasks:
-1. Update cross-references
-2. Create migration guide
-3. Archive BinaryDataDecoders repository
-4. Update CHANGELOG
-5. Tag release
-
-**Completion Criteria:**
-- All documentation updated
-- Migration guide complete
-- Release tagged
-
----
-
-## Architectural Compliance
-
-All migrations MUST follow OoBDev architectural patterns from `/docs/architecture`:
-
-**Layer Placement:**
-- **Framework:** CodeAnalysis, Archives, Protocols, core utilities
-- **Extensions:** Drawing, FileSystems, specialized features
-- **ExternalServices:** Roslyn wrappers (CSharp, VisualBasic)
-
-**Required Patterns:**
-- Provider/Factory for all integrations
-- Dependency Injection via TryAdd* extensions
-- IOptions<T> for configuration
-- Keyed services for multiple implementations
-
-**Testing Standards:**
-- Framework: 80% minimum coverage
-- LINQ/Expression: 90% minimum coverage
-- MSTest framework
-- Test categories: Unit, Simulate
-
-**Documentation Standards:**
-- README.md required (enforced by build)
-- XML documentation on all public APIs
-- Usage examples
-- PlantUML diagrams where appropriate
-
----
-
-## Success Metrics
-
-Migration is complete when:
-
-1. ✅ All critical bugs fixed (Phase 0)
-2. ✅ All HIGH priority features migrated
-3. ✅ Architectural compliance verified
-4. ✅ 80%+ test coverage maintained
-5. ✅ Documentation complete
-6. ✅ No breaking changes to existing APIs
-7. ✅ Build succeeds without warnings
-8. ✅ All tests pass
-9. ✅ NuGet packages generated
-10. ✅ Migration guide published
-
----
-
-## Quick Start for Contributors
-
-### Before Starting Any Migration:
-
-1. **Read Architecture Docs:**
-   - [Architectural Guidelines](../architecture/architectural-guidelines.md)
-   - [Architectural Standards](../architecture/architectural-standards.md)
-   - [Layering Architecture](../architecture/layering-architecture.md)
-
-2. **Review Feature Mapping:**
-   - [BinaryDataDecoders Feature Mapping](./binarydatadecoders-feature-mapping.md)
-
-3. **Follow Migration Plan:**
-   - [BinaryDataDecoders Migration Plan](./binarydatadecoders-migration-plan.md)
-
-4. **Start with Phase 0:**
-   - Fix critical bugs first
-   - All other phases depend on Phase 0
-
-### For Each Feature Migration:
-
-1. Create abstractions project (if new feature)
-2. Implement provider/factory pattern
-3. Add DI registration via TryAdd* extension
-4. Create comprehensive tests (80%+ coverage)
-5. Write README.md and XML documentation
-6. Verify build succeeds
-7. Update migration tracking
-
----
-
-## Migration Tracking
-
-### Phase 0: Critical Bug Fixes
-- [ ] BUG-001: PathEx lambda fix
-- [ ] BUG-002: StreamDevice nullable annotations
-- [ ] BUG-003: StreamDevice event typo
-- [ ] BUG-004: SerialPortFactory simplification
-- [ ] BUG-005: ShiftCommutativeVariablesRight replacement
-
-### Phase 1: Foundation
-- [ ] Endianness types (BigEndianInt32, etc.)
-- [ ] FormattableNumber<T>
-- [ ] BCD converter
-- [ ] DoubleLinkedList<T>
-- [ ] Threading utilities
-
-### Phase 2: High-Value Features
-- [ ] CodeAnalysis.Abstractions
-- [ ] CodeAnalysis implementation
-- [ ] Microsoft.CodeAnalysis.CSharp
-- [ ] Microsoft.CodeAnalysis.VisualBasic
-- [ ] ExpressionCalculator fixes
-- [ ] Archives (TAR)
-- [ ] Archives (ZIP enhancements)
-
-### Phase 3: Protocols
-- [ ] NMEA protocol decoder
-- [ ] Drawing (if needed)
-
-### Phase 4: Specialized
-- [ ] FileSystems (if needed)
-- [ ] Cryptography (if needed)
-
-### Phase 5: Cleanup
-- [ ] Migration guide
-- [ ] CHANGELOG update
-- [ ] BinaryDataDecoders archive
-- [ ] Release tag
-
----
-
-## Related Documentation
-
-### Architecture
-- [Architectural Guidelines](../architecture/architectural-guidelines.md)
-- [Architectural Standards](../architecture/architectural-standards.md)
-- [Architectural Patterns](../architecture/architectural-patterns.md)
-- [Layering Architecture](../architecture/layering-architecture.md)
-
-### Framework Documentation
-- [Major Functionality](../Framework/MajorFunctionality.md)
-- [Message Queueing](../Framework/MessageQueueing.md)
-- [Text Templating](../Framework/TextTemplating.md)
-
-### Migration
-- [Feature Mapping](./binarydatadecoders-feature-mapping.md)
-- [Migration Plan](./binarydatadecoders-migration-plan.md)
-
----
-
-## Support
-
-For questions or issues with migration:
-
-1. Review feature mapping and migration plan
-2. Check architectural documentation
-3. Review existing OoBDev patterns
-4. Document decisions and rationale
-
----
-
-## Change Log
-
-- 2026-01-12 v1.0: Initial migration documentation created
-  - BinaryDataDecoders feature mapping complete
-  - BinaryDataDecoders migration plan complete
-  - Migration phases defined
-  - Tracking checklist created
+Design: [DeviceDecoding](../design/DeviceDecoding/README.md) and its [migration plan](../design/DeviceDecoding/migration-plan.md) (conversion rules, naming, order of work). What is left:
+
+<a id="table-2"></a>**Table 2 — Device work left**
+
+| Item | Needs |
+|------|-------|
+| M3: Radex One serial number and version layout | A recorded reply from the device |
+| M4: Radex One unit scaling (`/100` µSv/h) | A capture; stays a documented hypothesis |
+| M2: K8055 digital input bit order (raw value kept) | A bench pass |
+| M1: Busylight `programSequence` (the frame is sent) | Watching the light cycle |
+| Zoom H4n handshake, NMEA BT-20 | A bench pass |
+| DE-5000 Hardware test | The BLE radio fitted in the meter |
+
+## Transports, DevTerm and plugins
+
+dev-term merges into this repository entirely (owner, 2026-10-28): shells become applications under `src/Applications/DevTerm`, control libraries are generic under `src/Framework`, nothing is back-ported. Slices and status: [DevTermParity](../design/DevTermParity/status.md).
+
+<a id="table-3"></a>**Table 3 — Transports, DevTerm and plugins**
+
+| Feature | Target | Design |
+|---------|--------|--------|
+| Transports not yet in Framework (merge dev-term's RFC 2217 and LXI discovery into `OoBDev.System.IO.Tcp`; VXI-11; BLE backends) | `OoBDev.System.IO.*` | [Transports](../design/Transports/README.md) |
+| Device manifests and `.ksy` frame decoding (phase 8) | `docs/design/UiDefinitions` | [UiDefinitions](../design/UiDefinitions/README.md) |
+| Renderers beyond WPF (Avalonia, Tui, Web) | `OoBDev.UiDefinitions.*` | [UiDefinitions](../design/UiDefinitions/README.md) |
+| Plugins and sandbox; the sandbox layering proposal awaits confirmation | `OoBDev.System.Sandbox*` | [Plugins](../design/Plugins/README.md), [PluginSandbox](../design/PluginSandbox/migration-plan.md) |
+| dev-term future plans (UDP, rendering presenters, discovery and config editors, research items) | one backlog item each | `BACKLOG.md` section 1 |
+
+## SharedFramework epics
+
+Design first (owner, 2026-11-06): none is implemented until a consumer appears. Four documents per feature ([standard](../patterns-discovery/06-design-document-standard.md)); plan in [SharedFramework](../design/SharedFramework/migration-plan.md).
+
+<a id="table-4"></a>**Table 4 — SharedFramework epics**
+
+| Epic | Design | Open |
+|------|--------|------|
+| 2 Communications | [Communications](../design/Communications/README.md) | Code from the design |
+| 6 Documents | [SharedFramework](../design/SharedFramework/README.md) | Code from the design |
+| 7 Identity | [SharedFramework](../design/SharedFramework/README.md) | Claims, rights and sessions from the design |
+| 10 Text templating | [SharedFramework](../design/SharedFramework/README.md) | Container adapter, database template source |
+
+## Harvest candidates
+
+Map: [harvest-candidates.md](../harvest-candidates.md). Nothing is copied without a comparison.
+
+<a id="table-5"></a>**Table 5 — Harvest candidates**
+
+| Source item | Decision |
+|-------------|----------|
+| ScoreMachine and HomeSeer | Libraries and emulators only (D8); applications rejected; the remaining ScoreMachine harvest rejected 2026-11-25 (Table 6) |
+| hybridsearch, BuildFirstOnce, postsql-playground | Compared 2026-11-10: [recommendations](harvest-d7-comparison.md) await the owner (D7); postsql informs `OoBDev.DacFx` |
+| Oobtainium (mocking and proxy framework, about 1,600 lines) | Not migrated; Moq and NSubstitute cover it. Reopen only with a fresh comparison against `proving-grounds/examples/OoBDev.Oobtainium` |
+| `OoBDev.MessageBroker`, `Ssb.Modeling`, `SQL` | Deferred until a Service Broker feature exists |
+| `event-sourcing`, `sync-mesh`, `fohjin-cqrs` | Read-only pattern references; extract knowledge only, see [Table 2](harvest-d7-comparison.md#table-2): a CQRS and event sourcing reference design, an HLC feature request. Ask before copying source |
+| notes: `sqldef-evaluation`, `jws-jwt-from-scratch` | Design inputs for the matching features |
+
+## Rejected, with reasons
+
+<a id="table-6"></a>**Table 6 — Rejections**
+
+| Item | Reason |
+|------|--------|
+| Rigol stub | One file with no implementation; `OoBDev.Scpi` profiles cover SCPI instruments |
+| EByteElectronicTechnology | Tests only, no source anywhere |
+| UWP, Silverlight, Compact Framework, .NET Framework-only code | No net10.0 equivalent |
+| BinaryDataDecoders `Nmea/Notes` (about 5,000 lines of generated WMI classes, a Wiimote P/Invoke sample) | Generated or scratch; HID access is HidSharp here |
+| Busylight `Class1`, K8055 request and response structs, NMEA classes, Radex write-settings request, Zoom H4n request enum | Experiment code, or dev-term decodes the same offsets and codes |
+| `IO.Controller.Cli`, `OoBDev.De5000.Ble.Cli` | Replaced by the DevTerm tools (D6); source bug reports 001, 002 and 004 describe code that is not carried over |
+| `*.Samples` projects, `.rptproj`, `ReportList.yaml`, `build.bat` | Empty, sample-only or old build glue; revisit as examples only on request |
+| `WhitedUS.Libs` compression copies, `_storage` ISO reader | Older ancestor, and smaller than main's |
+| proving-grounds applications, `NeedsReviewed`, `_storage` and `oobdev/containers` applications | Applications, not libraries (compare `containers` when touching the test stack) |
+| dev-term skills `work-docs-audit`, `bug-report`, hook `merge-gate.sh` | Covered by `tracking-hygiene`, the `work-backlog` audit, `BACKLOG.md`, change documents and the commit-time reminder |
+| BinaryDataDecoders badges, `RETIRED.md`, generated `docs/*`, report XSLT templates, GitHub workflows, `act` files | Retired GitHub or regenerated output; covered by `GitVersion.yml`, `OoBDev.Docs.Tests` and manual CI (`scripts/ci`) |
+| dev-term's "consume dotex as NuGet" plan | Superseded by the merge |
+| proving-grounds `examples/OsciRenderClient` (owner, 2026-11-25) | One-off demo client for the osci-render TCP port (wire format never confirmed); the HP-GL and SVG to stereo WAV sink ([request](../features/request/2026-11-10-hpgl-vector-display-sink.md)) replaces its purpose |
+| proving-grounds `examples/OoBDev.ScoreMachine` (owner, 2026-11-25) | A client-specific application; the Favero and Saint George decoders are already migrated as `OoBDev.Fencing.ScoreMachines`, and the rest would only be a specific client example (see the [reference application request](../features/rejected/2026-11-25-reference-domain-application.md): such examples belong in child repositories) |
+
+## Decisions
+
+D1 to D9 were all answered with the recommendation (2026-11-05 and 2026-11-09): diff then delete the incoming copies (done), the best-covered implementation per device as base, one package per device, Fencing migrated untested, ContractParser kept as a specification under `docs/design/ContractParser/`, PackMan and Xslt migrated and the IO controller and De5000 CLIs dropped, deferred harvest items to the backlog, ScoreMachine and HomeSeer libraries only, Vigenère added.

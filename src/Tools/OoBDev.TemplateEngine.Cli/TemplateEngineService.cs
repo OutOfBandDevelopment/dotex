@@ -1,4 +1,5 @@
 using OoBDev.System.Text.Templating;
+using OoBDev.System.Text.Templating.Xslt;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -36,6 +37,13 @@ public partial class TemplateEngineService(
         if (string.IsNullOrWhiteSpace(_settings.Value.OutputFile)) throw new InvalidOperationException($"{nameof(_settings.Value.OutputFile)} is required.");
 #pragma warning restore CA2208 // Instantiate argument exceptions correctly
 
+        if (XsltRun.IsXslt(_settings.Value.Template))
+        {
+            XsltRun.Run(_settings.Value);
+            LogWritten(_settings.Value.OutputFile);
+            return;
+        }
+
         var inputPath = Path.GetFullPath(Path.GetDirectoryName(_settings.Value.InputFile) ?? ".");
         var inputFile = Path.GetFileName(_settings.Value.InputFile);
 
@@ -64,19 +72,19 @@ public partial class TemplateEngineService(
     }
 
     private static string? GetContent(string fileName) => File.Exists(fileName) ? File.ReadAllText(fileName) : null;
-    private static FileTypes? GetFileType(FileTypes? fileTypes, string fileName) =>
+    private static InputTypes? GetFileType(InputTypes? fileTypes, string fileName) =>
        fileTypes ?? Path.GetExtension(fileName)?.ToLowerInvariant() switch
        {
-           ".json" => FileTypes.Json,
-           ".xml" => FileTypes.Xml,
+           ".json" => InputTypes.Json,
+           ".xml" => InputTypes.Xml,
            _ => null
        };
 
-    private static object? GetData(FileTypes type, string content) =>
+    private static object? GetData(InputTypes type, string content) =>
         type switch
         {
-            FileTypes.Json => JsonDocument.Parse(content),
-            FileTypes.Xml => XDocument.Parse(content),
+            InputTypes.Json => JsonDocument.Parse(content),
+            InputTypes.Xml => XDocument.Parse(content),
             _ => null,
         };
 

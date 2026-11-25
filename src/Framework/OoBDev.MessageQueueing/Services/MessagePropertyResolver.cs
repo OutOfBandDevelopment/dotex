@@ -66,7 +66,8 @@ public class MessagePropertyResolver(IConfiguration configuration) : IMessagePro
     public virtual (IConfigurationSection? configurationSection, string simpleTargetName, string simpleMessageName, string? configPath) ConfigurationSafe(Type channelType, Type messageType)
     {
         var (config, simpleTargetName, simpleMessageName, _) = RootConfiguration(channelType, messageType);
-        var selected = config?.GetSection("Config") ?? config;
+        var nested = config?.GetSection("Config");
+        var selected = nested != null && nested.GetChildren().Any() ? nested : config;
         return (selected, simpleTargetName, simpleMessageName, selected?.Path);
     }
 

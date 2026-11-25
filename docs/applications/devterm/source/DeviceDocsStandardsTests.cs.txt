@@ -1,0 +1,72 @@
+using DevTerm.Test.Utilities;
+
+namespace DevTerm.CodingStandards.Tests;
+
+/// <summary>
+/// Enforces the "a user-facing feature needs a docs/specs entry and a docs/user-guide entry" rule from CLAUDE.md for device plugins:
+/// every <c>src/DevTerm.Devices.*</c> project that contributes a control panel must be named in at least one spec and one user guide.
+/// A device plugin that ships without them is otherwise invisible to every other check.
+/// </summary>
+[TestCategory(TestCategories.Unit)]
+[TestClass]
+public sealed class DeviceDocsStandardsTests
+{
+    /// <summary>Plugins that predate this check and still lack a spec and/or a user guide. Shrink this list as they get documented; never add to it.</summary>
+    private static readonly string[] _knownGaps =
+    [
+        "DevTerm.Devices.Busylight",
+        "DevTerm.Devices.De5000",
+        "DevTerm.Devices.Demo",
+        "DevTerm.Devices.K8055",
+        "DevTerm.Devices.Nmea",
+        "DevTerm.Devices.RadexOne",
+        "DevTerm.Devices.ZoomH4n",
+    ];
+
+    private static string RepoRoot()
+    {
+        var dir = new DirectoryInfo(AppContext.BaseDirectory);
+        while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "DevTerm.slnx")))
+        {
+            dir = dir.Parent;
+        }
+
+        return dir?.FullName ?? throw new InvalidOperationException("DevTerm.slnx not found above the test output.");
+    }
+
+    [TestMethod]
+    public void EveryDevicePluginWithAPanel_HasASpecAndAUserGuide()
+    {
+        var root = RepoRoot();
+        string Docs(string folder) => string.Join('\n', Directory.GetFiles(Path.Combine(root, "docs", folder), "*.md", SearchOption.AllDirectories).Select(File.ReadAllText));
+        var specs = Docs("specs");
+        var guides = Docs("user-guide");
+
+        var problems = new List<string>();
+        foreach (var project in Directory.GetDirectories(Path.Combine(root, "src"), "DevTerm.Devices.*"))
+        {
+            if (Directory.GetFiles(project, "*PanelContribution.cs").Length == 0)
+            {
+                continue;
+            }
+
+            var name = Path.GetFileName(project);
+            if (_knownGaps.Contains(name, StringComparer.Ordinal))
+            {
+                continue;
+            }
+
+            if (!specs.Contains(name, StringComparison.Ordinal))
+            {
+                problems.Add($"{name}: no docs/specs page mentions it");
+            }
+
+            if (!guides.Contains(name, StringComparison.Ordinal))
+            {
+                problems.Add($"{name}: no docs/user-guide page mentions it");
+            }
+        }
+
+        Assert.IsEmpty(problems, "A device plugin with a panel needs a spec and a user guide that name its project (see CLAUDE.md, Documentation). " + string.Join("; ", problems));
+    }
+}

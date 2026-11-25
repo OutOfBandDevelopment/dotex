@@ -1,53 +1,20 @@
 # OoBDev.Identity.Abstractions
 
-OoBDev.Identity.Abstractions is a set of abstractions and models aimed at facilitating user identity management. Here's a breakdown of its components:
+Contracts and models (namespace `OoBDev.Identity`) for creating and removing user accounts in an identity provider. Implementations live in [OoBDev.Identity](../OoBDev.Identity/README.Identity.md) and the identity provider adapters.
 
-## IIdentityManager
+**Table 1 — Contracts**
 
-This class represents an identity manager responsible for managing user identities.
+| Type | Members |
+|------|---------|
+| `IIdentityManager` | `GetIdentityUsersByEmail(email)` returns `IList<UserIdentityModel>?`; `CreateIdentityUserAsync(email, firstName, lastName)` returns the object id and an optional generated password; `RemoveIdentityUserAsync(userId)` returns whether the user was removed |
+| `IUserManagementProvider` | `CreateAccountAsync(UserCreateModel)` returns a `UserCreatedModel` |
 
-### Methods
+**Table 2 — Models (records)**
 
-- **GetIdentityUsersByEmail(emailAddress)**: Retrieves a list of user identity models based on the specified email address.
-- **CreateIdentityUserAsync(email, firstName, lastName)**: Creates a new identity user asynchronously with the specified details.
-- **RemoveIdentityUserAsync(userId)**: Removes an identity user asynchronously based on the specified object ID.
+| Type | Properties |
+|------|------------|
+| `UserCreateModel` | `FirstName`, `LastName`, `EmailAddress` (all required) |
+| `UserCreatedModel` | `Username`, `Password` (both required) |
+| `UserIdentityModel` | Optional `FirstName`, `LastName`, `EmailAddress`, `UserName`, `Password`, `ForcePasswordChangeNextSignIn` |
 
-## IUserManagementProvider
-
-Provides methods for managing user accounts.
-
-### Methods
-
-- **CreateAccountAsync(model)**: Creates a user account asynchronously based on the provided model.
-
-## UserCreatedModel
-
-Represents the model for a user created as a result of account creation.
-
-### Properties
-
-- **Username**: Gets or sets the username associated with the created user.
-- **Password**: Gets or sets the password associated with the created user.
-
-## UserCreateModel
-
-Represents a model for creating a user in an identity provider.
-
-### Properties
-
-- **FirstName**: Gets or sets the first name of the user.
-- **LastName**: Gets or sets the last name of the user.
-- **EmailAddress**: Gets or sets the email address of the user.
-
-## UserIdentityModel
-
-Represents a model for user identity information.
-
-### Properties
-
-- **FirstName**: Gets or sets the first name of the user.
-- **LastName**: Gets or sets the last name of the user.
-- **EmailAddress**: Gets or sets the email address of the user.
-- **UserName**: Gets or sets the username of the user.
-- **Password**: Gets or sets the password of the user.
-- **ForcePasswordChangeNextSignIn**: Gets or sets a value indicating whether the user should be forced to change their password at the next sign-in.
+Applications validate tokens and never store passwords (owner decision); the password fields carry a generated initial password back to the caller only.

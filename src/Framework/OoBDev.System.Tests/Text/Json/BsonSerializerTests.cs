@@ -26,4 +26,39 @@ public class BsonSerializerTests
 
         TestContext.WriteLine(json);
     }
+
+    private sealed class CustomIdAttribute : global::System.Attribute
+    {
+    }
+
+    private sealed class Plain
+    {
+        [CustomId]
+        public string Code { get; set; } = "A1";
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public void GetTypeInfo_CustomIdAttributeName_UsesTheIdConverter()
+    {
+        TestContext.WriteLine("Stage: a resolver told that CustomIdAttribute marks an identifier");
+        var resolver = new BsonTypeInfoResolver(["CustomIdAttribute"]);
+        var options = new JsonSerializerOptions { TypeInfoResolver = resolver };
+
+        var info = resolver.GetTypeInfo(typeof(Plain), options);
+
+        var converter = info.Properties[0].CustomConverter;
+        TestContext.WriteLine($"converter {converter?.GetType().Name}");
+        Assert.IsInstanceOfType<BsonIdConverter>(converter);
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public void GetTypeInfo_DefaultResolver_IgnoresUnknownAttribute()
+    {
+        var resolver = new BsonTypeInfoResolver();
+        var options = new JsonSerializerOptions { TypeInfoResolver = resolver };
+
+        var info = resolver.GetTypeInfo(typeof(Plain), options);
+
+        Assert.IsNull(info.Properties[0].CustomConverter);
+    }
 }

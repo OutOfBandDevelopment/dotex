@@ -31,10 +31,5 @@ BEGIN
 	IF (@messageType = 'oobdev://embedding/sentence-transformer/response')
 	BEGIN
 		END CONVERSATION @conversationHandle;
-		--TODO: [ ] Add support to optionally route an event back to the application 
-		
-		--SEND ON CONVERSATION @conversationHandle
-		--	MESSAGE TYPE [oobdev://embedding/sentence-transformer/response]
-		--	(@message);
 	END 
 END

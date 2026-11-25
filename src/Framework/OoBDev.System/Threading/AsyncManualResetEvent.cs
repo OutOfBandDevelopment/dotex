@@ -28,7 +28,7 @@ public class AsyncManualResetEvent
     public void Set()
     {
         var tcs = m_tcs;
-        Task.Factory.StartNew(s => (s switch
+        _ = Task.Factory.StartNew(s => (s switch
         {
             TaskCompletionSource<bool> tsc => tsc.TrySetResult(true),
             _ => false

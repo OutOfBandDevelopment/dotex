@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.Caching;
@@ -16,11 +17,11 @@ public class ExampleTests
 {
     public required TestContext TestContext { get; set; }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-redis")]
     [TestCategory(TestCategories.Integration)]
     public async Task CachingDesignTest_WithRedisCache()
     {
-        var redisConnectionString = TestContext.GetRequiredProperty<string>("REDIS_CONNECTION_STRING");
+        var redisConnectionString = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("REDIS_CONNECTION_STRING"));
 
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>

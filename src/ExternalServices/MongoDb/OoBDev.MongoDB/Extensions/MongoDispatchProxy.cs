@@ -11,7 +11,9 @@ namespace OoBDev.MongoDB.Extensions;
 /// <summary>
 /// This proxy allow for dynamic creation of wrapper classes to expose MongoDatabase instances
 /// </summary>
-internal sealed class MongoDispatchProxy : DispatchProxy
+// DispatchProxy.Create<T, TProxy>() generates a subclass of TProxy at run time, so it must not be sealed.
+#pragma warning disable CA1852
+internal class MongoDispatchProxy : DispatchProxy
 {
     private IMongoDatabase _database = null!;
     private IMongoSettings _settings = null!;
@@ -28,7 +30,6 @@ internal sealed class MongoDispatchProxy : DispatchProxy
             return ret;
         }
 
-        //TODO: need to simplify this name logic with that on the DataloaderCommandFactory
         var originalName = targetMethod.Name.StartsWith("get_", StringComparison.Ordinal) ? targetMethod.Name[4..] : targetMethod.Name;
 
         var name = targetMethod.DeclaringType?.GetProperty(originalName)
@@ -88,3 +89,4 @@ internal sealed class MongoDispatchProxy : DispatchProxy
         return (T)instance;
     }
 }
+#pragma warning restore CA1852

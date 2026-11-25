@@ -1,0 +1,5 @@
+{
+  "tui-": ["src/Applications/DevTerm/OoBDev.DevTerm.Tui"],
+  "wpf-": ["src/Applications/DevTerm/OoBDev.DevTerm.Wpf"],
+  "web-": ["src/Applications/DevTerm/OoBDev.DevTerm.Web"]
+}

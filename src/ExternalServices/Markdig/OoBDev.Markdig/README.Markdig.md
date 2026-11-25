@@ -1,81 +1,22 @@
 # OoBDev.Markdig
 
-## MarkdownToHtmlConversionHandler
+Markdown to HTML conversion for the document conversion pipeline, using [Markdig](https://github.com/xoofx/markdig).
 
-Converts Markdown documents to HTML format.
+## Use
 
-### Properties
+```csharp
+services.TryAddMarkdigServices();
+```
 
-- **Destinations**: Gets the supported content types for the destination stream.
-- **Sources**: Gets the supported content types for the source stream.
+This registers a transient `MarkdownPipeline` built with `UseAdvancedExtensions()` (tables, footnotes, task lists and the other advanced extensions; replace it by registering your own pipeline first), the `MarkdownToHtmlConversionHandler` as an `IDocumentConversionHandler`, and a `Markdown` `IDocumentType` (extension `.md`, content types `text/markdown` and `text/x-markdown`). The handler is picked by `IDocumentConversion` when a Markdown source meets an HTML destination, for example with [OoBDev.WkHtmlToPdf](../../WkHtmlToPdf/OoBDev.WkHtmlToPdf/README.WkHtmlToPdf.md) for Markdown to PDF.
 
-### Methods
+**Table 1 — Content types of `MarkdownToHtmlConversionHandler` (compared ignoring case)**
 
-#### Constructor
+| Direction | Types |
+|-----------|-------|
+| Sources | `text/markdown`, `text/x-markdown`, `text/plain` |
+| Destinations | `text/html`, `text/xhtml`, `text/xhtml+xml` |
 
-Initializes a new instance of MarkdownToHtmlConversionHandler.
+`ConvertAsync` throws `NotSupportedException` for any other content type, reads the whole source as text, converts it and writes the HTML to the destination, leaving both streams open and rewinding the destination to position 0.
 
-##### Parameters
-
-- *pipeline*: (optional) The pipeline to use for conversion.
-
-#### ConvertAsync(System.IO.Stream,System.String,System.IO.Stream,System.String)
-
-Converts Markdown content from the source stream to HTML format and writes it to the destination stream asynchronously.
-
-##### Parameters
-
-- *source*: The source stream containing the Markdown content.
-- *sourceContentType*: The content type of the source stream.
-- *destination*: The destination stream where the HTML content will be written.
-- *destinationContentType*: The content type of the destination stream.
-
-##### Return value
-
-A task representing the asynchronous conversion operation.
-
-##### Exceptions
-
-- *System.NotSupportedException*: Thrown when either the source or destination content type is not supported.
-
-#### SupportedDestination(System.String)
-
-Checks if the specified content type is supported for the destination stream.
-
-##### Parameters
-
-- *contentType*: The content type to check.
-
-##### Return value
-
-True if the content type is supported; otherwise, false.
-
-#### SupportedSource(System.String)
-
-Checks if the specified content type is supported for the source stream.
-
-##### Parameters
-
-- *contentType*: The content type to check.
-
-##### Return value
-
-True if the content type is supported; otherwise, false.
-
-## ServiceCollectionExtensions
-
-Provides extension methods for configuring services related to Markdig.
-
-### Methods
-
-#### TryAddMarkdigServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)
-
-Configures services for Markdig.
-
-##### Parameters
-
-- *services*: The service collection to add the services to.
-
-##### Return value
-
-The modified service collection.
+The output is an HTML fragment: Markdig adds no `<html>` or `<body>` wrapper, so wrap it in a template when a full page is needed. `OoBDev.Markdig.Tests` has one data-driven Unit test (`ConvertAsyncTest`) comparing converted output with embedded files; the unsupported-type path is not covered.

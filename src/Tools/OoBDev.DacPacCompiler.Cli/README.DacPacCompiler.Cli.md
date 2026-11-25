@@ -1,31 +1,14 @@
 # OoBDev.DacPacCompiler.Cli
 
-Command-line tool for working with SQL Server DacPac files.
+Command-line tool that builds a SQL Server DacPac from a SQL CLR assembly (the .NET Framework 4.8 build of a project such as `OoBDev.Data.Vectors`) or merges several DacPacs into one. The tool command is `dacpactools` when installed as a dotnet tool.
 
-## Description
+## Contents
 
-This CLI tool provides two primary capabilities:
-1. Compiling .NET Framework 4.8 assemblies containing SQL CLR types into SQL Server DacPac files
-2. Merging multiple DacPac files into a single package
-
-## Key Features
-
-- .NET assembly to DacPac compilation
-- SQL CLR metadata extraction
-- DacPac merging and composition
-- PDB symbol file inclusion
-- Project version and naming support
-- Template-based configuration
-- Hosted service architecture
-- DacPac validation
+- [Installation](#installation)
+- [Usage](#usage)
+- [Merging DacPacs](#merging-dacpacs)
 
 ## Installation
-
-```xml
-<PackageReference Include="OoBDev.DacPacCompiler.Cli" Version="*" />
-```
-
-Or install as a global tool:
 
 ```bash
 dotnet tool install -g OoBDev.DacPacCompiler.Cli
@@ -33,59 +16,41 @@ dotnet tool install -g OoBDev.DacPacCompiler.Cli
 
 ## Usage
 
-### Compiling .NET Assembly to DacPac
+```bash
+dacpactools --sqlclr "OoBDev.Data.Vectors.dll" --pdb "OoBDev.Data.Vectors.pdb" --dacpac "OoBDev.Data.Vectors.dacpac" --project "OoBDev.Data.Vectors" --version "1.0.0"
+```
+
+**Table 1 — Options** (`--help` prints them; pass each as `--name value`)
+
+| Option | Required | Use |
+|--------|----------|-----|
+| `--sqlclr` | yes | Path of the .NET Framework SQL CLR assembly to read (its metadata is inspected, it is not executed). |
+| `--pdb` | no | Symbol file to include; defaults to the assembly path with `.pdb`. |
+| `--dacpac` | no | Output file; defaults to the assembly path with `.dacpac`. |
+| `--project` | no | Project name for the package metadata; defaults to the assembly file name. |
+| `--version` | no | Project version for the package metadata; defaults to `0.0.0.1`. |
+| `--tool` | no | `SqlClr` (default) or `Merge` (see [Merging DacPacs](#merging-dacpacs)). |
+
+The host binds the options from the command line, logs them and calls `IDacPacBuilder.BuildDacPac` (`OoBDev.DacFx`), then exits. The generated reference page is [dacpactools](../../../docs/applications/tools/dacpactools.md).
+
+## Merging DacPacs
+
+`--tool Merge` merges several DacPacs into one package with `IDacpacMergeCompiler` (`OoBDev.Microsoft.SqlServer.DacFx`, `AddDacPacCompilerServices()`). The merge host reads its own switches, so `--sqlclr` is not needed and `--version` is the package version.
 
 ```bash
-dacpactools --sqlclr "assembly.dll" --dotnet "assembly.dll" --output "output.dacpac" --name "MyProject" --version "1.0.0"
+dacpactools --tool Merge --source-path ./dacpacs --source-patterns "*.dacpac;!*.Tests.dacpac" --target-path ./out/Merged.dacpac --version 1.2.3 --setting-modeloptionsource First
 ```
 
-Command-line arguments:
-- `--sqlclr` - Path to .NET Framework 4.8 assembly
-- `--dotnet` - Path to .NET assembly (for reference)
-- `--output` - Output DacPac file path
-- `--name` - Project name
-- `--version` - Project version
+**Table 2 — Merge options** (`--help` lists them after the build options)
 
-### Merging Multiple DacPac Files
+| Option | Short | Use |
+|--------|-------|-----|
+| `--template` | `-t` | Template file read through the object converter (JSON); the other options override it. `DacPacMergeTemplate.yml` is not read: YAML is still commented out in `TemplateFactoryBase`. |
+| `--source-path` | `-s` | Folder the patterns are resolved against; defaults to the current folder. |
+| `--source-patterns` | `-p` | Semicolon separated glob patterns, `!` excludes; defaults to `*.dacpac`. |
+| `--target-path` | `-r` | The merged DacPac to write. |
+| `--name`, `--description` | `-n`, `-d` | Package metadata; the name defaults to the target file name, the description to the local time. |
+| `--version`, `--build-version` | `-v`, `-b` | Package version (default `0.0.0`) and the build version written by the post-deployment script (default: the version). |
+| `--setting-modeloptionsource` | | `Custom`, `First` or `Last`: which source the model options come from. |
 
-```bash
-dacpactools -s "." -p "*.dacpac" -r "merged.dacpac" -d "Merged package" -n "MyDatabase" -v "1.2.3"
-```
-
-Command-line parameters:
-- `-t | --template` - Path to a configuration template YAML file
-- `-s | --source-path` - Base directory to be used with source patterns
-- `-p | --source-patterns` - File globbing pattern to select DacPacs to be merged
-- `-r | --target-path` - Full output path for merged DacPac results
-- `-d | --description` - Description to be added to the DacPac metadata
-- `-n | --name` - Name to be added to the DacPac metadata (defaults to output filename)
-- `-v | --version` - Version number to apply to DacPac metadata
-- `-b | --build-version` - Extended version number for build (defaults to version if not provided)
-
-## Template File Example
-
-```yml
-SourcePath: "."
-SourcePatterns:
-- "*.dacpac"
-
-TargetPath: composed_XXXXXXXXXX.dacpac
-ServerVersion: SqlAzure
-
-ModelOptionSource: Custom
-ModelOptions: # Based on Microsoft.SqlServer.Dac.Model.TSqlModelOptions
-- Property: Value
-
-Name: test name
-Description: test desc
-Version: 1.2.3
-BuildVersion: 20200527-1.2.3-XYZ.4
-```
-
-## License
-
-See repository license file for details.
-
-## Repository
-
-[OoBDev Repository](https://github.com/mwwhited/dotex)
+Pre- and post-deployment scripts of the sources are carried into the merged package. Tests: `OoBDev.DacPacCompiler.Cli.Tests` (tool selection and a merge of two generated packages).

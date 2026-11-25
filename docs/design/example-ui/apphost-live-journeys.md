@@ -1,0 +1,19 @@
+# Example AppHost live journeys: open problems
+
+**Status:** Open, 2026-10-29.
+
+- The Keycloak sign-in and token-claims journeys fail against the host, because it runs the API anonymously (`IDENTITY_PROVIDER=None`). Either wire Keycloak into the host or skip those journeys when the API is anonymous.
+- The host passes the dashboard URL, API key, service name and source to the API, and the "Open the dashboard" link works. The dashboard lists no resources (`/api/telemetry/resources` is empty), so the API traces do not reach it and "See what the API just did" still fails live. Cause found 2026-11-05: the exporter forced HttpProtobuf over Aspire's gRPC endpoint; fixed in `OoBDev.Telemetry` (live confirmation pending).
+- The dacpac build crashed once with exit code -1073741819 and passed on retry.
+
+**Decision (owner, 2026-11-04):** the Example AppHost runs Keycloak as a container under Aspire (realm import as in the compose stack), starts the API with `IDENTITY_PROVIDER=Keycloak` and the authority from the Keycloak endpoint, and gives the web client that address. The telemetry journey is diagnosed on a live host run afterwards.
+
+**Built (2026-11-04):** `Program.cs` mounts the example realm beside the integration realm, publishes Keycloak on a fixed host port (`TEST_PORT_KEYCLOAK`, default 8081, so the issuer `http://localhost:<port>/realms/oobdev-example` is stable), starts the API with `IDENTITY_PROVIDER=Keycloak` (authority, audience, issuer and OpenAPI URLs as in the compose file), waits for the container, and gives the Vite app `VITE_OIDC_AUTHORITY` and `VITE_OIDC_CLIENT_ID`. The project builds; the live run and the telemetry diagnosis are still to do.
+
+**Live run (2026-11-19):** the host started with Keycloak on `TEST_PORT_KEYCLOAK=8082` (the test stack holds 8081); the example realm answered its OpenID configuration. The dashboard's telemetry API was off, so the launch profile now enables it with a fixed key (`DASHBOARD__API__*`, and `AppHost__DashboardApiKey` for the API). After requests to the API, `/api/telemetry/resources` lists `example-api` with logs and traces, so the OTLP fix works live. Still not run: the Playwright journeys against this host.
+
+**Journeys live (2026-11-19):** with `E2E_USER=grace E2E_PASSWORD=grace E2E_BASE_URL=http://localhost:5173` against the running host, 20 of 28 journeys passed after two fixes (the e2e helper clicks Sign in; `TryAddRoleRightMapping` replaces the no-op claims transformation that `AddAuthentication` registers first, which had made every right check answer 403). Still failing, each a mismatch between the journey and the live data or services, to diagnose one by one: "See the claims on your token" (expects the name Ada Lovelace, the user is grace), "Browse users and roles" (expects a user `ann` that the example realm does not have), "See the queue channels and received messages" (expects a message sent earlier), "Check which rights an endpoint needs" (the table stays empty after the filter `demo`), "Render a panel from a server-supplied definition" (the Constant current switch never appears), and the Ollama conversation and Convert and store journeys (depend on the model and Tika). A live run rewrites `docs/applications/example`; restore it with git unless the guide change is wanted.
+
+**Right audit live (2026-11-20):** the AppHost passes `OoBDev__RightAudit__ConnectionString` (the VectorDb database); the journey signed in as grace reaches the screen (not 403, not "not configured") but the trail is empty, so its steps that expect the `ann` and `bob` rows fail live: the journey needs rows seeded first.
+
+**Mock-only (owner Q8, built 2026-11-20):** the journeys `see-who-you-are`, `watch-the-queues`, `check-your-rights`, `browse-users-and-roles` and `server-driven-ui` carry `mockOnly` and are skipped when `E2E_BASE_URL` is set; the mock run stays the guide source.

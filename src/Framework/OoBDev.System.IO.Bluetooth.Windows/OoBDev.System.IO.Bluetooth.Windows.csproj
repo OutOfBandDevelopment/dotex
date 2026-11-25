@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Windows.Devices.Bluetooth (the WinRT GATT client) only projects from a Windows-versioned
+         TFM. A plain net10.0 application cannot reference this project, so it loads the assembly
+         by reflection and calls AddWindowsBleConnection. -->
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>false</ImplicitUsings>
+    <NoWarn>$(NoWarn);MA0016;MA0023;MA0051</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GitVersion.MsBuild">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OoBDev.System.IO.Bluetooth\OoBDev.System.IO.Bluetooth.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -73,7 +73,7 @@ public static class DacTools
     /// <returns>A tuple containing the pre-deployment and post-deployment scripts, or null if not present.</returns>
     public static (string? PreDeploymentScript, string? PostDeploymentScript) GetScripts(string fileName)
     {
-        using var dac = DacPackage.Load(fileName, DacSchemaModelStorageType.File);
+        using var dac = DacPackage.Load(fileName, DacSchemaModelStorageType.Memory);
         return (
             dac.PreDeploymentScript.ReadToEnd(),
             dac.PostDeploymentScript.ReadToEnd()

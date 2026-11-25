@@ -1,0 +1,158 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Loader;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace OoBDev.DevTerm;
+
+/// <summary>
+/// Loads plugins from a directory of per-plugin folders (<c>&lt;dir&gt;/&lt;plugin&gt;/plugin.json</c> plus its assemblies), each in its own
+/// <see cref="AssemblyLoadContext"/>, and lets each <see cref="IPluginModule"/> register its services. Never throws for a
+/// bad plugin: it is skipped and reported, so one broken folder can't stop the app starting.
+/// </summary>
+public static class PluginLoader
+{
+    /// <summary>The plugin contract this build implements. A plugin built for another number is skipped.</summary>
+    public const int ContractVersion = 1;
+
+    /// <summary>The plugins directory for a configured value: that path, or <c>plugins</c> next to the app when none is set.</summary>
+    public static string ResolveDirectory(string? configured) =>
+        string.IsNullOrWhiteSpace(configured) ? Path.Combine(AppContext.BaseDirectory, "plugins") : configured;
+
+    public static IReadOnlyList<PluginLoadResult> LoadAll(string? directory, IServiceCollection services)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+        var results = new List<PluginLoadResult>();
+        if (string.IsNullOrWhiteSpace(directory) || !Directory.Exists(directory))
+        {
+            return results;
+        }
+
+        var folders = Directory.GetDirectories(directory)
+            .Where(f => File.Exists(Path.Combine(f, PluginManifest.FileName)))
+            .OrderBy(f => PluginManifest.TryRead(Path.Combine(f, PluginManifest.FileName), out _)?.Order ?? 0)
+            .ThenBy(f => f, StringComparer.OrdinalIgnoreCase);
+        foreach (var folder in folders)
+        {
+            results.Add(Load(folder, services));
+        }
+
+        return results;
+    }
+
+    private static PluginLoadResult Load(string folder, IServiceCollection services)
+    {
+        var label = Path.GetFileName(folder);
+        var manifest = PluginManifest.TryRead(Path.Combine(folder, PluginManifest.FileName), out var error);
+        if (manifest is null)
+        {
+            return new(folder, label, false, error);
+        }
+
+        if (manifest.Contract != ContractVersion)
+        {
+            return new(folder, manifest.Name, false, $"built for plugin contract {manifest.Contract}; this build implements {ContractVersion}.");
+        }
+
+        if (manifest.Process is { } process)
+        {
+            return LoadProcess(folder, manifest, process, services);
+        }
+
+        var assemblyPath = Path.GetFullPath(Path.Combine(folder, manifest.Assembly));
+        if (!assemblyPath.StartsWith(Path.GetFullPath(folder), StringComparison.OrdinalIgnoreCase) || !File.Exists(assemblyPath))
+        {
+            return new(folder, manifest.Name, false, $"assembly '{manifest.Assembly}' isn't in the plugin folder.");
+        }
+
+        try
+        {
+            var assembly = new PluginLoadContext(assemblyPath).LoadFromAssemblyPath(assemblyPath);
+            var modules = assembly.GetTypes()
+                .Where(type => typeof(IPluginModule).IsAssignableFrom(type) && type is { IsAbstract: false, IsInterface: false })
+                .ToList();
+            if (modules.Count == 0)
+            {
+                return new(folder, manifest.Name, false, "no IPluginModule implementation found.");
+            }
+
+            // Register into a scratch collection first so a module that throws halfway leaves nothing behind.
+            var staged = new ServiceCollection();
+            foreach (var type in modules)
+            {
+                ((IPluginModule)Activator.CreateInstance(type)!).ConfigureServices(staged);
+            }
+
+            foreach (var descriptor in staged)
+            {
+                services.Add(descriptor);
+            }
+
+            return new(folder, manifest.Name, true, $"loaded {manifest.Name} {manifest.Version}.");
+        }
+        catch (Exception ex)
+        {
+            return new(folder, manifest.Name, false, $"{ex.GetType().Name}: {ex.Message}");
+        }
+    }
+
+    /// <summary>An out-of-process plugin: approved by the user (or by a remembered approval for this exact content), then registered as a lazily started presenter.</summary>
+    private static PluginLoadResult LoadProcess(string folder, PluginManifest manifest, PluginProcess process, IServiceCollection services)
+    {
+        var root = Path.GetFullPath(folder);
+        var command = process.Command.Replace("{folder}", root, StringComparison.Ordinal);
+        var arguments = process.Arguments.Select(a => a.Replace("{folder}", root, StringComparison.Ordinal)).ToArray();
+        PluginSandbox? sandbox = null;
+        var shown = string.Join(' ', new[] { command }.Concat(arguments));
+        if (manifest.Permissions is { } permissions)
+        {
+            var launcher = PluginSandboxes.Launcher;
+            if (launcher is null)
+            {
+                return new(folder, manifest.Name, false, "declares permissions, but this platform has no sandbox launcher; it is not run unsandboxed.");
+            }
+
+            sandbox = permissions.ToSandbox(launcher, root);
+            var write = sandbox.WriteDirectories.Count == 0 ? "nothing" : string.Join(", ", sandbox.WriteDirectories);
+            shown += $" [sandbox ({launcher.Mechanism}): read {string.Join(", ", sandbox.ReadDirectories)}; write {write}; memory {sandbox.Limits.MemoryMb} MB; no network]";
+        }
+
+        var request = new PluginApprovalRequest(manifest.Name, manifest.Version, root, shown, PluginHash.Compute(root));
+        if (!PluginTrust.Authorise(request))
+        {
+            LivePlugins.AddPending(new PendingPlugin(request, command, arguments, TimeSpan.FromMilliseconds(Math.Clamp(process.ReplyTimeoutMs, 100, 60000)), process.Kind.ToLowerInvariant(), sandbox));
+            return new(folder, manifest.Name, false, $"needs your approval to run: {request.CommandLine}");
+        }
+
+        var timeout = TimeSpan.FromMilliseconds(Math.Clamp(process.ReplyTimeoutMs, 100, 60000));
+        if (string.Equals(process.Kind, "transport", StringComparison.OrdinalIgnoreCase))
+        {
+            services.AddSingleton(new PluginTransport(manifest.Name, () => new ExternalProcessAdapter(manifest.Name, command, arguments, timeout, sandbox)));
+        }
+        else
+        {
+            services.AddTransient<IPresenter>(_ => new LazyExternalPresenter(manifest.Name, command, arguments, timeout, sandbox));
+        }
+
+        return new(folder, manifest.Name, true, $"approved {manifest.Name} {manifest.Version} (runs: {request.CommandLine}).");
+    }
+
+    /// <summary>Resolves a plugin's own dependencies from its folder, but never a second copy of what the host already loaded (so contract types unify).</summary>
+    private sealed class PluginLoadContext(string pluginPath) : AssemblyLoadContext(Path.GetFileNameWithoutExtension(pluginPath))
+    {
+        private readonly AssemblyDependencyResolver _resolver = new(pluginPath);
+
+        protected override Assembly? Load(AssemblyName assemblyName)
+        {
+            if (Default.Assemblies.Any(a => string.Equals(a.GetName().Name, assemblyName.Name, StringComparison.Ordinal)))
+            {
+                return null;
+            }
+
+            return _resolver.ResolveAssemblyToPath(assemblyName) is { } path ? LoadFromAssemblyPath(path) : null;
+        }
+    }
+}

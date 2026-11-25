@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>false</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<NoWarn>$(NoWarn);MA0004;MA0048;MA0002;MA0009;CA1859;CA1829;OOB0001</NoWarn>
+		<SupportedOSPlatform>windows</SupportedOSPlatform>
+		<IsPackable>false</IsPackable>
+		<IsTestProject>true</IsTestProject>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="GitVersion.MsBuild">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" />
+		<PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" />
+		<PackageReference Include="Microsoft.Extensions.Options" />
+		<PackageReference Include="Moq" />
+		<PackageReference Include="MSTest.TestAdapter" />
+		<PackageReference Include="MSTest.TestFramework" />
+		<PackageReference Include="System.Drawing.Common" />
+		<PackageReference Include="coverlet.collector">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\OoBDev.DevTerm.Tui\OoBDev.DevTerm.Tui.csproj" />
+		<ProjectReference Include="..\..\..\Framework\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
+		<ProjectReference Include="..\..\..\Framework\OoBDev.Tui.TestUtilities\OoBDev.Tui.TestUtilities.csproj" />
+		<ProjectReference Include="..\OoBDev.DevTerm.TestUtilities\OoBDev.DevTerm.TestUtilities.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="OoBDev.DevTerm.TestUtilities" />
+	</ItemGroup>
+
+</Project>

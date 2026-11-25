@@ -1,0 +1,238 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Buffers;
+using System.Diagnostics;
+using System.IO.Pipelines;
+using Microsoft.Extensions.Options;
+using Moq;
+using OoBDev.TestUtilities;
+
+namespace OoBDev.System.IO.UsbHids.Tests;
+
+[TestCategory("Unit")]
+[TestClass]
+[TestCategory(TestCategories.Hid)]
+public sealed class UsbHidEndpointDeviceAdapterTests
+{
+    private static IOptions<UsbHidEndpointOptions> Options(int vendorId = 0x1915, int productId = 0xAFDA) =>
+        Microsoft.Extensions.Options.Options.Create(new UsbHidEndpointOptions { VendorId = vendorId, ProductId = productId });
+
+    /// <summary>
+    /// A device double whose <see cref="IUsbHidDevice.BaseStream"/> is backed by a real
+    /// <see cref="Pipe"/>: the transport's background pump reads from it for real, and the test
+    /// plays "a report arrived" by writing to <c>DevicePipe.Writer</c> — no need to simulate the
+    /// read side by mocking a <see cref="Stream"/> or spinning up a real HID read thread.
+    /// </summary>
+    private static (Mock<IUsbHidDevice> Device, Pipe DevicePipe) CreateDevice()
+    {
+        var devicePipe = new Pipe();
+        var device = new Mock<IUsbHidDevice>();
+        device.SetupGet(d => d.BaseStream).Returns(devicePipe.Reader.AsStream());
+        return (device, devicePipe);
+    }
+
+    [TestMethod]
+    public async Task OpenAsync_CreatesAndOpensDeviceFromFactory()
+    {
+        var (device, _) = CreateDevice();
+        var factory = new Mock<IUsbHidDeviceFactory>();
+        factory.Setup(f => f.Create(It.IsAny<UsbHidEndpointOptions>())).Returns(device.Object);
+
+        var transport = new UsbHidEndpointDeviceAdapter(factory.Object, Options(vendorId: 0x1234));
+
+        await transport.OpenAsync(TestContext.CancellationToken);
+
+        factory.Verify(f => f.Create(It.Is<UsbHidEndpointOptions>(o => o.VendorId == 0x1234)), Times.Once);
+        device.Verify(d => d.Open(), Times.Once);
+        Assert.AreEqual(ConnectionState.Open, transport.State);
+
+        await transport.CloseAsync(TestContext.CancellationToken);
+    }
+
+    [TestMethod]
+    public async Task OpenAsync_RaisesStateChangedThroughOpeningToOpen()
+    {
+        var (device, _) = CreateDevice();
+        var factory = new Mock<IUsbHidDeviceFactory>();
+        factory.Setup(f => f.Create(It.IsAny<UsbHidEndpointOptions>())).Returns(device.Object);
+
+        var transport = new UsbHidEndpointDeviceAdapter(factory.Object, Options());
+        var states = new List<ConnectionState>();
+        transport.StateChanged += (_, e) => states.Add(e.Current);
+
+        await transport.OpenAsync(TestContext.CancellationToken);
+
+        Assert.AreSequenceEqual([ConnectionState.Opening, ConnectionState.Open], states);
+
+        await transport.CloseAsync(TestContext.CancellationToken);
+    }
+
+    [TestMethod]
+    public async Task OpenAsync_WhenDeviceThrows_TransitionsToFaultedAndRethrows()
+    {
+        var device = new Mock<IUsbHidDevice>();
+        device.Setup(d => d.Open()).Throws(new IOException("no matching HID device"));
+        var factory = new Mock<IUsbHidDeviceFactory>();
+        factory.Setup(f => f.Create(It.IsAny<UsbHidEndpointOptions>())).Returns(device.Object);
+
+        var transport = new UsbHidEndpointDeviceAdapter(factory.Object, Options());
+
+        await Assert.ThrowsExactlyAsync<IOException>(() => transport.OpenAsync(TestContext.CancellationToken));
+        Assert.AreEqual(ConnectionState.Faulted, transport.State);
+        device.Verify(d => d.Dispose(), Times.Once);
+    }
+
+    [TestMethod]
+    [TestCategory("Unit")]
+    public async Task OpenAsync_DoesNotBlockTheCallingThreadOnTheDevicesSynchronousOpen()
+    {
+        // Regression test for bug 055: OpenAsync used to call device.Open() directly in its own
+        // synchronous body (no Task.Run), so the call expression itself didn't return a Task until
+        // Open() returned - blocking whatever thread called OpenAsync (often the UI thread) for
+        // however long the real, synchronous HidSharp open takes. See
+        // docs/bugs/resolved/055-hid-read-thread-and-close-blocking.md.
+        var (device, _) = CreateDevice();
+        using var openGate = new ManualResetEventSlim(false);
+        device.Setup(d => d.Open()).Callback(() => openGate.Wait(TimeSpan.FromSeconds(5)));
+        var factory = new Mock<IUsbHidDeviceFactory>();
+        factory.Setup(f => f.Create(It.IsAny<UsbHidEndpointOptions>())).Returns(device.Object);
+
+        var transport = new UsbHidEndpointDeviceAdapter(factory.Object, Options());
+
+        var stopwatch = Stopwatch.StartNew();
+        var openTask = transport.OpenAsync(TestContext.CancellationToken);
+        stopwatch.Stop();
+
+        Assert.IsTrue(
+            stopwatch.ElapsedMilliseconds < 1000,
+            $"OpenAsync blocked its caller for {stopwatch.ElapsedMilliseconds} ms waiting on the device's synchronous Open().");
+
+        openGate.Set();
+        await openTask.WaitAsync(TimeSpan.FromSeconds(5), TestContext.CancellationToken);
+        Assert.AreEqual(ConnectionState.Open, transport.State);
+
+        await transport.CloseAsync(TestContext.CancellationToken);
+    }
+
+    [TestMethod]
+    public async Task WriteAsync_WhenNotOpen_Throws()
+    {
+        var transport = new UsbHidEndpointDeviceAdapter(Mock.Of<IUsbHidDeviceFactory>(), Options());
+
+        await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => transport.WriteAsync(new byte[] { 1 }, TestContext.CancellationToken));
+    }
+
+    [TestMethod]
+    public async Task WriteAsync_WhenOpen_WritesBytesToDevice()
+    {
+        var (device, _) = CreateDevice();
+        var factory = new Mock<IUsbHidDeviceFactory>();
+        factory.Setup(f => f.Create(It.IsAny<UsbHidEndpointOptions>())).Returns(device.Object);
+
+        var transport = new UsbHidEndpointDeviceAdapter(factory.Object, Options());
+        await transport.OpenAsync(TestContext.CancellationToken);
+
+        var payload = new byte[] { 0x01, 0x02, 0x03 };
+        await transport.WriteAsync(payload, TestContext.CancellationToken);
+
+        device.Verify(d => d.Write(payload, 0, payload.Length), Times.Once);
+
+        await transport.CloseAsync(TestContext.CancellationToken);
+    }
+
+    [TestMethod]
+    public async Task WriteAsync_WithEmptyData_DoesNotCallDeviceWrite()
+    {
+        var (device, _) = CreateDevice();
+        var factory = new Mock<IUsbHidDeviceFactory>();
+        factory.Setup(f => f.Create(It.IsAny<UsbHidEndpointOptions>())).Returns(device.Object);
+
+        var transport = new UsbHidEndpointDeviceAdapter(factory.Object, Options());
+        await transport.OpenAsync(TestContext.CancellationToken);
+
+        await transport.WriteAsync(ReadOnlyMemory<byte>.Empty, TestContext.CancellationToken);
+
+        device.Verify(d => d.Write(It.IsAny<byte[]>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+
+        await transport.CloseAsync(TestContext.CancellationToken);
+    }
+
+    [TestMethod]
+    public async Task IncomingBytes_AreAvailableThroughInput()
+    {
+        var (device, devicePipe) = CreateDevice();
+        var factory = new Mock<IUsbHidDeviceFactory>();
+        factory.Setup(f => f.Create(It.IsAny<UsbHidEndpointOptions>())).Returns(device.Object);
+
+        var transport = new UsbHidEndpointDeviceAdapter(factory.Object, Options());
+        await transport.OpenAsync(TestContext.CancellationToken);
+
+        var payload = "ޭ"u8.ToArray();
+        await devicePipe.Writer.WriteAsync(payload, TestContext.CancellationToken);
+
+        var result = await transport.Input.ReadAsync(TestContext.CancellationToken).AsTask().WaitAsync(TimeSpan.FromSeconds(5), TestContext.CancellationToken);
+        Assert.AreSequenceEqual(payload, result.Buffer.ToArray());
+        transport.Input.AdvanceTo(result.Buffer.End);
+
+        await transport.CloseAsync(TestContext.CancellationToken);
+    }
+
+    [TestMethod]
+    public async Task DeviceClosesTheConnection_TransportTransitionsToClosed()
+    {
+        var (device, devicePipe) = CreateDevice();
+        var factory = new Mock<IUsbHidDeviceFactory>();
+        factory.Setup(f => f.Create(It.IsAny<UsbHidEndpointOptions>())).Returns(device.Object);
+
+        var transport = new UsbHidEndpointDeviceAdapter(factory.Object, Options());
+        var closedTcs = new TaskCompletionSource();
+        transport.StateChanged += (_, e) =>
+        {
+            if (e.Current == ConnectionState.Closed)
+            {
+                closedTcs.TrySetResult();
+            }
+        };
+
+        await transport.OpenAsync(TestContext.CancellationToken);
+        await devicePipe.Writer.CompleteAsync();
+
+        await closedTcs.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.CancellationToken);
+        Assert.AreEqual(ConnectionState.Closed, transport.State);
+    }
+
+    [TestMethod]
+    public async Task CloseAsync_ClosesAndDisposesDevice()
+    {
+        var (device, _) = CreateDevice();
+        var factory = new Mock<IUsbHidDeviceFactory>();
+        factory.Setup(f => f.Create(It.IsAny<UsbHidEndpointOptions>())).Returns(device.Object);
+
+        var transport = new UsbHidEndpointDeviceAdapter(factory.Object, Options());
+        await transport.OpenAsync(TestContext.CancellationToken);
+
+        await transport.CloseAsync(TestContext.CancellationToken).WaitAsync(TimeSpan.FromSeconds(5), TestContext.CancellationToken);
+
+        device.Verify(d => d.Close(), Times.Once);
+        device.Verify(d => d.Dispose(), Times.Once);
+        Assert.AreEqual(ConnectionState.Closed, transport.State);
+    }
+
+    [TestMethod]
+    public async Task CloseAsync_WhenNeverOpened_DoesNothing()
+    {
+        var factory = new Mock<IUsbHidDeviceFactory>();
+        var transport = new UsbHidEndpointDeviceAdapter(factory.Object, Options());
+
+        await transport.CloseAsync(TestContext.CancellationToken);
+
+        factory.Verify(f => f.Create(It.IsAny<UsbHidEndpointOptions>()), Times.Never);
+    }
+
+    public required TestContext TestContext { get; set; }
+}

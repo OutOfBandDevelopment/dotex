@@ -9,4 +9,9 @@ public static class AzureStorageGlobals
     /// The key associated with the Azure Storage message provider.
     /// </summary>
     public const string MessageProviderKey = "azure-storage-queue";
+
+    /// <summary>
+    /// The key associated with the Azure blob container provider.
+    /// </summary>
+    public const string BlobProviderKey = "azure-blob";
 }

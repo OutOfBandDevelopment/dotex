@@ -1,4 +1,5 @@
 ﻿using OoBDev.Apache.Tika.Handlers;
+using OoBDev.TestUtilities.Containers;
 using OoBDev.TestUtilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ public class TikaPdfToHtmlConversionHandlerTests :
     public required TestContext TestContext { get; set; }
 
     [TestCategory(TestCategories.Integration)]
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-tika")]
     [DataRow("Sample.pdf", "application/pdf", "text/html", ".html")]
     public async Task ConvertAsyncTest(string resourceName, string sourceType, string targetType, string ext) =>
         await ConvertAsyncTestHarness(resourceName, sourceType, targetType, ext, TestContext);

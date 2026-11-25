@@ -1,135 +1,73 @@
 # OoBDev.Caching
 
-Common caching implementation for the OoBDev framework with factory and manager support.
+Attribute-driven method caching: a manager that builds cache keys and a factory that wraps a service in a caching proxy. The contracts and attributes (`ICachingProvider`, `ICachingManager`, `ICacheableFactory`, `[IsCacheable]`, `[FlushCache]`) are in `OoBDev.Caching.Abstractions`; the storage is a provider package.
 
-## Overview
+## Contents
 
-This package provides the core implementation of distributed caching functionality, including cache factories, proxies, and managers.
+- [Registration](#registration)
+- [Provider selection](#provider-selection)
+- [Caching a service](#caching-a-service)
+- [Concurrent misses](#concurrent-misses)
+- [Failure behaviour](#failure-behaviour)
 
-## Features
-
-- **CacheableFactory** - Factory for creating cached proxies
-- **CachedProxy** - Dynamic proxy for automatic caching
-- **CachingManager** - Cache management and operations
-- **ResultAwaiter** - Asynchronous result handling
-
-## Usage
-
-### Register Caching Services
+## Registration
 
 ```csharp
-using OoBDev.Caching;
-using Microsoft.Extensions.DependencyInjection;
-
-services.AddOoBDevCaching();
+services.TryAddCachingServices();
 ```
 
-### Use Caching Manager
+This adds the configured `ICachingProvider` selection, `ICachingManager` (`CachingManager`) and `ICacheableFactory` (`CacheableFactory`), all transient, plus the `IStringFormatter` used for keys.
 
-```csharp
-public class DataService
-{
-    private readonly ICachingManager _cache;
+## Provider selection
 
-    public DataService(ICachingManager cache)
-    {
-        _cache = cache;
-    }
+The provider is chosen by configuration at `OoBDev:CachingProvider:Type` (`CachingGlobals.ConfigurationPath`) and resolved under the key `selected`; when the value is empty the default `ICachingProvider` registration is used. Provider packages and their keys:
 
-    public async Task<Data> GetDataAsync(string id)
-    {
-        var cacheKey = $"data:{id}";
+**Table 1 — Caching providers**
 
-        // Try to retrieve from cache
-        var cached = await _cache.GetAsync<Data>(cacheKey);
-        if (cached != null) return cached;
-
-        // Fetch from source
-        var data = await FetchDataFromSourceAsync(id);
-
-        // Store in cache
-        await _cache.SetAsync(cacheKey, data, TimeSpan.FromMinutes(15));
-
-        return data;
-    }
-}
-```
-
-### Automatic Caching with Attributes
-
-```csharp
-using OoBDev.Caching.Abstractions;
-
-public class ProductService
-{
-    [IsCacheable]
-    public async Task<Product> GetProductAsync(int id)
-    {
-        // This method's results will be automatically cached
-        // Cache key generated from method name and parameters
-        return await _repository.GetByIdAsync(id);
-    }
-
-    [FlushCache]
-    public async Task UpdateProductAsync(Product product)
-    {
-        // This will flush relevant cache entries when called
-        await _repository.UpdateAsync(product);
-    }
-}
-```
-
-## Configuration
-
-Configure caching in `appsettings.json`:
+| Package | Key |
+|---------|-----|
+| `OoBDev.Microsoft.Caching` | `memory-cache` |
+| `OoBDev.Redis.Caching` | `redis` |
 
 ```json
+{ "OoBDev": { "CachingProvider": { "Type": "redis" } } }
+```
+
+## Caching a service
+
+Put the attributes on the implementation's methods, then ask the service provider for the cached proxy:
+
+```csharp
+public class ProductRepository : IProductRepository
 {
-  "OoBDev": {
-    "CachingProvider": {
-      "Type": "Redis",
-      "DefaultExpiration": "00:15:00"
-    }
-  }
+    [IsCacheable("products/{id}", "00:05:00")]
+    public Task<Product> GetAsync(int id) => ...;
+
+    [FlushCache("products/{product.Id}")]
+    public Task UpdateAsync(Product product) => ...;
+
+    [FlushCache(typeof(ProductRepository), nameof(GetAsync))]
+    public Task<Product> RefreshAsync(int id) => ...;
 }
+
+IProductRepository repository = serviceProvider.Cacheable<IProductRepository, ProductRepository>();
 ```
 
-## Providers
+- `[IsCacheable(keyFormatter, lifetime)]` stores the result under the formatted key for the lifetime (`TimeSpan` text).
+- `[FlushCache(keyFormatter)]` flushes the formatted key; `[FlushCache(type, methodName)]` flushes the key the named cacheable method would build for the same arguments.
+- Key formatters use `{parameter}` and `{parameter.Property}` placeholders over the method arguments.
+- `ICachingManager` can also be used directly: `BuildKey`, `StoreAsync`, `RetrieveAsync` and `FlushAsync`.
 
-This package requires a caching provider implementation. Available providers:
+## Concurrent misses
 
-- **OoBDev.Redis.Caching** - Redis-based distributed caching
-- **OoBDev.Microsoft.Caching** - Microsoft in-memory and distributed caching
+When several callers miss the same key at once, the first computes and the rest wait and then read its result, so an expensive method runs once per key, not once per caller (`CachedProxyStampedeTests`). The gate is in process and striped over 64 locks, so unrelated keys can occasionally wait on each other but nothing leaks; across processes each instance still computes once. The Redis provider (`redis`) shares the stored result between instances.
 
-## Installation
+## Concurrent misses
 
-```bash
-dotnet add package OoBDev.Caching
-dotnet add package OoBDev.Redis.Caching  # or OoBDev.Microsoft.Caching
-```
+A cold key is computed once. In one process `CachedProxy` serialises misses per key (striped gates). Across processes, a provider that implements `ICachingLock` (the `redis` provider does) lets the first process take a lock and compute while the others poll the cache every 50 ms until the value appears; if the holder dies, the lock expires after 30 s and a waiter computes instead. A provider without a lock (the memory cache is per process anyway) is treated as always granted.
 
-## Dependencies
+## Failure behaviour
 
-- OoBDev.Caching.Abstractions - Caching interfaces
-- OoBDev.System.Abstractions - Core abstractions
-- Microsoft.Extensions.Configuration.Abstractions
-- Microsoft.Extensions.Logging.Abstractions
+A caching failure is logged and swallowed so the call still runs, except in DEBUG builds, which rethrow so a broken key or provider shows up locally.
 
-## Architecture
-
-The caching system uses a factory pattern with dynamic proxies for transparent caching:
-
-1. **Factory** creates cached proxies for services
-2. **Proxy** intercepts method calls and applies caching logic
-3. **Manager** handles cache storage and retrieval
-4. **Provider** implements actual cache backend (Redis, Memory, etc.)
-
-## Related Packages
-
-- OoBDev.Caching.Abstractions - Interfaces and attributes
-- OoBDev.Redis.Caching - Redis provider
-- OoBDev.Microsoft.Caching - Microsoft provider
-
-## License
-
-See the main OoBDev repository for license information.
+Tests: `OoBDev.Caching.Tests`, plus the provider test projects (`OoBDev.Microsoft.Caching.Tests` holds the worked example).

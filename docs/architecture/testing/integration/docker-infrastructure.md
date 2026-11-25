@@ -27,7 +27,7 @@ rectangle "Developer machine or CI runner" as Host <<system>> {
     rectangle "Storage: Azurite" as Stor
     rectangle "Documents and mail: Tika, smtp4dev" as Doc
     rectangle "Identity and AI: Keycloak, SBert, Ollama" as IdAi
-    rectangle "Observability: Grafana LGTM" as Obs
+    rectangle "Observability: Aspire dashboard" as Obs
     rectangle "Dashboards: nginx, OpenSearch Dashboards" as Dash
   }
 }
@@ -58,7 +58,10 @@ Every host port is `${TEST_PORT_<NAME>:-default}`. Set the variable in the shell
 | Apache Tika | 9998 | |
 | MongoDB | 27017 | |
 | SQL Server | 1433 | |
-| RabbitMQ | 5673 (5672), 15672 | AMQP shifted so it does not collide with the emulator |
+| RabbitMQ | 5673 (5672), 15672, 21613 STOMP, 5671 AMQPS, 21614 STOMP TLS | AMQP shifted so it does not collide with the emulator |
+| Mosquitto | 1883 | DevTerm MQTT peer |
+| ser2net | 2217 | RFC 2217 peer, echoes every byte |
+| loopback-device | 7778 | DevTerm line device over TCP |
 | Redis | 6379 | |
 | OpenSearch | 9200, 9600 | HTTPS |
 | OpenSearch Dashboards | 5601 | |
@@ -66,7 +69,7 @@ Every host port is `${TEST_PORT_<NAME>:-default}`. Set the variable in the shell
 | Azurite | 10000, 10001, 10002 | blob, queue, table |
 | Moto | 4566 (5000) | AWS API |
 | Service Bus emulator | 5672 | AMQP |
-| Grafana LGTM | 3000, 4317, 4318 | UI and Tempo/Loki proxy, OTLP gRPC, OTLP HTTP |
+| Aspire dashboard | 18888, 4317, 4318 | UI and telemetry API, OTLP gRPC, OTLP HTTP |
 | Keycloak | 8081 (8080) | |
 | nginx dashboard | 8080 (80) | |
 | SBert | 5080 (5000) | |
@@ -116,6 +119,6 @@ Windows uses the `.bat` equivalents. First start is slow: images pull, Ollama ba
 
 ## CI
 
-`.github/workflows/integration-tests.yml` brings the stack up on `ubuntu-latest`, runs the `Integration` category and tears it down. It runs daily at 4 PM UTC and on demand (`gh workflow run integration-tests.yml`). GitHub only runs scheduled workflows from the default branch, so the schedule starts once the workflow is on `main`; a successful run on `main` creates the `validated-v{version}` tag. It has not yet run on GitHub, so expect Linux fixes on the first runs.
+GitHub is no longer the primary repository. `scripts/ci/run-tests.ps1 -Category Integration` ([readme](../../../../scripts/ci/README.md)) starts this stack, runs the `Integration` category and stops the stack; a daily run is a Windows Task Scheduler entry for that command. `.github/workflows/integration-tests.yml` is legacy and no longer gates work.
 
 [← Integration testing](README.md) · [Services →](services.md)

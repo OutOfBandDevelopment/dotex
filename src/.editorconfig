@@ -231,28 +231,31 @@ dotnet_diagnostic.MA0017.severity = warning
 dotnet_diagnostic.MA0019.severity = warning
 dotnet_diagnostic.MA0023.severity = warning
 dotnet_diagnostic.MA0025.severity = warning
+# MA0026 (about 50 TODO comments), MA0046 (EventHandler<TMessage> on the device interfaces), MA0061 (DEBUG-only required parameters), CA1710, CA1720 and CA1708 (domain names) stay at suggestion on purpose.
 dotnet_diagnostic.MA0026.severity = suggestion
 dotnet_diagnostic.MA0046.severity = suggestion
 dotnet_diagnostic.MA0048.severity = warning
-dotnet_diagnostic.MA0051.severity = suggestion
+dotnet_diagnostic.MA0051.severity = warning
 dotnet_diagnostic.MA0055.severity = warning
 dotnet_diagnostic.MA0061.severity = suggestion
-dotnet_diagnostic.MA0070.severity = suggestion
-dotnet_diagnostic.MA0084.severity = suggestion
-dotnet_diagnostic.MA0099.severity = suggestion
-dotnet_diagnostic.MA0132.severity = suggestion
-dotnet_diagnostic.MA0134.severity = suggestion
-dotnet_diagnostic.MA0144.severity = suggestion
-dotnet_diagnostic.MA0147.severity = suggestion
-dotnet_diagnostic.MA0151.severity = suggestion
-dotnet_diagnostic.MA0158.severity = suggestion
-dotnet_diagnostic.MA0169.severity = suggestion
-dotnet_diagnostic.MA0091.severity = suggestion
+dotnet_diagnostic.MA0070.severity = warning
+dotnet_diagnostic.MA0084.severity = warning
+dotnet_diagnostic.MA0099.severity = warning
+dotnet_diagnostic.MA0132.severity = warning
+dotnet_diagnostic.MA0134.severity = warning
+dotnet_diagnostic.MA0144.severity = warning
+dotnet_diagnostic.MA0147.severity = warning
+dotnet_diagnostic.MA0151.severity = warning
+dotnet_diagnostic.MA0158.severity = warning
+dotnet_diagnostic.MA0169.severity = warning
+dotnet_diagnostic.MA0091.severity = warning
 # OoBDev.Analyzers: production code uses TimeProvider; test code may read the clock for sample data
 dotnet_diagnostic.OOB0001.severity = warning
 
 [**/*.Tests/**.cs]
 dotnet_diagnostic.OOB0001.severity = none
+# test fixtures create and dispose disposable fields in [TestInitialize]/[TestCleanup]
+dotnet_diagnostic.CA1001.severity = none
 # test names follow Method_Scenario_ExpectedBehavior
 dotnet_diagnostic.CA1707.severity = none
 dotnet_diagnostic.CA1711.severity = none
@@ -265,6 +268,23 @@ dotnet_diagnostic.CA1711.severity = none
 # Library layers append ConfigureAwait(false); applications, hosts and ASP.NET Core code do not need it
 [{Tools,Examples}/**.cs]
 dotnet_diagnostic.MA0004.severity = none
+# Example DTO files group several small models per file
+dotnet_diagnostic.MA0048.severity = none
+
+[Applications/**.cs]
+dotnet_diagnostic.MA0004.severity = none
 
 [Framework/OoBDev.AspNetCore*/**.cs]
 dotnet_diagnostic.MA0004.severity = none
+
+# Definition DTOs expose settable List<T> so the XML and JSON serializers round-trip them
+[Framework/OoBDev.System.Abstractions/UiDefinitions/**.cs]
+dotnet_diagnostic.MA0016.severity = none
+
+# Test fakes expose their recorded lists for assertions
+[Applications/DevTerm/OoBDev.DevTerm.TestUtilities/**.cs]
+dotnet_diagnostic.MA0016.severity = none
+
+# A XAML ResourceDictionary subclass is a resource container, not a collection type
+[Applications/DevTerm/OoBDev.DevTerm.Wpf/DarkControls.xaml.cs]
+dotnet_diagnostic.CA1010.severity = none

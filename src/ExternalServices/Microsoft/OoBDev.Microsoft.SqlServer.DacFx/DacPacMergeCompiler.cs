@@ -40,7 +40,7 @@ public partial class DacpacMergeCompiler : IDacpacMergeCompiler
             foreach (var source in sqlModel.ReadPackage())
             {
                 LogMessage(file, source.name);
-                target.AddOrUpdateObjects(source.script, source.name, new TSqlObjectOptions()); //TODO: figure out how to carry TSqlObjectOptions forward
+                target.AddOrUpdateObjects(source.script, source.name, new TSqlObjectOptions());
             }
 
             var scripts = DacTools.GetScripts(file);

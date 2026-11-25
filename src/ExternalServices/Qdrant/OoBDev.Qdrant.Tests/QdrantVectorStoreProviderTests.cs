@@ -1,4 +1,5 @@
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
 using Qdrant.Client.Grpc;
@@ -27,7 +28,6 @@ public class QdrantVectorStoreProviderTests
         _client = new QdrantGrpcClientFactory(Options.Create(new QdrantOptions
         {
             Url = $"http://{host}:{grpcPort}",
-            CollectionName = _collection,
         })).Create();
     }
 
@@ -42,11 +42,11 @@ public class QdrantVectorStoreProviderTests
         new(_client!, Options.Create(new QdrantOptions
         {
             Url = "unused",
-            CollectionName = _collection,
             EnsureCollectionExists = true,
         }), _collection);
+[IntegrationTestMethod("oobd-test-qdrant")]    [TestCategory(TestCategories.Integration)]    public async Task Catalog_ListsAStoredCollection()    {        await CreateProvider().StoreVectorsAsync([new float[] { 1, 0, 0 }], new Dictionary<string, object>());        var names = await new QdrantVectorStoreCollectionCatalog(_client!).ListCollectionsAsync(TestContext.CancellationToken);        TestContext.WriteLine($"collections: {names.Count}, looking for {_collection}");        CollectionAssert.Contains(names.ToList(), _collection);    }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-qdrant")]
     [TestCategory(TestCategories.Integration)]
     public async Task FindNeighborsAsync_NearestVectorFirst()
     {
@@ -64,7 +64,7 @@ public class QdrantVectorStoreProviderTests
         Assert.AreEqual("x", results[0].MetaData!["name"]);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-qdrant")]
     [TestCategory(TestCategories.Integration)]
     public async Task FindNeighborsAsync_GroupBy_ReturnsOneHitPerGroup()
     {

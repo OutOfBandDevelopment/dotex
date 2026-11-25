@@ -24,8 +24,9 @@ Project: `src/ExternalServices/GroqCloud/OoBDev.GroqCloud.Tests`. Its readme is 
 |------|--------|
 | `GetCompletionAsync_ShortPrompt_ReturnsText` | `IMessageCompletion` returns text for a one-line prompt |
 | `HealthCheck_WithValidKey_IsHealthy` | `GroqCloudHealthCheck` reports Healthy |
+| `RunAsync_SampleFolderAgainstGroq_WritesPromptAndResponseAsync` (in `OoBDev.LlmCodeGen.Cli.Tests`) | the folder prompt runner writes a prompt file and a response file for a sample folder; needs `GROQ_API_KEY`, optional `GROQ_MODEL` |
 
-Each run makes two small chat completions. Both passed against the live API on 2026-10-09.
+The first two tests make one small chat completion each and passed against the live API on 2026-10-09; the folder runner test makes one more and has not been recorded as run.
 
 ## Model availability
 

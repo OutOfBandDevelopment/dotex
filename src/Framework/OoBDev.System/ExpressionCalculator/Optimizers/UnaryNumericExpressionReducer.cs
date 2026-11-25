@@ -64,7 +64,7 @@ public sealed class UnaryNumericExpressionReducer<T> : IExpressionOptimizer<T> w
     private ExpressionBase<T> Reduce(UnaryOperatorExpression<T> expression, UnaryOperatorExpression<T> unaryOperator)
     {
         var unary = Optimize(unaryOperator.Operand);
-        return unaryOperator.Operator == UnaryOperators.Negate && unaryOperator.Operator == UnaryOperators.Negate
+        return expression.Operator == UnaryOperators.Negate && unaryOperator.Operator == UnaryOperators.Negate
             ? new InnerExpression<T>(unary)
             : new UnaryOperatorExpression<T>(expression.Operator,
                 new UnaryOperatorExpression<T>(unaryOperator.Operator,

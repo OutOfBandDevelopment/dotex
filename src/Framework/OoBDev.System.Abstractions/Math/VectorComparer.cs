@@ -8,6 +8,8 @@ namespace OoBDev.System.Math;
 /// </summary>
 public class VectorComparer : IComparer<Vector>, IComparer<double[]>, IComparer
 {
+    private const double Tolerance = 1e-12;
+
     /// <summary>
     /// Gets or initializes the distance metric used for comparing vectors. Default is <see cref="VectorDistanceMetrics.Cosine"/>.
     /// </summary>
@@ -44,8 +46,9 @@ public class VectorComparer : IComparer<Vector>, IComparer<double[]>, IComparer
 
         var distance = VectorMath.Distance(vector1, vector2, DistanceMetric);
 
-        if (distance < 0) return -1;
-        else if (distance > 0) return 1;
+        // Cosine distance of equal vectors is rounding noise (about 1e-16), not exactly zero.
+        if (distance < -Tolerance) return -1;
+        else if (distance > Tolerance) return 1;
         else return 0;
     }
 }

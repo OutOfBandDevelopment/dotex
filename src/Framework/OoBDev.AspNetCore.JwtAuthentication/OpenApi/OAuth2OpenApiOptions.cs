@@ -11,12 +11,22 @@ public class OAuth2OpenApiOptions
     public required string UserReadApiClaim { get; set; }
 
     /// <summary>
-    /// Gets or sets the URL for the authorization endpoint.
+    /// Gets or sets the URL for the authorization endpoint. Empty reads it from <see cref="Authority"/>.
     /// </summary>
-    public required string AuthorizationUrl { get; set; }
+    public string? AuthorizationUrl { get; set; }
 
     /// <summary>
-    /// Gets or sets the URL for the token endpoint.
+    /// Gets or sets the URL for the token endpoint. Empty reads it from <see cref="Authority"/>.
     /// </summary>
-    public required string TokenUrl { get; set; }
+    public string? TokenUrl { get; set; }
+
+    /// <summary>
+    /// Gets or sets the authority (issuer) URL whose <c>.well-known/openid-configuration</c> supplies the authorization and token URLs that are not set.
+    /// </summary>
+    public string? Authority { get; set; }
+
+    /// <summary>
+    /// Gets or sets the client id the API reference signs in with. Empty uses the JwtBearer audience.
+    /// </summary>
+    public string? ClientId { get; set; }
 }

@@ -1,174 +1,34 @@
 # OoBDev.MigrationHelper.Cli
 
-Automated namespace and prefix migration tool for integrating external code into dotex.
+Console tool (not packaged: `IsPackable` is false) that swaps a name prefix in the folder names, file names and text of a code tree, for bringing a copied project into the OoBDev naming.
 
-## Purpose
+## Use
 
-This tool automates the process of migrating code from external libraries by renaming directories, files, and namespace references from a source prefix to a target prefix.
-
-## Use Case
-
-Designed to help migrate features from external codebases (like dotnet-libs) into the dotex framework by changing namespace prefixes.
-
-**Example Migration:**
-- Source: `OobDev.System.Abstractions` → Target: `OoBDev.System.Abstractions`
-- Source: `OobDev.AspNetCore.Mvc` → Target: `OoBDev.AspNetCore.Mvc`
-
-## How It Works
-
-The tool performs three operations in sequence:
-
-### 1. Rename Directories
-Scans all directories recursively and renames those starting with the source prefix.
-
-```
-Before: /path/OobDev.System.Abstractions/
-After:  /path/OoBDev.System.Abstractions/
-```
-
-### 2. Rename Files
-Scans all files recursively and renames those starting with the source prefix.
-
-```
-Before: OobDev.System.Abstractions.csproj
-After:  OoBDev.System.Abstractions.csproj
-```
-
-### 3. Replace Content
-Reads all text files and replaces namespace references throughout the content.
-
-```csharp
-// Before
-namespace OobDev.System.Abstractions
-{
-    public interface IResult { }
-}
-
-// After
-namespace OoBDev.System.Abstractions
-{
-    public interface IResult { }
-}
-```
-
-## Configuration
-
-Edit `Program.cs` lines 7-9:
-
-```csharp
-var path = @"C:\repo\merge-em\dotex\Incomming\dotnet-lib";  // Base directory
-var sourcePrefix = "SourceApp";                               // Prefix to replace
-var targetPrefix = "OoBDev";                                 // New prefix
-```
-
-## Usage
-
-### Step 1: Configure
-Edit the three configuration variables in `Program.cs`:
-- `path` - Root directory containing code to migrate
-- `sourcePrefix` - Current namespace prefix (e.g., "SourceApp")
-- `targetPrefix` - Desired namespace prefix (e.g., "OoBDev")
-
-### Step 2: Run
 ```bash
-dotnet run --project src/Tools/OoBDev.MigrationHelper.Cli
+dotnet run --project src/Tools/OoBDev.MigrationHelper.Cli -- --path ../copy --from BinaryDataDecoders --to OoBDev
 ```
 
-### Step 3: Verify
-Review the console output showing renamed directories, files, and modified content files.
+**Table 1 — Options**
 
-## Safety Features
+| Option | Meaning |
+|--------|---------|
+| `--path` | Required; the folder to rewrite. Without it the tool prints the usage and exits with 1 |
+| `--from` | Prefix to replace (default `BinaryDataDecoders`) |
+| `--to` | New prefix (default `OoBDev`) |
+| `--dry-run` | List what would change and change nothing |
 
-- **Binary File Detection:** Skips files containing null bytes (binary files)
-- **Error Handling:** Catches and reports exceptions during file processing
-- **Progress Output:** Prints each renamed directory, file, and modified content file
+`-h`, `--help` or `-?` prints the usage and exits with 0.
 
-## Example Output
+## What it does
 
-```
-OobDev.System.Abstractions
-OobDev.AspNetCore.Mvc
-OobDev.System.Abstractions.csproj
-/path/to/file/IResult.cs
-/path/to/file/ResponseModel/ModelResult.cs
-Skip: /path/to/binary.dll
-```
+1. Renames every folder whose name starts with `--from` (case-sensitive), replacing the prefix.
+2. Renames every file whose name starts with `--from` the same way.
+3. Reads every file under the path as text and, when the content contains the prefix, replaces every occurrence (namespaces, usings, project references, documentation) and writes the file back. A file containing a null character is treated as binary: it is reported as `Skip:` and left unchanged.
 
-## Typical Migration Workflow
+The work is done by `PrefixMigrator.Run` (covered by `OoBDev.MigrationHelper.Cli.Tests`). Each renamed name, rewritten file path or skipped file is printed (`Would ...` in a dry run); read or write failures go to stderr and processing continues.
 
-1. **Copy external code** to `dotex/Incomming/dotnet-lib/`
-2. **Configure MigrationHelper.Cli** with path and prefixes
-3. **Run the tool** to perform automated renaming
-4. **Review changes** using git diff
-5. **Test compilation** to ensure no broken references
-6. **Move migrated code** to appropriate Framework directories
-7. **Update project references** and imports
-8. **Run tests** to validate integration
+## Limits
 
-## Limitations
-
-- **Simple text replacement** - Does not parse C# syntax
-- **Overwrites files** - No backup created (use version control!)
-- **Hardcoded configuration** - Must edit source code to change settings
-- **No dry-run mode** - Changes are immediate
-
-## Best Practices
-
-✅ **DO:**
-- Use version control (git) before running
-- Test on a copy first
-- Review changes with `git diff` after running
-- Verify compilation after migration
-
-❌ **DON'T:**
-- Run on production code without backups
-- Use on directories with uncommitted changes
-- Assume it handles all edge cases
-- Skip testing after migration
-
-## Error Handling
-
-The tool will:
-- Print error messages to stderr if file operations fail
-- Continue processing remaining files if one fails
-- Skip binary files (containing null bytes)
-
-## Related Tools
-
-- **FixSourceLinks.Cli** - Corrects source links after migration
-- **TemplateEngine.Cli** - Can be used for more complex transformations
-
-## Version History
-
-- **Current:** Simple text replacement tool
-- **Future Enhancements:**
-  - CLI arguments instead of hardcoded config
-  - Dry-run mode
-  - Backup option
-  - Regex-based replacement patterns
-  - C# syntax-aware renaming
-
-## Example: SourceApp to OoBDev Migration
-
-**Scenario:** Migrating 40 files from dotnet-libs
-
-**Configuration:**
-```csharp
-var path = @"C:\repo\dotex\Incomming\dotnet-lib";
-var sourcePrefix = "SourceApp";
-var targetPrefix = "OoBDev";
-```
-
-**Files Affected:**
-- 8 directories renamed
-- 40+ .cs files renamed
-- 40+ .csproj files renamed
-- Namespace declarations updated in all files
-- Using statements updated in all files
-- XML documentation updated
-
-**Result:** All code ready for integration into dotex Framework
-
----
-
-**Status:** ✅ Production Ready - Actively used for dotnet-libs migration
+- It changes files in place with no backup (use `--dry-run` first): run it on a clean working tree or a copy and review `git diff`.
+- It is plain text replacement, not C# aware, and replaces the prefix anywhere in a file, not only at the start of a name.
+- Folders are renamed deepest first, so nested folders that also start with the prefix are all renamed in one run.

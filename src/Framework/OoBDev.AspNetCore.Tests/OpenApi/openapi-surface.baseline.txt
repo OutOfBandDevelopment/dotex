@@ -1,0 +1,7 @@
+GET /api/items
+GET /api/items param:hint
+GET /api/items param:pageSize
+GET /api/items response:200
+GET /api/items/ping
+GET /api/items/ping response:200
+GET /health

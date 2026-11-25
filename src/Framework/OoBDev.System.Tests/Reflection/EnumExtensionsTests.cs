@@ -17,13 +17,6 @@ public class EnumExtensionsTests
     [TestMethod, TestCategory(TestCategories.Unit)]
     public void AsModelsTest()
     {
-        if (Environment.OSVersion.Platform != PlatformID.Win32NT)
-        {
-            //TODO: fix this better
-            Assert.Inconclusive();
-            return;
-        }
-
         var values = EnumExtensions.AsModels<AttributeTargets>();
 
         foreach (var e in values)
@@ -48,19 +41,12 @@ EnumModel { Id = 8192, Name = ReturnValue, Code = RETURNVALUE, Description = , O
 EnumModel { Id = 16384, Name = GenericParameter, Code = GENERICPARAMETER, Description = , Order = 0, Value = GenericParameter, IsEndState = False, IsExcludeFromUnique = False, PossibleNames = System.String[], Value = GenericParameter }
 EnumModel { Id = 32767, Name = All, Code = ALL, Description = , Order = 0, Value = All, IsEndState = False, IsExcludeFromUnique = False, PossibleNames = System.String[], Value = All }
 ";
-        Assert.AreEqual(expected, result);
+        Assert.AreEqual(expected.ReplaceLineEndings(), result.ReplaceLineEndings());
     }
 
     [TestMethod, TestCategory(TestCategories.Unit)]
     public void AsModelsTest2()
     {
-        if (Environment.OSVersion.Platform != PlatformID.Win32NT)
-        {
-            //TODO: fix this better
-            Assert.Inconclusive();
-            return;
-        }
-
         var values = EnumExtensions.AsModels<TestEnum>();
 
         foreach (var e in values)
@@ -76,7 +62,7 @@ EnumModel { Id = 8, Name = WithMemberName, Code = name2, Description = , Order =
 EnumModel { Id = 16, Name = WithDescription, Code = WITHDESCRIPTION, Description = test description, Order = 0, Value = WithDescription, IsEndState = False, IsExcludeFromUnique = False, PossibleNames = System.String[], Value = WithDescription }
 EnumModel { Id = 32, Name = test name, Code = test short, Description = test display, Order = 0, Value = WithDisplay, IsEndState = False, IsExcludeFromUnique = False, PossibleNames = System.String[], Value = WithDisplay }
 ";
-        Assert.AreEqual(expected, result);
+        Assert.AreEqual(expected.ReplaceLineEndings(), result.ReplaceLineEndings());
     }
 
     [TestMethod, TestCategory(TestCategories.Unit)]

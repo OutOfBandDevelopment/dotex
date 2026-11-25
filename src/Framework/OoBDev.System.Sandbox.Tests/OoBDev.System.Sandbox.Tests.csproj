@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>false</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="MSTest.TestAdapter" />
+    <PackageReference Include="MSTest.TestFramework" />
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OoBDev.System.Sandbox\OoBDev.System.Sandbox.csproj" />
+    <ProjectReference Include="..\OoBDev.System.Sandbox.Windows\OoBDev.System.Sandbox.Windows.csproj" />
+    <ProjectReference Include="..\OoBDev.System.Sandbox.Linux\OoBDev.System.Sandbox.Linux.csproj" />
+    <ProjectReference Include="..\OoBDev.System.Sandbox.MacOS\OoBDev.System.Sandbox.MacOS.csproj" />
+    <ProjectReference Include="..\OoBDev.System.Sandbox.Plugin\OoBDev.System.Sandbox.Plugin.csproj" />
+    <ProjectReference Include="..\OoBDev.System\OoBDev.System.csproj" />
+    <Using Include="OoBDev.System.Sandbox" />
+  </ItemGroup>
+
+</Project>

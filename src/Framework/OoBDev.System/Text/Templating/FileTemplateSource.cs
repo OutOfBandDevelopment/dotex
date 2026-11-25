@@ -36,7 +36,7 @@ public partial class FileTemplateSource(
             where template.IsTemplateType
             select template;
 
-        var fileTypes =
+        var suffixTypes =
             from template in _fileTypes.Concat(new[] { new FileType {
                 Extension = "",
                 ContentType= "application/octet-stream",
@@ -47,7 +47,7 @@ public partial class FileTemplateSource(
 
         var possibleFiles =
             from template in templateTypes
-            from target in fileTypes
+            from target in suffixTypes
             let fileName = string.Join("", templateName, target.Extension, template.Extension)
             let filePath = Path.Combine(_settings.TemplatePath, fileName)
             let fullPath = Path.GetFullPath(filePath)

@@ -9,14 +9,14 @@ namespace OoBDev.System;
 public static class StreamEx
 {
     /// <summary>
-    /// simple wrapper to get stream content as string
+    /// Reads the stream to the end as text and disposes the stream (the reader owns it), so the caller does not use it afterwards.
     /// </summary>
-    /// <param name="stream"></param>
-    /// <returns></returns>
+    /// <param name="stream">The stream to read, or null.</param>
+    /// <returns>The text, or null when the stream is null.</returns>
     public static async Task<string?> ReadAsStringAsync(this Stream? stream)
     {
         if (stream == null) return null;
-        using var sr = new StreamReader(stream); //TODO: should this leave the underlying stream open?
+        using var sr = new StreamReader(stream);
         return await sr.ReadToEndAsync().ConfigureAwait(false);
     }
 

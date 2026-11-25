@@ -41,7 +41,7 @@ public static class ServiceCollectionExtensions
         // Add common services
         services.TryAddMessageQueueingServices();
         services.TryAddCommunicationQueueServices();
-        services.TryAddCommunicationsServices();
+        services.TryAddSendReceive();
         services.TryAddIdentityServices(configuration);
         services.TryAddSearchServices();
         services.TryAddDocumentServices();

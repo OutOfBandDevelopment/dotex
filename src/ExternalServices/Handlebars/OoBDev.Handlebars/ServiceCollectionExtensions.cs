@@ -28,11 +28,16 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IFileType>(_ => new FileType { Extension = ".hbs", ContentType = ContentTypesExtensions.Text.HandlebarsTemplate, IsTemplateType = true });
 
         services.AddTransient<IHelperDescriptor<HelperOptions>, DateNowHelperDescriptor>();
+        services.AddTransient<IHelperDescriptor<HelperOptions>, FormatDateHelperDescriptor>();
+        services.AddTransient<IHelperDescriptor<HelperOptions>, FormatNumberHelperDescriptor>();
+        services.AddTransient<IHelperDescriptor<HelperOptions>>(_ => new FormatNumberHelperDescriptor("currency", "C"));
+        services.AddTransient<IHelperDescriptor<HelperOptions>, JsonHelperDescriptor>();
         services.AddTransient<IHelperDescriptor<HelperOptions>, GetHelperDescriptor>();
         services.AddTransient<IHelperDescriptor<HelperOptions>, GuidNewHelperDescriptor>();
         services.AddTransient<IHelperDescriptor<HelperOptions>, HashHelperDescriptor>();
         services.AddTransient<IHelperDescriptor<HelperOptions>, SetHelperDescriptor>();
         services.AddTransient<IHelperDescriptor<HelperOptions>, StringReplaceHelperDescriptor>();
+        services.AddTransient<IHelperDescriptor<HelperOptions>, TranslateHelperDescriptor>();
 
         return services;
     }

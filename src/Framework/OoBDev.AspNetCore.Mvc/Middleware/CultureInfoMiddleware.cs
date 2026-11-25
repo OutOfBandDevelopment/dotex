@@ -1,6 +1,7 @@
 using OoBDev.System.Accessors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -24,21 +25,24 @@ public partial class CultureInfoMiddleware(
     /// <param name="context">The HTTP context.</param>
     /// <param name="logger">The logger.</param>
     /// <param name="cultureInfo">The accessor for <see cref="CultureInfo"/>.</param>
+    /// <param name="options">The supported cultures and the default culture.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task Invoke(
         HttpContext context,
         ILogger<CultureInfoMiddleware> logger,
-        IAccessor<CultureInfo> cultureInfo
+        IAccessor<CultureInfo> cultureInfo,
+        IOptions<CultureInfoMiddlewareOptions> options
         )
     {
         try
         {
             // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language
             var fromHeader = (string?)context.Request.Headers.AcceptLanguage;
-            if (!string.IsNullOrWhiteSpace(fromHeader))
+            var hasHeader = !string.IsNullOrWhiteSpace(fromHeader);
+            var language = (hasHeader ? Negotiate(fromHeader!, options.Value) : null) ?? GetDefault(options.Value);
+            if (hasHeader || language is not null)
             {
-                var language = fromHeader.Split(',').Select(GetCultureInfo).FirstOrDefault();
-                LogSetCulture(logger, fromHeader, language);
+                LogSetCulture(logger, fromHeader ?? string.Empty, language);
 
                 cultureInfo.Value = language ?? CultureInfo.CurrentCulture;
                 CultureInfo.CurrentCulture = CultureInfo.CurrentUICulture = cultureInfo.Value;
@@ -68,11 +72,42 @@ public partial class CultureInfoMiddleware(
         }
     }
 
-    private CultureInfo? GetCultureInfo(string cultureInfo)
+    private static CultureInfo? GetDefault(CultureInfoMiddlewareOptions options) =>
+        string.IsNullOrWhiteSpace(options.DefaultCulture) ? null : GetCultureInfo(options.DefaultCulture);
+
+    private static CultureInfo? Negotiate(string header, CultureInfoMiddlewareOptions options)
+    {
+        var candidates = header.Split(',')
+            .Select((entry, index) => (culture: GetCultureInfo(entry), quality: GetQuality(entry), index))
+            .Where(c => c.culture is not null && c.quality > 0)
+            .OrderByDescending(c => c.quality)
+            .ThenBy(c => c.index);
+
+        foreach (var (culture, _, _) in candidates)
+        {
+            if (options.SupportedCultures.Length == 0)
+                return culture;
+
+            var match = options.SupportedCultures.FirstOrDefault(s => string.Equals(s, culture!.Name, StringComparison.OrdinalIgnoreCase))
+                ?? options.SupportedCultures.FirstOrDefault(s => string.Equals(s, culture!.TwoLetterISOLanguageName, StringComparison.OrdinalIgnoreCase));
+            if (match is not null)
+                return GetCultureInfo(match);
+        }
+
+        return null;
+    }
+
+    private static double GetQuality(string entry)
+    {
+        var q = entry.Split(';').Skip(1).Select(p => p.Trim()).FirstOrDefault(p => p.StartsWith("q=", StringComparison.OrdinalIgnoreCase));
+        return q is not null && double.TryParse(q[2..], NumberStyles.Float, CultureInfo.InvariantCulture, out var value) ? value : 1;
+    }
+
+    private static CultureInfo? GetCultureInfo(string cultureInfo)
     {
         try
         {
-            var culture = cultureInfo.Split(';').FirstOrDefault();
+            var culture = cultureInfo.Split(';').FirstOrDefault()?.Trim();
             return culture == null ? null : CultureInfo.GetCultureInfo(culture);
         }
         catch (CultureNotFoundException)

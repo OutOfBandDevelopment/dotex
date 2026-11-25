@@ -1,10 +1,15 @@
+using OoBDev.System.Net.Mime;
 using OoBDev.System.Text.Templating;
+using OoBDev.WebApi.Models;
+using OoBDev.WebApi.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
@@ -25,7 +30,8 @@ public class TextTemplateController(
     ITemplateEngine engine,
 
     IEnumerable<IFileType> fileTypes,
-    TimeProvider timeProvider
+    TimeProvider timeProvider,
+    TemplateCatalog catalog
     ) : ControllerBase
 {
 
@@ -38,20 +44,73 @@ public class TextTemplateController(
     public IEnumerable<FileType> SupportedTemplates() =>
         fileTypes.Cast<FileType>().Where(ct => ct.IsTemplateType);
 
-    // /// <summary>
-    // /// Queries text templates.
-    // /// </summary>
-    //[HttpPost()]
-    //[AllowAnonymous]
-    //public IQueryable<TextTemplateModel> Query() => provider.Query();
+    /// <summary>
+    /// Lists the template files in the template folder.
+    /// </summary>
+    /// <returns>The templates, ordered by name.</returns>
+    [HttpGet()]
+    [AllowAnonymous]
+    public IReadOnlyList<TemplateInfoModel> List() => catalog.List();
 
-    // /// <summary>
-    // /// Saves a text template.
-    // /// </summary>
-    //[HttpPost()]
-    //[AllowAnonymous]
-    //public async Task<string> Save([FromBody] TextTemplateModel model) =>
-    //    await provider.SaveAsync(model);
+    /// <summary>
+    /// Reads the source text of a listed template.
+    /// </summary>
+    /// <param name="file">The file name from the list.</param>
+    /// <returns>The template and its text, or not found.</returns>
+    [HttpGet()]
+    [AllowAnonymous]
+    public ActionResult<TemplateDetailModel> Read(string file) =>
+        catalog.Read(file) is { } detail ? detail : NotFound();
+
+    /// <summary>
+    /// Saves new text over a listed template file (the example demo edits the repository files; owner, 2026-11-09).
+    /// </summary>
+    /// <param name="model">The listed file name and the new text.</param>
+    /// <returns>No content, or not found when the file is not a listed template.</returns>
+    [HttpPut()]
+    [AllowAnonymous]
+    public IActionResult Save([FromBody] TemplateSaveRequestModel model) =>
+        catalog.Save(model.File, model.Text) ? NoContent() : NotFound();
+
+    /// <summary>
+    /// Renders a draft template text with sample data. Nothing is saved.
+    /// </summary>
+    /// <param name="model">The draft text, the engine, the target extension and the data.</param>
+    /// <returns>The rendered text, or a problem when no engine can render the draft.</returns>
+    [HttpPost()]
+    [AllowAnonymous]
+    public async Task<IActionResult> Preview([FromBody] TemplatePreviewRequestModel model)
+    {
+        var templateType = string.IsNullOrWhiteSpace(model.TemplateContentType) ? ContentTypesExtensions.Text.HandlebarsTemplate : model.TemplateContentType;
+        var target = fileTypes.FirstOrDefault(t => !t.IsTemplateType && string.Equals(t.Extension, model.TargetExtension, StringComparison.OrdinalIgnoreCase));
+        var bytes = Encoding.UTF8.GetBytes(model.Text);
+        var context = new TemplateContext
+        {
+            TemplateName = "preview",
+            TemplateContentType = templateType,
+            TemplateFileExtension = string.Empty,
+            TemplateSource = null!,
+            TemplateReference = "preview",
+            OpenTemplate = _ => new MemoryStream(bytes),
+            TargetContentType = target?.ContentType ?? "text/plain",
+            TargetFileExtension = model.TargetExtension,
+        };
+
+        using var output = new MemoryStream();
+        try
+        {
+            if (!await engine.ApplyAsync(context, model.Data ?? new JsonObject(), output))
+            {
+                return Problem(title: "Cannot render", detail: $"No template engine handles '{templateType}'.", statusCode: StatusCodes.Status400BadRequest);
+            }
+        }
+        catch (Exception ex)
+        {
+            return Problem(title: "Template error", detail: ex.Message, statusCode: StatusCodes.Status400BadRequest);
+        }
+
+        return Content(Encoding.UTF8.GetString(output.ToArray()), "text/plain");
+    }
 
     /// <summary>
     /// Applies a text template with the specified name and data.

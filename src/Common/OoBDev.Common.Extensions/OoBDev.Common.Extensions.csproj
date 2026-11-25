@@ -16,6 +16,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+    <ProjectReference Include="..\..\Framework\OoBDev.Telemetry\OoBDev.Telemetry.csproj" />
     <ProjectReference Include="..\..\ExternalServices\**\*.csproj" />
 		<ProjectReference Remove="..\..\ExternalServices\**\*.Tests.csproj" />
 		<ProjectReference Remove="..\..\ExternalServices\**\*.Abstractions.csproj" />

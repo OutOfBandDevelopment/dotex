@@ -1,5 +1,6 @@
 ﻿using OoBDev.System.Xml.XPath;
 using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using YamlDotNet.RepresentationModel;
@@ -74,7 +75,7 @@ public static class YamlNavigatorFactory
              {
                  YamlMappingNode mapping => mapping.Select(i => (XName.Get(i.Key switch
                  {
-                     YamlScalarNode s when s.Value != null => s.Value,
+                     YamlScalarNode s when !string.IsNullOrEmpty(s.Value) => XmlConvert.EncodeLocalName(s.Value),
                      _ => "item"
                  }, rootName.NamespaceName), i.Value)),
                  YamlSequenceNode mapping => mapping.Select(i => (XName.Get("item", rootName.NamespaceName), i)),

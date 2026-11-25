@@ -27,6 +27,13 @@ public interface IVectorStore
     Task<string[]> StoreVectorsAsync(IEnumerable<(ReadOnlyMemory<float> embedding, IDictionary<string, object> metadata)> items, IDictionary<string, object> metadata);
 
     /// <summary>
+    /// Deletes the vectors with the specified ids (the ids <see cref="StoreVectorsAsync(IEnumerable{ReadOnlyMemory{float}}, IDictionary{string, object})"/> returned and <see cref="SearchResultModel.ItemId"/> reports). An unknown id is ignored.
+    /// </summary>
+    /// <param name="ids">The ids to delete.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    Task DeleteAsync(IEnumerable<string> ids);
+
+    /// <summary>
     /// Lists the stored vectors.
     /// </summary>
     /// <returns>A sequence of search result models.</returns>

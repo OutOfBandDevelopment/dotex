@@ -108,7 +108,7 @@ public partial class SearchQueryOperationTransformer(
 
             if (property.Name.Equals(nameof(ISearchQuery.Filter), StringComparison.OrdinalIgnoreCase))
             {
-                //TODO: ignore filter support for now.
+                // Filter is a free-form dictionary keyed by model property; no per-property schema is generated.
                 continue;
             }
 

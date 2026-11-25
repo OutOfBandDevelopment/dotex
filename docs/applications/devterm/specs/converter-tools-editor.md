@@ -1,0 +1,46 @@
+# Converter tools editor
+
+The dialog that manages the app-wide list of converter tools the Stream Monitor can run. The list is shared by every
+profile, device and front end, and is stored in `~/.dev-term/converter-tools.json`. It is opened by **Device > Converter
+Tools...** (next to **Stream Monitor...**) in both the TUI and WPF. Design: [stream-converter-tools](../../../design/StreamTools/stream-converter-tools.md).
+
+Logic is shared: `DevTerm.Configuration.ConverterToolsEditor` (a working copy of the list). WPF renders it as
+`ConverterToolsWindow`, the TUI as `ConverterToolsDialog`.
+
+## Screenshots
+
+Captured by `ConverterToolsScreenshotTests` (TUI, 80x25) and `ScreenshotTests.ConverterToolsWindow_IsCaptured` (WPF).
+
+![TUI converter tools dialog](../user-guide/images/tui-converter-tools.png)
+
+![WPF converter tools dialog](../user-guide/images/wpf-converter-tools.png)
+
+## Fields (per selected tool)
+
+| Field | Meaning |
+|---|---|
+| Name | Unique (case-insensitive); what `tool:<Name>` and the Convert... list show. |
+| Path | The executable. WPF has a Browse... button. |
+| Arguments | Template with `{input}`, `{output}`, `{dpi}`. New tools start as `{input} {output}`. |
+| Formats | Comma list of capture formats the tool handles (`ps`, `pcl`, `hpgl`, `image`, `bmp`...); empty means any. |
+| Output extension | Extension of the converted file; a leading `.` is stripped. Default `png`. |
+| DPI | Positive integer substituted for `{dpi}`. Default 150. |
+
+## Actions
+
+- **Add** appends a tool named `toolN` and focuses Name. **Remove** deletes the selected tool and selects its neighbour.
+- **Up / Down** reorder. Order matters: Auto mode picks the first tool, in list order, whose Formats match.
+- **OK** validates and, if clean, returns the edited list; otherwise the first problem is shown in the dialog and it stays
+  open. Checks: blank name, duplicate name, blank path, DPI not above zero, blank output extension.
+- **Cancel** discards every change (the dialog edits copies).
+
+Accepting the dialog replaces the list and writes it to `converter-tools.json` at once; Cancel writes nothing. A missing
+or unreadable file reads as an empty list. The Stream Monitor windows load the list when they open, so a change shows
+the next time one is opened.
+
+A profile's own `StreamConvertTools` (older profiles) still load and are added to the list, unless an app-wide tool has
+the same name, in which case the app-wide one wins. They have no editing screen any more; saving a profile keeps them.
+
+## Web
+
+`/converters` in `DevTerm.Web` edits the same shared list (`ConverterToolsEditor`, `converter-tools.json`, or `Web:ConverterToolsFile`). All tools show as editable cards; Save validates as OK does and writes at once, Revert reloads the file. Read-only viewers cannot change it. The web Stream Monitor's Convert uses this list.

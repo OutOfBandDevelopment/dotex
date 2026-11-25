@@ -1,4 +1,5 @@
 ﻿using OoBDev.AI;
+using OoBDev.TestUtilities.Containers;
 using OoBDev.TestUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,10 +35,10 @@ public class OllamaMessageCompletionTests
     }
 
     [TestCategory(TestCategories.Integration)]
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-ollama")]
     public async Task IMessageCompletion_GetCompletionAsyncTest()
     {
-        var url = TestContext.GetRequiredProperty<string>("OLLAMA_URL");
+        var url = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("OLLAMA_URL"));
         var model = TestContext.GetPropertyOrDefault("OLLAMA_MODEL", "phi3");
 
         var client = Build<IMessageCompletion>(url, model);
@@ -48,18 +49,6 @@ public class OllamaMessageCompletionTests
         TestContext.WriteLine($"Response: {response}");
 
         Assert.IsFalse(string.IsNullOrWhiteSpace(response));
-    }
-
-    [TestCategory(TestCategories.DevLocal)]
-    [TestMethod]
-    [DataRow("http://127.0.0.1:11434", "phi", "Hello World!")]
-    public async Task IMessageCompletion_GetCompletionAsyncTest_DevLocal(string hostName, string model, string prompt)
-    {
-        var client = Build<IMessageCompletion>(hostName, model);
-        var embedding = await client.GetCompletionAsync(model, prompt);
-        TestContext.WriteLine(embedding);
-
-        Assert.IsFalse(string.IsNullOrWhiteSpace(embedding));
     }
 
 }

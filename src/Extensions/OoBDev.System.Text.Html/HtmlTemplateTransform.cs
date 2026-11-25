@@ -14,7 +14,7 @@ namespace OoBDev.System.Text.Html;
 [TemplateTransform(MediaTypes.Html)]
 public class HtmlTemplateTransform(
     IInstanceFactory instanceFactory,
-    IHtmlDocumentVistor htmlVisitor
+    IHtmlDocumentVisitor htmlVisitor
         ) : ITemplateTransform
 {
     /// <summary>
@@ -29,14 +29,11 @@ public class HtmlTemplateTransform(
             DisableServerSideCode = true,
 
             OptionAutoCloseOnEnd = true,
-            // OptionDefaultStreamEncoding = Encoding.UTF8,
             OptionEmptyCollection = true,
             OptionFixNestedTags = true,
             OptionOutputAsXml = true,
             OptionOutputOptimizeAttributeValues = true,
-            // OptionPreserveXmlNamespaces = true,
             OptionReadEncoding = true,
-            //OptionWriteEmptyNodes = true,
 
         };
         html.LoadHtml(content);

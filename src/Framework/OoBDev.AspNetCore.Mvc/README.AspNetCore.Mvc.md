@@ -1,63 +1,64 @@
 # OoBDev.AspNetCore.Mvc
 
-## Summary
+ASP.NET Core building blocks for the framework's REST APIs: authenticated-by-default authorization, application rights, OpenAPI documents with Scalar, the HTTP `QUERY` verb, the shared search query, correlation and culture middleware, health checks and the AsyncAPI endpoints. JWT validation is in [OoBDev.AspNetCore.JwtAuthentication](../OoBDev.AspNetCore.JwtAuthentication/README.AspNetCore.JwtAuthentication.md); [Common.AspNetCore](../../Common/OoBDev.Common.AspNetCore/README.Common.AspNetCore.md) wires both.
 
-This code is part of an open-source project that provides extensions for ASP.NET Core. 
-The extensions include authentication, authorization, and search query support. The code 
-contains several functions and classes that are used to implement these extensions.
-
-## Configuration
-
-The configuration options for this code can be found in the ServiceCollectionExtensions 
-class. The main configuration options are:
-
-* `TryAddAspNetCoreExtensions` This function adds the necessary services to support all 
-  ASP.NET Core extensions provided by this library. It takes several parameters, including 
-  requireAuthenticatedByDefault, requireApplicationUserId, and authorizationPolicyBuilder.
-
-* `AddRequireAuthenticatedUser` This function adds authentication requirements to the service 
-  collection. It takes two parameters, requireApplicationUserId and authorizationPolicyBuilder.
-
-* `TryAddCommonOpenApiExtensions` This function enables extensions for OpenAPI (Microsoft.AspNetCore.OpenApi transformers and the Scalar API reference).
-
-* `MapAsyncApi` (with `TryAddAsyncApiServices` from `OoBDev.AsyncApi`) publishes the message queue AsyncAPI document at `/asyncapi/{name}.json` and a viewer at `/asyncapi/{name}`.
-
-* `TryAddAspNetCoreSearchQuery` This function enables extensions for shared search query 
-  extensions.
-
-
-## Example
-
-Here is an example of how to configure the code
+## Use
 
 ```csharp
-public void ConfigureServices(IServiceCollection services)
+services.TryAddAspNetCoreExtensions(new AspNetCoreExtensionBuilder
 {
-    services.TryAddAspNetCoreExtensions(
-        requireAuthenticatedByDefault: true,
-        requireApplicationUserId: true,
-        authorizationPolicyBuilder: policyBuilder =>
-        {
-            policyBuilder.RequireClaim("scope", "api1");
-            policyBuilder.RequireClaim("scope", "api2");
-        }
-    );
+    RequireAuthenticatedByDefault = true,
+    ApplicationUserIdClaim = CommonClaims.UserId, // null: the application has no user id
+    AuthorizationPolicyBuilder = policy => policy.RequireClaim("scope", "api1"),
+});
+services.TryAddRoleRightMapping(configuration);                    // optional, see below
 
-    services.AddRequireAuthenticatedUser(
-        requireApplicationUserId: true,
-        authorizationPolicyBuilder: policyBuilder =>
-        {
-            policyBuilder.RequireClaim("role", "admin");
-        }
-    );
+app.UseAspNetCoreExtensionMiddleware(healthCheckPath: "/health");
+app.UseHttpQueryVerb();                                            // optional: HTTP QUERY
+app.MapControllers();
+app.MapApiReference();                                             // /openapi/{document}.json and /scalar/{document}
+app.MapAsyncApi();                                                 // /asyncapi/{document}.json and a viewer
+```
 
-    services.TryAddCommonOpenApiExtensions();
-    services.TryAddAspNetCoreSearchQuery();
+In Debug builds the builder and `healthCheckPath` parameters are required, in Release they default (the `#if DEBUG` pattern).
+
+**Table 1 — Entry points**
+
+| Method | Does |
+|--------|------|
+| `TryAddAspNetCoreExtensions(builder)` | Health checks, OpenAPI, search query, the CultureInfo accessor, `HttpContext` based `IPrincipal`, `IIdentity`, `ClaimsPrincipal` and `ICurrentUserAccessor` (keyed `http`; the environment accessor stays as `environment`), the correlation header feature, and `AddRequireAuthenticatedUser` when `RequireAuthenticatedByDefault` is true |
+| `AddRequireAuthenticatedUser(applicationUserIdClaim, policy)` | Default and controller filter policy: authenticated user plus `UserAuthorizationRequirement`, then your policy callback |
+| `TryAddCommonOpenApiExtensions()` or `(controllerAssemblies)` | One OpenAPI document per controller assembly (`/openapi/{AssemblyName}.json`) and an `all` document, with the XML documentation, search query, permission and health check transformers |
+| `TryAddAspNetCoreSearchQuery()` | Search query filter, `ISearchQuery` accessor, `ISearchModelMapper` and `ISearchModelBuilder` |
+
+The `OOBDEV_SHOW_PII=true` environment variable turns on identity model personal data in logs outside Production; in Production it is ignored with a logged warning.
+| `TryAddRoleRightMapping(configuration)` | Role to application right mapping, below |
+| `TryAddCultureNegotiation(configuration)` | `OoBDev:Culture` options: `DefaultCulture` and `SupportedCultures`; `Accept-Language` is matched by quality, an unsupported culture gets the default, and `Content-Language` returns the result |
+| `TryAddProblemDetailsExceptionHandler(configuration)` | `ProblemDetailsExceptionHandler` (an `IExceptionHandler`) and `OoBDev:ProblemDetails` options. `UseProblemDetailsExceptionHandler()` (call first) turns an unhandled exception into an RFC 9457 500 with `traceId`, `correlationId`, `requestId` and `instance`, never the exception message; `IncludeErrorLocation` (default false) adds `errorLocation` (exception type, method, file, line) for development and test |
+| `UseHttpUsageMetrics()` | Opt-in `HttpUsageMetricsMiddleware`: counter `oobdev.http.requests` (route template, method, status class), counter `oobdev.http.timeouts` (408, 504 or a `TimeoutException`) and histogram `oobdev.http.request.duration` on the meter `OoBDev.AspNetCore.Mvc`; the route is the template, never the URL with identifiers |
+| `MapScreenViews(screens, path)` | `POST /api/v1/analytics/screen-views` with `{ "screen": "name" }`: counts `oobdev.ui.screen_views` (meter `OoBDev.AspNetCore.Mvc.Ui`, tags screen and authenticated); a name outside the known list gets problem details 400, so tag values cannot be inflated. Chain `RequireAuthorization()` and a rate limit as the host needs |
+| `UseAspNetCoreExtensionMiddleware(path)` | Health check endpoint (default `/health`; call after `UseAuthentication`), correlation info, culture and search query middleware. The health body depends on the caller: anonymous gets `status` only, authenticated gets the check list, and the right `health.details` adds descriptions, data and errors. The OpenAPI document shows the mapped path |
+| `UseHttpQueryVerb()` | `QueryVerbMiddleware` for HTTP `QUERY` |
+| `MapApiReference(configure)` | OpenAPI endpoints plus Scalar listing every document; each `IApiReferenceConfigurator` (for example the OAuth2 one) and then `configure` shape the options |
+| `MapAsyncApi()` | `/asyncapi/{document}.json` and an HTML viewer at `/asyncapi/{document}` loading the web component from `AsyncApi:ViewerScriptUrl` (default a pinned unpkg script); 404 for an unknown document |
+
+## Application rights
+
+`TryAddRoleRightMapping(configuration)` maps role claims to `app__application_right` claims, so code checks rights (`[ApplicationRight("orders.read")]`) and never role names. The mapping is configuration:
+
+```json
+{
+  "OoBDev": {
+    "Authorization": {
+      "RoleClaimTypes": [ "roles" ],
+      "Roles": { "order-manager": [ "orders.read", "orders.approve" ] }
+    }
+  }
 }
 ```
 
-In this example, authentication is required by default, and the application user ID is also 
-required. Additionally, two authorization policies are added: one that requires 
-authentication and two specific claims (scope), and another that requires authentication 
-and a specific claim (role). Finally, the OpenAPI and search query extensions are 
-enabled.
+Unmapped roles grant nothing. Granted rights are logged at Debug as counts only. Details: [ApplicationRights](../../../docs/design/ApplicationRights/README.md).
+
+## Paging links
+
+When a search action returns a paged result with more than one page, `SearchQueryResultFilter` adds an RFC 8288 `Link` header with `first`, `prev`, `next` and `last` (`PagingLinkHeader`). The path and the other query parameters are kept; only `currentPage` changes.

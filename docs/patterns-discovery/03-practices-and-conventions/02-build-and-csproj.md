@@ -14,10 +14,10 @@ Shared metadata and behavior live once in `src/Directory.Build.props` (and `.tar
 |---------|-----------|
 | Company, copyright, authors, repository URL | properties in `Directory.Build.props` |
 | `RootNamespace` | project name with spaces to `_` and `.Abstractions` removed |
-| Packing | `IsPackable` and `GeneratePackageOnBuild` true except for `*.Tests` |
+| Packing | `IsPackable` true except for `*.Test(s)`, `*.Example(s)` and `*AppHost`; packs only on `dotnet pack` (never on build) into `G:\nuget` |
 | Package readme | `README.{ProjectName without "OoBDev."}.md` if it exists, else `README.md` |
 | License | `LICENSE` packed when present one level above the solution |
-| Solution root | `SolutionDir` discovered by walking up to five levels for a `*.sln` |
+| Solution root | `SolutionDir` discovered by walking up to five levels for a `*.slnx` |
 | Tests | `TestAssemblyInfo.cs` compiled into every `*.Tests`; `.runsettings` wired via `RunSettingsFilePath`; results to `TestResults/` |
 | Versioning | `GitVersion.MsBuild` (see [CI and versioning](./06-cicd-and-versioning.md)) |
 | Central package management | **on** (`ManagePackageVersionsCentrally=true`); versions live only in `src/Directory.Packages.props` |

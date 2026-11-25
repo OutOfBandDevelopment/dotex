@@ -1,0 +1,19 @@
+---
+paths:
+  - "docs/**"
+  - "**/*.md"
+  - "templates/**"
+---
+
+# Documentation rules
+
+- All diagrams are PlantUML fenced blocks (`@startuml`). UI mockups are PlantUML Salt (`@startsalt`). Never ASCII art or Mermaid. Convert existing ASCII diagrams when touching a document. The hook `no-ascii-diagrams.mjs` blocks writing a drawn box (box-drawing corners, two bars on a line, +---+) into markdown outside a plantuml/salt fence (owner, 2026-11-05); directory trees pass. Directory trees in code blocks are fine.
+- Architecture diagrams use C4 style (Context/Container/Component) in plain PlantUML: rectangles, stereotypes, skinparam. Never `!include` C4-PlantUML templates.
+- Add a table of contents, list of figures and list of tables when a document has 3+ sections, 2+ figures or 2+ tables. Captions: `*Figure N — title*` after a figure, `**Table N — title**` before a table.
+- Split documents longer than about 250 lines or 6 major sections into a folder with a `README.md` index and one file per headline, with nav links. Use relative cross references (file plus `#anchor`); the daily change files in `docs/changes/` are exempt (owner, 2026-11-04: one file per day, however long).
+- Designs are written as feature documents (requirements, architecture, api-design, testing-strategy per feature, in `docs/design/<Feature>/`), not as ADRs; a decision is recorded in the feature doc it affects. See `docs/patterns-discovery/06-design-document-standard.md`.
+- Only `README.md`, `CLAUDE.md`, `TODO.md` and `BACKLOG.md` live at the repo root, besides the existing `TEST_VARIABLES.md`, `CONFIGURATION_SETTINGS.md` and `OPEN-QUESTIONS.md`. Everything else goes under `docs/`.
+- Names: reading-order number prefixes (`01-`) only under `docs/patterns-discovery`; project readmes are `README.{Project}.md`. Full guide: `docs/how-tos/documentation-style-guide.md` (checked by `Names_Documents_FollowStyleGuide`).
+- Patterns docs record the owner's preferences; do not "correct" them. Rough edges go to `BACKLOG.md`.
+- Prefer deterministic scripts in `scripts/docs/` over hand edits for validation, indexes, captions and link fixing.
+- Before finishing any doc change run `DOCS_VALIDATE_PATHS=<changed folder> dotnet test src/Tools/OoBDev.Docs.Tests` (Unit tests; the Integration render test uses the existing `plantuml` container on port 8086 through `PLANTUML_URL`; never start another PlantUML container). Report problems you did not fix. Write helper scripts with the Write tool, not shell heredocs.

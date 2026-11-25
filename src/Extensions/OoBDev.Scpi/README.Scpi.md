@@ -1,0 +1,50 @@
+# OoBDev.Scpi
+
+SCPI-style text instrument control: command and reply lines, with the command sets declared as JSON profiles.
+
+## Description
+
+`ScpiDevice(profile)` is an `IDeviceDefinitionReceiver<ScpiReply>` and `IDeviceDefinitionTransmitter<ScpiRequest>` from `OoBDev.System.Abstractions`; bytes travel through the existing adapters (serial, TCP, USB), so the package never opens a port.
+
+- **Profiles.** `ScpiInstrumentProfile` holds a name, an `*IDN?` match pattern, the terminator, notes and commands. A command has a template with `{Name}` tokens, parameters (numeric with bounds, fixed-width formatting and padding, choice, text), `IsQuery` and an expected response format.
+- **Building commands.** `profile.Build("vset", ["5"])` returns a `ScpiRequest` (wire text with the terminator, query flag, response format). Substitution is a single pass; numeric values are clamped and formatted (`DecimalPlaces`, `IntegerDigits`), so the Korad `VSET1:05.00` fixed-width form is produced. `BuildCustom` sends text verbatim.
+- **Replies.** A profile with a terminator gets `ScpiReplySegmenter` (CR, LF or CRLF each end a line); a profile with an empty terminator (Korad) treats each arrival as one reply. `ScpiMessageDecoder` returns `ScpiReply.Text` without line endings.
+- **Catalog.** `ScpiProfileCatalog.Create(dropInDirectories)` loads the bundled profiles (embedded JSON) and any `*.json` in the given directories. Bad files are skipped and listed in `LoadErrors`. `TryMatchByIdn(reply)` picks a profile from an `*IDN?` reply; `ScpiProfileCatalog.Generic` is the fallback. A profile can layer over another with `"Extends": "<profile name>"` (the generic profile or a family profile): the base commands come first, a command with the same `Id` replaces the base one, and the terminator and notes are inherited when the file omits them (`IdnPattern` never is). A missing base or a cycle is listed in `LoadErrors` and drops the profile.
+- **Reply tracking.** `ScpiReplyTracker` pairs each query with its reply in order (`QueryAsync`, `OnReply`, `SendAsync` for commands, `Unsolicited` for strays); a timed-out query keeps its place and discards its late reply. `ScpiAutoDetect.IdentifyAsync` sends `*IDN?` and returns the matching profile, or the generic one.
+- `services.TryAddScpi()` registers the codecs and the bundled catalog.
+
+Bundled profiles: HP/Agilent/Keysight 34401A, Korad KA3005P and KA6003P, Rigol DG1022, DG1062Z, DM3058E and DS1102E, Tektronix 2230 and TDS2024. Their notes cite documents that live in the dev-term repository.
+
+Source: dev-term `Devices.Scpi` (base); BinaryDataDecoders has no SCPI package. The generated control panel of dev-term depends on its UI framework and comes with the DevTerm merge. Design: [DeviceDecoding](../../../docs/design/DeviceDecoding/README.md).
+
+## Limits
+
+- A definite-length block reply (`#<n><length>` then that many bytes, such as a screen dump) is cut as one segment by `ScpiReplySegmenter` and decoded into `ScpiReply.Block`; a leading `#` not followed by a digit 1 to 9 is an ordinary line. Indefinite blocks (`#0`) are not supported. A profile with an empty terminator takes each arrival as one reply, so a block there is not reassembled. Turning the bytes into an image is left to the caller (`ExpectedResponseFormat` says when to expect one).
+
+## Hardware verification
+
+The Korad supplies were checked read-only through `KoradSupplyTests` (identify, setpoints, status byte; both supplies passed on 2026-11-05, see [the test hardware how-to](../../../docs/how-tos/test-hardware.md)). The other profiles rest on the dev-term bench notes and unit tests; [hardware coverage](../../../docs/applications/devterm/test/hardware-coverage.md) lists what each pass reached.
+
+## Instrument documentation
+
+One folder per instrument under [docs/](docs/): the vendor programming manual (where kept) and a `known-configuration.md` with how it was reached on the bench: [hp-34401a](docs/hp-34401a/known-configuration.md), [korad-ka3005p-ka6003p](docs/korad-ka3005p-ka6003p/known-configuration.md), [rigol-dg1022](docs/rigol-dg1022/known-configuration.md), [rigol-dg1062z](docs/rigol-dg1062z/known-configuration.md), [rigol-dm3058e](docs/rigol-dm3058e/known-configuration.md), [rigol-ds1102e](docs/rigol-ds1102e/known-configuration.md), [tektronix-2230](docs/tektronix-2230/known-configuration.md), [tektronix-tds2024](docs/tektronix-tds2024/known-configuration.md), [usr-tcp232-302](docs/usr-tcp232-302/known-configurations.md). `usr-tcp232-302` is the serial-to-Ethernet bridge several instruments sit behind. Paths such as `docs/design/...` and `docs/test/...` inside the notes name files in the dev-term repository.
+
+## Panels
+
+The `OoBDev.Scpi.Panels` namespace builds a control panel from an instrument profile, so any profile (including the generic one) gets a usable front end without a bespoke form.
+
+`ScpiPanelBuilder.Build(profile, execute)` returns a `ScpiPanel`:
+
+| Part | What it is |
+|------|------------|
+| `Definition` | A `UiDefinition` with a section per command category. Each parameter becomes a numeric, slider, text or choice control (from `ScpiParameterDefinition.Control`, else its kind), each command a button whose `ParameterFieldIds` name its fields, each query a reply text field. |
+| `Model` | An object built at run time (`DynamicModelFactory`) with one property per field, an `ICommand` per button and a `string` per reply. |
+| `Binding` | The `FormBinding` over the model. A renderer uses it, and replies are written through it so `Changed` fires. |
+
+`execute` sends the request and returns the reply text for a query (for example `ScpiReplyTracker.QueryAsync`), or null. A failure is shown in the reply field as `Error: ...`. Control ids come from `ScpiPanelIds` (`{command}_{parameter}`, `{command}_reply`, letters and digits only).
+
+## Notes
+
+- A button packs its field values joined by `,` (the `InvokeCommand` convention), so a text value containing a comma splits into two values.
+- `ParameterExpressions` are not generated (a profile has no expressions).
+- The DevTerm WPF shell opens these panels through `ScpiPanelFactory` (`--scpi host[:port]`, see [the Wpf readme](../../Applications/DevTerm/OoBDev.DevTerm.Wpf/README.DevTerm.Wpf.md)) and the Tui renders them in control-panel mode.

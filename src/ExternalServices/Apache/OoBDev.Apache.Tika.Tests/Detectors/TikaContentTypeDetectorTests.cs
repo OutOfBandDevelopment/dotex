@@ -1,4 +1,5 @@
 ﻿using OoBDev.Apache.Tika.Detectors;
+using OoBDev.TestUtilities.Containers;
 using OoBDev.TestUtilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -39,7 +40,7 @@ public class TikaContentTypeDetectorTests
     }
 
     [TestCategory(TestCategories.Integration)]
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-tika")]
     [DataRow("accessible_epub_3.epub", "application/epub+zip")]
     [DataRow("Sample.pdf", "application/pdf")]
     [DataRow("sample1.docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document")]
@@ -51,7 +52,7 @@ public class TikaContentTypeDetectorTests
         using var stream = GetType().Assembly.GetManifestResourceStream($"OoBDev.Apache.Tika.Tests.TestData.{resourceName}")
             ?? throw new NotSupportedException($"Not found {resourceName}");
 
-        var tikaUrl = TestContext.GetRequiredProperty<string>("TIKA_URL");
+        var tikaUrl = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("TIKA_URL"));
 
         var serviceProvider = ApacheTikaTestHarness.GetServiceProvider(new Dictionary<string, string?>()
         {

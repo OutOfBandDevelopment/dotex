@@ -3,6 +3,7 @@ using Microsoft.ML.OnnxRuntime;
 using OoBDev.Onnx.SentenceEmbeddings;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -92,6 +93,22 @@ internal sealed partial class ImageModel : IDisposable
     }
 
     private float[][] Infer(float[] pixels, int count)
+    {
+        using var activity = ImageEmbeddingTelemetry.Source.StartActivity("images.batch");
+        activity?.SetTag("images.batch_size", count);
+        var started = Stopwatch.GetTimestamp();
+        try
+        {
+            return InferCore(pixels, count);
+        }
+        finally
+        {
+            ImageEmbeddingTelemetry.Duration.Record(Stopwatch.GetElapsedTime(started).TotalMilliseconds);
+            ImageEmbeddingTelemetry.BatchSize.Record(count);
+        }
+    }
+
+    private float[][] InferCore(float[] pixels, int count)
     {
         var shape = new long[] { count, 3, _options.ImageSize, _options.ImageSize };
         using var input = OrtValue.CreateTensorValueFromMemory(pixels, shape);

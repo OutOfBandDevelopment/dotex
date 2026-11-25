@@ -1,6 +1,10 @@
 using OoBDev.Documents.Containers;
 using OoBDev.Documents.Conversion;
 using OoBDev.Documents.Models;
+using OoBDev.Documents.Packaging;
+using OoBDev.Documents.Store;
+using System;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -22,6 +26,15 @@ public static class ServiceCollectionExtensions
         services.TryAddTransient<IDocumentConversionChainBuilder, DocumentConversionChainBuilder>();
 
         services.TryAddSingleton<IDocumentTypeTools, DocumentTypeTools>();
+
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IDocumentPackageHandler, ZipDocumentPackageHandler>());
+        services.TryAddSingleton<IDocumentPackager, DocumentPackager>();
+
+        services.TryAddSingleton(TimeProvider.System);
+        services.TryAddSingleton<IDocumentKeyGenerator, DocumentKeyGenerator>();
+        services.TryAddSingleton<IValidateContent, BypassContentValidation>();
+        services.TryAddTransient<IDocumentStore, DocumentStore>();
+        services.TryAddTransient<IDocumentResolver, DocumentResolver>();
 
         services.TryAddTransient<IBlobContainerFactory, BlobContainerFactory>();
         services.TryAddTransient(typeof(IBlobContainer<>), typeof(WrappedBlobContainer<>));
@@ -47,6 +60,34 @@ public static class ServiceCollectionExtensions
             FileExtensions = [".xml"],
             ContentTypes = ["text/xml"],
         });
+        return services;
+    }
+
+    /// <summary>
+    /// Binds <see cref="BlobContainerOptions"/> so configuration chooses the provider of each container.
+    /// </summary>
+    /// <param name="services">The services.</param>
+    /// <param name="configuration">The configuration holding the options section.</param>
+    /// <param name="sectionName">The options section.</param>
+    /// <returns>The services.</returns>
+    public static IServiceCollection TryAddBlobContainerSelection(this IServiceCollection services, IConfiguration configuration, string sectionName = nameof(BlobContainerOptions))
+    {
+        _ = services.AddOptions<BlobContainerOptions>().Bind(configuration.GetSection(sectionName));
+        return services;
+    }
+
+    /// <summary>
+    /// Adds the file system blob container provider factory; it is offered while <c>RootDirectory</c> is set.
+    /// </summary>
+    /// <param name="services">The services.</param>
+    /// <param name="configuration">The configuration holding the options section.</param>
+    /// <param name="sectionName">The options section.</param>
+    /// <returns>The services.</returns>
+    public static IServiceCollection TryAddFileSystemBlobServices(this IServiceCollection services, IConfiguration configuration, string sectionName = nameof(FileSystemBlobOptions))
+    {
+        _ = services.AddOptions<FileSystemBlobOptions>().Bind(configuration.GetSection(sectionName));
+        services.AddTransient<IBlobContainerProviderFactory, FileSystemBlobContainerProviderFactory>();
+        services.AddKeyedTransient<IBlobContainerProviderFactory, FileSystemBlobContainerProviderFactory>(DocumentsGlobals.FileSystemBlobProviderKey);
         return services;
     }
 }

@@ -83,6 +83,7 @@ else
     echo "  docker volume rm oobd-test-opensearch-data"
     echo "  docker volume rm oobd-test-qdrant-storage"
     echo "  docker volume rm oobd-test-qdrant-snapshots"
+    echo "  docker volume rm oobd-test-neo4j-data"
     echo "  docker volume rm oobd-test-azurite-data"
     echo "  docker volume rm oobd-test-keycloak-data"
     echo ""

@@ -1,4 +1,5 @@
 ﻿using OoBDev.Common;
+using OoBDev.TestUtilities.Containers;
 using OoBDev.Documents;
 using OoBDev.TestUtilities;
 using Microsoft.Extensions.Configuration;
@@ -21,9 +22,7 @@ public class IDocumentConversionTests
     [TestCategory(TestCategories.Unit)]
     [TestMethod]
     [DataRow("HelloWorld.html", "text/html", "text/x-markdown", ".md")]
-    //TODO: these require more configuration on linux at this time. 
-    //[DataRow("HelloWorld.html", "text/html", "application/pdf", ".pdf")]
-    //[DataRow("HelloWorld.txt", "text/plain", "application/pdf", ".pdf")]
+    //NOTE: PDF output is Tika to HTML, then wkhtmltopdf; that converter is opt-in (ExternalExtensionBuilder.IncludeWkHtmlToPdf), which the Integration rows switch on
     [DataRow("HelloWorld.txt", "text/plain", "text/html", ".html")]
     [DataRow("HelloWorld.md", "text/markdown", "text/html", ".html")]
     [DataRow("HelloWorld.txt", "text/plain", "text/plain", ".txt")]
@@ -31,7 +30,7 @@ public class IDocumentConversionTests
         InternalConvertAsyncTest(resourceName, sourceType, targetType, extension, false);
 
     [TestCategory(TestCategories.Integration)]
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-tika")]
     [DataRow("HelloWorld.txt", "unknown/unknown", "text/plain", ".txt")]
     [DataRow("sample1.docx", "unknown/unknown", "application/pdf", ".pdf")]
     [DataRow("sample1.docx", "unknown/unknown", "text/markdown", ".md")]
@@ -58,7 +57,7 @@ public class IDocumentConversionTests
             configBuilder.AddInMemoryCollection(
                 new Dictionary<string, string?>
                 {
-                    { "ApacheTikaClientOptions:Url","http://127.0.0.1:9998"}
+                    { "ApacheTikaClientOptions:Url", TestContext.GetPropertyOrDefault("TIKA_URL", "http://127.0.0.1:9998") }
 
                 });
         }
@@ -74,7 +73,7 @@ public class IDocumentConversionTests
                 aspNetBuilder: new(),
                 jwtBuilder: new(),
                 identityBuilder: new(),
-                externalBuilder: new(),
+                externalBuilder: new() { IncludeWkHtmlToPdf = includeExternal },
                 hostingBuilder: new()
                 )
             .BuildServiceProvider()

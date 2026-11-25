@@ -1,0 +1,116 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+
+namespace OoBDev.DevTerm.Configuration;
+
+/// <summary>
+/// A project: a named set of connections, saved as one JSON file and reopened only on request
+/// (<c>--project &lt;file&gt;</c>), never automatically. Holds connection state only (profiles and their
+/// presenter choices) plus, optionally, each tab's send history and log setting and which tab was active; see docs/design/ProjectState/project-state.md.
+/// </summary>
+public sealed class ProjectFile
+{
+    private static readonly JsonSerializerOptions _indented = new() { WriteIndented = true };
+
+    public string Name { get; set; } = string.Empty;
+
+    public List<ProjectConnection> Connections { get; } = [];
+
+    /// <summary>The name of the connection whose tab was in front when the project was saved (the window layout), or null.</summary>
+    public string? Active { get; set; }
+
+    /// <summary>The main window's bounds when saved (WPF), or null.</summary>
+    public ProjectWindowBounds? Window { get; set; }
+
+    /// <summary>Builds a project from open tabs, keeping each tab's send history and log setting and which one is <paramref name="active"/>.</summary>
+    public static ProjectFile FromTabs(string name, IEnumerable<ProjectTabState> tabs, string? active)
+    {
+        var project = new ProjectFile { Name = name, Active = active };
+        foreach (var tab in tabs)
+        {
+            var log = tab.Options.Log is { Length: > 0 } configured ? configured : tab.Logging ? SessionLogging.AutoPathValue : null;
+            project.Connections.Add(new ProjectConnection(tab.Name, DevTermConfiguration.ToProfileJson(tab.Options), tab.History.Count > 0 ? [.. tab.History] : null, log));
+        }
+
+        return project;
+    }
+
+    /// <summary>Builds a project from named connections, each captured with <see cref="DevTermConfiguration.ToProfileJson"/>.</summary>
+    public static ProjectFile From(string name, IEnumerable<(string Name, CliOptions Options)> connections)
+    {
+        var project = new ProjectFile { Name = name };
+        foreach (var (connectionName, options) in connections)
+        {
+            project.Connections.Add(new ProjectConnection(connectionName, DevTermConfiguration.ToProfileJson(options)));
+        }
+
+        return project;
+    }
+
+    public string ToJson()
+    {
+        var root = new JsonObject
+        {
+            [nameof(Name)] = Name,
+            [nameof(Active)] = Active,
+            [nameof(Window)] = Window is { } w ? new JsonObject { ["Left"] = w.Left, ["Top"] = w.Top, ["Width"] = w.Width, ["Height"] = w.Height, ["Maximized"] = w.Maximized } : null,
+            [nameof(Connections)] = new JsonArray([.. Connections.Select(c => (JsonNode?)new JsonObject
+            {
+                [nameof(c.Name)] = c.Name,
+                ["Profile"] = JsonNode.Parse(c.ProfileJson),
+                ["History"] = c.History is { Count: > 0 } ? new JsonArray([.. c.History.Select(h => (JsonNode?)JsonValue.Create(h))]) : null,
+                ["Log"] = c.Log,
+            })]),
+        };
+        return root.ToJsonString(_indented);
+    }
+
+    /// <exception cref="InvalidDataException">The text is not a project file.</exception>
+    public static ProjectFile FromJson(string json)
+    {
+        try
+        {
+            var root = JsonNode.Parse(json) as JsonObject ?? throw new InvalidDataException("A project file must be a JSON object.");
+            var project = new ProjectFile { Name = (string?)root[nameof(Name)] ?? string.Empty, Active = (string?)root[nameof(Active)] };
+            if (root[nameof(Window)] is JsonObject window
+                && window["Left"] is JsonValue left && window["Top"] is JsonValue top
+                && window["Width"] is JsonValue width && window["Height"] is JsonValue height
+                && left.TryGetValue<double>(out var l) && top.TryGetValue<double>(out var t)
+                && width.TryGetValue<double>(out var w) && height.TryGetValue<double>(out var h))
+            {
+                project.Window = new ProjectWindowBounds(l, t, w, h, window["Maximized"] is JsonValue m && m.TryGetValue<bool>(out var max) && max);
+            }
+
+            foreach (var node in root[nameof(Connections)] as JsonArray ?? [])
+            {
+                if (node is not JsonObject connection || connection["Profile"] is not JsonObject profile)
+                {
+                    throw new InvalidDataException("Every connection needs a Profile object.");
+                }
+
+                var history = (connection["History"] as JsonArray)?.Select(h => (string?)h).OfType<string>().ToList();
+                project.Connections.Add(new ProjectConnection((string?)connection[nameof(ProjectConnection.Name)] ?? string.Empty, profile.ToJsonString(), history, (string?)connection["Log"]));
+            }
+
+            return project;
+        }
+        catch (JsonException ex)
+        {
+            throw new InvalidDataException("The project file is not valid JSON: " + ex.Message, ex);
+        }
+    }
+
+    public void Save(string path) => AtomicFile.WriteAllText(path, ToJson());
+
+    public static ProjectFile Load(string path) => FromJson(File.ReadAllText(path));
+
+    /// <summary>The connection called <paramref name="name"/>, or the first one when <paramref name="name"/> is null or empty.</summary>
+    public ProjectConnection? Find(string? name) =>
+        string.IsNullOrEmpty(name)
+            ? Connections.FirstOrDefault()
+            : Connections.FirstOrDefault(c => string.Equals(c.Name, name, StringComparison.OrdinalIgnoreCase));
+}

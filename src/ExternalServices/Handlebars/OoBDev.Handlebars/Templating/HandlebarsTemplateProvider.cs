@@ -4,10 +4,14 @@ using HandlebarsDotNet;
 using HandlebarsDotNet.Extension.Json;
 using HandlebarsDotNet.Helpers;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Collections.Concurrent;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace OoBDev.Handlebars.Templating;
@@ -22,14 +26,21 @@ namespace OoBDev.Handlebars.Templating;
 /// <param name="blockHelperDescriptors">The collection of helpers registries.</param>
 /// <param name="helperDescriptors">The collection of helpers registries.</param>
 /// <param name="log">The logger instance.</param>
+/// <param name="options">The provider options; <c>NoEscape</c> is on when omitted.</param>
 public class HandlebarsTemplateProvider(
     IEnumerable<IHelpersRegistry> helpersRegistry,
     IEnumerable<IHelperDescriptor<BlockHelperOptions>> blockHelperDescriptors,
     IEnumerable<IHelperDescriptor<HelperOptions>> helperDescriptors,
-    ILogger<HandlebarsTemplateProvider> log
+    ILogger<HandlebarsTemplateProvider> log,
+    IOptions<HandlebarsOptions>? options = null
     ) : ITemplateProvider
 {
     private readonly ILogger _log = log;
+    private readonly ConcurrentDictionary<string, HandlebarsTemplate<TextWriter, object, object>> _cache = new(StringComparer.Ordinal);
+    private readonly global::System.Threading.Lock _gate = new();
+    private IHandlebars? _handlebars;
+
+    private IHandlebars Environment { get { lock (_gate) { return _handlebars ??= CreateEnvironment(); } } }
 
     /// <summary>
     /// Gets the collection of supported content types by the template provider.
@@ -58,9 +69,47 @@ public class HandlebarsTemplateProvider(
     /// <returns>A task representing the asynchronous operation. The task result is <c>true</c> if successful, <c>false</c> otherwise.</returns>
     public async Task<bool> ApplyAsync(ITemplateContext context, object data, Stream target)
     {
+        using var template = context.OpenTemplate(context);
+        using var reader = new StreamReader(template);
+        var text = await reader.ReadToEndAsync().ConfigureAwait(false);
+        var compiled = Compile(text);
+
+        using var writer = new StreamWriter(target, leaveOpen: true)
+        {
+            AutoFlush = true,
+        };
+        compiled(writer, context: data, data: context);
+        await writer.FlushAsync().ConfigureAwait(false);
+        return true;
+    }
+
+    /// <summary>
+    /// Gets the number of compiled templates currently cached.
+    /// </summary>
+    public int CachedTemplateCount => _cache.Count;
+
+    private HandlebarsTemplate<TextWriter, object, object> Compile(string text)
+    {
+        var settings = options?.Value ?? new HandlebarsOptions();
+        if (!settings.EnableCompilationCache)
+            return Environment.Compile(new StringReader(text));
+
+        var key = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(text)));
+        if (_cache.TryGetValue(key, out var found))
+            return found;
+
+        var compiled = Environment.Compile(new StringReader(text));
+        if (_cache.Count >= Math.Max(1, settings.MaxCachedTemplates))
+            _cache.Clear();
+        _cache[key] = compiled;
+        return compiled;
+    }
+
+    private IHandlebars CreateEnvironment()
+    {
         var config = new HandlebarsConfiguration()
         {
-            NoEscape = true, //TODO: make this configurable
+            NoEscape = options?.Value.NoEscape ?? true,
         };
 
         // https://github.com/Handlebars-Net/Handlebars.Net
@@ -88,16 +137,6 @@ public class HandlebarsTemplateProvider(
             handlebar.RegisterHelper(helper);
         }
 
-        using var template = context.OpenTemplate(context);
-        var reader = new StreamReader(template);
-        var compiled = handlebar.Compile(reader);
-
-        using var writer = new StreamWriter(target, leaveOpen: true)
-        {
-            AutoFlush = true,
-        };
-        compiled(writer, context: data, data: context);
-        await writer.FlushAsync().ConfigureAwait(false);
-        return true;
+        return handlebar;
     }
 }

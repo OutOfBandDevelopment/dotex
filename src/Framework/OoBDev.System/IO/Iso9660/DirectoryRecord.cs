@@ -42,36 +42,7 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
         //8	00 08 00 00 - 00 00 08 00 
         Size = buffer.GetUInt32(ref offset, 8);
 
-        //1	63 
-        var yearOffset = buffer[offset];
-        offset++;
-        //1	0B 
-        var month = buffer[offset];
-        offset++;
-        //1	18 
-        var day = buffer[offset];
-        offset++;
-        //1	0F 
-        var hour = buffer[offset];
-        offset++;
-        //1	35 
-        var minute = buffer[offset];
-        offset++;
-        //1	00 
-        var second = buffer[offset];
-        offset++;
-        //1	00 
-        var quaterHourOffset = (sbyte)buffer[offset];
-        offset++;
-
-        var timeOffset = quaterHourOffset * 15d;
-        DateTime = new DateTime(yearOffset + 1900,
-                                     month == 0 ? 1 : month,
-                                     day == 0 ? 1 : month,
-                                     hour,
-                                     minute,
-                                     second
-                                     ).AddMinutes(timeOffset);
+        DateTime = ReadDateTime(buffer, ref offset);
 
         //1	02 
         DirectoryType = (DirectoryType)buffer[offset];
@@ -101,6 +72,49 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
             Identifier = "..";
 
         //    00 
+    }
+
+    internal static DateTime ReadDateTime(byte[] buffer, ref int offset)
+    {
+        //1	63 
+        var yearOffset = buffer[offset];
+        offset++;
+        //1	0B 
+        var month = buffer[offset];
+        offset++;
+        //1	18 
+        var day = buffer[offset];
+        offset++;
+        //1	0F 
+        var hour = buffer[offset];
+        offset++;
+        //1	35 
+        var minute = buffer[offset];
+        offset++;
+        //1	00 
+        var second = buffer[offset];
+        offset++;
+        //1	00 
+        var quaterHourOffset = (sbyte)buffer[offset];
+        offset++;
+
+        // ECMA-119 9.1.5: the fields are local time and the offset is quarter hours from GMT, so UTC is local minus the offset.
+        var timeOffset = quaterHourOffset * 15d;
+        try
+        {
+            return new DateTime(yearOffset + 1900,
+                                month == 0 ? 1 : month,
+                                day == 0 ? 1 : day,
+                                hour,
+                                minute,
+                                second,
+                                DateTimeKind.Utc
+                                ).AddMinutes(-timeOffset);
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            return DateTime.MinValue;
+        }
     }
 
     #region Properties
@@ -228,7 +242,7 @@ public class DirectoryRecord : IEnumerable<DirectoryRecord>
     /// <summary>
     /// Gets a value indicating whether this record represents a directory.
     /// </summary>
-    public bool IsDirectory => (DirectoryType & DirectoryType.Directory) != 0;
+    public bool IsDirectory => DirectoryType.HasFlag(DirectoryType.Directory);
 
     /// <summary>
     /// Gets the child directory records if this is a directory.

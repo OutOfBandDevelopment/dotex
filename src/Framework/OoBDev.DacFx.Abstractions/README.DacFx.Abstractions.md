@@ -1,50 +1,23 @@
 # OoBDev.DacFx.Abstractions
 
-Abstractions for SQL Server DacPac building and compilation.
+Contracts for building a SQL Server DacPac from a SQLCLR assembly, validating one, and merging several DacPacs into one package.
 
-## Description
+## Contracts
 
-This package provides abstractions and interfaces for working with SQL Server Data-tier Application packages (DacPac). It defines contracts for DacPac building, validation, merging, and template generation.
+**Table 1 — Contracts (namespace `OoBDev.DacFx`)**
 
-## Key Features
+| Type | Role |
+|------|------|
+| `IDacPacBuilder` | Builds a DacPac from a SQLCLR assembly: `BuildDacPac(assemblyFile, pdbFile, dacpacFile, projectName, projectVersion)`, plus the pieces it is made of (`BuildModel`, `BuildDacMetadata`, `BuildOrigin`, `BuildContentType`, and the aggregate, function, method, user-defined type and file element builders) and the SHA-256 and SHA-512 helpers. |
+| `IDacPacValidator` | `ValidateDacPac(dacpacFile)` checks that a package loads. |
+| `IDacpacMergeCompiler` | `CreatePackage(definition)` writes one DacPac from an `IDacPacMergeDefinition`. |
+| `IDacPacMergeDefinition` | What to merge: `SourceFiles`, `TargetPath`, `ServerVersion`, `ModelOptions`, `TargetBuildVersion` and `TargetPackageMetadata`. |
+| `IDacPacMergeTemplate` | The merge request as written by a user: `SourcePath` and `SourcePatterns` to find the sources, `TargetPath`, `Name`, `Description`, `Version`, `BuildVersion`, `ServerVersion`, and `ModelOptions` with the `ModelOptionSource` that says where they come from. |
+| `IDacPacMergeTemplateFactory` | `Create()` reads a template (for example from a file or the command line). |
+| `IDacPacMergeDefinitionFactory` | `Create(template)` expands a template into a definition (resolves the patterns to files). |
+| `IDacPacCompilerConfig` | The same settings as properties of a configuration object (`TemplatePath`, `SourcePath`, `SourcePatterns`, `TargetPath`, `Name`, `Description`, `Version`, `BuildVersion`, `ModelOptionSource`). |
+| `ModelOptionSource` | `Custom`, `First` or `Last`: which model options the merged package uses when several sources are merged. |
 
-- IDacPacBuilder interface for DacPac creation
-- IDacPacValidator for package validation
-- IDacPacMergeCompiler for combining packages
-- Template factory abstractions
-- Model option source configuration
-- SQL Server version targeting
+## Implementations
 
-## Installation
-
-```xml
-<PackageReference Include="OoBDev.DacFx.Abstractions" Version="*" />
-```
-
-## Basic Usage
-
-```csharp
-using OoBDev.DacFx;
-
-// Implement custom DacPac builder
-public class MyDacPacBuilder : IDacPacBuilder
-{
-    public void BuildDacPac(
-        string assemblyFileFramework,
-        string? assemblyPdbFramework = null,
-        string? dacpacFile = null,
-        string? projectName = null,
-        string? projectVersion = null)
-    {
-        // Your implementation
-    }
-}
-```
-
-## License
-
-See repository license file for details.
-
-## Repository
-
-[OoBDev Repository](https://github.com/yourusername/oobdev)
+The builder and validator are in [OoBDev.DacFx](../OoBDev.DacFx/README.DacFx.md) (`services.TryAddDacPacServices()`). The merge compiler and the template and definition factories are in `OoBDev.Microsoft.SqlServer.DacFx` (`services.AddDacPacCompilerServices()`). The `dacpactools` dotnet tool (`OoBDev.DacPacCompiler.Cli`) uses both: `--tool SqlClr` builds, `--tool Merge` merges.

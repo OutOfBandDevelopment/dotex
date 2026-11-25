@@ -9,3 +9,7 @@ In-process image embeddings and classification with ONNX Runtime, behind `Micros
 - `IImageDecoder` - bytes to RGB; use `OoBDev.Onnx.ImageEmbeddings.Skia` for the default implementation.
 
 Model presets live in `OoBDev.Vision.*` projects. Design: `docs/design/ImageEmbeddings/`.
+
+## Telemetry
+
+Add `ImageEmbeddingTelemetry.Name` (`OoBDev.Onnx.ImageEmbeddings`) to the OpenTelemetry sources and meters to export the span `images.batch` and the metrics `oobdev.images.duration` and `oobdev.images.batch_size`.

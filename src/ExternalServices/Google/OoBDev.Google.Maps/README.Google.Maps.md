@@ -1,0 +1,3 @@
+# OoBDev.Google.Maps
+
+Google Geocoding API behind `ILocationServices`, forward (`address=`) and reverse (`latlng=`). Register with `services.TryAddGoogleGeocoding(o => o.ApiKey = "...")` (typed `HttpClient`; options section `OoBDev:Google:Maps`). Without a key, a non-OK status (`ZERO_RESULTS`, `REQUEST_DENIED`, `OVER_QUERY_LIMIT`), an HTTP error or bad JSON the result is `GeocodeResult.NoMatch`; a vendor failure never throws. `location_type` maps `ROOFTOP` to `Rooftop`, `RANGE_INTERPOLATED` to `Interpolated`, anything else to `Approximate`. Live calls need a billed key, so tests use a fake handler. Design: [SpatialServices](../../../../docs/design/SpatialServices/README.md).

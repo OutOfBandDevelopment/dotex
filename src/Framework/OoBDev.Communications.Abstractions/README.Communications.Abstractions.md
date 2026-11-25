@@ -7,19 +7,13 @@ messages over a dedicated channel such as Email and SMS
 
 ### Example
 
-The `ICommunicationSender<>` interface is provided as a means to interact with various 
-channel providers.  Example channels are hosted for `EmailMessageModel` and `SmsMessageModel`
+The `ISendService` sends an `IMessage` through a named channel (`OoBDev:Communications:Channels`); the channel's
+provider (for example `OoBDev.MailKit` for `email`) does the delivery. Details are in `README.Communications.md`.
 
 ```csharp
-
-//Include ICommunicationSender<EmailMessageModel> in your service class
-
-public class ExampleClass (
-    ICommunicationSender<EmailMessageModel> email
-    )
+public class ExampleClass(ISendService send)
 {
-    public async Task<string> SendAsync(EmailMessageModel message) =>
-        await email.SendAsync(message);
+    public Task<SendResult> SendAsync(EmailMessage message) =>
+        send.SendAsync("email", message);
 }
-
 ```

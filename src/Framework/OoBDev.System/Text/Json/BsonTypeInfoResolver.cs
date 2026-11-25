@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Json;
@@ -11,6 +12,24 @@ namespace OoBDev.System.Text.Json;
 /// </summary>
 public class BsonTypeInfoResolver : DefaultJsonTypeInfoResolver
 {
+    private static readonly string[] _defaultIdAttributeNames = ["BsonRepresentationAttribute"];
+
+    private readonly HashSet<string> _idAttributeNames;
+
+    /// <summary>
+    /// Initializes a resolver that treats <see cref="KeyAttribute"/> and <c>BsonRepresentationAttribute</c> as identifier markers.
+    /// </summary>
+    public BsonTypeInfoResolver() : this(_defaultIdAttributeNames)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a resolver with its own identifier attributes (matched by type name, so no BSON package is referenced).
+    /// </summary>
+    /// <param name="idAttributeNames">Attribute type names, besides <see cref="KeyAttribute"/>, that mark a property as the identifier.</param>
+    public BsonTypeInfoResolver(IEnumerable<string> idAttributeNames) =>
+        _idAttributeNames = new HashSet<string>(idAttributeNames, StringComparer.Ordinal);
+
     /// <summary>
     /// Gets the JSON type information for the specified type during BSON serialization.
     /// </summary>
@@ -31,7 +50,7 @@ public class BsonTypeInfoResolver : DefaultJsonTypeInfoResolver
         {
             var hasIdAttribute = prop.AttributeProvider?.GetCustomAttributes(true).Any(a =>
                 a is KeyAttribute ||
-                a.GetType().Name == "BsonRepresentationAttribute" //TODO: consider making this injectable so it can be extended
+                _idAttributeNames.Contains(a.GetType().Name)
                 ) ?? false;
 
             if (string.Equals(prop.Name, idConvention, StringComparison.OrdinalIgnoreCase))

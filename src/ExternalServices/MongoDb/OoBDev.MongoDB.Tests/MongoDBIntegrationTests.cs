@@ -1,4 +1,5 @@
 ﻿using OoBDev.MongoDB.Extensions;
+using OoBDev.TestUtilities.Containers;
 using OoBDev.System;
 using OoBDev.TestUtilities;
 using Microsoft.Extensions.Configuration;
@@ -39,7 +40,7 @@ public class MongoDBIntegrationTests
 
     private ITestMongoDatabase BuildTestDatabase()
     {
-        var connectionString = TestContext.GetRequiredProperty<string>("MONGODB_CONNECTION_STRING");
+        var connectionString = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("MONGODB_CONNECTION_STRING"));
 
         var config = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
@@ -64,7 +65,7 @@ public class MongoDBIntegrationTests
         return provider.GetRequiredService<ITestMongoDatabase>();
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-mongodb")]
     [TestCategory(TestCategories.Integration)]
     public async Task InsertDocument_WithNewEntity_AssignsIdAndPersists()
     {
@@ -96,7 +97,7 @@ public class MongoDBIntegrationTests
         TestContext.WriteLine($"Created document with TestId: {entity.TestId}");
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-mongodb")]
     [TestCategory(TestCategories.Integration)]
     public async Task UpsertDocument_WhenDocumentExists_UpdatesExistingDocument()
     {
@@ -141,7 +142,7 @@ public class MongoDBIntegrationTests
         TestContext.WriteLine($"Upserted document with TestId: {result.TestId}, Value1: '{originalValue}' -> '{updatedValue}'");
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-mongodb")]
     [TestCategory(TestCategories.Integration)]
     public async Task InsertMultipleDocuments_WithVariedCasing_PersistsAllDocuments()
     {
@@ -183,7 +184,7 @@ public class MongoDBIntegrationTests
         Assert.AreEqual(3, lowerCount, "Should have 3 'upper' documents (indices 2, 5, 8)");
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-mongodb")]
     [TestCategory(TestCategories.Integration)]
     public async Task QueryDocuments_WithOrdering_ReturnsSortedResults()
     {
@@ -228,7 +229,7 @@ public class MongoDBIntegrationTests
         }
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-mongodb")]
     [TestCategory(TestCategories.Integration)]
     public async Task UpdateDocument_WhenDocumentExists_ModifiesValues()
     {
@@ -267,7 +268,7 @@ public class MongoDBIntegrationTests
         TestContext.WriteLine($"Updated document {entity.TestId}: '{originalValue}' -> '{updatedValue}'");
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-mongodb")]
     [TestCategory(TestCategories.Integration)]
     public async Task DeleteDocument_WhenDocumentExists_RemovesDocument()
     {

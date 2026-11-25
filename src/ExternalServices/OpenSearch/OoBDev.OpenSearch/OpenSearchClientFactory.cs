@@ -26,11 +26,16 @@ public class OpenSearchClientFactory : IOpenSearchClientFactory
     public virtual IOpenSearchLowLevelClient Create()
     {
         var connection = new ConnectionConfiguration(
-                new Uri($"http://{_config.Value.HostName}:{_config.Value.Port}")
+                new Uri($"{(_config.Value.UseTls ? "https" : "http")}://{_config.Value.HostName}:{_config.Value.Port}")
             )
             .EnableHttpCompression(true)
             .ThrowExceptions(true)
             ;
+
+        if (_config.Value.AllowInvalidCertificate)
+        {
+            connection.ServerCertificateValidationCallback(CertificateValidations.AllowAll);
+        }
 
         if (!string.IsNullOrWhiteSpace(_config.Value.UserName) && !string.IsNullOrWhiteSpace(_config.Value.Password))
         {

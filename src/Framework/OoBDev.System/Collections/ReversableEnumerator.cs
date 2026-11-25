@@ -12,11 +12,11 @@ namespace OoBDev.System.Collections;
 /// Wrap existing IEnumerator
 /// </remarks>
 /// <param name="base"></param>
-[DebuggerDisplay("{Current.ToString()}::{_position}")]
+[DebuggerDisplay("{Current.ToString()}")]
 public class ReversableEnumerator<T>(IEnumerator<T> @base) : IReversibleEnumerator<T>
 {
     private const int ResetPosition = -1;
-    private readonly object _lock = new();
+    private readonly global::System.Threading.Lock _lock = new();
     private IDoubleLinkedList<T>? _pointer;
     private bool _reset;
     private bool _end;

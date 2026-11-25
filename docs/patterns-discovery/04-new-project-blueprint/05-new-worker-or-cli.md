@@ -60,7 +60,7 @@ Extracted from the retired BotChat sample. When the work is a loop that must be 
 - `IRunner` with a single `Task ExecuteAsync(CancellationToken)`; the runner holds the work and takes its dependencies by constructor injection.
 - A generic `IHostedService` (`RunnerHost<TRunner>`) that, on start, runs a task which creates a scope, builds the runner with `ActivatorUtilities.CreateInstance<TRunner>` and awaits it, repeating until cancelled; on stop it cancels and awaits the task.
 
-Each runner gets a fresh scope per iteration, so scoped services (database contexts, HTTP clients) never leak across runs. The existing hosts (`MessageReceiverHost`, `EmailMessageReceiverHost`, `EmbeddingSentenceTransformerQueueReaderHost`) are purpose-built variants of this shape; use the generic form for new loops rather than copying one of them. Poll delays between iterations are options and use `TimeProvider` ([resilience](../03-practices-and-conventions/14-resilience-practices.md)).
+Each runner gets a fresh scope per iteration, so scoped services (database contexts, HTTP clients) never leak across runs. The existing hosts (`MessageReceiverHost`, `ReceivePollingHost`, `EmbeddingSentenceTransformerQueueReaderHost`) are purpose-built variants of this shape; use the generic form for new loops rather than copying one of them. Poll delays between iterations are options and use `TimeProvider` ([resilience](../03-practices-and-conventions/14-resilience-practices.md)).
 
 ## Rules that carry over
 

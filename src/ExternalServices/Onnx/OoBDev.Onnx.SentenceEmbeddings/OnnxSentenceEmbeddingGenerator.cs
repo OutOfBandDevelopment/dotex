@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.ML.OnnxRuntime;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -132,6 +133,25 @@ public sealed partial class OnnxSentenceEmbeddingGenerator : IEmbeddingGenerator
     }
 
     private float[][] RunBatch((int Index, IReadOnlyList<int> Ids)[] batch)
+    {
+        using var activity = SentenceEmbeddingTelemetry.Source.StartActivity("embeddings.batch");
+        var started = Stopwatch.GetTimestamp();
+        var tokens = batch.Sum(item => item.Ids.Count);
+        activity?.SetTag("embeddings.batch_size", batch.Length);
+        activity?.SetTag("embeddings.tokens", tokens);
+        try
+        {
+            return RunBatchCore(batch);
+        }
+        finally
+        {
+            SentenceEmbeddingTelemetry.Duration.Record(Stopwatch.GetElapsedTime(started).TotalMilliseconds);
+            SentenceEmbeddingTelemetry.BatchSize.Record(batch.Length);
+            SentenceEmbeddingTelemetry.Tokens.Add(tokens);
+        }
+    }
+
+    private float[][] RunBatchCore((int Index, IReadOnlyList<int> Ids)[] batch)
     {
         var longest = batch.Max(item => item.Ids.Count);
         var size = batch.Length * longest;

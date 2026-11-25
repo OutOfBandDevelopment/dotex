@@ -1,51 +1,39 @@
 # OoBDev.Data.Vectors.Hosting
 
-Background service for processing SQL Server Service Broker embedding requests.
+Hosted service that answers embedding requests sent through a SQL Server Service Broker queue, so a database can ask for the embedding of a text without calling out itself.
 
-## Description
-
-This package provides a hosted background service that processes text embedding requests from SQL Server Service Broker queues. It integrates with embedding providers to generate vector embeddings for database content asynchronously.
-
-## Key Features
-
-- SQL Service Broker queue reader
-- Asynchronous embedding generation
-- Batch processing support
-- Configurable timeout and batch size
-- Integration with IEmbeddingProvider
-- Hosted service lifecycle management
-
-## Installation
-
-```xml
-<PackageReference Include="OoBDev.Data.Vectors.Hosting" Version="*" />
-```
-
-## Basic Usage
+## Registration
 
 ```csharp
-using OoBDev.Data.Vectors.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+services.TryAddVectorHosting(configuration);   // section name is required in DEBUG builds
+```
 
-services.AddEmbeddingSentenceTransformerQueueReader(configuration);
+This binds `EmbeddingSentenceTransformerQueueReaderOptions` from the `EmbeddingSentenceTransformerQueueReaderOptions` section (or the name passed), registers the transient `IEmbeddingSentenceTransformerQueueReader` and adds `EmbeddingSentenceTransformerQueueReaderHost` as a hosted service. An `IEmbeddingProvider`, `IJsonSerializer`, `IXmlSerializer` and `IDatabaseQuery<>` must be registered by the application, and the connection string is read from `ConnectionStrings:EmbeddingSentenceTransformer`.
 
-// Configuration in appsettings.json
+```json
 {
-  "EmbeddingSentenceTransformerQueueReader": {
-    "MaximumReadLength": 100,
-    "ReadWaitTimeout": "00:00:30"
-  },
-  "ConnectionStrings": {
-    "EmbeddingSentenceTransformer": "Server=localhost;Database=VectorDb;..."
-  }
+  "EmbeddingSentenceTransformerQueueReaderOptions": { "MaximumReadLength": 100, "ReadWaitTimeout": "00:05:00" },
+  "ConnectionStrings": { "EmbeddingSentenceTransformer": "Server=...;Database=...;" }
 }
 ```
 
-## License
+**Table 1 — Queue reader options**
 
-See repository license file for details.
+| Option | Default | Use |
+|--------|---------|-----|
+| `MaximumReadLength` | 100 | Messages received per `RECEIVE`. |
+| `ReadWaitTimeout` | 5 minutes | `WAITFOR ... TIMEOUT` on the queue, and the pause after a failed batch. |
+| `ErrorWaitTimeout` | 30 seconds | Declared but not used yet; the reader pauses for `ReadWaitTimeout` after an error. |
+| `RestartDelay` | 10 seconds | How long the host waits before it restarts a reader that stopped with an error. |
 
-## Repository
+## Message flow
 
-[OoBDev Repository](https://github.com/yourusername/oobdev)
+The reader receives from `[embedding].[oobdev://embedding/sentence-transformer/queue]` in a transaction and handles each message by type:
+
+- `oobdev://embedding/sentence-transformer/request`: an XML element with `id`, `value` and `tableName` attributes; the reader generates the embedding of `value` and sends an `oobdev://embedding/sentence-transformer/response` element on the same conversation carrying the same attributes plus `embedding` (a JSON array).
+- the Service Broker `EndDialog` message: ends the conversation.
+- anything else: the batch fails, rolls back and is retried after the pause.
+
+The host restarts the reader after an unhandled error, waiting 10 seconds (a TODO in the code to make it configurable), and cancels it on stop.
+
+The queue, contracts and message types are created by the database project that ships with the vector store (`OoBDev.Data.Vectors.DB`).

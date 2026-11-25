@@ -1,76 +1,64 @@
+using OoBDev.AI;
+using OoBDev.AspNetCore.Authorization;
+using OoBDev.SBert.AllMiniLmL6V2;
+using OoBDev.WebApi.Models;
+using OoBDev.WebApi.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
+using System.Linq;
+using System.Numerics.Tensors;
+using System.Threading.Tasks;
 
 namespace OoBDev.WebApi.Controllers;
 
 /// <summary>
-/// Controller for handling search operations.
+/// Searches the given passages three ways: by keywords (BM25), by meaning (in-process embeddings) and by both fused.
 /// </summary>
-[AllowAnonymous]
-[Route("[Controller]/[Action]")]
-[Obsolete("Obsolete; retained until it is removed from the framework.")]
-[ExcludeFromCodeCoverage]
-public class SearchController : Controller
+[Route("api/[controller]")]
+[ApiController]
+public class SearchController(
+    [FromKeyedServices(SBertGlobals.AllMiniLmL6V2Key)] IEmbeddingProvider embedding,
+    IApplicationRightChecker rights) : ControllerBase
 {
-    //private readonly ISearchProvider _search;
+    /// <summary>
+    /// Runs the query in all three modes.
+    /// </summary>
+    /// <param name="model">The query and the passages.</param>
+    /// <returns>The hits per mode, best first.</returns>
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<ActionResult<SearchResponseModel>> Search([FromBody] SearchRequestModel model)
+    {
+        if (model.Passages.Count == 0 || string.IsNullOrWhiteSpace(model.Query))
+        {
+            return Problem(title: "Nothing to search", detail: "Give a query and at least one passage.", statusCode: StatusCodes.Status400BadRequest);
+        }
 
-    ///// <summary>
-    ///// Initializes a new instance of the <see cref="SearchController"/> class.
-    ///// </summary>
-    ///// <param name="search">The search provider.</param>
-    //public SearchController(
-    //    ISearchProvider search
-    //    ) => _search = search;
+        var passages = PassageAccess.VisibleTo(model.Passages, User, rights);
+        var hidden = model.Passages.Count - passages.Count;
+        var limit = Math.Clamp(model.Limit, 1, 20);
+        var question = (await embedding.GenerateEmbeddingAsync(model.Query, default, default)).ToArray();
+        var scored = new List<SearchHitModel>();
+        foreach (var passage in passages)
+        {
+            var vector = (await embedding.GenerateEmbeddingAsync(passage.Text, default, default)).ToArray();
+            scored.Add(new SearchHitModel { Id = passage.Id, Text = passage.Text, Score = TensorPrimitives.CosineSimilarity(question, vector) });
+        }
 
-    ///// <summary>
-    ///// Retrieves a list of all available search results.
-    ///// </summary>
-    ///// <returns>An enumerable collection of search results.</returns>
-    //[HttpGet]
-    //public async Task<IEnumerable<SearchResultModel>> List() => await _search.ListAsync();
+        var semantic = scored.OrderByDescending(h => h.Score).ToList();
+        var lexical = SearchScoring.Lexical(model.Query, passages);
+        var hybrid = SearchScoring.Fuse(lexical, semantic);
 
-    ///// <summary>
-    ///// Performs a semantic search with the given query.
-    ///// </summary>
-    ///// <param name="query">The search query.</param>
-    ///// <param name="limit">The maximum number of results to return.</param>
-    ///// <returns>An enumerable collection of search results.</returns>
-    //[HttpGet]
-    //public async Task<IEnumerable<SearchResultModel>> SemanticSearch(string? query = default, int limit = 10)
-    //{
-    //    Response.Headers[$"X-APP-{nameof(query)}"] = query;
-    //    Response.Headers[$"X-APP-{nameof(limit)}"] = limit.ToString();
-    //    return await _search.SemanticSearchAsync(query, limit);
-    //}
-
-    ///// <summary>
-    ///// Performs a lexical search with the given query.
-    ///// </summary>
-    ///// <param name="query">The search query.</param>
-    ///// <param name="limit">The maximum number of results to return.</param>
-    ///// <returns>An enumerable collection of search results.</returns>
-    //[HttpGet]
-    //public async Task<IEnumerable<SearchResultModel>> LexicalSearch(string? query = default, int limit = 10)
-    //{
-    //    Response.Headers[$"X-APP-{nameof(query)}"] = query;
-    //    Response.Headers[$"X-APP-{nameof(limit)}"] = limit.ToString();
-    //    return await _search.LexicalSearchAsync(query, limit);
-    //}
-
-    ///// <summary>
-    ///// Performs a hybrid search with the given query.
-    ///// </summary>
-    ///// <param name="query">The search query.</param>
-    ///// <param name="limit">The maximum number of results to return.</param>
-    ///// <returns>An enumerable collection of search results.</returns>
-    //[HttpGet]
-    //public async Task<IEnumerable<SearchResultModel>> HybridSearch(string? query = default, int limit = 10)
-    //{
-    //    Response.Headers[$"X-APP-{nameof(query)}"] = query;
-    //    Response.Headers[$"X-APP-{nameof(limit)}"] = limit.ToString();
-    //    return await _search.HybridSearchAsync(query, limit);
-    //}
-
+        return new SearchResponseModel
+        {
+            Lexical = lexical.Take(limit).ToList(),
+            Semantic = semantic.Take(limit).ToList(),
+            Hybrid = hybrid.Take(limit).ToList(),
+            Hidden = hidden,
+        };
+    }
 }

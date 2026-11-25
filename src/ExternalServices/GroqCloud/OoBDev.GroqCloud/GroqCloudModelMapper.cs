@@ -1,6 +1,5 @@
 ﻿using OoBDev.AI.Models;
 using GroqNet.ChatCompletions;
-using System.Linq;
 
 namespace OoBDev.GroqCloud;
 
@@ -27,7 +26,7 @@ public class GroqCloudModelMapper : IGroqCloudModelMapper
     /// <returns>A completion response object.</returns>
     public CompletionResponse Map(GroqChatCompletions response) => new()
     {
-        Context = [], //TODO: I need a way to map this more generic,
+        Context = [], // chat completions are stateless: Groq returns no context tokens
         Response = (response.Choices.Count > 0 ? response.Choices[0].Message?.Content : null) ?? "",
     };
 }

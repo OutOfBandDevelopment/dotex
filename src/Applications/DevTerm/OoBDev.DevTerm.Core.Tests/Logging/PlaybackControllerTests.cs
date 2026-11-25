@@ -1,0 +1,288 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OoBDev.System.IO;
+using System.Text;
+using OoBDev.DevTerm.Presenters.Text;
+using Microsoft.Extensions.Options;
+using OoBDev.TestUtilities;
+
+namespace OoBDev.DevTerm.Logging.Tests;
+
+/// <summary>Trim, markup and presenter choice — the Playback window's shared logic, over real files.</summary>
+[TestCategory("Unit")]
+[TestCategory("Unit")]
+[TestClass]
+[TestCategory(TestCategories.Logging)]
+public sealed class PlaybackControllerTests
+{
+    private static readonly DateTimeOffset _t0 = new(2026, 9, 25, 12, 0, 0, TimeSpan.Zero);
+    private static readonly string[] _available = ["ascii", "hex"];
+
+    private TempDirectoryHandle _folder = null!;
+    private string _directory = null!;
+    private string _path = null!;
+
+    [TestInitialize]
+    public void CreateLog()
+    {
+        _folder = new TempDirectoryHandle();
+        _directory = _folder.DirectoryPath;
+        _path = Path.Combine(_directory, "capture.jsonl");
+        new SessionLog(
+            new SessionLogHeader { Created = _t0, Connection = "tcp://192.168.0.107:23", Presenters = ["ascii", "scpi"] },
+            [.. Enumerable.Range(0, 6).Select(i => new SessionLogRecord
+            {
+                Kind = SessionLogRecordKind.Rx,
+                Sequence = i + 1,
+                Timestamp = _t0.AddSeconds(i),
+                Data = Encoding.ASCII.GetBytes($"line{i}\r"),
+            })]).Save(_path);
+    }
+
+    [TestCleanup]
+    public void DeleteLog() => _folder.Dispose();
+
+    private static Pipeline PipelineFor(IReadOnlyList<string> names) =>
+        new(names.Select(n => n == "hex"
+            ? (IPresenter)new HexPresenter()
+            : new AsciiPresenter(Options.Create(new AsciiPresenterOptions()))));
+
+    private PlaybackController Open() => PlaybackController.Open(_path, PipelineFor, _available, new ManualTimeProvider());
+
+    [TestMethod]
+    public void SkipSilence_Toggled_SetsTheEnginesGapCap()
+    {
+        // Stage
+        var controller = Open();
+
+        // Test + Assert
+        Assert.IsFalse(controller.SkipSilence, "Off by default.");
+        controller.SkipSilence = true;
+        Assert.AreEqual(PlaybackController.DefaultSkipSilenceCap, controller.Engine.MaxGap);
+        controller.SkipSilence = false;
+        Assert.IsNull(controller.Engine.MaxGap);
+    }
+
+    [TestMethod]
+    public void StartsWithTheLogsOwnPresenters_LimitedToTheInstalledOnes()
+    {
+        var controller = Open();
+
+        CollectionAssert.AreEqual(new[] { "ascii" }, controller.Presenters.ToArray());
+        Assert.AreEqual("1x", controller.Speed.Label);
+        Assert.AreEqual(0, controller.SelectionStart);
+        Assert.AreEqual(6, controller.SelectionEnd);
+    }
+
+    [TestMethod]
+    public void JumpTo_ARecordNumber_SeeksToThatPosition_AndClampsPastTheEnd()
+    {
+        var controller = Open();
+
+        controller.JumpTo("4");
+        Assert.AreEqual(4, controller.Engine.Position);
+
+        controller.JumpTo("99");
+        Assert.AreEqual(6, controller.Engine.Position);
+
+        var back = controller.JumpTo("1");
+        Assert.IsTrue(back.Reset, "A backward jump replays from the start.");
+        Assert.AreEqual(1, controller.Engine.Position);
+    }
+
+    [TestMethod]
+    public void JumpTo_ATime_PlaysEveryRecordAtOrBeforeIt()
+    {
+        var controller = Open();
+
+        controller.JumpTo("0:02.5");
+        Assert.AreEqual(3, controller.Engine.Position, "Records at 0, 1 and 2 seconds are at or before 2.5 s.");
+
+        controller.JumpTo("0:05");
+        Assert.AreEqual(6, controller.Engine.Position);
+    }
+
+    [TestMethod]
+    public void JumpTo_Gibberish_ThrowsAFormatExceptionNamingTheText()
+    {
+        var controller = Open();
+
+        var ex = Assert.Throws<FormatException>(() => controller.JumpTo("soon"));
+
+        Assert.Contains("'soon'", ex.Message);
+        Assert.AreEqual(0, controller.Engine.Position, "A rejected jump doesn't move.");
+    }
+
+    [TestMethod]
+    public void SetPresenters_IgnoresUnknownNames_AndReplaysThroughTheNewOnes()
+    {
+        var controller = Open();
+        controller.SeekTo(2);
+
+        var batch = controller.SetPresenters(["HEX", "nope"]);
+
+        CollectionAssert.AreEqual(new[] { "hex" }, controller.Presenters.ToArray());
+        Assert.IsTrue(batch.Reset);
+        Assert.AreEqual("hex", batch.Items[0].Outputs[0].PresenterName);
+        Assert.AreSame(PlaybackBatch.Empty, controller.SetPresenters(["nope"]), "Nothing valid chosen keeps the current presenters.");
+    }
+
+    [TestMethod]
+    public void Trim_SavesTheSelectedRangeAsANewLog_KeepingSequenceNumbersAndProvenance()
+    {
+        var controller = Open();
+        controller.SeekTo(1);
+        controller.MarkIn();
+        controller.SeekTo(4);
+        controller.MarkOut();
+        var trimmedPath = controller.DefaultTrimPath();
+
+        controller.SaveSelection(trimmedPath);
+
+        Assert.AreEqual(Path.Combine(_directory, "capture.trim-1-4.jsonl"), trimmedPath);
+        var trimmed = SessionLog.Load(trimmedPath);
+        CollectionAssert.AreEqual(new long?[] { 2, 3, 4 }, trimmed.Records.Select(r => r.Sequence).ToArray());
+        Assert.AreEqual("capture.jsonl", trimmed.Header.TrimmedFrom);
+        Assert.AreEqual("tcp://192.168.0.107:23", trimmed.Header.Connection);
+        Assert.HasCount(6, SessionLog.Load(_path).Records, "The original is untouched.");
+    }
+
+    [TestMethod]
+    public void Trim_RefusesToOverwriteTheLogBeingPlayed_OrAnEmptySelection()
+    {
+        var controller = Open();
+        Assert.ThrowsExactly<InvalidOperationException>(() => controller.SaveSelection(_path));
+
+        controller.SeekTo(3);
+        controller.MarkIn();
+        controller.MarkOut();
+        Assert.IsFalse(controller.HasSelection);
+        Assert.ThrowsExactly<InvalidOperationException>(() => controller.SaveSelection(Path.Combine(_directory, "x.jsonl")));
+    }
+
+    [TestMethod]
+    public void AddNote_IsSavedIntoTheLogFileImmediately_AndReloadsAtTheSamePosition()
+    {
+        var controller = Open();
+        controller.SeekTo(2);
+
+        var line = PlaybackText.Lines(controller.AddNote("  scope triggered here  ")).Single();
+
+        Assert.AreEqual("00:01.000 [note] scope triggered here", line.Text);
+        Assert.AreEqual(PlaybackLineKind.Note, line.Kind);
+        var reloaded = SessionLog.Load(_path);
+        Assert.HasCount(7, reloaded.Records);
+        Assert.AreEqual(SessionLogRecordKind.Note, reloaded.Records[2].Kind);
+        Assert.AreEqual("scope triggered here", reloaded.Records[2].Text);
+        Assert.AreEqual(7, controller.SelectionEnd, "The selection end moved with the records after the note.");
+    }
+
+    [TestCategory(TestCategories.BugRegression)]
+    [TestMethod]
+    public void AddNote_WhenTheLogFileIsHeldOpenByAWriter_ThrowsAndLeavesMemoryUnchanged()
+    {
+        var controller = Open();
+        controller.SeekTo(2);
+        var recordCountBefore = controller.Log.Records.Count;
+        var positionBefore = controller.Engine.Position;
+        var selectionEndBefore = controller.SelectionEnd;
+
+        // Mirrors SessionLogWriter's own share mode (FileShare.Read, no Delete) - simulates the log still
+        // being captured by an active SessionLogger while it's opened for playback.
+        using var writerHold = new FileStream(_path, FileMode.Open, FileAccess.Write, FileShare.Read);
+
+        Assert.ThrowsExactly<UnauthorizedAccessException>(() => controller.AddNote("scope triggered here"));
+
+        Assert.AreEqual(recordCountBefore, controller.Log.Records.Count, "The note must not be inserted in memory if the save failed.");
+        Assert.AreEqual(positionBefore, controller.Engine.Position);
+        Assert.AreEqual(selectionEndBefore, controller.SelectionEnd);
+    }
+
+    [TestMethod]
+    public void EditNote_KeepsTheOldTextAsHistory_SavesIt_AndPlaysAsEdited()
+    {
+        var controller = Open();
+        controller.SeekTo(2);
+        controller.AddNote("first");
+
+        var line = PlaybackText.Lines(controller.EditNote("  second  ")).Single(l => l.Kind == PlaybackLineKind.Note);
+
+        Assert.AreEqual("00:01.000 [note] second (edited)", line.Text);
+        var saved = SessionLog.Load(_path).Records[2];
+        Assert.AreEqual("second", saved.Text);
+        CollectionAssert.AreEqual(new[] { "first" }, saved.PreviousTexts!.ToArray());
+        Assert.IsFalse(saved.Deleted);
+    }
+
+    [TestMethod]
+    public void DeleteNote_MarksItDeletedInTheFile_AndNoLongerOffersItForChange()
+    {
+        var controller = Open();
+        controller.SeekTo(2);
+        controller.AddNote("oops");
+
+        var line = PlaybackText.Lines(controller.DeleteNote()).Single(l => l.Kind == PlaybackLineKind.Note);
+
+        Assert.AreEqual("00:01.000 [note] (deleted: oops)", line.Text);
+        var saved = SessionLog.Load(_path).Records[2];
+        Assert.IsTrue(saved.Deleted);
+        Assert.AreEqual("oops", saved.Text);
+        Assert.IsNull(controller.CurrentNoteIndex);
+    }
+
+    [TestMethod]
+    public void EditNote_WhenTheRecordJustPlayedIsNotANote_Throws()
+    {
+        var controller = Open();
+        controller.SeekTo(2);
+
+        Assert.IsNull(controller.CurrentNoteIndex);
+        Assert.ThrowsExactly<InvalidOperationException>(() => controller.EditNote("x"));
+    }
+
+    [TestMethod]
+    public void EditNote_WhenTheLogFileIsHeldOpenByAWriter_ThrowsAndLeavesMemoryUnchanged()
+    {
+        var controller = Open();
+        controller.SeekTo(2);
+        controller.AddNote("first");
+        using var writerHold = new FileStream(_path, FileMode.Open, FileAccess.Write, FileShare.Read);
+
+        Assert.ThrowsExactly<UnauthorizedAccessException>(() => controller.EditNote("second"));
+
+        Assert.AreEqual("first", controller.Log.Records[2].Text);
+        Assert.IsNull(controller.Log.Records[2].PreviousTexts);
+    }
+
+    [TestMethod]
+    public void TogglePlayPause_AtTheEnd_StartsOverFromTheBeginning()
+    {
+        var controller = Open();
+        controller.SkipToEnd();
+
+        var batch = controller.TogglePlayPause();
+
+        Assert.IsTrue(batch.Reset);
+        Assert.IsTrue(controller.Engine.IsPlaying);
+        Assert.AreEqual(0, controller.Engine.Position);
+    }
+
+    [TestMethod]
+    public void PositionText_ShowsStateCountTimeSpeedAndSelection()
+    {
+        var controller = Open();
+        controller.SeekTo(2);
+        controller.SetSpeed(PlaybackController.Speeds[^1]);
+
+        Assert.AreEqual("Paused  2/6  00:01.000 / 00:05.000  Max  Selection 0–6", controller.PositionText);
+    }
+
+    [TestMethod]
+    public void Escape_ShowsControlAndNonAsciiBytesUnambiguously()
+    {
+        Assert.AreEqual(@"A\r\n\t\\\x00\xFF", PlaybackText.Escape([(byte)'A', 13, 10, 9, (byte)'\\', 0, 0xFF]));
+    }
+}

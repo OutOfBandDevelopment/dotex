@@ -9,10 +9,16 @@ One section per stack. Values are the test defaults from `src/.runsettings`; the
 - [SQL Server](#sql-server)
 - [MongoDB](#mongodb)
 - [Redis](#redis)
+- [PostgreSQL](#postgresql)
 - [RabbitMQ](#rabbitmq)
+- [DevTerm peers](#devterm-peers-mosquitto-ser2net-loopback-device)
 - [OpenSearch](#opensearch)
 - [Qdrant](#qdrant)
+- [Neo4j](#neo4j)
 - [Apache Tika](#apache-tika)
+- [Docling serve](#docling-serve)
+- [ClamAV](#clamav)
+- [SonarQube](#sonarqube)
 - [smtp4dev](#smtp4dev)
 - [Azurite](#azurite)
 - [Moto](#moto)
@@ -20,7 +26,7 @@ One section per stack. Values are the test defaults from `src/.runsettings`; the
 - [Keycloak](#keycloak)
 - [SBert](#sbert)
 - [Ollama](#ollama)
-- [Grafana LGTM](#grafana-lgtm)
+- [Aspire dashboard](#aspire-dashboard)
 - [Dashboards](#dashboards)
 
 **Table 1 — Summary**
@@ -29,19 +35,25 @@ One section per stack. Values are the test defaults from `src/.runsettings`; the
 |---------|-------|------------------|-------------|
 | SQL Server | `mssql/server:2022-latest` | `localhost,1433` | `sa` / `IntegrationTest123!` |
 | MongoDB | `mongo:latest` | `mongodb://localhost:27017` | none |
-| Redis | `redis:7-alpine` | `localhost:6379` | none |
+| Redis | `valkey/valkey:8-alpine` | `localhost:6379` | none |
+| PostgreSQL | `ghcr.io/pgmq/pg17-pgmq:v1.8.0` | `localhost:5434` | `postgres` / `IntegrationTest123!` |
 | RabbitMQ | `rabbitmq:management` | `amqp://localhost:5673` | `guest` / `guest` |
 | OpenSearch | `opensearchproject/opensearch` | `https://localhost:9200` | `admin` / `IntegrationTest123!` |
 | Qdrant | `qdrant/qdrant` | `http://localhost:6333` | none |
+| Neo4j | `neo4j:5-community` | `bolt://localhost:7687`, browser `http://localhost:7474` | `neo4j` / `oobdev-test-pass` |
 | Apache Tika | `apache/tika` | `http://localhost:9998` | none |
+| Docling serve | `quay.io/docling-project/docling-serve-cpu` | `http://localhost:5001` | none |
+| ClamAV | `clamav/clamav:stable` | `localhost:3310` | none |
+| SonarQube | `sonarqube:community` | `http://localhost:9002` | `admin` / `admin`, changed on first login |
 | smtp4dev | `rnwood/smtp4dev` | SMTP 25, IMAP 143, UI 7777 | none |
 | Azurite | `azure-storage/azurite` | `http://127.0.0.1:10000/devstoreaccount1` | well-known dev account key |
 | Moto | `motoserver/moto` | `http://localhost:4566` | `test` / `test` |
 | Service Bus emulator | `azure-messaging/servicebus-emulator` | `sb://localhost:5672` | emulator SAS key |
+| Event Hubs emulator | `azure-messaging/eventhubs-emulator` | `sb://localhost:5674` | emulator SAS key |
 | Keycloak | `keycloak/keycloak` | `http://localhost:8081` | `admin` / `admin` |
 | SBert | built from `containers/` | `http://localhost:5080` | none |
 | Ollama | `oobdev/ollama-phi3` (built) | `http://localhost:11435` | none |
-| Grafana LGTM | `grafana/otel-lgtm` | OTLP `http://localhost:4318`, UI `http://localhost:3000` | none |
+| Aspire dashboard | `mcr.microsoft.com/dotnet/aspire-dashboard` | OTLP `http://localhost:4318`, UI `http://localhost:18888` | API key header for the telemetry API |
 
 ## SQL Server
 
@@ -51,6 +63,14 @@ Developer edition. Used for SQL vector and matrix tests (`OoBDev.Data.Vectors.DB
 
 Document store tests. Keys: `MONGODB_CONNECTION_STRING`, `MONGODB_DATABASE_NAME`. Tests create a database named `IntegrationTest_<guid>` and drop it in cleanup.
 
+## PostgreSQL
+
+PostgreSQL 17 with the pgmq extension created at first start (`containers/testing/postgres/01-pgmq.sql`), database `oobdev_test`, ephemeral volume. Host port 5434 because 5432 and 5433 are common local installs. Used by the event sourcing Postgres provider tests and the pgmq queue adapter. Key: `POSTGRES_CONNECTION_STRING`.
+
+## PostgreSQL with pgvector
+
+PostgreSQL 17 with the pgvector extension created at first start (`containers/testing/pgvector/01-vector.sql`), database `oobdev_test`, ephemeral volume, image `pgvector/pgvector:0.8.1-pg17`. Host port 5435 (override with `TEST_PORT_PGVECTOR`). Separate from the pgmq service so neither image constrains the other. Used by the pgvector store and the database work queue tests. Key: `PGVECTOR_CONNECTION_STRING`.
+
 ## Redis
 
 256 MB cap, `allkeys-lru`, no persistence. Used by the caching provider tests. Keys: `REDIS_CONNECTION_STRING`, `REDIS_HOST`, `REDIS_PORT`.
@@ -58,6 +78,10 @@ Document store tests. Keys: `MONGODB_CONNECTION_STRING`, `MONGODB_DATABASE_NAME`
 ## RabbitMQ
 
 AMQP is published on 5673 so the Service Bus emulator can keep 5672; the management UI is on 15672. Keys: `RABBITMQ_HOST`, `RABBITMQ_PORT`, `RABBITMQ_AMQP_PORT`, `RABBITMQ_MANAGEMENT_PORT`, `RABBITMQ_USERNAME`, `RABBITMQ_PASSWORD`, `RABBITMQ_CONNECTION_STRING`.
+
+## DevTerm peers (Mosquitto, ser2net, loopback-device)
+
+Disposable peers for the DevTerm transports, configured under `containers/testing/devterm/`. Mosquitto is anonymous MQTT on 1883; ser2net serves RFC 2217 on 2217 with a port behind it that echoes every byte; loopback-device is a TCP line device on 7778. RabbitMQ also publishes STOMP (21613, because 61613 sits in a Windows reserved range), AMQPS (5671) and STOMP over TLS (21614); the TLS listeners need `sh containers/testing/devterm/make-test-certs.sh` first (git-ignored `devterm/certs/ca.pem`). Keys: `MOSQUITTO_HOST`, `MOSQUITTO_PORT`, `SER2NET_HOST`, `SER2NET_PORT`, `LOOPBACK_DEVICE_HOST`, `LOOPBACK_DEVICE_PORT`, `RABBITMQ_STOMP_PORT`, `RABBITMQ_STOMP_TLS_PORT`.
 
 ## OpenSearch
 
@@ -67,9 +91,25 @@ Security plugin on, self-signed certificate (tests use `OPENSEARCH_USE_HTTPS=tru
 
 Vector database over the query API. Keys: `QDRANT_URL`, `QDRANT_HOST`, `QDRANT_PORT`. Storage and snapshot volumes persist between runs, so tests use unique collection names.
 
+## Neo4j
+
+Graph database (Cypher over Bolt) for the graph retrieval adapter. Keys: `NEO4J_URI`, `NEO4J_USER`, `NEO4J_PASSWORD`; host ports `TEST_PORT_NEO4J_BOLT` (7687) and `TEST_PORT_NEO4J` (7474, browser). The data volume persists between runs, so tests use unique node labels or ids and delete what they create. No nginx proxy (the browser is on 7474 directly).
+
 ## Apache Tika
 
 Stateless document detection and extraction. Keys: `TIKA_URL`, `TIKA_HOST`, `TIKA_PORT`.
+
+## ClamAV
+
+Virus scanning for `IContentScanner` through the clamd `INSTREAM` protocol. Keys: `CLAMAV_HOST`, `CLAMAV_PORT`; host port `TEST_PORT_CLAMAV` (3310). The first start downloads the signature database (freshclam), so the container reports healthy only after a few minutes; the health check is the image's `clamdcheck.sh`. The integration test sends the standard EICAR test string, which is not malware.
+
+## Docling serve
+
+Document conversion and OCR (PDF to Markdown). Key: `DOCLING_URL`; host port `TEST_PORT_DOCLING` (5001). The CPU image is about 7.6 GB and ships Tesseract with English only, so tests send `ocr_lang=eng` (`DoclingOptions.OcrLanguages`). The server caps `images_scale` at 2.0 and has no formula-enrichment model, so the adapter retries with its light options.
+
+## SonarQube
+
+Static analysis for the C# solution. Key: `SONARQUBE_URL`; host port `TEST_PORT_SONARQUBE` (9002). Start-up takes about a minute (health check `/api/system/status` reports `UP`). The first login forces a new admin password; create a user token in the UI and keep it in a user secret or the `SONAR_TOKEN` variable. `scripts/ci/sonar.ps1` runs `dotnet-sonarscanner` against it.
 
 ## smtp4dev
 
@@ -87,6 +127,10 @@ AWS emulator (SQS and others) on 4566. The one-shot `moto-init` container create
 
 Starts after SQL Server and reads its queue and topic definition from `servicebus-config/Config.json`. It has no health check, so the scripts wait on its port. Keys: `SERVICEBUS_CONNECTION_STRING`, `SERVICEBUS_HOST`, `SERVICEBUS_PORT`, `SERVICEBUS_TEST_QUEUE`, `SERVICEBUS_TEST_TOPIC`.
 
+## Event Hubs emulator
+
+Starts after Azurite (its blob and table metadata) and reads the hub definition from `eventhubs-config/Config.json` (`integration-test-hub`, two partitions, group `integration-test-group`). AMQP is on host port 5674 because the Service Bus emulator holds 5672 and RabbitMQ 5673. It has no health check, so the scripts wait on its port. Keys: `EVENTHUB_CONNECTION_STRING`, `EVENTHUB_NAME`, `EVENTHUB_CONSUMER_GROUP`.
+
 ## Keycloak
 
 Imports `keycloak-config/integration-test-realm.json` on start: realm `integration-test`, client `integration-test-client`, user `testuser`. Keys: `KEYCLOAK_URL`, `KEYCLOAK_REALM`, `KEYCLOAK_CLIENT_ID`, `KEYCLOAK_CLIENT_SECRET`, `KEYCLOAK_ADMIN_USERNAME`, `KEYCLOAK_ADMIN_PASSWORD`, `KEYCLOAK_TEST_USERNAME`, `KEYCLOAK_TEST_PASSWORD`. Details in [KEYCLOAK-TESTING.md](../../../../containers/testing/KEYCLOAK-TESTING.md).
@@ -97,11 +141,11 @@ Python sentence-embedding service used by the SBert client tests and as the refe
 
 ## Ollama
 
-CPU-only inference with `phi3` baked into the image at build time, so first start does not download 2 GB. Published on 11435 to leave a local Ollama on 11434 alone. Keys: `OLLAMA_URL`, `OLLAMA_HOST`, `OLLAMA_PORT`, `OLLAMA_MODEL`, `OLLAMA_EMBEDDING_MODEL`.
+CPU-only inference with `phi3` baked into the image at build time, so first start does not download 2 GB. Published on 11435 to leave a local Ollama on 11434 alone. Keys: `OLLAMA_URL`, `OLLAMA_HOST`, `OLLAMA_PORT`, `OLLAMA_MODEL`, `OLLAMA_EMBEDDING_MODEL`, `OLLAMA_VISION_MODEL`.
 
-## Grafana LGTM
+## Aspire dashboard
 
-One container with an OTLP receiver (4317 gRPC, 4318 HTTP), Tempo, Loki, Prometheus and Grafana. The OpenTelemetry tests export spans and logs to OTLP and read them back through Grafana's Tempo and Loki proxies. Keys: `OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_GRAFANA_URL`.
+One container with an OTLP receiver (4317 gRPC, 4318 HTTP) and the Aspire dashboard UI on 18888 (unsecured). The OpenTelemetry tests export spans and logs to OTLP and read them back through the dashboard telemetry API (`/api/telemetry/spans`, `/api/telemetry/logs`), which needs the `x-api-key` header. Keys: `OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_DASHBOARD_URL`, `OTEL_DASHBOARD_API_KEY`.
 
 ## Dashboards
 

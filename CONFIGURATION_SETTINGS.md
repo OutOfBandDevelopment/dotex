@@ -1,6 +1,6 @@
 # OoBDev Framework - Configuration Reference
 
-**Last Updated:** 2026-01-21
+**Last Updated:** 2026-11-11
 **Framework Version:** net10.0
 **Total Configuration Points:** 157+
 
@@ -204,6 +204,21 @@ services.Configure<FileTemplatingOptions>(options =>
 | `Title` | `Messaging` (or the document name) | Document title |
 | `Version` | `1.0.0` | Document version |
 | `ViewerScriptUrl` | pinned unpkg web component | Script the `/asyncapi/{name}` viewer loads |
+
+---
+
+#### RoleRightOptions
+
+**Namespace:** `OoBDev.AspNetCore.Mvc.Authorization`
+**Configuration Section:** `OoBDev:Authorization`
+
+| Property | Default | Description |
+|----------|---------|-------------|
+| `RoleClaimTypes` | `ClaimTypes.Role`, `roles`, `role` | Claim types read as roles; at least one, none blank |
+| `RoleObjectClaimTypes` | `realm_access` | JSON object claims whose `roles` array holds roles (Keycloak realm roles) |
+| `Roles` | empty | Role name (case-insensitive) to the application rights it grants; no blank role or right |
+
+Unmapped roles grant nothing. See [ApplicationRights](docs/design/ApplicationRights/README.md).
 
 ---
 
@@ -449,18 +464,18 @@ services.Configure<OpenSearchOptions>(options =>
 | Property | Type | Required | Default | Description |
 |----------|------|----------|---------|-------------|
 | Url | string | Yes | - | Qdrant server URL |
-| CollectionName | string | Yes | - | Collection name for vectors |
 | EnsureCollectionExists | bool | No | false | Auto-create collection if missing |
+| Distance | Distance | No | Cosine | Distance for created collections |
+| ResultLimit | int | No | 1000 | Most points a list or neighbour search returns |
 
 **Validation:**
-- Url, CollectionName: Required (compile-time via `required` modifier)
+- Url: Required (compile-time via `required` modifier)
 
 **Usage:**
 ```csharp
 services.Configure<QdrantOptions>(options =>
 {
     options.Url = "http://localhost:6333";
-    options.CollectionName = "embeddings";
     options.EnsureCollectionExists = true;
 });
 ```
@@ -978,6 +993,61 @@ Within each section:
 
 ---
 
+### Web Extensions (added 2026-11-11)
+
+#### CGI hosting (`OoBDev:Cgi`, `CgiOptions`)
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `Prefix` | string | `/cgi-bin` | URL prefix handled by the middleware (required) |
+| `ScriptRoot` | string | - | Directory holding the scripts (required) |
+| `Handlers` | map | empty | File extension to interpreter |
+| `Timeout` | TimeSpan | 30 s | Per-request process timeout |
+| `MaxRequestBodyBytes` | long | 10 MiB | Request body limit |
+| `MaxResponseBytes` | long? | none | Response limit |
+| `MaxConcurrentProcesses` | int | 2 x CPU count | Concurrent script processes |
+| `MaxStderrBytes` | int | 64 KiB | Captured stderr limit |
+| `AllowAnonymous` | bool | false | Skip authentication |
+| `RequiredRights` | list | empty | Application rights needed for every script |
+| `ScriptRights` | map | empty | Extra rights per script |
+| `AllowBatchFiles` | bool | false | Allow `.bat` and `.cmd` |
+| `InheritedEnvironmentVariables` | list | `PATH`, `SystemRoot` | Variables passed to the script |
+
+#### CGI OpenAPI (`OoBDev:Cgi:OpenApi`, `CgiOpenApiOptions`)
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `FileSuffix` | string | `.openapi.json` | Suffix of the per-script OpenAPI file |
+| `Documents` | list | `all` | OpenAPI documents that receive the CGI operations |
+
+#### OData query limits (`OoBDev:OData`, `ODataQueryLimits`)
+
+| Key | Type | Default | Range | Description |
+|-----|------|---------|-------|-------------|
+| `DefaultPageSize` | int | 50 | 1-100000 | Page size without `$top` |
+| `MaxTop` | int | 100 | 1-100000 | Largest `$top` |
+| `MaxNodeCount` | int | 100 | 1-10000 | Query node limit |
+| `AllowExpand` | bool | false | - | Allow `$expand` |
+| `MaxExpansionDepth` | int | 2 | 1-10 | `$expand` depth |
+
+### Telemetry (added 2026-11-11)
+
+`OpenTelemetryOptions`, section `OpenTelemetryOptions` (config-gated; nothing is exported without an endpoint):
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `OtlpEndpoint` | Uri? | none | OTLP collector endpoint |
+| `Protocol` | string? | exporter default | OTLP protocol |
+| `ServiceName` | string? | assembly name | Service name resource attribute |
+| `Sources` | string[] | empty | Extra activity sources to record |
+
+### Other keys (added 2026-11-11)
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `OoBDev:Caching:Disabled` | bool | false | Turns caching off globally |
+| `OoBDev:Ollama`, `OoBDev:GroqCloud` | sections | - | Model settings of the `OoBDev.LlmCodeGen.Cli` tool |
+
 ## Environment Variables
 
 ### Runtime Environment
@@ -1045,7 +1115,7 @@ Within each section:
 
 | Variable | Type | Default | Description |
 |----------|------|---------|-------------|
-| `SERVICEBUS_CONNECTION_STRING` | string | Endpoint=sb://localhost:5672/... | Service Bus connection |
+| `SERVICEBUS_CONNECTION_STRING` | string | Endpoint=sb://localhost;...;UseDevelopmentEmulator=true | Service Bus connection |
 | `SERVICEBUS_HOST` | string | localhost | Service Bus host |
 | `SERVICEBUS_PORT` | int | 5672 | AMQP port |
 | `SERVICEBUS_TEST_QUEUE` | string | integration-test-queue | Test queue name |
@@ -1237,7 +1307,7 @@ Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBek
 
 **Emulator Example:**
 ```
-Endpoint=sb://localhost:5672/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=...
+Endpoint=sb://localhost;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=...;UseDevelopmentEmulator=true
 ```
 
 #### RabbitMQ (AMQP)

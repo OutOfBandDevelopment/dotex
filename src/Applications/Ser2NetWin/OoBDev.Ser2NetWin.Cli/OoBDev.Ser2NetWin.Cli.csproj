@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>ser2net-win</AssemblyName>
+    <RootNamespace>OoBDev.Ser2NetWin.Cli</RootNamespace>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>ser2net-win</ToolCommandName>
+    <PackageId>OoBDev.Ser2NetWin.Cli</PackageId>
+    <Description>Bridges Windows COM ports to raw TCP sockets; runs as a console app or Windows Service.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GitVersion.MsBuild">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" />
+    <PackageReference Include="Spectre.Console" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Framework\OoBDev.System.IO.Ports.Bridge\OoBDev.System.IO.Ports.Bridge.csproj" />
+    <ProjectReference Include="..\..\..\Framework\OoBDev.System.IO.UsbHids\OoBDev.System.IO.UsbHids.csproj" />
+    <ProjectReference Include="..\..\..\Framework\OoBDev.System.IO.UsbTmc\OoBDev.System.IO.UsbTmc.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

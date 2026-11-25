@@ -151,14 +151,13 @@ public partial class AzureBlobContainerProvider : IBlobContainerProvider
     }
 
     /// <summary>
-    /// Queries content metadata.
+    /// Queries content metadata. Blobs are listed page by page with their metadata as the query is enumerated; filters run in memory over that listing.
     /// </summary>
     /// <returns>An IQueryable representing the content metadata.</returns>
     public IQueryable<ContentMetaDataReference> QueryContent()
     {
         EnsureContainerExistsAsync().GetAwaiter().GetResult();
-        //TODO: build a query provider!
-        var query = from p in _blockBlobClient.GetBlobs().AsPages()
+        var query = from p in _blockBlobClient.GetBlobs(new GetBlobsOptions { Traits = BlobTraits.Metadata }).AsPages()
                     from b in p.Values
                     select new ContentMetaDataReference
                     {

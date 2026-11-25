@@ -1,0 +1,56 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Input;
+using OoBDev.UiDefinitions.Forms;
+
+namespace OoBDev.UiDefinitions.ViewModels;
+
+/// <summary>A button row that runs a command property of the model.</summary>
+public sealed class ButtonViewModel : ControlViewModel
+{
+    /// <summary>Creates the view model and reads the model.</summary>
+    /// <param name="control">The button.</param>
+    /// <param name="binding">The bound model.</param>
+    /// <param name="colorPicker">The dialog for a colour picker button, or null.</param>
+    /// <param name="siblings">The controls the colour picker may write to.</param>
+    /// <param name="confirm">Asks the button's confirm message before it runs, or null.</param>
+    /// <param name="preview">Shows what the command would send for the current field values, or null.</param>
+    public ButtonViewModel(ButtonControl control, FormBinding binding, IColorPicker? colorPicker = null, IReadOnlyCollection<UiControl>? siblings = null, IConfirmPrompt? confirm = null, ICommandPreview? preview = null)
+        : base(control, binding)
+    {
+        Button = control;
+        _preview = preview;
+        var target = colorPicker is not null && control.ColorPickerTargetCommandId is { } id ? siblings?.FirstOrDefault(c => c.Id == id) : null;
+        Invoke = target is null ? new InvokeCommand(binding, control, siblings, confirm) : new PickColorCommand(binding, target, colorPicker!);
+        Refresh();
+    }
+
+    private readonly ICommandPreview? _preview;
+
+    /// <summary>The button definition.</summary>
+    public ButtonControl Button { get; }
+
+    /// <summary>Runs the model command.</summary>
+    public ICommand Invoke { get; }
+
+    /// <summary>The question a view asks before running the command, or null.</summary>
+    public string? ConfirmMessage => Button.ConfirmMessage;
+
+    /// <summary>What the command would send right now, from the current parameter field values, or null.</summary>
+    public string? Sends => _preview is not null && Button.CommandId is { } id && Invoke is InvokeCommand invoke ? _preview.PreviewCommand(id, invoke.Parameter()) : null;
+
+    /// <summary>The help text followed by the <see cref="Sends"/> line, or null when there is neither.</summary>
+    public string? ToolTip => Sends is { } sends ? (string.IsNullOrEmpty(Description) ? $"Sends: {sends}" : $"{Description}{Environment.NewLine}Sends: {sends}") : Description;
+
+    /// <inheritdoc />
+    protected override void RefreshValue()
+    {
+        ((CommandBase)Invoke).RaiseCanExecuteChanged();
+        OnPropertyChanged(nameof(Sends));
+        OnPropertyChanged(nameof(ToolTip));
+    }
+
+    /// <inheritdoc />
+    protected override bool IsLocked() => false;
+}

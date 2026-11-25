@@ -1,0 +1,283 @@
+# Example UI: Screen Designs
+
+Part of [the plan](plan.md). Back to the [shell design](README.md).
+
+Each screen lists its purpose, the API it binds to, its commands and a mockup. "New" in the API column means the endpoint does not exist yet (see the phases in the plan).
+
+## Contents
+
+- [Screen index](#screen-index)
+- [AI chat](#ai-chat)
+- [Embeddings lab](#embeddings-lab)
+- [Documents workbench](#documents-workbench)
+- [Communications composer](#communications-composer)
+- [Queues](#queues)
+- [Templates](#templates)
+- [Current user](#current-user)
+- [Search](#search)
+- [Right audit trail](#right-audit-trail)
+- [Remaining screens](#remaining-screens)
+
+## Screen index
+
+**Table 1 — Screens and their APIs**
+
+| Screen | Route | API | Status |
+|---|---|---|---|
+| Dashboard | `/` | health, links | Exists (`OverviewPage`) |
+| AI chat | `/ai/chat` | `POST api/AI`, `Streamed`, `Context` | Exists |
+| Ollama console | `/ai/ollama` | `api/Ollama` | Exists |
+| Groq console | `/ai/groq` | `api/GroqCloud/Completion` | Exists (key needed) |
+| Embeddings lab | `/ai/embeddings` | `api/AI/Embeddings`, `api/SBERT`, `api/AllMiniLM` | Exists |
+| RAG | `/ai/rag` | `api/Rag` (embeds passages in process, answers through Ollama) | Exists |
+| Search | `/ai/search` | `api/Search` (BM25 keywords, in-process embeddings and reciprocal rank fusion over pasted passages) | Exists |
+| Documents | `/content/documents` | `Document/*` | Exists |
+| Templates | `/content/templates` | `api/TextTemplate/*` | Yes (list, open, preview, save) |
+| Communications | `/messaging/communications` | `api/Communications/*` | Exists |
+| Queues | `/messaging/queues` | `api/MessageQueueing/*` | Exists |
+| Current user | `/identity/me` | `api/User/claims` | Exists |
+| Rights and roles | `/identity/rights` | `api/Rights/endpoints`, `api/Rights/check` | Exists |
+| Cache | `/data/cache` | `api/Cache` | Exists as a lab (store, look up, remove; the provider cannot list keys) |
+| Vector stores | `/utilities/vectors` | vector store endpoints | Exists (store texts, search by meaning; lexical and hybrid Planned) |
+| Image embeddings | `/ai/images` | image endpoints | Exists (zero-shot labels) |
+| Vectors and matrices | `/utilities/vector-lab` | vector math endpoints | Exists |
+| Identity management | `/identity/users` | identity endpoints | Planned |
+| Expression calculator | `/utilities/toolbox` | expression endpoints | Exists inside the Toolbox page |
+| Security helpers | `/utilities/toolbox` | hash, HMAC, TOTP endpoints | Exists inside the Toolbox page |
+| Operations | `/operations/info` | `api/Operations/info` (runtime facts, masked configuration) | Exists |
+| Telemetry | `/operations/telemetry` | Aspire dashboard link and its telemetry API | Exists (added beyond this design) |
+| Right audit trail | `/operations/right-audit` | `GET /api/v1/right-audit` (right `audit.read`; mapped only when `OoBDev:RightAudit:ConnectionString` is set) | Exists (2026-11-20) |
+| Model compare | `/ai/model-compare` | embedding models side by side | Exists (added beyond this design) |
+| Text tools | `/utilities/text` | XPath over JSON, YAML, HTML and XML, Markdown | Exists |
+
+## AI chat
+
+Purpose: send a prompt to the configured generative provider, optionally streamed, with optional context documents.
+
+Commands: `SendPromptCommand`, `StreamPromptCommand` (cancellable), `ClearCommand`.
+
+```plantuml
+@startsalt
+{+
+  <b>AI chat
+  Provider: ^Ollama^ | Mode: (X) Single () Streamed () Context
+  Prompt:
+  "Explain provider factories in two lines   "
+  [ Send ] | [ Cancel ] | [ Clear ]
+  ----
+  Response
+  {+
+    Tokens appear here while streaming
+  }
+  Elapsed: 1.4 s
+}
+@endsalt
+```
+
+*Figure 1 — AI chat*
+
+## Embeddings lab
+
+Purpose: turn text into a vector with each available model and compare them. Commands: `EmbedCommand`, `CompareCommand`.
+
+```plantuml
+@startsalt
+{+
+  <b>Embeddings lab
+  Model: ^AllMiniLM L6 v2^
+  Text A: "cats purr                  "
+  Text B: "kittens make quiet noises  "
+  [ Embed ] | [ Compare ]
+  ----
+  Vector (first 8): 0.012, -0.044, ...
+  Dimensions: 384
+  Cosine similarity: 0.81
+}
+@endsalt
+```
+
+*Figure 2 — Embeddings lab*
+
+## Documents workbench
+
+Purpose: upload a file, browse the stored documents (blob browser over `GET Document/List`, which reads the `docs` container through `IBlobContainer`), view one as text, HTML, PDF or summary, or convert between types. Commands: `ListStoredCommand`, `PickStoredCommand`, `UploadCommand`, `ConvertCommand`, `DownloadCommand`.
+
+```plantuml
+@startsalt
+{+
+  <b>Documents
+  File: [ Choose file ] report.docx
+  Name in store: "reports/report.docx    "
+  [ Upload ] | [ Download ]
+  Stored: [ report.docx ] [ notes.txt ]
+  ----
+  {/ Text | Html | Pdf | Summary | Convert }
+  {+
+    Rendered output of the selected tab
+  }
+  Convert to: ^application/pdf^ [ Convert ]
+}
+@endsalt
+```
+
+*Figure 3 — Documents workbench*
+
+## Communications composer
+
+Purpose: send a message through the public, queued or private channel. Commands: `SendMessageCommand` with a channel option.
+
+```plantuml
+@startsalt
+{+
+  <b>Communications
+  Channel: (X) Public () Queued () Private
+  To:      "someone@example.test     "
+  Subject: "Hello                    "
+  Body:
+  "Message text                      "
+  [ Send ]
+  ----
+  Result: queued, id 4f2a...
+}
+@endsalt
+```
+
+*Figure 4 — Communications composer*
+
+## Queues
+
+Purpose: send a sample message to the public or private queue, show the AsyncAPI contract for it, list the configured channels (`GET api/MessageQueueing/channels`: provider, queue, host and receiver flag; connection strings and other secrets are never returned) and show the last 50 messages the example handler received (`GET api/MessageQueueing/received`, newest first, kept in memory). Commands: `EnqueueCommand`, `RefreshChannelsCommand`, `RefreshReceivedCommand`.
+
+```plantuml
+@startsalt
+{+
+  <b>Queues
+  Queue: (X) Public () Private
+  Payload:
+  "{ ""text"": ""hello"" }               "
+  [ Enqueue ] | [ Open event reference ]
+  ----
+  Last result: accepted
+}
+@endsalt
+```
+
+*Figure 5 — Queue sender*
+
+## Templates
+
+Purpose: browse the template files of the example `Templates` folder, open one, edit the text and data, and preview the draft. Binds to `GET api/TextTemplate/List`, `GET api/TextTemplate/Read?file=` (only a listed file name is opened), `POST api/TextTemplate/Preview` (renders draft text, saves nothing) and `Apply` for a named template. `PUT api/TextTemplate/Save` writes the edited text over the listed file (owner, 2026-11-09: a demo click edits the tracked file; only a listed file name is accepted). Commands: `ListTemplatesCommand`, `OpenTemplateCommand`, `PreviewTemplateCommand`, `SaveTemplateCommand`, `ApplyTemplateCommand`.
+
+```plantuml
+@startsalt
+{+
+  <b>Templates
+  Files: [ order-shipped.html.hbs ] [ order-shipped.txt.hbs ]
+  Source:
+  "<h1>Hello {{name}}</h1>          "
+  Data (JSON):
+  "{ ""name"": ""Ada"" }              "
+  [ Preview draft ]  [ Apply ]
+  ----
+  {+
+    Rendered output
+  }
+}
+@endsalt
+```
+
+*Figure 6 — Template browser and preview*
+
+## Current user
+
+Purpose: show who the token says you are. Binds to `GET api/User/claims`; the same data feeds the top-bar user menu.
+
+```plantuml
+@startsalt
+{+
+  <b>Current user
+  {#
+    Claim | Value
+    sub | 1234
+    preferred_username | ada
+    realm_access | user
+  }
+  [ Copy token ] | [ Sign out ]
+}
+@endsalt
+```
+
+*Figure 7 — Claims*
+
+## Search
+Purpose: run one query three ways (keywords by BM25, meaning by in-process embeddings, and both fused by reciprocal rank fusion) over passages pasted into the page, and show the three lists side by side. Built 2026-11-09 as `SearchController` (`POST api/Search`); searching an indexed store with a list-all mode stays a later step. Commands: `SearchCommand`.
+Purpose: lexical, semantic and hybrid search over indexed content, with a list-all mode. Needs the commented-out `SearchController` restored. Commands: `SearchCommand`.
+
+```plantuml
+@startsalt
+{+
+  <b>Search
+  Query: "provider factory       " [ Search ]
+  Mode: () List () Lexical (X) Semantic () Hybrid     Limit: "10"
+  ----
+  {#
+    Score | Title | Snippet
+    0.91 | Provider pattern | ...
+    0.84 | DI extensions | ...
+  }
+}
+@endsalt
+```
+
+*Figure 8 — Search*
+
+## Right audit trail
+
+Purpose: let an auditor ask who was denied what and when. Binds to `GET /api/v1/right-audit` (subject, result, most entries; newest first). The endpoint exists only when the host has a durable trail (`OoBDev:RightAudit:ConnectionString`, SQL Server); a 404 shows the "not configured" note instead of a table. Commands: `RefreshAuditCommand`.
+
+```plantuml
+@startsalt
+{+
+  <b>Right audit trail
+  Subject: "grace      " Result: ^any^ Most: "100" [ Refresh ]
+  ----
+  {#
+    Time (UTC) | Subject | Rights | Result
+    2026-11-20T15:02:11Z | grace | cache.manage | Allowed
+    2026-11-20T15:01:40Z | ada | audit.read | Forbidden
+  }
+}
+@endsalt
+```
+
+*Figure 9 — Right audit trail*
+
+## Remaining screens
+
+Built screens are listed in Table 1; the rows below are still open unless Table 1 says Exists. Not built: Identity management, Queue adapters and blob storage, the dacpac half of Data access (the read-only query runner is built), Semantic Kernel, Formats and the CLI catalog.
+
+These follow the same blade pattern; each gets its own four design documents (requirements, architecture, API design, testing strategy) when the phase starts.
+
+**Table 2 — Remaining screens**
+
+| Screen | Key controls | Notes |
+|---|---|---|
+| Dashboard | provider status tiles, recent activity, links | Reads a new health endpoint |
+| Ollama and Groq consoles | model list, completion, stream | Groq disabled until a key is configured |
+| RAG | question box, cited passages | Binds to `RaggedAnne` |
+| Cache | key list, get, set, remove, flush | Provider switch for Redis or in-memory |
+| Vector stores | collection list, upsert, query | Qdrant and OpenSearch |
+| Image embeddings | image drop zone, vector, labels | CLIP zero-shot labels, DINOv2 and ViT compare |
+| Vectors and matrices | vector and matrix inputs, operators | Mirrors the SQL functions |
+| Identity management | user search, rights, sessions | Keycloak admin scope required |
+| Expression calculator | expression box, variables, result | Shows the parsed tree |
+| Security helpers | hash, HMAC, one-time code | SHA-512 default |
+| Queue adapters and blob storage | provider status, container browser | Azurite and Moto in the stack |
+| Data access | query runner, DacPac build | Read-only by default |
+| Semantic Kernel | plug-in list, invoke | |
+| Text tools | Markdown, HTML, YAML converters | |
+| Formats | file inspector | Device and hardware screens are deferred until the hardware projects are merged |
+| Operations | health, configuration | Secrets masked |
+| Developer | links to Scalar, AsyncAPI, Aspire dashboard, CLI catalog | |
+
+[Back to the plan](plan.md) · [Shell design](README.md) · [Missing screens review](missing-screens.md)

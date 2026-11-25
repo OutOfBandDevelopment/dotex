@@ -26,6 +26,7 @@ app.MapApiReference();                                    // /openapi/{name}.jso
 | `ConfigureOpenApiOptions` | `IConfigureNamedOptions<OpenApiOptions>`: filter, schema ids and transformer registration |
 | `IApiReferenceConfigurator` | `Configure(ScalarOptions)`; implemented by libraries that need to change the reference |
 | `ApiInfoDocumentTransformer`, `HealthChecksDocumentTransformer` | Document transformers |
+| `ApiPermissionsExtension` | `IOpenApiExtension` that writes `x-permissions` (`anonymous`, `right`) for an operation |
 | `ApplicationPermissionsOperationTransformer`, `SearchQueryOperationTransformer`, `XmlDocumentationOperationTransformer` | Operation transformers |
 | `SearchQuerySchemaTransformer`, `XmlDocumentationSchemaTransformer` | Schema transformers |
 | `XmlDocumentationProvider` | Reads member comments from the XML files beside the application |
@@ -37,10 +38,11 @@ app.MapApiReference();                                    // /openapi/{name}.jso
 
 | Type | Role |
 |------|------|
-| `OAuth2OpenApiOptions` | `UserReadApiClaim`, `AuthorizationUrl`, `TokenUrl` |
+| `OAuth2OpenApiOptions` | `UserReadApiClaim`, `AuthorizationUrl`, `TokenUrl` (both optional when `Authority` is set and its `.well-known/openid-configuration` supplies them) |
 | `OAuthDocumentTransformer` | Declares the `oauth2` authorization code scheme |
 | `OAuthApiReferenceConfigurator` | Scalar authorization code flow with PKCE |
 | `ConfigureOAuthOpenApiOptions` | Adds the document transformer |
+| `OpenIdConfigurationDiscovery`, `OpenIdEndpoints` | Read the authorization and token URLs from the authority's `.well-known/openid-configuration` (5-second timeout) when they are not configured |
 
 ## Configuration
 

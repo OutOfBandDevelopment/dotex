@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.System.Codecs;
 using OoBDev.TestUtilities;
+using System;
 using System.Text;
 
 namespace OoBDev.System.Tests.Codecs;
@@ -8,6 +9,8 @@ namespace OoBDev.System.Tests.Codecs;
 [TestClass]
 public class Base32CodecTests
 {
+    public required TestContext TestContext { get; set; }
+
     [TestMethod, TestCategory(TestCategories.Unit)]
     public void DecodeTest()
     {
@@ -50,5 +53,28 @@ public class Base32CodecTests
             var encoded = encoding.Encode(buffer);
             Assert.AreEqual(test.encoded, encoded);
         }
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public void EncodeDecode_SpanInputs_MatchTheArrayForms()
+    {
+        var encoding = new Base32Codec();
+        ReadOnlySpan<byte> data = stackalloc byte[] { 1, 2, 3, 4, 5, 6, 7 };
+
+        var fromSpan = encoding.Encode(data);
+        var fromArray = encoding.Encode(data.ToArray());
+        var decoded = encoding.Decode(fromSpan.AsSpan());
+
+        TestContext.WriteLine(fromSpan);
+        Assert.AreEqual(fromArray, fromSpan);
+        CollectionAssert.AreEqual(data.ToArray(), decoded);
+    }
+
+    [TestMethod, TestCategory(TestCategories.Unit)]
+    public void Decode_UnpaddedInput_DecodesLikePaddedInput()
+    {
+        var encoding = new Base32Codec();
+
+        CollectionAssert.AreEqual(encoding.Decode("MZXW6YQ="), encoding.Decode("MZXW6YQ"));
     }
 }

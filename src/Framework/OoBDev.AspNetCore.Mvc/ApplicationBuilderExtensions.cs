@@ -1,6 +1,7 @@
 using OoBDev.AspNetCore.Mvc.Diagnostics.HealthChecks;
 using OoBDev.AspNetCore.Mvc.Middleware;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace OoBDev.AspNetCore.Mvc;
 
@@ -9,6 +10,32 @@ namespace OoBDev.AspNetCore.Mvc;
 /// </summary>
 public static class ApplicationBuilderExtensions
 {
+    /// <summary>
+    /// Accepts the HTTP <c>QUERY</c> verb and its <c>POST</c> fallback on <c>GET</c> endpoints. Call before routing.
+    /// </summary>
+    /// <param name="builder">The application builder.</param>
+    /// <returns>The application builder.</returns>
+    public static IApplicationBuilder UseHttpQueryVerb(this IApplicationBuilder builder)
+        => builder.UseMiddleware<QueryVerbMiddleware>();
+
+    /// <summary>
+    /// Returns unhandled exceptions as RFC 9457 problem details with trace and correlation identifiers.
+    /// Call first, before <see cref="UseAspNetCoreExtensionMiddleware"/>, after <c>TryAddProblemDetailsExceptionHandler</c>.
+    /// </summary>
+    /// <param name="builder">The application builder.</param>
+    /// <returns>The application builder.</returns>
+    public static IApplicationBuilder UseProblemDetailsExceptionHandler(this IApplicationBuilder builder)
+        => builder.UseExceptionHandler();
+
+    /// <summary>
+    /// Counts calls and timeouts by route template and records request duration on the meter <see cref="HttpUsageMetricsMiddleware.MeterName"/>.
+    /// Opt in; call early so the whole pipeline is timed. Needs <c>IMeterFactory</c> (registered by the web host builder or <c>AddMetrics</c>).
+    /// </summary>
+    /// <param name="builder">The application builder.</param>
+    /// <returns>The application builder.</returns>
+    public static IApplicationBuilder UseHttpUsageMetrics(this IApplicationBuilder builder)
+        => builder.UseMiddleware<HttpUsageMetricsMiddleware>();
+
     /// <summary>
     /// Add custom middleware to ASP.Net to support these extensions
     /// <see cref="CorrelationInfoMiddleware"/>
@@ -29,6 +56,9 @@ public static class ApplicationBuilderExtensions
         )
     {
         healthCheckPath ??= "/health";
+        var mapped = builder.ApplicationServices.GetService<HealthCheckPath>();
+        if (mapped is not null)
+            mapped.Value = healthCheckPath;
         builder.UseHealthChecks(healthCheckPath, HealthCheckOptionsFactory.Create());
         builder.UseMiddleware<CorrelationInfoMiddleware>();
         builder.UseMiddleware<CultureInfoMiddleware>();

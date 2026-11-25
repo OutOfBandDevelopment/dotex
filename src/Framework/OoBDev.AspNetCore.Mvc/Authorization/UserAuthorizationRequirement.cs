@@ -15,11 +15,16 @@ public record UserAuthorizationRequirement : IAuthorizationRequirement
     /// <summary>
     /// Initializes a new instance of the <see cref="UserAuthorizationRequirement"/> class.
     /// </summary>
-    /// <param name="requireApplicationUserId">Specifies whether the application user ID is required for authorization.</param>
-    public UserAuthorizationRequirement(bool requireApplicationUserId) => RequireApplicationUserId = requireApplicationUserId;
+    /// <param name="applicationUserIdClaim">The claim that carries the application user ID; <c>null</c> when the application has none, which turns the requirement off.</param>
+    public UserAuthorizationRequirement(string? applicationUserIdClaim) => ApplicationUserIdClaim = applicationUserIdClaim;
 
     /// <summary>
-    /// Gets a value indicating whether the application user ID is required for authorization.
+    /// Gets the claim that carries the application user ID, or <c>null</c> when none is configured.
     /// </summary>
-    public bool RequireApplicationUserId { get; init; }
+    public string? ApplicationUserIdClaim { get; init; }
+
+    /// <summary>
+    /// Gets a value indicating whether the application user ID is required for authorization (true when a claim is configured).
+    /// </summary>
+    public bool RequireApplicationUserId => !string.IsNullOrWhiteSpace(ApplicationUserIdClaim);
 }

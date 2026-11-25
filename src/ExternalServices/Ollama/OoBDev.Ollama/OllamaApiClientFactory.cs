@@ -25,7 +25,8 @@ public class OllamaApiClientFactory : IOllamaApiClientFactory
     public IOllamaApiClient Build()
     {
         var options = _options.Value;
-        var client = new OllamaApiClient(options.Url, options.DefaultModel);
+        var http = new global::System.Net.Http.HttpClient { BaseAddress = new global::System.Uri(options.Url), Timeout = options.Timeout };
+        var client = new OllamaApiClient(http, options.DefaultModel);
         if (!string.IsNullOrWhiteSpace(options.ApiKey))
         {
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {options.ApiKey}");

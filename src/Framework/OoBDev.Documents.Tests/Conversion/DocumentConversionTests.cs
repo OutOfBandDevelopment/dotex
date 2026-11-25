@@ -1,4 +1,5 @@
 ﻿using OoBDev.Common;
+using OoBDev.TestUtilities.Containers;
 using OoBDev.Common.Extensions;
 using OoBDev.Documents.Models;
 using OoBDev.TestUtilities;
@@ -18,12 +19,12 @@ public class DocumentConversionTests
 {
     public required TestContext TestContext { get; set; }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-tika")]
     [TestCategory(TestCategories.Integration)]
     public async Task ConvertAsyncTest()
     {
         // Stage
-        var tikaUrl = TestContext.GetRequiredProperty<string>("TIKA_URL");
+        var tikaUrl = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("TIKA_URL"));
 
         var config = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>

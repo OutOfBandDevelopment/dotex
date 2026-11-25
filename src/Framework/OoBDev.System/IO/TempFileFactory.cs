@@ -24,4 +24,10 @@ public class TempFileFactory : ITempFileFactory
     /// <returns>A temporary file.</returns>
     public ITempFile GetTempFile() =>
         ActivatorUtilities.CreateInstance<TempFileHandle>(_serviceProvider);
+
+    /// <summary>
+    /// Creates a new temporary directory.
+    /// </summary>
+    /// <returns>A temporary directory deleted with its contents on disposal.</returns>
+    public ITempDirectory GetTempDirectory() => new TempDirectoryHandle();
 }

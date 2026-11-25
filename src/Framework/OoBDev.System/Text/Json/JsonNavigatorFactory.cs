@@ -4,6 +4,7 @@ using OoBDev.System.Xml.XPath;
 using System;
 using System.Linq;
 using System.Text.Json;
+using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
@@ -108,12 +109,12 @@ public static class JsonNavigatorFactory
                  JsonElement element => element.ValueKind switch
                  {
                      JsonValueKind.Array => element.EnumerateArray().Select(i => (XName.Get("item", rootName.NamespaceName), (object)i)),
-                     JsonValueKind.Object => element.EnumerateObject().Select(i => (XName.Get(i.Name, rootName.NamespaceName), (object)i.Value)),
+                     JsonValueKind.Object => element.EnumerateObject().Select(i => (XName.Get(XmlConvert.EncodeLocalName(i.Name), rootName.NamespaceName), (object)i.Value)),
 
                      _ => null
                  },
 
-                 JsonProperty property => new[] { (XName.Get(property.Name, rootName.NamespaceName), (object)property.Value) }.AsEnumerable(),
+                 JsonProperty property => new[] { (XName.Get(XmlConvert.EncodeLocalName(property.Name), rootName.NamespaceName), (object)property.Value) }.AsEnumerable(),
 
                  _ => throw new NotSupportedException()
              }

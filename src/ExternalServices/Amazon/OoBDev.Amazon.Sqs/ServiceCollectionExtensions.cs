@@ -26,6 +26,11 @@ public static class ServiceCollectionExtensions
             AwsSqsGlobals.MessageProviderKey
         );
 
+        services.AddTransient<IMessageReceiverProvider, AmazonSqsMessageProvider>();
+        services.AddKeyedTransient<IMessageReceiverProvider, AmazonSqsMessageProvider>(
+            AwsSqsGlobals.MessageProviderKey
+        );
+
         // Factory registration
         services.TryAddTransient<ISqsClientFactory, SqsClientFactory>();
 

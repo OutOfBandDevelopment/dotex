@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Qdrant.Client.Grpc;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace OoBDev.Qdrant;
@@ -31,10 +30,8 @@ public static partial class QdrantGrpcClientExtensions
         )
     {
         logger ??= NullLogger.Instance;
-        var collectionsResponse = await qdrant.Collections.ListAsync(new() { }).ConfigureAwait(false);
-        foreach (var collection in collectionsResponse.Collections)
-            LogList(logger, collection);
-        if (!collectionsResponse.Collections.Any(d => d.Name == collectionName))
+        var exists = await qdrant.Collections.CollectionExistsAsync(new() { CollectionName = collectionName }).ConfigureAwait(false);
+        if (!exists.Result.Exists)
         {
             LogCreate(logger, collectionName);
             await qdrant.Collections.CreateAsync(
@@ -55,9 +52,6 @@ public static partial class QdrantGrpcClientExtensions
 
         return qdrant;
     }
-
-    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "List: {collection}")]
-    private static partial void LogList(ILogger logger, object collection);
 
     [LoggerMessage(EventId = 2, Level = LogLevel.Information, Message = "create {collection} on qdrant")]
     private static partial void LogCreate(ILogger logger, string collection);

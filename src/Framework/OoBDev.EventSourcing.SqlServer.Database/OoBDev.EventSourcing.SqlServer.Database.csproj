@@ -1,0 +1,26 @@
+<Project Sdk="MSBuild.Sdk.SqlProj/3.3.0">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <SqlServerVersion>Sql150</SqlServerVersion>
+    <RunSqlCodeAnalysis>True</RunSqlCodeAnalysis>
+    <RecoveryMode>Simple</RecoveryMode>
+    <NoWarn>$(NoWarn);MSB3270;NU1701;NU1702;SQLPROJ0001;SQLPROJ0002</NoWarn>
+
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <IsPackable>false</IsPackable>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GitVersion.MsBuild">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="README.EventSourcing.SqlServer.Database.md" />
+  </ItemGroup>
+
+</Project>

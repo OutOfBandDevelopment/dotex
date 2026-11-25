@@ -1,0 +1,22 @@
+# Sandboxed Plugin Host — API design
+
+[← Architecture](architecture.md) · [↑ Overview](README.md) · [Testing strategy →](testing-strategy.md)
+
+**Status:** Draft (intent only; the threat model is signed off, so the API is fixed with the code) · **Date:** 2026-10-29
+
+## Sketch
+
+```csharp
+public interface IPluginHost
+{
+    Task<PluginInstance> StartAsync(PluginPackage package, PluginGrant grant, CancellationToken ct);
+}
+public interface IPluginBroker { Task<BrokerResult> InvokeAsync(string pluginId, BrokerRequest request, CancellationToken ct); }
+public interface IPluginPackageVerifier { VerificationResult Verify(Stream package); }
+public sealed record PluginGrant(IReadOnlySet<string> Hosts, IReadOnlySet<string> Paths, PluginLimits Limits);
+public sealed record PluginLimits(TimeSpan WallTime, long MemoryBytes, int MaxProcesses, double CpuShare);
+```
+
+Manifest: JSON with `id`, `version`, `entry`, `permissions[]` (kind, target, reason). Protocol: packed binary frames (versioned header, type, sequence and ack, topic, payload, optional CRC-32 and HMAC with counter-signed replies) over the plugin's stdin and stdout; the payload may be a JSON string. Layout in [protocol-and-manifest.md](protocol-and-manifest.md). Signature verification uses `OoBDev.Identity.Jws` ideas only as reference; package signing algorithm is decided in phase 1.
+
+Providers follow the repo pattern: `IPluginLauncher` per platform behind a factory, `TryAdd*` registration.

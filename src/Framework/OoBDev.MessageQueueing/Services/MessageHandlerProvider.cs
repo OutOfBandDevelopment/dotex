@@ -45,7 +45,7 @@ public partial class MessageHandlerProvider(
     {
         if (message != null)
         {
-            var context = _context.Create(
+            var messageContext = _context.Create(
                 _channelType ?? throw new InvalidOperationException("No channel type"),
                 message,
                 Config ?? throw new InvalidOperationException("No channel configuration")
@@ -60,11 +60,11 @@ public partial class MessageHandlerProvider(
             }
 
             LogHandle(messageId);
-            context.SentId = messageId;
+            messageContext.SentId = messageId;
 
             foreach (var handler in _handlers)
             {
-                await handler.HandleAsync(payload, context).ConfigureAwait(false);
+                await handler.HandleAsync(payload, messageContext).ConfigureAwait(false);
             }
 
             LogHandled(messageId);

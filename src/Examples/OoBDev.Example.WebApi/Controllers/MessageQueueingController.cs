@@ -1,5 +1,7 @@
 using OoBDev.WebApi.Models;
 using OoBDev.WebApi.Provider;
+using OoBDev.WebApi.Services;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -16,9 +18,27 @@ namespace OoBDev.WebApi.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class MessageQueueingController(
-    IExampleMessageProvider provider
+    IExampleMessageProvider provider,
+    QueueChannelCatalog channels,
+    ReceivedMessageLog receivedLog
     ) : ControllerBase
 {
+    /// <summary>
+    /// Lists the configured message queue channels (provider, queue, receiver flag); secrets are never returned.
+    /// </summary>
+    /// <returns>One status per channel.</returns>
+    [HttpGet("channels")]
+    [AllowAnonymous]
+    public IReadOnlyList<QueueChannelStatusModel> Channels() => channels.List();
+
+    /// <summary>
+    /// Lists the most recent messages the example handler received, newest first.
+    /// </summary>
+    /// <returns>Up to <see cref="ReceivedMessageLog.Capacity"/> messages.</returns>
+    [HttpGet("received")]
+    [AllowAnonymous]
+    public IReadOnlyList<ReceivedMessageModel> Received() => receivedLog.Recent();
+
     /// <summary>
     /// Sends a message to the queue publicly without requiring authentication.
     /// </summary>

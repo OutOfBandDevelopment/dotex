@@ -1,0 +1,35 @@
+export interface NavItem { label: string; to: string; }
+export interface NavGroup { title: string; items: NavItem[]; }
+
+/** Left navigation groups. Entries appear as their screens are built. */
+export const navGroups: NavGroup[] = [
+  { title: 'AI', items: [
+    { label: 'Chat', to: '/ai/chat' },
+    { label: 'Embeddings', to: '/ai/embeddings' },
+    { label: 'Retrieval (RAG)', to: '/ai/rag' },
+    { label: 'Search', to: '/ai/search' },
+    { label: 'Ollama', to: '/ai/ollama' },
+    { label: 'Groq cloud', to: '/ai/groq' },
+    { label: 'Image labels', to: '/ai/images' },
+    { label: 'Model compare', to: '/ai/model-compare' },
+  ] },
+  { title: 'Content', items: [
+    { label: 'Documents', to: '/content/documents' },
+    { label: 'Templates', to: '/content/templates' },
+  ] },
+  { title: 'Data', items: [{ label: 'Cache lab', to: '/data/cache' }, { label: 'Data access', to: '/data/access' }, { label: 'Address lookup', to: '/data/geocode' }, { label: 'Distance', to: '/data/distance' }, { label: 'Test data generation', to: '/data/generation' }, { label: 'Query', to: '/data/query' }, { label: 'Data loading', to: '/data/load' }] },
+  { title: 'Utilities', items: [{ label: 'Toolbox', to: '/utilities/toolbox' }, { label: 'Command-line tools', to: '/utilities/tools' }, { label: 'Kernel plug-ins', to: '/utilities/kernel' }, { label: 'Text tools', to: '/utilities/text' }, { label: 'Vector store', to: '/utilities/vectors' }, { label: 'Vector lab', to: '/utilities/vector-lab' }, { label: 'Server-driven UI', to: '/utilities/server-ui' } ] },
+  { title: 'Messaging', items: [
+    { label: 'Communications', to: '/messaging/communications' },
+    { label: 'Queues', to: '/messaging/queues' },
+    { label: 'Webhooks', to: '/messaging/webhooks' },
+    { label: 'Schedule', to: '/messaging/schedule' },
+  ] },
+  { title: 'Identity and security', items: [{ label: 'Current user', to: '/identity/me' }, { label: 'Rights and roles', to: '/identity/rights' }, { label: 'Users and roles', to: '/identity/directory' }] },
+  { title: 'Operations', items: [{ label: 'Runtime and configuration', to: '/operations/info' }, { label: 'Right audit trail', to: '/operations/right-audit' }, { label: 'Telemetry', to: '/operations/telemetry' } ] },
+  { title: 'Developer', items: [
+    { label: 'CGI programs', to: '/developer/cgi' },
+    { label: 'API reference', to: '/developer/api' },
+    { label: 'Event reference', to: '/developer/events' },
+  ] },
+];

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using OoBDev.Documents.Conversion;
 using System;
 using System.IO;
@@ -14,12 +15,18 @@ namespace OoBDev.WkHtmlToPdf;
 public class HtmlToPdfConversionHandler : IDocumentConversionHandler
 {
     private readonly IConverter _converter;
+    private readonly HtmlToPdfOptions _options;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HtmlToPdfConversionHandler"/> class.
     /// </summary>
     /// <param name="converter">The converter used for HTML to PDF conversion.</param>
-    public HtmlToPdfConversionHandler(IConverter converter) => _converter = converter;
+    /// <param name="options">The page settings.</param>
+    public HtmlToPdfConversionHandler(IConverter converter, IOptions<HtmlToPdfOptions> options)
+    {
+        _converter = converter;
+        _options = options.Value;
+    }
 
     /// <summary>
     /// Converts HTML content from a source stream to PDF format and writes it to a destination stream.
@@ -33,32 +40,36 @@ public class HtmlToPdfConversionHandler : IDocumentConversionHandler
     public async Task ConvertAsync(Stream source, string sourceContentType, Stream destination, string destinationContentType)
     {
         if (!SupportedSource(sourceContentType)) throw new NotSupportedException($"Source Content Type \"{sourceContentType}\" is not supported");
-        if (!SupportedDestination(destinationContentType)) throw new NotSupportedException($"Source Content Type \"{destinationContentType}\" is not supported");
+        if (!SupportedDestination(destinationContentType)) throw new NotSupportedException($"Destination Content Type \"{destinationContentType}\" is not supported");
 
         using var reader = new StreamReader(source, leaveOpen: true);
         var html = await reader.ReadToEndAsync().ConfigureAwait(false);
 
-        //TODO: change this to config stuff or create a conversion context/extension so this can be provided per instance
-        var doc = new HtmlToPdfDocument()
-        {
-            GlobalSettings = {
-                ColorMode = ColorMode.Color,
-                Orientation = Orientation.Portrait,
-                PaperSize = PaperKind.Letter,
-            },
-            Objects = {
-                new () {
-                    PagesCount = true,
-                    HtmlContent = html,
-                    WebSettings = { DefaultEncoding = "utf-8" },
-                    HeaderSettings = { FontSize = 9, Right = "Page [page] of [toPage]", Line = true, Spacing = 2.812 }
-                }
-            }
-        };
-
-        var pdf = _converter.Convert(doc);
+        var pdf = _converter.Convert(CreateDocument(html));
         await destination.WriteAsync(pdf).ConfigureAwait(false);
     }
+
+    /// <summary>
+    /// Builds the wkhtmltopdf document for the HTML using the configured page settings.
+    /// </summary>
+    /// <param name="html">The HTML to render.</param>
+    /// <returns>The document handed to the converter.</returns>
+    public HtmlToPdfDocument CreateDocument(string html) => new()
+    {
+        GlobalSettings = {
+            ColorMode = _options.ColorMode,
+            Orientation = _options.Orientation,
+            PaperSize = _options.PaperSize,
+        },
+        Objects = {
+            new () {
+                PagesCount = true,
+                HtmlContent = html,
+                WebSettings = { DefaultEncoding = _options.DefaultEncoding },
+                HeaderSettings = { FontSize = _options.HeaderFontSize, Right = _options.HeaderRight, Line = _options.HeaderLine, Spacing = 2.812 }
+            }
+        }
+    };
 
     /// <summary>
     /// Gets the supported content types for destination PDF files.

@@ -1,8 +1,12 @@
 using Microsoft.Data.SqlClient;
+using OoBDev.TestUtilities.Containers;
 using Microsoft.SqlServer.Dac;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OoBDev.TestUtilities;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -19,6 +23,9 @@ namespace OoBDev.Data.Vectors.DB.Tests;
 [TestClass]
 public class SqlServerDeploymentTests
 {
+    private const int LogMilliseconds = 500;
+    private const int FailMilliseconds = 750;
+
     public required TestContext TestContext { get; set; }
 
     private string _masterConnection = default!;
@@ -29,7 +36,7 @@ public class SqlServerDeploymentTests
     [TestInitialize]
     public async Task InitializeAsync()
     {
-        _masterConnection = TestContext.GetRequiredProperty<string>("SQLSERVER_CONNECTION_STRING");
+        _masterConnection = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("SQLSERVER_CONNECTION_STRING"));
         _databaseName = $"VectorDeploy_{Guid.NewGuid():N}";
 
         _originalClrEnabled = await ScalarAsync<int>(_masterConnection, "SELECT CAST(value_in_use AS int) FROM sys.configurations WHERE name = 'clr enabled'");
@@ -62,8 +69,56 @@ public class SqlServerDeploymentTests
             EXEC sp_configure 'clr strict security', {_originalClrStrict};
             EXEC sp_configure 'clr enabled', {_originalClrEnabled}; RECONFIGURE;");
     }
+[IntegrationTestMethod("oobd-test-sqlserver")]    [TestCategory(TestCategories.Integration)]    public async Task SqlVectorStore_Catalog_ListsStoredCollections()    {        var options = Microsoft.Extensions.Options.Options.Create(new OoBDev.Data.Vectors.SqlStore.SqlVectorStoreOptions { ConnectionString = DatabaseConnection(), Limit = 10 });        await new OoBDev.Data.Vectors.SqlStore.SqlVectorStoreProvider(options, "catalog-b").StoreVectorsAsync([new float[] { 1, 0, 0 }], new Dictionary<string, object>());        await new OoBDev.Data.Vectors.SqlStore.SqlVectorStoreProvider(options, "catalog-a").StoreVectorsAsync([new float[] { 0, 1, 0 }], new Dictionary<string, object>());        var names = await new OoBDev.Data.Vectors.SqlStore.SqlVectorStoreCollectionCatalog(options).ListCollectionsAsync(TestContext.CancellationToken);        TestContext.WriteLine($"collections: {string.Join(", ", names)}");        CollectionAssert.AreEqual(new[] { "catalog-a", "catalog-b" }, names.ToArray());    }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-sqlserver")]
+    [TestCategory(TestCategories.Integration)]
+    public async Task SqlVectorStore_StoreAndFindNeighbors_RanksByCosineAndKeepsMetadata()
+    {
+        var options = Microsoft.Extensions.Options.Options.Create(new OoBDev.Data.Vectors.SqlStore.SqlVectorStoreOptions { ConnectionString = DatabaseConnection(), Limit = 10 });
+        var store = new OoBDev.Data.Vectors.SqlStore.SqlVectorStoreProvider(options, "notes");
+        var common = new global::System.Collections.Generic.Dictionary<string, object> { ["kind"] = "note" };
+
+        var ids = await store.StoreVectorsAsync(
+        [
+            (new float[] { 1, 0, 0 }, new global::System.Collections.Generic.Dictionary<string, object> { ["title"] = "x axis" }),
+            (new float[] { 0, 1, 0 }, new global::System.Collections.Generic.Dictionary<string, object> { ["title"] = "y axis" }),
+            (new float[] { 0.9f, 0.1f, 0 }, new global::System.Collections.Generic.Dictionary<string, object> { ["title"] = "near x" }),
+        ], common);
+
+        Assert.AreEqual(3, ids.Length);
+        var hits = new global::System.Collections.Generic.List<OoBDev.Search.Models.SearchResultModel>();
+        await foreach (var hit in store.FindNeighborsAsync(new float[] { 1, 0, 0 })) hits.Add(hit);
+        Assert.AreEqual(3, hits.Count);
+        Assert.AreEqual("x axis", hits[0].MetaData!["title"]);
+        Assert.AreEqual("near x", hits[1].MetaData!["title"]);
+        Assert.AreEqual("note", hits[0].MetaData!["kind"]);
+        Assert.IsTrue(hits[0].Score <= hits[1].Score);
+
+        var listed = 0;
+        await foreach (var _ in store.ListAsync()) listed++;
+        Assert.AreEqual(3, listed);
+    }
+
+    [IntegrationTestMethod("oobd-test-sqlserver")]
+    [TestCategory(TestCategories.Integration)]
+    public void Redeploy_SameDacpac_ChangesNothing()
+    {
+        // Stage
+        var services = new DacServices(_masterConnection);
+        var options = new DacDeployOptions { IncludeCompositeObjects = true, BlockOnPossibleDataLoss = true };
+        using var package = DacPackage.Load(FindDacpac());
+
+        // Test
+        var script = services.GenerateDeployScript(package, _databaseName, options);
+        services.Deploy(package, _databaseName, upgradeExisting: true, options);
+
+        // Assert
+        Assert.IsFalse(script.Contains("Dropping User-Defined Type", StringComparison.Ordinal), script);
+        Assert.IsFalse(script.Contains("rebuilding table", StringComparison.Ordinal), script);
+    }
+
+    [IntegrationTestMethod("oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task Distance_And_Angle_RunInsideSqlServer()
     {
@@ -75,7 +130,39 @@ public class SqlServerDeploymentTests
         Assert.AreEqual(Math.Acos(0.6), await ScalarAsync<double>(db, vectors + "SELECT CAST(@a.Angle(@b) AS float)"), 1e-5);
     }
 
-    [TestMethod]
+    [IntegrationTestMethod("oobd-test-sqlserver")]
+    [TestCategory(TestCategories.Integration)]
+    public async Task Aggregates_RunInsideSqlServer()
+    {
+        var db = DatabaseConnection();
+        const string rows = "FROM (VALUES (embedding.VectorF::Parse('1,8,3')), (embedding.VectorF::Parse('4,2,9')), (embedding.VectorF::Parse('2,5,6'))) AS t(v)";
+
+        Assert.AreEqual(1d, await ScalarAsync<double>(db, $"SELECT CAST(embedding.MinimumF(v).Element(0) AS float) {rows}"), 1e-5);
+        Assert.AreEqual(2d, await ScalarAsync<double>(db, $"SELECT CAST(embedding.MinimumF(v).Element(1) AS float) {rows}"), 1e-5);
+        Assert.AreEqual(4d, await ScalarAsync<double>(db, $"SELECT CAST(embedding.MaximumF(v).Element(0) AS float) {rows}"), 1e-5);
+        Assert.AreEqual(9d, await ScalarAsync<double>(db, $"SELECT CAST(embedding.MaximumF(v).Element(2) AS float) {rows}"), 1e-5);
+        Assert.AreEqual(5d, await ScalarAsync<double>(db, $"SELECT CAST(embedding.CentroidF(v).Element(1) AS float) {rows}"), 1e-5);
+    }
+
+    [IntegrationTestMethod("oobd-test-sqlserver")]
+    [TestCategory(TestCategories.Integration)]
+    public async Task MatrixAndDoubleVector_RunInsideSqlServer()
+    {
+        var db = DatabaseConnection();
+        const string matrix = "DECLARE @m embedding.MatrixF = embedding.MatrixF::Parse('1,2,3|4,5,6'); DECLARE @md embedding.Matrix = embedding.Matrix::Parse('1,2,3|4,5,6');";
+
+        Assert.AreEqual(5d, await ScalarAsync<double>(db, matrix + "SELECT CAST(@m.Row(1).Element(1) AS float)"), 1e-5);
+        Assert.AreEqual(6d, await ScalarAsync<double>(db, matrix + "SELECT CAST(@m.[Column](2).Element(1) AS float)"), 1e-5);
+        Assert.AreEqual(4d, await ScalarAsync<double>(db, matrix + "SELECT CAST(@md.Row(1).Element(0) AS float)"), 1e-9);
+        Assert.IsTrue(await ScalarAsync<bool>(db, matrix + "SELECT CASE WHEN @m.Row(5) IS NULL THEN 1 ELSE 0 END"), "row out of range is NULL");
+
+        const string vectors = "DECLARE @a embedding.Vector = embedding.Vector::Parse('3,4'); DECLARE @b embedding.Vector = embedding.Vector::Parse('0,0');";
+        Assert.AreEqual(5d, await ScalarAsync<double>(db, vectors + "SELECT CAST(@a.Magnitude() AS float)"), 1e-9);
+        Assert.AreEqual(5d, await ScalarAsync<double>(db, vectors + "SELECT CAST(@a.Distance(@b, 'euclidean') AS float)"), 1e-9);
+        Assert.AreEqual(2, await ScalarAsync<int>(db, vectors + "SELECT @a.Length()"));
+    }
+
+    [IntegrationTestMethod("oobd-test-sqlserver")]
     [TestCategory(TestCategories.Integration)]
     public async Task UndefinedInputs_ReturnNull_WithoutFailingTheBatch()
     {
@@ -96,6 +183,85 @@ public class SqlServerDeploymentTests
         Assert.IsTrue(reader.IsDBNull(2), "distance, different lengths");
         Assert.IsTrue(reader.IsDBNull(3), "distance, unsupported metric");
         Assert.AreEqual(0d, Convert.ToDouble(reader.GetValue(4)), 1e-6, "identical vectors");
+    }
+
+    [IntegrationTestMethod("oobd-test-sqlserver")]
+    [TestCategory(TestCategories.Integration)]
+    public async Task SqlVectorStore_FindNeighbors_StaysUnderTheLatencyGate()
+    {
+        // Stage
+        const int rows = 1000;
+        const int dimensions = 384;
+        var options = Microsoft.Extensions.Options.Options.Create(new OoBDev.Data.Vectors.SqlStore.SqlVectorStoreOptions { ConnectionString = DatabaseConnection(), Limit = 10 });
+        var store = new OoBDev.Data.Vectors.SqlStore.SqlVectorStoreProvider(options, "perf");
+        var random = new Random(42);
+        var items = Enumerable.Range(0, rows)
+            .Select(i => (embedding: (ReadOnlyMemory<float>)Enumerable.Range(0, dimensions).Select(_ => (float)random.NextDouble()).ToArray(),
+                          metadata: (IDictionary<string, object>)new Dictionary<string, object> { ["n"] = i }))
+            .ToList();
+        await store.StoreVectorsAsync(items, new Dictionary<string, object>());
+        var query = items[500].embedding;
+
+        // Test
+        var stopwatch = Stopwatch.StartNew();
+        var hits = new List<OoBDev.Search.Models.SearchResultModel>();
+        await foreach (var hit in store.FindNeighborsAsync(query)) hits.Add(hit);
+        stopwatch.Stop();
+
+        // Assert
+        TestContext.WriteLine($"nearest neighbours over {rows} x {dimensions}: {stopwatch.ElapsedMilliseconds} ms");
+        if (stopwatch.ElapsedMilliseconds > LogMilliseconds)
+            TestContext.WriteLine($"WARNING: over the {LogMilliseconds} ms log threshold");
+        Assert.HasCount(10, hits);
+        Assert.AreEqual(500, Convert.ToInt32(hits[0].MetaData!["n"], global::System.Globalization.CultureInfo.InvariantCulture));
+        Assert.IsLessThan(FailMilliseconds, stopwatch.ElapsedMilliseconds, "vector search latency gate");
+    }
+
+    [IntegrationTestMethod("oobd-test-sqlserver")]
+    [TestCategory(TestCategories.Integration)]
+    public async Task RestoredCopy_WithNewBrokerId_KeepsTheDataAndTakesTheMigration()
+    {
+        // Stage: seed the deployed database, then back it up and restore it under another name with a new Service Broker id (the stand-in for a sanitized production dump)
+        var options = Microsoft.Extensions.Options.Options.Create(new OoBDev.Data.Vectors.SqlStore.SqlVectorStoreOptions { ConnectionString = DatabaseConnection(), Limit = 10 });
+        var store = new OoBDev.Data.Vectors.SqlStore.SqlVectorStoreProvider(options, "rehearsal");
+        await store.StoreVectorsAsync([(new float[] { 1, 0, 0 }, new Dictionary<string, object> { ["title"] = "kept" })], new Dictionary<string, object>());
+
+        var copyName = $"VectorCopy_{Guid.NewGuid():N}";
+        var backupFile = $"/var/opt/mssql/data/{copyName}.bak";
+        try
+        {
+            await ExecuteAsync(_masterConnection, $"BACKUP DATABASE [{_databaseName}] TO DISK = N'{backupFile}' WITH INIT, COPY_ONLY;");
+            await ExecuteAsync(_masterConnection, $@"
+                DECLARE @data nvarchar(260), @log nvarchar(260), @dataFile nvarchar(260), @logFile nvarchar(260);
+                DECLARE @files TABLE (LogicalName nvarchar(128), PhysicalName nvarchar(260), Type char(1), FileGroupName nvarchar(128), Size numeric(20,0), MaxSize numeric(20,0), FileId bigint, CreateLSN numeric(25,0), DropLSN numeric(25,0), UniqueId uniqueidentifier, ReadOnlyLSN numeric(25,0), ReadWriteLSN numeric(25,0), BackupSizeInBytes bigint, SourceBlockSize int, FileGroupId int, LogGroupGUID uniqueidentifier, DifferentialBaseLSN numeric(25,0), DifferentialBaseGUID uniqueidentifier, IsReadOnly bit, IsPresent bit, TDEThumbprint varbinary(32), SnapshotUrl nvarchar(360));
+                INSERT INTO @files EXEC('RESTORE FILELISTONLY FROM DISK = N''{backupFile}''');
+                SELECT @data = LogicalName FROM @files WHERE Type = 'D';
+                SELECT @log = LogicalName FROM @files WHERE Type = 'L';
+                DECLARE @sql nvarchar(max) = N'RESTORE DATABASE [{copyName}] FROM DISK = N''{backupFile}'' WITH NEW_BROKER, MOVE ''' + @data + N''' TO ''/var/opt/mssql/data/{copyName}.mdf'', MOVE ''' + @log + N''' TO ''/var/opt/mssql/data/{copyName}_log.ldf''';
+                EXEC(@sql);");
+
+            // Test: query the restored copy through the store
+            var copyConnection = new SqlConnectionStringBuilder(_masterConnection) { InitialCatalog = copyName }.ConnectionString;
+            Assert.AreEqual(1, await ScalarAsync<int>(copyConnection, "SELECT COUNT(*) FROM [embedding].[Vectors]"));
+            Assert.AreEqual("kept", await ScalarAsync<string>(copyConnection, "SELECT JSON_VALUE([Metadata], '$.title') FROM [embedding].[Vectors]"));
+            Assert.AreEqual(1d, await ScalarAsync<double>(copyConnection, "SELECT CAST([Value].Magnitude() AS float) FROM [embedding].[Vectors]"), 1e-5);
+
+            // Test: apply the migration (this build of the dacpac) to the copy without allowing data loss, then query it again
+            using (var package = DacPackage.Load(FindDacpac()))
+                new DacServices(_masterConnection).Deploy(package, copyName, upgradeExisting: true, new DacDeployOptions { IncludeCompositeObjects = true, BlockOnPossibleDataLoss = true });
+            Assert.AreEqual(1, await ScalarAsync<int>(copyConnection, "SELECT COUNT(*) FROM [embedding].[Vectors]"));
+            Assert.AreEqual(1d, await ScalarAsync<double>(copyConnection, "SELECT CAST([Value].Magnitude() AS float) FROM [embedding].[Vectors]"), 1e-5);
+        }
+        finally
+        {
+            SqlConnection.ClearAllPools();
+            await ExecuteAsync(_masterConnection, $@"
+                IF DB_ID('{copyName}') IS NOT NULL
+                BEGIN
+                    ALTER DATABASE [{copyName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+                    DROP DATABASE [{copyName}];
+                END");
+        }
     }
 
     private string DatabaseConnection() =>

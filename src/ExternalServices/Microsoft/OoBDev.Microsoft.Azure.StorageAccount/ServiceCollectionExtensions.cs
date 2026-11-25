@@ -1,4 +1,5 @@
 ﻿using OoBDev.Documents.Containers;
+using OoBDev.AsyncApi;
 using OoBDev.MessageQueueing.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -58,6 +59,7 @@ public static class ServiceCollectionExtensions
         services.TryAddTransient(sp => sp.GetRequiredService<IBlobServiceClientFactory>().Create());
 
         services.AddTransient<IBlobContainerProviderFactory, AzureBlobContainerProviderFactory>();
+        services.AddKeyedTransient<IBlobContainerProviderFactory, AzureBlobContainerProviderFactory>(AzureStorageGlobals.BlobProviderKey);
 
         return services;
     }
@@ -76,6 +78,7 @@ public static class ServiceCollectionExtensions
         services.TryAddKeyedTransient<IMessageReceiverProvider, AzureStorageQueueMessageProvider>(AzureStorageGlobals.MessageProviderKey);
 
         services.TryAddTransient<IQueueClientFactory, QueueClientFactory>();
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IAsyncApiContributor, AzureStorageQueueAsyncApiContributor>());
         services.TryAddTransient<IAzureStorageQueueMapper, AzureStorageQueueMapper>();
 
         return services;

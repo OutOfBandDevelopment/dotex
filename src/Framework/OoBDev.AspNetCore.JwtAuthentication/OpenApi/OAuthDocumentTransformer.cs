@@ -13,9 +13,11 @@ namespace OoBDev.AspNetCore.JwtAuthentication.OpenApi;
 /// Document transformer that declares the <c>oauth2</c> authorization code security scheme (used with PKCE) and requires it for the document.
 /// </summary>
 /// <param name="config">The OAuth2 options.</param>
+/// <param name="discovery">Reads the endpoints from the authority when they are not set.</param>
 /// <param name="logger">Logger</param>
 public partial class OAuthDocumentTransformer(
     IOptions<OAuth2OpenApiOptions> config,
+    OpenIdConfigurationDiscovery discovery,
     ILogger<OAuthDocumentTransformer> logger
     ) : IOpenApiDocumentTransformer
 {
@@ -48,20 +50,31 @@ public partial class OAuthDocumentTransformer(
     /// <param name="context">The transformer context.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>A completed task.</returns>
-    public Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)
+    public async Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)
     {
-        //TODO: consider getting from oauth ./.well-known/openid-configuration if not set
         var options = config.Value;
+        var authorizationUrl = options.AuthorizationUrl;
+        var tokenUrl = options.TokenUrl;
 
-        if (string.IsNullOrEmpty(options.AuthorizationUrl))
+        if ((string.IsNullOrEmpty(authorizationUrl) || string.IsNullOrEmpty(tokenUrl)) && !string.IsNullOrWhiteSpace(options.Authority))
+        {
+            var endpoints = await discovery.GetAsync(options.Authority, cancellationToken).ConfigureAwait(false);
+            if (endpoints is not null)
+            {
+                authorizationUrl = string.IsNullOrEmpty(authorizationUrl) ? endpoints.AuthorizationUrl : authorizationUrl;
+                tokenUrl = string.IsNullOrEmpty(tokenUrl) ? endpoints.TokenUrl : tokenUrl;
+            }
+        }
+
+        if (string.IsNullOrEmpty(authorizationUrl))
         {
             LogAuthorizationUrlNotConfigured(logger, nameof(OAuth2OpenApiOptions));
-            return Task.CompletedTask;
+            return;
         }
-        if (string.IsNullOrEmpty(options.TokenUrl))
+        if (string.IsNullOrEmpty(tokenUrl))
         {
             LogTokenUrlNotConfigured(logger, nameof(OAuth2OpenApiOptions));
-            return Task.CompletedTask;
+            return;
         }
 
         var scopes = GetScopes(options);
@@ -77,8 +90,8 @@ public partial class OAuthDocumentTransformer(
                 AuthorizationCode = new OpenApiOAuthFlow
                 {
                     Scopes = scopes,
-                    AuthorizationUrl = new Uri(options.AuthorizationUrl),
-                    TokenUrl = new Uri(options.TokenUrl),
+                    AuthorizationUrl = new Uri(authorizationUrl),
+                    TokenUrl = new Uri(tokenUrl),
                 },
             },
         };
@@ -88,13 +101,11 @@ public partial class OAuthDocumentTransformer(
         {
             [new OpenApiSecuritySchemeReference(SecuritySchemeName, document)] = [.. scopes.Keys],
         });
-
-        return Task.CompletedTask;
     }
 
-    [LoggerMessage(EventId = 1, Level = LogLevel.Warning, Message = "{Section}:AuthorizationUrl is not configured")]
+    [LoggerMessage(EventId = 1, Level = LogLevel.Warning, Message = "{Section}:AuthorizationUrl is not configured and could not be read from the authority")]
     private static partial void LogAuthorizationUrlNotConfigured(ILogger logger, string section);
 
-    [LoggerMessage(EventId = 2, Level = LogLevel.Warning, Message = "{Section}:TokenUrl is not configured")]
+    [LoggerMessage(EventId = 2, Level = LogLevel.Warning, Message = "{Section}:TokenUrl is not configured and could not be read from the authority")]
     private static partial void LogTokenUrlNotConfigured(ILogger logger, string section);
 }

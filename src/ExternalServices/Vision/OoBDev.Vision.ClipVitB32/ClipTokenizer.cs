@@ -26,7 +26,7 @@ public sealed partial class ClipTokenizer
     private readonly Dictionary<(string, string), int> _ranks;
     private readonly string[] _byteToUnicode = new string[256];
     private readonly Dictionary<string, int[]> _cache = [];
-    private readonly object _cacheLock = new();
+    private readonly global::System.Threading.Lock _cacheLock = new();
 
     /// <summary>Creates a tokenizer from the model's files.</summary>
     /// <param name="vocabularyJson">Content of <c>vocab.json</c>.</param>

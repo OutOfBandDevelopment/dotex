@@ -67,7 +67,7 @@ public class BsonDateTimeOffsetConverter : JsonConverter<object>
                     }
                     else if (long.TryParse(value, CultureInfo.InvariantCulture, out var ticks))
                     {
-                        dateTime = new DateTime(ticks, DateTimeKind.Utc);
+                        dateTime = new DateTimeOffset(new DateTime(ticks, DateTimeKind.Utc));
                     }
                 }
                 else if (reader.TokenType == JsonTokenType.Number && dateTime.HasValue)

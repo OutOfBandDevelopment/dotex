@@ -1,0 +1,78 @@
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+namespace OoBDev.DevTerm.Web;
+
+/// <summary>
+/// Requires the shared token on every request: <c>Authorization: Bearer</c>, the <c>devterm_auth</c> cookie, or a one-time
+/// <c>?token=</c> that sets the cookie and redirects to the clean URL.
+/// </summary>
+internal sealed class AccessTokenMiddleware(RequestDelegate next, string token, string readOnlyToken, SessionJwt? jwt = null)
+{
+    internal const string CookieName = "devterm_auth";
+
+    /// <summary><see cref="HttpContext.Items"/> key holding <see langword="true"/> when the request authenticated with the read-only token.</summary>
+    internal const string ReadOnlyItem = "devterm.readonly";
+
+    /// <summary><see cref="HttpContext.Items"/> key set when the request authenticated with a session JWT, which cannot be exchanged for another.</summary>
+    internal const string ViaJwtItem = "devterm.viajwt";
+
+    private bool IsReadOnlyToken(string? presented) =>
+        !string.IsNullOrWhiteSpace(readOnlyToken) && AccessPolicy.TokenMatches(readOnlyToken, presented);
+
+    public async Task InvokeAsync(HttpContext context)
+    {
+        var request = context.Request;
+        if (!AccessPolicy.OriginAllowed(request.Headers.Origin.ToString(), request.Host.Value ?? string.Empty))
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            return;
+        }
+
+        var header = request.Headers.Authorization.ToString();
+        var bearer = header.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase) ? header["Bearer ".Length..].Trim() : null;
+        var cookie = request.Cookies[CookieName];
+        if (AccessPolicy.TokenMatches(token, bearer) || AccessPolicy.TokenMatches(token, cookie))
+        {
+            await next(context).ConfigureAwait(false);
+            return;
+        }
+
+        if (jwt is not null && jwt.TryValidate(bearer, out var jwtReadOnly))
+        {
+            context.Items[ViaJwtItem] = true;
+            if (jwtReadOnly)
+            {
+                context.Items[ReadOnlyItem] = true;
+            }
+
+            await next(context).ConfigureAwait(false);
+            return;
+        }
+
+        if (IsReadOnlyToken(bearer) || IsReadOnlyToken(cookie))
+        {
+            context.Items[ReadOnlyItem] = true;
+            await next(context).ConfigureAwait(false);
+            return;
+        }
+
+        var query = request.Query["token"].ToString();
+        if (HttpMethods.IsGet(request.Method) && (AccessPolicy.TokenMatches(token, query) || IsReadOnlyToken(query)))
+        {
+            context.Response.Cookies.Append(CookieName, query, new CookieOptions
+            {
+                HttpOnly = true,
+                SameSite = SameSiteMode.Strict,
+                Secure = request.IsHttps,
+            });
+            context.Response.Redirect(request.Path.HasValue ? request.Path.Value! : "/");
+            return;
+        }
+
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        context.Response.Headers.WWWAuthenticate = "Bearer";
+        await context.Response.WriteAsync("dev-term: access token required (open the URL printed at startup).").ConfigureAwait(false);
+    }
+}

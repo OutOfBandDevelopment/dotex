@@ -12,14 +12,31 @@ A sample ASP.NET Core web API that composes the OoBDev framework the way a real 
 
 | Controller | Capability |
 |------------|-----------|
-| `AIController`, `OllamaController`, `GroqCloudController` | Language model providers selected by key (`OPENAI`, `OLLAMA`) |
+| `OllamaController`, `GroqCloudController`, `ModelCompareController` | Language model providers and side-by-side comparison |
 | `AllMiniLMController`, `SBERTController`, `SBERTDefaultController` | Embedding providers |
-| `SearchController` | Search and vector store |
-| `MessageQueueingController` | Message queue sender |
-| `CommunicationsController` | Email and other channels |
-| `DocumentController` | Document conversion |
-| `TextTemplateController` | Text templating |
+| `VectorStoreController` (index, query, list, re-embed), `VectorLabController`, `RagController`, `SearchController` (passages with a `RequiredRight` are hidden from callers without it), `ImagesController` | Vector store, vector experiments, retrieval, keyword, semantic and hybrid search, and image embeddings |
+| `CgiProgramsController` | `GET api/CgiPrograms`: the CGI programs this host can start (Linux binaries are left out on Windows) |
+| `MessageQueueingController` | Message queue sender, configured channels (no secrets) and the received-message monitor |
+| `CommunicationsController` | Email through `ISendService` (channel `email`), directly or queued |
+| `WebhooksController` | Anonymous `POST /webhooks/{channel}`: raw body to `IReceiveService.HandleWebhookAsync` (204, 400 or 404 problem details) |
+| `DocumentController`, `TextToolsController` | Document conversion, the stored-documents list, a ZIP of all stored documents (`GET Document/Package`, through `IDocumentPackager`) and text tools |
+| `TextTemplateController` | Text templating: list, read and save the example template files, preview a draft, apply a named template |
 | `UserController` | Current user and claims |
+| `KernelPlugInsController` | Lists the Semantic Kernel plug-in functions and invokes one with text arguments (right `toolbox.use`) |
+| `CacheController`, `OperationsController`, `TelemetryController`, `ToolboxController` | Caching, operations, telemetry readback and shared tools (the toolbox also signs and reads HS256 tokens through `OoBDev.Identity.Jws`, and converts text with the Morse, Roman numeral and Base32 codecs) |
+
+## CGI example (Go)
+
+`cgi-src/greet` is a small Go program served through `OoBDev.AspNetCore.Cgi`: `GET /cgi-bin/greet.exe` (`greet.cgi` off Windows) shows a form, and posting a `name` sends it back in a greeting (HTML-escaped). It also prints its own OpenAPI description (`greet -openapi`), which `OoBDev.AspNetCore.Cgi.OpenApi` lists in `/openapi/all.json`.
+
+```powershell
+./cgi-src/build.ps1     # go test, go build into cgi-bin/, writes cgi-bin/greet.openapi.json
+dotnet run --project src/Examples/OoBDev.Example.WebApi
+```
+
+Needs Go on the path. The built files are not committed (`cgi-bin/.gitignore`). `AllowAnonymous` is on in `appsettings.json` for the example only.
+
+On Windows call `greet.exe`. A `greet.cgi` left in `cgi-bin/` by a Linux or container build is an ELF binary, which Windows cannot start, so `/cgi-bin/greet.cgi` answers `500 The program could not start.` (the log line "CGI script greet.cgi could not start" names the script). Delete it or ignore it; `build.ps1` builds the file for the current system.
 
 ## Running
 
@@ -31,6 +48,37 @@ Most controllers need a backing service. Start the Docker services from `contain
 
 ## Notes
 
-- `RequireApplicationUserId` is set to `false` so the samples run without a signed-in user.
+- The launch profile `http (no hosting)` sets `DISABLE_HOSTING=true`, which turns off the communications, message queue and vector hosted services.
+- `ApplicationUserIdClaim` is set to `null` so the samples run without a signed-in user.
 - The MailKit hosted receiver is disabled in `Program.cs`; enable it only with a reachable mailbox.
 - This project is not packaged.
+
+## Tests
+
+`OoBDev.Example.WebApi.Tests` (Unit) calls the controllers directly with mocked services: `CommunicationsController` (send accepted, provider rejection to a 502 problem, enqueue) and `WebhooksController` (raw body, headers, query and clock reach `IReceiveService`; 204, 404 and 400 mapping).
+
+## Right audit trail
+
+When `OoBDev:RightAudit:ConnectionString` (SQL Server) is set, the API stores every right check (`TryAddEntityFrameworkRightAudit`, `AddRightAuditLog`), creates the table at start (`EnsureCreated`) and maps `GET /api/v1/right-audit` for the right `audit.read` (given to `admin`). Without it the endpoint is absent.
+
+## Usage analytics
+
+`UseHttpUsageMetrics()` counts calls and timeouts by route template, and `POST /api/v1/analytics/screen-views` (authenticated) counts the screens listed in `OoBDev:Analytics:Screens`; the web app posts each route change. Design: [UserAnalytics](../../../docs/design/UserAnalytics/README.md).
+
+## Error handling
+
+Unhandled exceptions return RFC 9457 problem details with the trace, correlation and request identifiers (`ProblemDetailsExceptionHandler`, first in the pipeline). `appsettings.Development.json` sets `OoBDev:ProblemDetails:IncludeErrorLocation` so development responses name the original error location; other environments do not.
+
+## Data access (read-only query runner)
+
+`POST api/DataAccess/query` (right `data.query`, admin role) runs one SELECT on the instance named by `OoBDev:DataAccess:ConnectionString` (`MaxRows` 200 and `TimeoutSeconds` 15 by default); it answers 404 until a connection string is set. Layers: `SelectOnlyGuard` (ScriptDom, one SELECT only), the `ApplicationIntent=ReadOnly` connection, the row cap and timeout, and above all a login that can only read. Point it at a test or reporting instance, never live data. The Vue page is `/data/access`.
+
+`GET/POST api/Schedule` and `DELETE api/Schedule/{key}` (right `schedule.use`, admin role) schedule a text message through `OoBDev.ComplexEvents`; the hosted `ScheduleHost` (poll every 2 s, off with `DISABLE_HOSTING=true`) hands each due item to `ScheduleDemo`, which keeps the pending and fired lists because `IScheduleStore` has no listing. The store is the in-memory one, so a restart empties it. The web screen is `/messaging/schedule`.
+
+`POST api/Geocode` (right `geocode.use`, admin role) looks up the coordinates of a US address through `ILocationServices` (`OoBDev.Census.Geocoding`). The typed address is sent from the server to the public Census geocoder; unit tests use a mocked service, a live lookup is a manual check.
+
+`POST api/Generation` (right `generation.use`, admin role) builds a seeded sample graph (`person`, `customer` or `order`) with `OoBDev.Generations`; the same type and seed give the same JSON, and an unknown type is a 400 problem.
+
+`GET api/SampleCatalog` (right `catalog.read`, admin role) serves ten in-memory rows through `[OoBDevEnableQuery]`, so `$filter`, `$orderby`, `$top`, `$skip`, `$select` and `$count` work over `GET`, the HTTP `QUERY` verb and its `POST` fallback (`OoBDev.AspNetCore.OData`, limits in `OoBDev:OData`). The `/data/query` screen drives it.
+
+`POST api/DataLoad/preview` (right `data.load`, admin role) loads a small CSV or JSON text (up to 100000 characters) into a throwaway in-memory table with `OoBDev.DataLoader` and returns the load report (read, written, replaced, skipped, rejected lines) with the stored rows; the key column and the duplicate policy (Skip, Replace, Fail) come with the request, and nothing is kept between requests. Unit tests run the real loader.

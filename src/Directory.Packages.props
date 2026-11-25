@@ -4,11 +4,23 @@
     <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="AngleSharp" Version="1.8.4" />
+    <PackageVersion Include="Aspire.Hosting.Docker" Version="13.6.5" />
+    <PackageVersion Include="Aspire.Hosting.JavaScript" Version="13.6.5" />
+    <PackageVersion Include="Aspire.Hosting.RabbitMQ" Version="13.6.5" />
+    <PackageVersion Include="Aspire.Hosting.SqlServer" Version="13.6.5" />
+    <PackageVersion Include="Aspire.Hosting.Redis" Version="13.6.5" />
+    <PackageVersion Include="AngleSharp" Version="1.8.5" />
+    <PackageVersion Include="MessagePack" Version="3.1.12" />
     <PackageVersion Include="Antlr4.Runtime.Standard" Version="4.13.1" />
     <PackageVersion Include="Antlr4BuildTasks" Version="12.14.0" />
-    <PackageVersion Include="AWSSDK.SQS" Version="4.0.100.16" />
+    <PackageVersion Include="AWSSDK.S3" Version="4.0.101" />
+    <PackageVersion Include="AWSSDK.SQS" Version="4.0.100.19" />
+    <PackageVersion Include="AWSSDK.SimpleEmailV2" Version="4.0.106.10" />
+    <PackageVersion Include="AWSSDK.SimpleNotificationService" Version="4.0.100.25" />
     <PackageVersion Include="Azure.Identity" Version="1.21.0" />
+    <PackageVersion Include="Neo4j.Driver" Version="5.28.3" />
+    <PackageVersion Include="Azure.Search.Documents" Version="11.7.0" />
+    <PackageVersion Include="Azure.Messaging.EventHubs" Version="5.12.2" />
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.21.0" />
     <PackageVersion Include="Azure.Storage.Blobs" Version="12.30.1" />
     <PackageVersion Include="Azure.Storage.Queues" Version="12.28.1" />
@@ -16,84 +28,123 @@
     <PackageVersion Include="ErikEJ.DacFX.SqlServer.Rules" Version="1.3.0" />
     <PackageVersion Include="ErikEJ.DacFX.TSQLSmellSCA" Version="1.3.0" />
     <PackageVersion Include="GitVersion.MsBuild" Version="6.8.2" />
+    <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="10.0.14" />
     <PackageVersion Include="GroqNet" Version="1.0.1" />
     <PackageVersion Include="Handlebars.Net" Version="2.4.3" />
     <PackageVersion Include="Handlebars.Net.Extension.Json" Version="1.0.0" />
     <PackageVersion Include="Handlebars.Net.Helpers" Version="2.5.5" />
+    <PackageVersion Include="HotChocolate.Execution" Version="15.1.21" />
     <PackageVersion Include="Haukcode.WkHtmlToPdfDotNet" Version="1.5.95" />
     <PackageVersion Include="HidSharp" Version="2.6.4" />
-    <PackageVersion Include="HtmlAgilityPack" Version="1.13.0" />
+    <PackageVersion Include="LibUsbDotNet" Version="3.0.224" />
+    <PackageVersion Include="libusb-dynamic" Version="1.0.26" />
+    <PackageVersion Include="HtmlAgilityPack" Version="1.13.1" />
     <PackageVersion Include="HtmlToOpenXml.dll" Version="3.5.0" />
     <PackageVersion Include="JsonDiffPatch.Net" Version="2.5.0" />
     <PackageVersion Include="Keycloak.ApiClient.Net" Version="2.0.2" />
     <PackageVersion Include="Keycloak.Net.Core" Version="1.0.41" />
-    <PackageVersion Include="Markdig" Version="1.4.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.12" />
-    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
-    <PackageVersion Include="Microsoft.Build.Utilities.Core" Version="18.10.1" />
+    <PackageVersion Include="Markdig" Version="1.4.2" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.Build.Utilities.Core" Version="18.11.0" />
     <PackageVersion Include="Microsoft.Data.SqlClient" Version="7.1.1" />
-    <PackageVersion Include="Microsoft.Extensions.AI" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.Extensions.AI.Abstractions" Version="10.10.1" />
-    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.12" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.12" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.12" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.12" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.CommandLine" Version="10.0.12" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.Extensions.AI" Version="10.11.0" />
+    <PackageVersion Include="Microsoft.Extensions.AI.Abstractions" Version="10.11.0" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.CommandLine" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.13" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="10.0.2" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.12" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.12" />
-    <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="10.0.12" />
-    <PackageVersion Include="Microsoft.Extensions.FileSystemGlobbing" Version="10.0.12" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.12" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.Extensions.FileSystemGlobbing" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting.WindowsServices" Version="10.0.13" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
-    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.12" />
-    <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.12" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.12" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="10.0.12" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.12" />
-    <PackageVersion Include="Meziantou.Analyzer" Version="3.0.299" />
-    <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.12" />
-    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.12" />
-    <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="10.0.12" />
-    <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.10.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.VisualBasic" Version="4.14.0" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.13" />
+    <PackageVersion Include="System.Security.Cryptography.ProtectedData" Version="10.0.13" />
+    <PackageVersion Include="Magick.NET-Q16-AnyCPU" Version="15.1.0" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.13" />
+    <PackageVersion Include="Meziantou.Analyzer" Version="3.0.313" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.Data.Sqlite" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.14" />
+    <PackageVersion Include="Npgsql" Version="10.0.3" />
+    <PackageVersion Include="Pgvector" Version="0.3.2" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
+    <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.11.0" />
     <PackageVersion Include="Microsoft.Graph" Version="6.8.0" />
-    <PackageVersion Include="Microsoft.Identity.Client" Version="4.90.1" />
+    <PackageVersion Include="Microsoft.Identity.Client" Version="4.91.1" />
     <PackageVersion Include="Microsoft.IdentityModel.Logging" Version="8.23.0" />
-    <PackageVersion Include="OpenTelemetry.Exporter.InMemory" Version="1.19.1" />
-    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.19.1" />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.19.1" />
-    <PackageVersion Include="System.Numerics.Tensors" Version="10.0.12" />
+    <PackageVersion Include="OpenTelemetry.Exporter.InMemory" Version="1.20.0" />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.20.0" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.20.0" />
+    <PackageVersion Include="System.Numerics.Tensors" Version="10.0.13" />
     <PackageVersion Include="Microsoft.ML.OnnxRuntime" Version="1.31.0" />
+    <PackageVersion Include="Avalonia" Version="11.3.23" />
+    <PackageVersion Include="Avalonia.Desktop" Version="11.3.23" />
+    <PackageVersion Include="Avalonia.Headless" Version="11.3.23" />
+    <PackageVersion Include="Avalonia.Skia" Version="11.3.23" />
+    <PackageVersion Include="Avalonia.Themes.Fluent" Version="11.3.23" />
     <PackageVersion Include="SkiaSharp" Version="4.153.1" />
     <PackageVersion Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.153.1" />
     <PackageVersion Include="Microsoft.ML.OnnxRuntime.Managed" Version="1.31.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
     <PackageVersion Include="Microsoft.SemanticKernel.Connectors.Ollama" Version="1.81.0-alpha" />
     <PackageVersion Include="Microsoft.SemanticKernel.Core" Version="1.81.0" />
     <PackageVersion Include="Microsoft.SqlServer.DacFx" Version="170.5.96" />
+    <PackageVersion Include="MSBuild.StructuredLogger" Version="2.3.246" />
     <PackageVersion Include="MongoDB.Driver" Version="3.12.0" />
+    <PackageVersion Include="Makaretu.Dns.Multicast.New" Version="0.38.0" />
     <PackageVersion Include="Moq" Version="4.21.0" />
     <PackageVersion Include="MSTest.TestAdapter" Version="4.5.1" />
     <PackageVersion Include="MSTest.TestFramework" Version="4.5.1" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageVersion Include="NuGet.Protocol" Version="7.9.0" />
     <PackageVersion Include="OllamaSharp" Version="5.5.0" />
     <PackageVersion Include="OpenSearch.Client" Version="2.2.0" />
     <PackageVersion Include="PlantUml.Net" Version="1.4.80" />
+    <PackageVersion Include="Microsoft.AspNetCore.OData" Version="9.5.0" />
+    <PackageVersion Include="MQTTnet" Version="5.2.0.1603" />
+    <PackageVersion Include="Microsoft.Playwright" Version="1.63.0" />
     <PackageVersion Include="Qdrant.Client" Version="1.19.0" />
     <PackageVersion Include="RabbitMQ.Client" Version="7.2.2" />
     <PackageVersion Include="ReverseMarkdown" Version="6.2.1" />
-    <PackageVersion Include="StackExchange.Redis" Version="3.4.0" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.17.14" />
+    <PackageVersion Include="StackExchange.Redis" Version="3.4.5" />
+    <PackageVersion Include="bunit" Version="1.40.0" />
+    <PackageVersion Include="Dirkster.AvalonDock" Version="4.74.1" />
+    <PackageVersion Include="Dirkster.AvalonDock.Themes.VS2013" Version="4.74.1" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.18.0" />
+    <PackageVersion Include="Yarp.ReverseProxy" Version="2.3.0" />
     <PackageVersion Include="System.Data.SqlClient" Version="4.9.1" />
-    <PackageVersion Include="System.Drawing.Common" Version="10.0.12" />
+    <PackageVersion Include="Terminal.Gui" Version="2.5.0" />
+    <PackageVersion Include="Terminal.Gui.Editor" Version="2.5.7" />
+    <PackageVersion Include="System.Drawing.Common" Version="10.0.13" />
+    <PackageVersion Include="System.Windows.Extensions" Version="10.0.13" />
+    <PackageVersion Include="NAudio.Wasapi" Version="2.2.1" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.23.0" />
-    <PackageVersion Include="System.IO.Packaging" Version="10.0.12" />
-    <PackageVersion Include="System.IO.Ports" Version="10.0.12" />
+    <PackageVersion Include="System.IO.Hashing" Version="10.0.13" />
+    <PackageVersion Include="System.IO.Packaging" Version="10.0.13" />
+    <PackageVersion Include="Spectre.Console" Version="0.57.2" />
+    <PackageVersion Include="System.IO.Ports" Version="10.0.13" />
     <PackageVersion Include="System.Linq.Async" Version="7.0.1" />
-    <PackageVersion Include="System.Memory.Data" Version="10.0.12" />
-    <PackageVersion Include="System.Reflection.MetadataLoadContext" Version="10.0.12" />
+    <PackageVersion Include="System.Memory.Data" Version="10.0.13" />
+    <PackageVersion Include="System.Reflection.MetadataLoadContext" Version="10.0.13" />
     <PackageVersion Include="YamlDotNet" Version="18.1.0" />
     <PackageVersion Include="MailKit" Version="4.18.1" />
   </ItemGroup>

@@ -28,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\OoBDev.Microsoft.Azure.ServiceBus\OoBDev.Microsoft.Azure.ServiceBus.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.MessageQueueing.Abstractions\OoBDev.MessageQueueing.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Framework\OoBDev.MessageQueueing\OoBDev.MessageQueueing.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.System\OoBDev.System.csproj" />
     <ProjectReference Include="..\..\..\Framework\OoBDev.TestUtilities\OoBDev.TestUtilities.csproj" />
   </ItemGroup>

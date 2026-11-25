@@ -64,6 +64,11 @@ fi
 echo ""
 
 # Start services in detached mode
+if [ ! -f devterm/certs/ca.pem ]; then
+    echo "Generating the throwaway TLS certificates for the RabbitMQ TLS listeners..."
+    sh devterm/make-test-certs.sh
+fi
+
 docker compose -f docker-compose.integration-tests.yml up -d $BUILD_FLAG
 
 echo ""
@@ -76,15 +81,25 @@ echo "  - MongoDB:            mongodb://localhost:27017"
 echo "  - SQL Server:         localhost,1433 (sa/${SQL_SA_PASSWORD:-IntegrationTest123!})"
 echo "  - RabbitMQ:           amqp://localhost:5673, http://localhost:15672"
 echo "  - Redis:              localhost:6379"
+echo "  - PostgreSQL (pgmq):  localhost:5434 (postgres/${POSTGRES_PASSWORD:-IntegrationTest123!}, db oobdev_test)"
+echo "  - PostgreSQL (pgvector): localhost:5435 (postgres/${POSTGRES_PASSWORD:-IntegrationTest123!}, db oobdev_test)"
+echo "  - Docling serve:      http://localhost:5001"
+echo "  - ClamAV:             localhost:3310 (clamd; first start downloads signatures)"
+echo "  - SonarQube:          http://localhost:9002 (admin/admin, change on first login)"
 echo "  - OpenSearch:         https://localhost:9200 (admin/${OPENSEARCH_PASSWORD:-IntegrationTest123!})"
 echo "  - Qdrant:             http://localhost:6333"
+echo "  - Neo4j:              bolt://localhost:7687 (browser http://localhost:7474)"
 echo "  - Azurite:            http://localhost:10000 (Blob), 10001 (Queue), 10002 (Table)"
 echo "  - Moto:         http://localhost:4566"
 echo "  - Service Bus:        localhost:5672"
 echo "  - Keycloak:           http://localhost:8081 (admin/admin)"
 echo "  - SBert:              http://localhost:5080"
 echo "  - Ollama:             http://localhost:11435"
-echo "  - Grafana (OTel):     http://localhost:3000 (OTLP :4317 gRPC, :4318 HTTP)"
+echo "  - Aspire (OTel):      http://localhost:18888 (OTLP :4317 gRPC, :4318 HTTP)"
+echo "  - Mosquitto:          localhost:1883 (MQTT, anonymous)"
+echo "  - RabbitMQ STOMP:     localhost:21613 (TLS: 21614, AMQPS: 5671; guest/guest)"
+echo "  - ser2net:            localhost:2217 (RFC 2217 echo port)"
+echo "  - Loopback device:    localhost:7778 (TCP line device: hello, STATUS?, help)"
 echo ""
 
 # Check if --wait flag is provided

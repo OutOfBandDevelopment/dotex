@@ -29,6 +29,17 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
+    "http (no hosting)": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "scalar",
+      "applicationUrl": "https://localhost:7276;http://localhost:5276",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DISABLE_HOSTING": "true"
+      }
+    },
     "https (Keycloak)": {
       "commandName": "Project",
       "dotnetRunMessages": true,
@@ -53,8 +64,7 @@
         "OLLAMAAPICLIENTOPTIONS__DEFAULTMODEL": "llava:7b",
         "OPENSEARCHOPTIONS__HOSTNAME": "192.168.1.170",
         "AZUREBLOBPROVIDEROPTIONS__CONNECTIONSTRING": "DefaultEndpointsProtocol=https;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://192.168.1.170:10000/devstoreaccount1;",
-        "QDRANTOPTIONS__URL": "http://192.168.1.170:6334",
-        "SENTENCEEMBEDDINGOPTIONS__URL": "http://192.168.1.170:5080"
+        "QDRANTOPTIONS__URL": "http://192.168.1.170:6334"
       }
     },
     "IIS Express": {
