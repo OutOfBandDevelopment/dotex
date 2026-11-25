@@ -26,6 +26,7 @@ export async function mockApi(page: Page): Promise<void> {
       turn++;
       return json(route, { context: [1, 2, 3, turn], response: turn === 1 ? 'Hello! How can I help you today?' : 'Photosynthesis is how plants turn light into sugar.' });
     }
+    if (path === '/api/Operations/health') return json(route, { status: 'Healthy', entries: [{ name: 'apache-tika', status: 'Healthy', description: null, durationMs: 4.2 }, { name: 'ollama', status: 'Healthy', description: null, durationMs: 6.8 }, { name: 'sbert', status: 'Degraded', description: 'model is loading', durationMs: 12.5 }] });
     if (path === '/api/Operations/info') return json(route, { environment: 'Development', application: 'OoBDev.Example.WebApi', runtime: '.NET 10.0.0', machine: 'example-api', started: '2026-10-19T08:00:00+00:00', configuration: [{ key: 'AllowedHosts', value: '*' }, { key: 'FileTemplatingOptions:TemplatePath', value: 'Templates' }, { key: 'Identity:Keycloak:ClientSecret', value: '***' }, { key: 'Logging:LogLevel:Default', value: 'Information' }] });
     if (path === '/api/CgiPrograms') return json(route, [{ name: 'greet.exe', path: '/cgi-bin/greet.exe' }]);
     if (path === '/api/UiDefinitions') return json(route, [{ key: 'bench-supply', name: 'Bench power supply', description: 'Written by hand.', source: 'hand-built' }]);

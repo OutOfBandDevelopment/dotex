@@ -22,4 +22,17 @@ onMounted(() => vm.check.execute());
     </tbody>
   </table>
   <p><fluent-button :disabled="!vm.check.canExecute.value" @click="vm.check.execute()">Recheck</fluent-button></p>
+  <h2>Providers</h2>
+  <p v-if="vm.providersNote.value">{{ vm.providersNote.value }}</p>
+  <table v-else>
+    <thead><tr><th>Provider</th><th>Status</th><th>Time</th><th>Detail</th></tr></thead>
+    <tbody>
+      <tr v-for="p in vm.providers.value" :key="p.name">
+        <td>{{ p.name }}</td>
+        <td>{{ p.status }}</td>
+        <td>{{ p.durationMs }} ms</td>
+        <td>{{ p.description ?? '' }}</td>
+      </tr>
+    </tbody>
+  </table>
 </template>
