@@ -26,7 +26,8 @@ Automatically: `npx playwright test e2e/journeys.spec.ts -g "Explore the example
 By hand, in the example web application at `/`:
 
 1. **Open the overview.** The overview lists every example endpoint and checks that each one answers. Expect: The page title reads "OoBDev framework examples". Every probed endpoint shows OK.
-2. **Pick a feature from the left navigation.** The navigation groups the examples by area. Choosing an entry opens its screen in the main blade and updates the breadcrumb. Expect: The breadcrumb shows Home > AI > Embeddings.
+2. **Read the provider health.** Below the endpoint table, the Providers table lists the health of each backing service the API reports, with its response time and any detail. Expect: The Providers table lists apache-tika, ollama and sbert. The sbert row reads Degraded with the detail "model is loading".
+3. **Pick a feature from the left navigation.** The navigation groups the examples by area. Choosing an entry opens its screen in the main blade and updates the breadcrumb. Expect: The breadcrumb shows Home > AI > Embeddings.
 
 ## Troubleshooting
 

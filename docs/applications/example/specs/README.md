@@ -10,7 +10,7 @@ Acceptance criteria for each journey. The same journeys run as Playwright tests.
 
 | Spec | Steps | Start route |
 | --- | --- | --- |
-| [Explore the examples](explore-the-examples.md) | 2 | `/` |
+| [Explore the examples](explore-the-examples.md) | 3 | `/` |
 | [Chat with a local model](chat-with-a-local-model.md) | 2 | `/ai/chat` |
 | [Hold a conversation with Ollama](hold-a-conversation.md) | 3 | `/ai/ollama` |
 | [Compare two texts with embeddings](compare-two-texts.md) | 2 | `/ai/embeddings` |

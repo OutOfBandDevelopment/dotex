@@ -52,7 +52,7 @@ These have no row in [the plan](plan.md) or `screens.md`; whether each deserves 
 | Telemetry | Fixed 2026-11-20: the API now lists the `Microsoft.AspNetCore` and `System.Net.Http` sources, and request traces reach the Aspire dashboard (checked live); the page itself lists the recent traces |
 | Current user, Sign in | Sign in shows only when an identity provider is configured; the Current user page says so when the host runs anonymously (2026-11-24) |
 | Developer | API and event references are links only |
-| Overview | Probes cover eight endpoints (vector store, operations and rights added 2026-11-20); a providers table from `GET api/Operations/health` was built 2026-11-25 (Q40 A); its journey step and screenshot wait for a Playwright run (`screens.md`, Table 2) |
+| Overview | Probes cover eight endpoints (vector store, operations and rights added 2026-11-20); a providers table from `GET api/Operations/health` was built 2026-11-25 (Q40 A); its journey step and screenshot were generated 2026-11-25 (step "Read the provider health") |
 
 ## Recommended order
 

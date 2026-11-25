@@ -30,6 +30,15 @@ export const journeys: Journey[] = [
         },
       },
       {
+        title: 'Read the provider health',
+        narrative: 'Below the endpoint table, the Providers table lists the health of each backing service the API reports, with its response time and any detail.',
+        expect: ['The Providers table lists apache-tika, ollama and sbert.', 'The sbert row reads Degraded with the detail "model is loading".'],
+        run: async page => {
+          await expect(page.getByRole('heading', { name: 'Providers' })).toBeVisible();
+          await expect(page.getByRole('cell', { name: 'model is loading' })).toBeVisible();
+        },
+      },
+      {
         title: 'Pick a feature from the left navigation',
         narrative: 'The navigation groups the examples by area. Choosing an entry opens its screen in the main blade and updates the breadcrumb.',
         expect: ['The breadcrumb shows Home > AI > Embeddings.'],

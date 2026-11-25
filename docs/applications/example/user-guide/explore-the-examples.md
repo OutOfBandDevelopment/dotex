@@ -35,6 +35,7 @@ Related framework features: OoBDev.Example.WebApi; OoBDev.AspNetCore.Mvc (OpenAP
 skinparam shadowing false
 start
 :Open the overview;
+:Read the provider health;
 :Pick a feature from the left navigation;
 stop
 @enduml
@@ -52,10 +53,18 @@ The overview lists every example endpoint and checks that each one answers.
 
 *Figure 2 — Open the overview*
 
-### 2. Pick a feature from the left navigation
+### 2. Read the provider health
+
+Below the endpoint table, the Providers table lists the health of each backing service the API reports, with its response time and any detail.
+
+![Read the provider health](images/explore-the-examples/02-read-the-provider-health.png)
+
+*Figure 3 — Read the provider health*
+
+### 3. Pick a feature from the left navigation
 
 The navigation groups the examples by area. Choosing an entry opens its screen in the main blade and updates the breadcrumb.
 
-![Pick a feature from the left navigation](images/explore-the-examples/02-pick-a-feature-from-the-left-navigation.png)
+![Pick a feature from the left navigation](images/explore-the-examples/03-pick-a-feature-from-the-left-navigation.png)
 
-*Figure 3 — Pick a feature from the left navigation*
+*Figure 4 — Pick a feature from the left navigation*

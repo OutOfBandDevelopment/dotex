@@ -13,6 +13,7 @@
 | Step | Action | Expected result |
 | --- | --- | --- |
 | 1 | Open the overview | The page title reads "OoBDev framework examples".<br>Every probed endpoint shows OK. |
-| 2 | Pick a feature from the left navigation | The breadcrumb shows Home > AI > Embeddings. |
+| 2 | Read the provider health | The Providers table lists apache-tika, ollama and sbert.<br>The sbert row reads Degraded with the detail "model is loading". |
+| 3 | Pick a feature from the left navigation | The breadcrumb shows Home > AI > Embeddings. |
 
 Source: `e2e/journeys.ts` (journey `explore-the-examples`). Each expected result is asserted by the step's `run` function.
