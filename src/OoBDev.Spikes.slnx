@@ -5,4 +5,5 @@
     <Platform Name="x86" />
   </Configurations>
   <Project Path="Spikes/OoBDev.Spike.ExtensionsAI/OoBDev.Spike.ExtensionsAI.csproj" />
+  <Project Path="Spikes/OoBDev.Spike.SchemaBakeOff/OoBDev.Spike.SchemaBakeOff.csproj" />
 </Solution>
