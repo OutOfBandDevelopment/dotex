@@ -1,7 +1,7 @@
 # Design Revisions Summary
 
 **Date:** 2026-01-22
-**Status:** ✅ All User Feedback Incorporated (13 Revisions)
+**Status:** Design history (reconciled 2026-11-25): feedback revisions of the original proposal; the current status per epic is in the [SharedFramework README](README.md)
 
 ---
 

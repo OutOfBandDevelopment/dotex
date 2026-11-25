@@ -1,7 +1,7 @@
 # Consolidated Design - Final Architecture
 
 **Date:** 2026-01-22
-**Status:** ✅ Complete - All User Feedback Incorporated (13 Revisions)
+**Status:** Design history (reconciled 2026-11-25): the consolidated proposal; the current status per epic is in the [SharedFramework README](README.md)
 **Purpose:** Single source of truth for final architecture after all feedback
 
 ---

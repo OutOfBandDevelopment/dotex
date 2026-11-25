@@ -3,6 +3,7 @@
 **Epic:** 04 - Distributed Caching
 **Feature:** Platform-Agnostic Background Tasks
 **Priority:** MEDIUM (Infrastructure)
+**Status:** Not built (reconciled 2026-11-25); hosted services are the platform option, see the [SharedCaching status table](../README.md#implementation-status)
 **Complexity:** MEDIUM
 **Estimated LOC:** ~450
 
