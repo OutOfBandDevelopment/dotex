@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using OoBDev.Communications.Abstractions;
+using OoBDev.Communications.Orchestration;
 using OoBDev.Communications.Unsubscribe;
 
 namespace OoBDev.Communications;
@@ -35,6 +36,23 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<ISendService, SendService>();
         services.TryAddSingleton<IWebhookProcessorFactory, WebhookProcessorFactory>();
         services.TryAddSingleton<IReceiveService, ReceiveService>();
+        return services;
+    }
+
+    /// <summary>
+    /// Adds <see cref="ICommunicationOrchestrator"/> with an in-memory <see cref="IDeferralStore"/> and <see cref="ITargetPreferenceProvider"/>.
+    /// Register <see cref="IMessageComposer"/> and <see cref="IDataEnhancer"/> implementations (as enumerable services), and replace the store and provider with durable ones.
+    /// Call <see cref="ICommunicationOrchestrator.ReleaseDueAsync"/> on a timer or a hosted service to release held requests.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <returns>The service collection.</returns>
+    public static IServiceCollection TryAddCommunicationOrchestration(this IServiceCollection services)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+        services.TryAddSingleton(TimeProvider.System);
+        services.TryAddSingleton<IDeferralStore, InMemoryDeferralStore>();
+        services.TryAddSingleton<ITargetPreferenceProvider, InMemoryTargetPreferenceProvider>();
+        services.TryAddSingleton<ICommunicationOrchestrator, CommunicationOrchestrator>();
         return services;
     }
 
