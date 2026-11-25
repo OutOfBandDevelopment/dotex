@@ -33,6 +33,7 @@
     <PackageVersion Include="Handlebars.Net" Version="2.4.3" />
     <PackageVersion Include="Handlebars.Net.Extension.Json" Version="1.0.0" />
     <PackageVersion Include="Handlebars.Net.Helpers" Version="2.5.5" />
+    <PackageVersion Include="HotChocolate.Execution" Version="15.1.21" />
     <PackageVersion Include="Haukcode.WkHtmlToPdfDotNet" Version="1.5.95" />
     <PackageVersion Include="HidSharp" Version="2.6.4" />
     <PackageVersion Include="LibUsbDotNet" Version="3.0.224" />

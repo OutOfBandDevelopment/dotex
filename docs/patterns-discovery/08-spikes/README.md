@@ -8,6 +8,7 @@ Short, time-boxed experiments that answer one question with running code and a w
 1. [Spike — Microsoft.Extensions.AI](./01-extensions-ai.md)
 2. [Spike — Aspire versus Docker Compose](./02-aspire-vs-compose.md)
 3. [Spike — Desired-state database bake-off as repeatable tests](./03-schema-bake-off.md)
+4. [Spike — GraphQL (HotChocolate) beside the rights middleware and the search syntax](./04-graphql.md)
 
 ### List of Figures
 
