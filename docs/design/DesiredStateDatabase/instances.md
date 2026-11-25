@@ -55,7 +55,7 @@ So no plan filtering code is needed in the deployer: `SqldefProvider` must pass 
 ## Built 2026-11-25
 
 - `DatabaseTarget` carries `Schema` and `TablePrefix` (`ForInstance`); `SqldefProvider` passes `target_schema` (PostgreSQL, SQL Server) or `target_tables` (SQLite with a prefix) as `--config-inline`.
-- `SuppressionsInstance.UseSuppressionsInstance(schema, tablePrefix)` in `OoBDev.Communications.EntityFrameworkCore` places the table, and an `IModelCacheKeyFactory` keeps one model per instance. The helper is internal to that project until Q42 is answered.
+- `SuppressionsInstance.UseSuppressionsInstance(schema, tablePrefix)` in `OoBDev.Communications.EntityFrameworkCore` places the table, and an `IModelCacheKeyFactory` keeps one model per instance. The helper moves to the new `OoBDev.Data.EntityFrameworkCore` (owner, 2026-11-25, Q42 A).
 - EF emits a `DO $EF$ ... CREATE SCHEMA` block for a schema, which sqldef cannot parse: the block is removed from the desired script and the schema is created by an ensure step.
 - Tests (`OoBDev.Data.Schema.Tests/StoreInstanceTests.cs`): model per instance (Unit), two prefixes in one SQLite file (Simulate), two schemas in one PostgreSQL database (Integration); each second plan is empty and skips nothing.
 
@@ -63,4 +63,4 @@ So no plan filtering code is needed in the deployer: `SqldefProvider` must pass 
 
 - Check `mssqldef` with `target_schema`.
 - (built 2026-11-25) `{schema}`/`{prefix}` tokens in once and ensure scripts: `EnsureScriptRunner` replaces them from the target and throws when a token has no value.
-- The other stores (RightAudit, Schedule, event store, AspNetCore, ComplexEvents) adopt the shared helper once Q42 is answered.
+- The other stores (RightAudit, Schedule, event store, AspNetCore, ComplexEvents) adopt the shared helper once the shared project exists (owner, 2026-11-25, Q42 A).

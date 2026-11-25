@@ -8,7 +8,7 @@ Keep this file short (about 15 one-line items). When an item starts, move it her
 
 ## In progress
 
-- [x] Owner request 2026-11-25, "do all this except physical hardware while I sleep" (standing from 2026-11-19: work every item that needs no answer, assume the default where one exists); open question Q42 and Q43. Owner answers 2026-11-21: Atlas run 2026-11-23 (out: login-gated views and extensions); screens A (complex events, spatial, data loading).
+- [x] Owner request 2026-11-25, "do all this except physical hardware while I sleep" (standing from 2026-11-19: work every item that needs no answer, assume the default where one exists). Owner answers 2026-11-21: Atlas run 2026-11-23 (out: login-gated views and extensions); screens A (complex events, spatial, data loading).
 
 ## Next
 
