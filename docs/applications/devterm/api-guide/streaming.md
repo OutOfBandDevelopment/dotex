@@ -8,6 +8,14 @@ Every channel needs the host token (Bearer header, devterm_auth cookie or ?token
 
 ## Channels
 
+### deviceTunnel `/ws/device/{name}`
+
+Binary WebSocket onto the device of a saved connection: a frame received is written to the device, a frame sent is what the device returned. Refused for a read-only token (403), an unknown name (404) and a device that will not open (502). The Bearer is the shared key or a session token from POST /api/token.
+
+- Parameter `name`: A saved connection of the host (project file or profile store)
+
+Messages: `bytes`
+
 ### events `/api/events`
 
 Server-Sent Events (text/event-stream). Each subscriber has a 256-event queue that drops its oldest.
@@ -30,11 +38,19 @@ Messages: `line`
 
 ## Operations
 
+- `receiveDeviceBytes`: receive on `deviceTunnel`
 - `receiveEvents`: receive on `events`
 - `receiveLine`: receive on `mainSession`
+- `sendDeviceBytes`: send on `deviceTunnel`
 - `sendLine`: send on `mainSession`
 
 ## Messages
+
+### bytes
+
+- Name: `bytes`
+- Content type: `application/octet-stream`
+- Payload: string
 
 ### connectionClosed
 

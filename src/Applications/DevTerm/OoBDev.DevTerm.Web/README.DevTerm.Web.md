@@ -17,3 +17,7 @@ See the `DevTerm 100% parity` item in `BACKLOG.md`: `BundleDevicePlugins`, the k
 ## Session tokens for remote clients
 
 `POST /api/token` with the shared key (or the read-only key) as `Authorization: Bearer` returns a 15-minute JWT (`access_token`, `expires_in`, `expires_at`). Send it as a Bearer on every other route. The token carries the read-only flag of the key it came from, dies with the host process, and cannot be exchanged for another one. See [Remote DevTerm](../../../../docs/design/RemoteDevTerm/README.md).
+
+## Device tunnel
+
+`/ws/device/{name}` (binary WebSocket) opens the device of a saved connection of this host and relays its bytes: a frame received is written to the device, a frame sent is what the device returned. A read-only token gets 403, an unknown name 404, a device that will not open 502. The client side is `RemoteDeviceAdapter` in `OoBDev.DevTerm.Core` (`OoBDev.DevTerm.Remote`): it exchanges the shared key for a session token and opens the tunnel. See [Remote DevTerm](../../../../docs/design/RemoteDevTerm/README.md).

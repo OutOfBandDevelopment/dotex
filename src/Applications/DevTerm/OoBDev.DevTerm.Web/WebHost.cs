@@ -100,6 +100,7 @@ public static class WebHost
         app.UseWebSockets();
         app.UseAntiforgery();
         app.Map("/ws", (HttpContext context) => WebSocketTunnel.HandleAsync(context, hub));
+        app.Map("/ws/device/{name}", (HttpContext context, string name) => DeviceTunnel.HandleAsync(context, connections, name));
         app.MapStaticAssets(); // serves _framework/blazor.web.js, without which the Blazor panel never becomes interactive
         app.MapRazorComponents<Components.App>().AddInteractiveServerRenderMode();
         app.MapGet("/", () => Results.Content(TerminalPage.Html, "text/html; charset=utf-8"));

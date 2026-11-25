@@ -24,6 +24,12 @@ internal static class AsyncApiDocument
           "messages": { "line": { "$ref": "#/components/messages/line" } },
           "description": "The same protocol for one connection opened from the project file."
         },
+        "deviceTunnel": {
+          "address": "/ws/device/{name}",
+          "parameters": { "name": { "description": "A saved connection of the host (project file or profile store)" } },
+          "messages": { "bytes": { "$ref": "#/components/messages/bytes" } },
+          "description": "Binary WebSocket onto the device of a saved connection: a frame received is written to the device, a frame sent is what the device returned. Refused for a read-only token (403), an unknown name (404) and a device that will not open (502). The Bearer is the shared key or a session token from POST /api/token."
+        },
         "events": {
           "address": "/api/events",
           "messages": {
@@ -37,11 +43,14 @@ internal static class AsyncApiDocument
       "operations": {
         "sendLine": { "action": "send", "channel": { "$ref": "#/channels/mainSession" } },
         "receiveLine": { "action": "receive", "channel": { "$ref": "#/channels/mainSession" } },
+        "sendDeviceBytes": { "action": "send", "channel": { "$ref": "#/channels/deviceTunnel" } },
+        "receiveDeviceBytes": { "action": "receive", "channel": { "$ref": "#/channels/deviceTunnel" } },
         "receiveEvents": { "action": "receive", "channel": { "$ref": "#/channels/events" } }
       },
       "components": {
         "messages": {
           "line": { "contentType": "text/plain", "payload": { "type": "string" } },
+          "bytes": { "contentType": "application/octet-stream", "payload": { "type": "string", "format": "binary" } },
           "connectionOpened": { "name": "connection-opened", "payload": { "type": "object", "properties": { "id": { "type": "string" }, "name": { "type": "string" } } } },
           "connectionClosed": { "name": "connection-closed", "payload": { "type": "object", "properties": { "id": { "type": "string" } } } },
           "lineEvent": { "name": "line", "payload": { "type": "object", "properties": { "id": { "type": "string", "description": "main for the shared session" }, "text": { "type": "string" } } } }
