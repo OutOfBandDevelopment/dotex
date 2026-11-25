@@ -29,7 +29,7 @@ Compared by file listing and reading the key files against `src`. The covered ca
 
 ## Findings
 
-- **Small feature to decide (1):** the `DeepClean` build targets. `CsvWriter` and `IniFile` were built in `OoBDev.System.IO` on 2026-11-11.
+- **Small feature to decide (0):** none open. The `DeepClean` build targets already exist in `src/Directory.Build.targets` (row BuildFirstOnce); `CsvWriter` and `IniFile` were built in `OoBDev.System.IO` on 2026-11-11.
 - **Large and already tracked (1):** the hybrid merge, with the Azure and Neo4j providers as optional later adapters.
 - Hybridsearch's Go version is a language port of the same design; no action, except to keep it as a read-only reference.
 
