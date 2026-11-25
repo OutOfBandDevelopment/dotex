@@ -32,13 +32,13 @@ Long-running, restartable pipelines need a queue where the unit of work is a vis
 
 ## Design
 
-- `IWorkQueue` (`ClaimAsync`, `HeartbeatAsync`, `CompleteAsync`, `FailAsync`, `ClaimableCountAsync`, `EnqueueAsync`) with the fence rule: every call after the claim matches `(attempt, claimed_by)` and a stale worker is ignored.
+- `IWorkQueue` (`EnqueueAsync`, `ClaimAsync`, `HeartbeatAsync`, `CompleteAsync`, `FailAsync`, `RedriveAsync`, `StatsAsync`, `DeadLettersAsync`) with the fence rule: every call after the claim matches `(attempt, claimed_by)` and a stale worker is ignored.
 - A retryable failure returns the item to pending with exponential back-off; an exhausted item is parked (it hung) or dead (it kept failing) with a dead-letter row, along with its dependents; a redrive operation returns them.
-- Claimable count (not pending count) drives a supervisor.
-- Per-stage owner controls (pause, speed) are a table the application's screen can edit; the library reads them.
+- `StageStats.Claimable` (not a pending count) drives a supervisor; `StatsAsync` also returns running, lease-expired, parked and dead counts.
+- Per-stage control is `WorkQueue:Stages:{stage}` (`Enabled`, lease, runtime ceiling, attempts, per-stage overrides of `WorkQueueOptions.Default`). An editable pause and speed table for an application screen is not built.
 - Table and column names are options (schema, task table name), not catalog names; the migration script is generated from the options.
 - The PGMQ reader is optional and off by default; the table is always the source of truth.
-- `AddStageWorkers(...)`, `AddStage<T>(sla)` and `AddDuty<T>()` register hosted services through `TryAdd*`; a stage is enabled by name in configuration (`Workers:Stages:hash`).
+- `TryAddWorkQueue(configuration)`, `TryAddInMemoryWorkQueue()` and `AddWorkStage<THandler>(stage)` register the options, the provider and one hosted `StageWorker` per stage; a stage runs while `WorkQueue:Stages:{stage}:Enabled` is true (the default). Duties (`AddDuty<T>()`) and the `IClaimOrder` plug-in are not built; claim order is `NextAttemptAt` then update time.
 - Stage contract documented: outputs keyed by content hash and written by upsert, so at-least-once is safe.
 - Time comes from `TimeProvider`. Logging carries ids and counts only.
 
