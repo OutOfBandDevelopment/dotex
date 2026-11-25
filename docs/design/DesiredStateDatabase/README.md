@@ -13,6 +13,7 @@ Derive migrations from plain `CREATE` scripts for SQL Server, Postgres and SQLit
 5. [Final-state plan](final-state-plan.md) (replace EF migrations with final-state scripts; confirmed 2026-11-25)
 6. [Tool comparison](tool-comparison.md) (sqldef and pgschema: configuration, deployment, safety, pros and cons)
 7. [Build plan for PostgreSQL and SQLite](plan.md) (EF bridge, host hook, package and refactor log, canonical model; proposed)
+8. [Store instances](instances.md) (schema on PostgreSQL and SQL Server, prefix or file on SQLite; design)
 
 ### List of Tables
 
