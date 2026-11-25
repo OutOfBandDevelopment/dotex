@@ -12,4 +12,15 @@ _(none waiting; processed requests are in BACKLOG.md and TODO.md)_
 ## Open
 
 
-_(none open)_
+### Q42 — 2026-11-25 — Desired state, store instances: where does the shared instance type live?
+
+Store instances ([design](docs/design/DesiredStateDatabase/instances.md)) need a small shared piece every store uses: an options record (`SchemaName`, `TablePrefix`), a helper that applies it in `OnModelCreating`, and an `IModelCacheKeyFactory` so two instances of one context get two models. It must be Framework (no host), and only EF Core.
+
+**Options**
+- A (recommended): a new small project `OoBDev.Data.EntityFrameworkCore` in `src/Framework` (references EF Core Relational only; stores reference it). Reason: it is reusable without pulling the sqldef tool wrapper into every store, and a store keeps its current references plus one.
+- B: put it in `OoBDev.Data.DesiredState` (already references EF). No new project, but every store would depend on the sqldef wrapper just to name a schema.
+- C: copy the few lines into each store. No coupling, but five copies of the cache key factory.
+
+**Default:** build the first slice (Suppressions) with the type inside `OoBDev.Communications.EntityFrameworkCore` as `internal`, which is reversible; move it when you answer. A migration plan row for A: project `OoBDev.Data.EntityFrameworkCore`, `src/Framework`, namespace `OoBDev.Data.EntityFrameworkCore`, NuGet package of the same name, referenced by Communications, AspNetCore, ComplexEvents and EventSourcing EntityFrameworkCore projects.
+
+**Your answer:**

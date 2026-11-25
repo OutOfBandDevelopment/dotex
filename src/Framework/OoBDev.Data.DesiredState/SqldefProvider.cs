@@ -68,10 +68,23 @@ public sealed class SqldefProvider(string engine, string executable, IToolRunner
             }
         }
 
+        var scope = ScopeConfig(target);
+        if (scope is not null)
+        {
+            args.AddRange(["--config-inline", scope]);
+        }
+
         args.AddRange(extra);
         args.Add(target.Database);
         return args;
     }
+
+    private string? ScopeConfig(DatabaseTarget target) => Engine switch
+    {
+        Sqlite when !string.IsNullOrEmpty(target.TablePrefix) => $"target_tables: {System.Text.RegularExpressions.Regex.Escape(target.TablePrefix)}.*",
+        Postgres or SqlServer when !string.IsNullOrEmpty(target.Schema) => $"target_schema: {target.Schema}",
+        _ => null,
+    };
 
     private async Task<ToolResult> RunAsync(DesiredSchema desired, DatabaseTarget target, IEnumerable<string> extra, CancellationToken cancellationToken)
     {
