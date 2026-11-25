@@ -1,5 +1,7 @@
 # Plugins
 
+**Status:** Built in DevTerm (reconciled with `src` 2026-11-25): the plugin model is `OoBDev.DevTerm.Core/Plugins` with the sample `OoBDev.DevTerm.Core.TestPlugin`; isolation is `OoBDev.System.Sandbox*` (see PluginSandbox).
+
 Plugin contracts, discovery, isolation and what plugins can contribute. Moved from the DevTerm design folder on 2026-11-04. Application: [DevTerm](../../applications/devterm/README.md).
 
 Two designs cover plugins and they belong together: this folder is the plugin model (what a plugin is and what it contributes); [PluginSandbox](../PluginSandbox/README.md) is how an untrusted plugin is isolated, granted rights and limited.
