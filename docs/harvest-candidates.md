@@ -43,7 +43,7 @@ The owner has not decided to publish the event-sourcing work; it needs sanitizin
 | Where | What it is | Worth taking |
 |---|---|---|
 | `C:\repo\_storage` (origin `g:/_storage.git`) | .NET 10 and Vue system that inventories, deduplicates, classifies and converts documents and programs on a NAS share | An application; extract reusable pieces only when a feature needs them |
-| `C:\repo\oobdev\containers` | Central Docker services and compositions (34 services) | Compare with `containers/testing` for services the test stack lacks |
+| `C:epooobdevntainers` | Central Docker services and compositions (34 services) | Compared 2026-11-25: the test stack lacks Kafka, ParadeDB, ComfyUI, Open WebUI, pgAdmin, SearXNG, Wine and the dev and FPGA tool containers; no framework adapter needs any of them (no Kafka adapter exists), so none is added. Revisit when an adapter appears. |
 
 ## 4. Design material in the notes repository
 
