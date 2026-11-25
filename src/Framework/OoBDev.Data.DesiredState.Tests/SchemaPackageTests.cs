@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Npgsql;
+using OoBDev.TestUtilities;
+using OoBDev.TestUtilities.Containers;
 using OoBDev.System.IO;
 
 namespace OoBDev.Data.DesiredState.Tests;
@@ -122,6 +125,64 @@ public sealed class SchemaPackageTests
         Assert.AreEqual(0, result.RefactorsRun.Count);
         CollectionAssert.AreEqual(new[] { Rename.Id }, result.RefactorsRecorded.ToArray());
         Assert.AreEqual("1", await Scalar(target, "SELECT COUNT(*) FROM \"Notes\""));
+    }
+
+    [TestCategory(TestCategories.Integration)]
+    [IntegrationTestMethod("oobd-test-pgvector")]
+    public async Task Deploy_PostgresRenameScenario_KeepsTheDataAndARepeatAppliesNothing()
+    {
+        // Stage
+        if (!ProviderTests.IsOnPath("psqldef"))
+        {
+            Assert.Inconclusive("psqldef (sqldef, MIT) is not on PATH.");
+        }
+
+        var admin = TestInstanceGuard.Require(TestContext.GetRequiredProperty<string>("PGVECTOR_CONNECTION_STRING"));
+        var builder = new NpgsqlConnectionStringBuilder(admin);
+        var database = $"pkg_{Guid.NewGuid():N}";
+        await PgExec(admin, $"CREATE DATABASE \"{database}\"");
+        try
+        {
+            var target = new DatabaseTarget(builder.Host!, builder.Port, database, builder.Username, builder.Password);
+            NpgsqlConnection Connect(DatabaseTarget t) => new(new NpgsqlConnectionStringBuilder(admin) { Database = t.Database, Pooling = false }.ConnectionString);
+            using var services = new ServiceCollection()
+                .AddDesiredStateDatabase()
+                .AddSingleton<IScriptExecutor>(new AdoScriptExecutor(Connect))
+                .AddSingleton<IAppliedScriptStore>(new AdoAppliedScriptStore(Connect))
+                .BuildServiceProvider();
+            var deployer = services.GetRequiredService<SchemaPackageDeployer>();
+            var dbAdmin = new NpgsqlConnectionStringBuilder(admin) { Database = database, Pooling = false }.ConnectionString;
+
+            // Test
+            await deployer.DeployAsync(Package(V1), SqldefProvider.Postgres, target, cancellationToken: TestContext.CancellationToken);
+            await PgExec(dbAdmin, "INSERT INTO \"Notes\" VALUES (1, 'keep me');");
+            var upgrade = await deployer.DeployAsync(Package(V2, Rename), SqldefProvider.Postgres, target, cancellationToken: TestContext.CancellationToken);
+            var repeat = await deployer.DeployAsync(Package(V2, Rename), SqldefProvider.Postgres, target, cancellationToken: TestContext.CancellationToken);
+            await using var connection = new NpgsqlConnection(dbAdmin);
+            await connection.OpenAsync(TestContext.CancellationToken);
+            await using var command = new NpgsqlCommand("SELECT \"Body\" FROM \"Notes\" WHERE \"Id\" = 1", connection);
+            var body = await command.ExecuteScalarAsync(TestContext.CancellationToken);
+            TestContext.WriteLine($"ran={string.Join(',', upgrade.RefactorsRun)} repeat plan={repeat.Plan.Statements.Count}");
+
+            // Assert
+            CollectionAssert.AreEqual(new[] { Rename.Id }, upgrade.RefactorsRun.ToArray());
+            Assert.AreEqual("keep me", body);
+            Assert.AreEqual(0, repeat.RefactorsRun.Count);
+            Assert.IsTrue(repeat.Plan.IsEmpty);
+        }
+        finally
+        {
+            NpgsqlConnection.ClearAllPools();
+            await PgExec(admin, $"DROP DATABASE IF EXISTS \"{database}\" WITH (FORCE)");
+        }
+    }
+
+    private static async Task PgExec(string connectionString, string sql)
+    {
+        await using var connection = new NpgsqlConnection(connectionString);
+        await connection.OpenAsync();
+        await using var command = new NpgsqlCommand(sql, connection);
+        await command.ExecuteNonQueryAsync();
     }
 
     private static async Task Exec(DatabaseTarget target, string sql)
