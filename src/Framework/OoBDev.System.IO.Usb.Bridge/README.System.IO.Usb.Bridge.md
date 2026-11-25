@@ -17,3 +17,9 @@ var server = new UsbBridgeServer(new UsbBridgeOptions { Kind = UsbBridgeKind.Usb
 server.Start();
 await server.RunAsync(cancellationToken);
 ```
+
+## Clients, hosting and configuration
+
+- `RemoteUsbTmcDevice` (`IUsbTmcDevice`) and `RemoteUsbHidDevice` (`IUsbHidDevice`) connect to a bridge, so the existing USBTMC and HID adapters run unchanged over TCP; `RemoteConnection` is the shared framed connection.
+- `UsbBridgeHostedService` runs one `UsbBridgeServer` per `UsbBridgeOptions`; `UsbBridgeConfig.Load(path)` reads the `UsbBridges` array of the ser2net-win config file.
+- Not built yet: DevTerm connection options, mDNS advertising, a shared hub port (see `BACKLOG.md`).
