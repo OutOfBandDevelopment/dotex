@@ -14,7 +14,8 @@ public sealed class SuppressionsDbContext(DbContextOptions<SuppressionsDbContext
     {
         modelBuilder.Entity<SuppressionRow>(e =>
         {
-            e.ToTable("Suppressions");
+            var (schema, prefix) = SuppressionsInstance.Of(this);
+            e.ToTable(prefix + "Suppressions", schema);
             e.HasKey(x => x.Address);
             e.Property(x => x.Address).HasMaxLength(320);
             e.Property(x => x.Reason).HasMaxLength(200).IsRequired();

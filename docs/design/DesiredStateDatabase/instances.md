@@ -10,6 +10,7 @@
 - [Mapping per engine](#mapping-per-engine)
 - [What the code must do](#what-the-code-must-do)
 - [Plan scope: checked 2026-11-25](#plan-scope-checked-2026-11-25)
+- [Built 2026-11-25](#built-2026-11-25)
 - [Open points](#open-points)
 
 **Tables:** [Table 1 — Mapping per engine](#mapping-per-engine)
@@ -51,8 +52,15 @@ sqldef plans against the whole database, so another instance's tables look like 
 
 So no plan filtering code is needed in the deployer: `SqldefProvider` must pass a config (`target_schema` on PostgreSQL and SQL Server, `target_tables` on SQLite with a prefix).
 
+## Built 2026-11-25
+
+- `DatabaseTarget` carries `Schema` and `TablePrefix` (`ForInstance`); `SqldefProvider` passes `target_schema` (PostgreSQL, SQL Server) or `target_tables` (SQLite with a prefix) as `--config-inline`.
+- `SuppressionsInstance.UseSuppressionsInstance(schema, tablePrefix)` in `OoBDev.Communications.EntityFrameworkCore` places the table, and an `IModelCacheKeyFactory` keeps one model per instance. The helper is internal to that project until Q42 is answered.
+- EF emits a `DO $EF$ ... CREATE SCHEMA` block for a schema, which sqldef cannot parse: the block is removed from the desired script and the schema is created by an ensure step.
+- Tests (`OoBDev.Data.Schema.Tests/StoreInstanceTests.cs`): model per instance (Unit), two prefixes in one SQLite file (Simulate), two schemas in one PostgreSQL database (Integration); each second plan is empty and skips nothing.
+
 ## Open points
 
-- `SqldefProvider` does not pass a config yet; add an optional scope to the provider options.
 - Check `mssqldef` with `target_schema`.
-- First slice: Suppressions on PostgreSQL and SQLite, two instances in one database, both plan to empty, a drop in one instance never appears in the other's plan.
+- A per-instance history table and `{schema}`/`{prefix}` tokens in once and ensure scripts.
+- The other stores (RightAudit, Schedule, event store, AspNetCore, ComplexEvents) adopt the shared helper once Q42 is answered.
