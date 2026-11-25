@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
+using OoBDev.AspNetCore.EntityFrameworkCore;
 using OoBDev.Communications.EntityFrameworkCore;
+using OoBDev.ComplexEvents.EntityFrameworkCore;
 using OoBDev.Data.DesiredState;
 using OoBDev.System.IO;
 using OoBDev.TestUtilities;
@@ -31,8 +33,34 @@ public class FinalStateScriptTests
     public void Suppressions_SqliteScriptMatchesTheModel() => AssertMatches("sqlite", "Suppressions", GenerateSqlite());
 
     [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public void RightAudit_PostgresScriptMatchesTheModel() => AssertMatches("postgres", "RightAudit", GeneratePostgres<RightAuditDbContext>());
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public void RightAudit_SqliteScriptMatchesTheModel() => AssertMatches("sqlite", "RightAudit", GenerateSqlite<RightAuditDbContext>());
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public void Schedule_PostgresScriptMatchesTheModel() => AssertMatches("postgres", "Schedule", GeneratePostgres<ScheduleDbContext>());
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public void Schedule_SqliteScriptMatchesTheModel() => AssertMatches("sqlite", "Schedule", GenerateSqlite<ScheduleDbContext>());
+
+    [TestMethod]
     [TestCategory(TestCategories.Simulate)]
-    public async Task Suppressions_SqliteEmptyToFinalState_ThenPlansNothing()
+    public async Task Suppressions_SqliteEmptyToFinalState_ThenPlansNothing() => await SqliteRoundTripAsync("Suppressions");
+
+    [TestMethod]
+    [TestCategory(TestCategories.Simulate)]
+    public async Task RightAudit_SqliteEmptyToFinalState_ThenPlansNothing() => await SqliteRoundTripAsync("RightAudit");
+
+    [TestMethod]
+    [TestCategory(TestCategories.Simulate)]
+    public async Task Schedule_SqliteEmptyToFinalState_ThenPlansNothing() => await SqliteRoundTripAsync("Schedule");
+
+    private async Task SqliteRoundTripAsync(string name)
     {
         // Stage
         if (!OnPath("sqlite3def"))
@@ -42,7 +70,7 @@ public class FinalStateScriptTests
 
         using var folder = new TempDirectoryHandle();
         var provider = SqldefProvider.ForSqlite(new ProcessToolRunner());
-        var desired = new DesiredSchema([new DesiredScript("Suppressions.sql", File.ReadAllText(ScriptPath("sqlite", "Suppressions")))]);
+        var desired = new DesiredSchema([new DesiredScript($"{name}.sql", File.ReadAllText(ScriptPath("sqlite", name)))]);
         var target = DatabaseTarget.File(Path.Combine(folder.DirectoryPath, "app.db"));
 
         // Test
@@ -58,7 +86,17 @@ public class FinalStateScriptTests
 
     [TestCategory(TestCategories.Integration)]
     [IntegrationTestMethod("oobd-test-pgvector")]
-    public async Task Suppressions_PostgresEmptyToFinalState_ThenPlansNothing()
+    public async Task Suppressions_PostgresEmptyToFinalState_ThenPlansNothing() => await PostgresRoundTripAsync("Suppressions");
+
+    [TestCategory(TestCategories.Integration)]
+    [IntegrationTestMethod("oobd-test-pgvector")]
+    public async Task RightAudit_PostgresEmptyToFinalState_ThenPlansNothing() => await PostgresRoundTripAsync("RightAudit");
+
+    [TestCategory(TestCategories.Integration)]
+    [IntegrationTestMethod("oobd-test-pgvector")]
+    public async Task Schedule_PostgresEmptyToFinalState_ThenPlansNothing() => await PostgresRoundTripAsync("Schedule");
+
+    private async Task PostgresRoundTripAsync(string name)
     {
         // Stage
         if (!OnPath("psqldef"))
@@ -73,7 +111,7 @@ public class FinalStateScriptTests
         try
         {
             var provider = SqldefProvider.ForPostgres(new ProcessToolRunner());
-            var desired = new DesiredSchema([new DesiredScript("Suppressions.sql", File.ReadAllText(ScriptPath("postgres", "Suppressions")))]);
+            var desired = new DesiredSchema([new DesiredScript($"{name}.sql", File.ReadAllText(ScriptPath("postgres", name)))]);
             var target = new DatabaseTarget(builder.Host!, builder.Port, database, builder.Username, builder.Password);
 
             // Test
@@ -93,17 +131,23 @@ public class FinalStateScriptTests
         }
     }
 
-    private static string GeneratePostgres()
+    private static string GeneratePostgres() => GeneratePostgres<SuppressionsDbContext>();
+
+    private static string GeneratePostgres<T>() where T : DbContext
     {
-        using var context = new SuppressionsDbContext(new DbContextOptionsBuilder<SuppressionsDbContext>().UseNpgsql("Host=unused;Database=unused").Options);
+        using var context = Create<T>(new DbContextOptionsBuilder<T>().UseNpgsql("Host=unused;Database=unused").Options);
         return context.Database.GenerateCreateScript();
     }
 
-    private static string GenerateSqlite()
+    private static string GenerateSqlite() => GenerateSqlite<SuppressionsDbContext>();
+
+    private static string GenerateSqlite<T>() where T : DbContext
     {
-        using var context = new SuppressionsDbContext(new DbContextOptionsBuilder<SuppressionsDbContext>().UseSqlite("Data Source=unused.db").Options);
+        using var context = Create<T>(new DbContextOptionsBuilder<T>().UseSqlite("Data Source=unused.db").Options);
         return context.Database.GenerateCreateScript();
     }
+
+    private static T Create<T>(DbContextOptions<T> options) where T : DbContext => (T)Activator.CreateInstance(typeof(T), options)!;
 
     private static void AssertMatches(string engine, string name, string generated)
     {

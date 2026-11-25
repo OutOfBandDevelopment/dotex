@@ -28,6 +28,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\OoBDev.Data.DesiredState\OoBDev.Data.DesiredState.csproj" />
+		<ProjectReference Include="..\OoBDev.System\OoBDev.System.csproj" />
 		<ProjectReference Include="..\OoBDev.EventSourcing.EntityFrameworkCore\OoBDev.EventSourcing.EntityFrameworkCore.csproj" />
 		<ProjectReference Include="..\OoBDev.EventSourcing.Postgres\OoBDev.EventSourcing.Postgres.csproj" />
 		<ProjectReference Include="..\OoBDev.EventSourcing.Sqlite\OoBDev.EventSourcing.Sqlite.csproj" />
