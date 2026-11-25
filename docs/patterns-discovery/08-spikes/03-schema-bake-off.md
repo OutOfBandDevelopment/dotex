@@ -29,7 +29,7 @@ All eight tests pass and agree with the manual SQLite column of the result. S4 (
 
 ## Not built
 
-- **pgschema, Atlas and the container engines:** the separate stack in [`containers/bakeoff`](../../../containers/bakeoff/README.md) (built and started 2026-11-24: sqldef and pgschema from pinned tags with checksums, the Atlas community image, PostgreSQL 17.7, a scratch Postgres and SQL Server 2022) now supplies the binaries and databases. The scenario harnesses for those columns are not written yet; the harness is SQLite-only today. Atlas SQLite and SQL Server were never run.
+- **pgschema and the container engines (Atlas dropped, owner 2026-11-24):** the separate stack in [`containers/bakeoff`](../../../containers/bakeoff/README.md) (built and started 2026-11-24: sqldef and pgschema from pinned tags with checksums, PostgreSQL 17.7, a scratch Postgres and SQL Server 2022) now supplies the binaries and databases. The scenario harnesses for those columns are not written yet; the harness is SQLite-only today. Atlas SQLite and SQL Server were never run.
 - **Maintenance score:** not a test.
 
 ## Verdict

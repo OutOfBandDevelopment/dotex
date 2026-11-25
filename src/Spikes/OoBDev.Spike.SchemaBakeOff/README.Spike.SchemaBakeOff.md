@@ -22,4 +22,4 @@ dotnet test src/Spikes/OoBDev.Spike.SchemaBakeOff
 
 ## Not covered yet
 
-The pgschema, Atlas, PostgreSQL and SQL Server scenario harnesses. Their binaries and databases come from [`containers/bakeoff`](../../../containers/bakeoff/README.md).
+The pgschema, PostgreSQL and SQL Server scenario harnesses. Their binaries and databases come from [`containers/bakeoff`](../../../containers/bakeoff/README.md).

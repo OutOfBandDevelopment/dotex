@@ -29,7 +29,7 @@ Non-goals (first version): data migrations, a GUI, cross-engine script translati
 | REQ-002 | Given a changed script, the plan contains only the difference | Must |
 | REQ-003 | Plan and apply are separate steps; unsafe changes (drop column or table, narrowing type, lock-heavy) are refused without an explicit flag | Must |
 | REQ-004 | Ensure scripts are ordered by file name and idempotent: a second run changes nothing | Must |
-| REQ-005 | A bake-off of sqldef, pgschema and Atlas is scored against the test plan and records a buy or build decision per engine with date and tool versions | Must |
+| REQ-005 | A bake-off of sqldef and pgschema (Atlas dropped, owner 2026-11-24) is scored against the test plan and records a buy or build decision per engine with date and tool versions | Must |
 | REQ-006 | Diff engines sit behind one provider interface so a tool can be replaced | Should |
 | REQ-007 | An optional manifest (`queue: orders`, `extension: pgmq`) compiles to ensure scripts | Could |
 | REQ-008 | Licences of every wrapped tool are verified and recorded before adoption | Must |

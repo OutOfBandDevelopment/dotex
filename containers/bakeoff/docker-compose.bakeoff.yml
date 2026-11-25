@@ -39,7 +39,7 @@ services:
       retries: 10
       start_period: 30s
 
-  # A scratch Postgres for tools that plan on a second database (pgschema --plan-host, Atlas --dev-url).
+  # A scratch Postgres for tools that plan on a second database (pgschema --plan-host).
   postgres-dev:
     image: postgres:17.7
     container_name: oobd-bakeoff-postgres-dev
@@ -72,14 +72,6 @@ services:
     depends_on:
       postgres: { condition: service_healthy }
       sql-server: { condition: service_healthy }
-
-  # Atlas community edition (the free build; the earlier licence finding used the vendor binary). The image has no shell or sleep, so it
-  # is not started with the stack: docker compose -f docker-compose.bakeoff.yml run --rm atlas schema diff ...
-  atlas:
-    image: arigaio/atlas:latest-community
-    container_name: oobd-bakeoff-atlas
-    profiles: [run]
-    networks: [bakeoff-net]
 
 networks:
   bakeoff-net:

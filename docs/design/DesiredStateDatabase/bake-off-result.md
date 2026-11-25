@@ -73,6 +73,8 @@ Provisional, to be confirmed by the owner:
 
 ## Atlas on PostgreSQL
 
+**Dropped by the owner on 2026-11-24.** Kept as history only.
+
 Atlas v1.4.2 canary (the vendor `latest` Windows binary, downloaded 2026-11-23 into a scratch folder, run without `atlas login`), against `oobd-test-postgres` with two throwaway databases (the target, and the `--dev-url` database Atlas needs to normalise the desired schema). Fixture: the small customer and orders tables of the other runs.
 
 | Scenario | Result |

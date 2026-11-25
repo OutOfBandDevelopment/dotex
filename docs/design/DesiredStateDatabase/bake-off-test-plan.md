@@ -32,7 +32,7 @@ Phase 0 of the [architecture](architecture.md#phases): decide per engine whether
 |-----------|-----------------|-----------------|
 | sqldef | PostgreSQL, SQL Server, SQLite, MySQL | Licence, `--dry-run` plan output, `--enable-drop` gate, idempotent re-run |
 | pgschema | PostgreSQL | Licence, plan and apply split, supported object types |
-| Atlas | PostgreSQL, SQL Server, SQLite, others | Licence and which features need a paid tier |
+| Atlas | Dropped by the owner on 2026-11-24; the run of 2026-11-23 stays in the result as history | n/a |
 | DacFx (reference) | SQL Server | Already used by `OoBDev.DacFx`; the baseline for SQL Server |
 
 Oracle has no candidate and is rejected (owner, 2026-11-24). Versions of every tool are recorded at run time, never "latest".

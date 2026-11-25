@@ -11,7 +11,7 @@ Derive migrations from plain `CREATE` scripts for SQL Server, Postgres and SQLit
 3. [API design](api-design.md)
 4. [Testing strategy](testing-strategy.md)
 5. [Final-state plan](final-state-plan.md) (replace EF migrations with final-state scripts; waiting for Q37)
-6. [Tool comparison](tool-comparison.md) (sqldef, pgschema, Atlas: configuration, deployment, safety, pros and cons)
+6. [Tool comparison](tool-comparison.md) (sqldef and pgschema: configuration, deployment, safety, pros and cons)
 
 ### List of Tables
 
@@ -30,4 +30,4 @@ Owner answers: **Q34 A** buy with gaps (wrap sqldef for PostgreSQL, SQL Server a
 
 ## Summary
 
-The work starts with a recorded buy-or-build bake-off (plan: [bake-off-test-plan.md](bake-off-test-plan.md)) of sqldef, pgschema and Atlas on a real schema (phase 0). Nothing else is built until it has a result per engine. Layers 1 to 3 (diff provider, ensure scripts, feature manifest) follow behind a provider interface. The open choices are in `OPEN-QUESTIONS.md` (Q5): schema scope, wrap versus write, and the stack.
+The work starts with a recorded buy-or-build bake-off (plan: [bake-off-test-plan.md](bake-off-test-plan.md)) of sqldef, pgschema and Atlas (Atlas dropped by the owner, 2026-11-24) on a real schema (phase 0). Nothing else is built until it has a result per engine. Layers 1 to 3 (diff provider, ensure scripts, feature manifest) follow behind a provider interface. The open choices are in `OPEN-QUESTIONS.md` (Q5): schema scope, wrap versus write, and the stack.
