@@ -1,6 +1,7 @@
 # Feature Proposals - SharedFramework Modernization
 
 **Last Updated:** 2026-11-25
+**Duplication review (2026-11-25):** [duplication-review.md](duplication-review.md) compares epics 2, 6, 7 and 10 with the code.
 **Status:** Reconciled with `src` on 2026-11-25: Epic 1 is built, epics 2 to 10 are built in whole or in part (status per epic below); DataEnhancement, MasterData and ContractParser have no code
 **Purpose:** Comprehensive design documentation for reimplementing SharedFramework capabilities using modern OoBDev patterns
 
