@@ -22,4 +22,4 @@ dotnet test src/Spikes/OoBDev.Spike.SchemaBakeOff
 
 ## Not covered yet
 
-pgschema, Atlas and the PostgreSQL and SQL Server columns still need their binaries and containers (see the report).
+The pgschema, Atlas, PostgreSQL and SQL Server scenario harnesses. Their binaries and databases come from [`containers/bakeoff`](../../../containers/bakeoff/README.md).

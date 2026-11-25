@@ -29,8 +29,7 @@ All eight tests pass and agree with the manual SQLite column of the result. S4 (
 
 ## Not built
 
-- **pgschema and Atlas:** the binaries are not installed here; downloading third-party binaries needs a fresh directory per tool and a recorded checksum ([setup and safety](../../design/DesiredStateDatabase/bake-off-test-plan.md#setup-and-safety)). Atlas SQLite and SQL Server were also never run.
-- **PostgreSQL and SQL Server columns:** the same scenarios need the `oobd-test-postgres` and SQL Server containers; the harness is SQLite-only today.
+- **pgschema, Atlas and the container engines:** the separate stack in [`containers/bakeoff`](../../../containers/bakeoff/README.md) (built and started 2026-11-24: sqldef and pgschema from pinned tags with checksums, the Atlas community image, PostgreSQL 17.7, a scratch Postgres and SQL Server 2022) now supplies the binaries and databases. The scenario harnesses for those columns are not written yet; the harness is SQLite-only today. Atlas SQLite and SQL Server were never run.
 - **Maintenance score:** not a test.
 
 ## Verdict

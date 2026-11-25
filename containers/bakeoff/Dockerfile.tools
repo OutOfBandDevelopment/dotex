@@ -1,0 +1,18 @@
+# Diff tools for the desired-state database bake-off, built from source at pinned tags.
+# Licences: sqldef MIT, pgschema Apache 2.0 (recorded with the result, docs/design/DesiredStateDatabase/bake-off-result.md).
+FROM golang:1.25-bookworm AS build
+# sqldef 3.11 needs Go 1.26 or later; the toolchain is pinned to the one the first run used.
+ENV GOTOOLCHAIN=go1.27.1
+ARG SQLDEF_VERSION=v3.11.30
+ARG PGSCHEMA_VERSION=v1.14.1
+ENV CGO_ENABLED=0 GOBIN=/out
+RUN go install github.com/sqldef/sqldef/v3/cmd/sqlite3def@${SQLDEF_VERSION} \
+ && go install github.com/sqldef/sqldef/v3/cmd/psqldef@${SQLDEF_VERSION} \
+ && go install github.com/sqldef/sqldef/v3/cmd/mssqldef@${SQLDEF_VERSION} \
+ && go install github.com/pgplex/pgschema@${PGSCHEMA_VERSION} \
+ && cd /out && sha256sum * > /out/SHA256SUMS
+
+FROM debian:bookworm-slim
+COPY --from=build /out/ /usr/local/bin/
+WORKDIR /work
+CMD ["sleep", "infinity"]
