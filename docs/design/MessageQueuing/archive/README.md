@@ -202,8 +202,7 @@ public PaymentProcessor(IMessageSenderProvider<PaymentQueue> queue)
 
 ### Source Code
 - Main Abstractions: `src/Framework/OoBDev.MessageQueueing.Abstractions/`
-- Incoming Code: `src/Incoming/SharedFramework/OoBDev.Amazon.Sqs/`
-- Incoming Code: `src/Incoming/SharedFramework/OoBDev.Microsoft.Azure.ServiceBus/`
+- Former source: the SharedFramework Amazon SQS and Azure Service Bus projects (removed; see `git log`)
 
 ---
 

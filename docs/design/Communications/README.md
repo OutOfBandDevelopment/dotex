@@ -460,11 +460,7 @@ ITargetPreference {
 
 ## Migration from SharedFramework
 
-**Source:**
-- `Incoming/SharedFramework/OoBDev.Communications` (1,145 LOC)
-- `Incoming/SharedFramework/OoBDev.Communications.Abstractions` (695 LOC)
-- `Incoming/SharedFramework/OoBDev.Twilio.SendGrid` (267 LOC)
-- `Incoming/SharedFramework/OoBDev.Twilio.SmsMessaging` (151 LOC)
+**Source:** the former SharedFramework communications projects (about 2,250 lines in four projects), removed from the repository; see `git log` for `Incoming/SharedFramework`.
 
 **Target:**
 - `src/Framework/OoBDev.Communications.Abstractions/`

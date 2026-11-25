@@ -48,7 +48,7 @@ Part of the [feature landscape](README.md). Status is "a project exists under `s
 ## LlmCodeGen and ContractParser
 
 - **Works with:** Embeddings for retrieval; ContractParser would feed it contract text.
-- **Known issues:** ContractParser is a harvest project with no migration decision yet; live LLM tests are manual (LiveIntegration).
+- **Known issues:** ContractParser is kept as a specification only (no code); live LLM tests are manual (LiveIntegration).
 - **Practices:** provider/factory per LLM service, local Ollama for CI.
 - **Built 2026-11-16:** prompt-injection guidance in the LlmCodeGen requirements ("Untrusted input and output").
 - **Built 2026-11-16:** estimated token accounting (`OoBDev.AI`, `TryAddEstimatedLlmUsage`, `LlmUsageMeter`). **Missing:** provider-reported usage and cost (needs an interface change, declined for now).

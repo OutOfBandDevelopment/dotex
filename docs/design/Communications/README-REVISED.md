@@ -388,7 +388,7 @@ deactivate Comm
 ## Migration from SharedFramework
 
 **Source:**
-- `Incoming/SharedFramework/OoBDev.Communications` (~1,145 LOC)
+- The former SharedFramework communications project (~1,145 LOC, removed; see `git log`)
   - Extract: Channel routing, preference lookup, deferral (~300 LOC)
   - **Discard:** Enhancement, composition, template logic (~845 LOC → Epic 11, Epic 10)
 

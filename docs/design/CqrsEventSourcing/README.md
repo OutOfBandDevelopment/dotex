@@ -1,6 +1,6 @@
 # CQRS and Event Sourcing Reference Design — Overview
 
-**Status:** Built and covered (reconciled 2026-11-25; the CloudEvents HTTP edge `OoBDev.EventSourcing.Web` since 2026-11-16, GDPR erasure steps 3 to 5 open, see BACKLOG) · **Date:** 2026-11-11 · **Related:** [extraction table](../../migration/harvest-d7-comparison.md#table-2) · [harvest candidates](../../harvest-candidates.md) · [design document standard](../../patterns-discovery/06-design-document-standard.md)
+**Status:** Built and covered (reconciled 2026-11-25; the CloudEvents HTTP edge `OoBDev.EventSourcing.Web` since 2026-11-16, GDPR erasure steps 3 to 5 open, see BACKLOG) · **Date:** 2026-11-11 · **Related:** [design document standard](../../patterns-discovery/06-design-document-standard.md)
 
 A reference design for building command/query separation and event-sourced aggregates on the OoBDev framework. It is a teaching baseline plus an infrastructure target, not a port: nothing is copied from the pattern references, and no library is built until a consumer needs one.
 
@@ -39,7 +39,7 @@ Confirmed by the owner on 2026-11-11 (the recommended options):
 3. **Home:** Framework (`OoBDev.EventSourcing` plus Abstractions). The event store, the event stream and the entity store are separate, each swapped by configuration; the stream is the existing message-queue providers (owner, 2026-11-11). The first queues are Azure Service Bus and Storage Queues, SQL Server Service Broker and a new PostgreSQL pgmq adapter.
 4. **First cut:** minimal. Snapshots and upcasting are separate backlog items.
 5. **Relational stores:** the event store and the entity store have an Entity Framework Core implementation with PostgreSQL, SQL Server and SQLite as configurable databases (owner, 2026-11-11); see [API design](api-design.md#entity-framework-stores).
-6. **Reference material:** the harvest event-sourcing project may be copied from after sanitizing, recording each source in the readme (owner, 2026-11-11).
+6. **Reference material:** event-sourcing code from the owner's other repositories may be copied after sanitizing, recording each source in the readme (owner, 2026-11-11).
 7. **Erasure (owner, 2026-11-16):** rewrite history: a tombstone event and a compaction job blank the personal fields; this breaks hash chains (re-sealed) and leaves external copies, see [erasure](erasure.md). Crypto-shredding is no longer the route.
 
 The library build is now unblocked and sits in `BACKLOG.md`.

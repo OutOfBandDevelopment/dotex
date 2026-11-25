@@ -2,7 +2,7 @@
 
 **Written:** 2026-10-26 | **Branch:** `dev/device-decoding` | **Status:** plan; Q2 and Q3 answered 2026-10-28 (dev-term merged entirely, see [requirements](requirements.md))
 
-Source: `C:\repo\oobdev\dev-term` (branch `dev/zstick-s2`, commit `d777358`; the Z-Wave module is still changing there). The owner wants the binary protocol decoders in this framework, and dev-term rebuilt on top of them later ([harvest-candidates.md](../../harvest-candidates.md)).
+Source: `C:\repo\oobdev\dev-term` (branch `dev/zstick-s2`, commit `d777358`; the Z-Wave module is still changing there). The owner wants the binary protocol decoders in this framework, and dev-term rebuilt on top of them later.
 
 ## Contents
 
@@ -32,7 +32,7 @@ Source: `C:\repo\oobdev\dev-term` (branch `dev/zstick-s2`, commit `d777358`; the
 
 In scope: the protocol layer of every `DevTerm.Devices.*` project (framers, decoders, command builders, value models) and the shared contracts they need. The UI framework is also in scope (owner, 2026-10-26), with the aim of making it reusable here: the toolkit-neutral `DevTerm.UiDefinitions` model first, then a view-model layer and the renderers (section 3). The dev-term application shells (main windows, session management, plugin loading) are converted to use the OoBDev libraries rather than left behind (owner, 2026-10-26). dev-term is merged entirely into this framework (owner, 2026-10-28): the shells become `OoBDev.DevTerm.{Wpf|Tui|Web}` tools under `src/Tools`, and the reusable controls are generic per-platform libraries under `src/Framework`; packages are not back-ported into dev-term. Transports and `DevTerm.DeviceManifests` are phases 8 and 9 and depend on Q3.
 
-Base decision (owner, 2026-10-26): for these protocols the dev-term implementations are better than the BinaryDataDecoders ones, so dev-term is the base for every device. The best-coverage rule still applies in a narrower form: each device is compared once with the BinaryDataDecoders source of truth, `C:\repo\mine\binary-data-decoders` (its `RETIRED.md` says it is moving to dotex; it is newer than and replaces the earlier pull-in at `Incoming/BinaryDecoders`) for anything dev-term lacks (message types, sentences, fields), and only those parts are merged; the rest of the older code is rejected with the reason recorded. The device parity note named in `harvest-candidates.md` (`projects/device-parity.md`) was not found under `C:\repo\mine\projects`; phase 0 rebuilds that table.
+Base decision (owner, 2026-10-26): for these protocols the dev-term implementations are better than the BinaryDataDecoders ones, so dev-term is the base for every device. The best-coverage rule still applies in a narrower form: each device is compared once with the BinaryDataDecoders source of truth, `C:\repo\mine\binary-data-decoders` (its `RETIRED.md` says it is moving to dotex; it is newer than and replaces the earlier pull-in at `Incoming/BinaryDecoders`) for anything dev-term lacks (message types, sentences, fields), and only those parts are merged; the rest of the older code is rejected with the reason recorded. Phase 0 rebuilds the device parity table.
 
 ## 2. Inventory
 
@@ -96,7 +96,7 @@ Contract mapping (to be settled in the api-design document, phase 1). dev-term's
 
 ## 4. Conflicts with code already in the repository
 
-Checked 2026-10-26 against `src/` (nothing in `Incoming/` has been brought in yet).
+Checked 2026-10-26 against `src/`.
 
 **Table 2 — Overlaps with existing code**
 
@@ -108,7 +108,7 @@ Checked 2026-10-26 against `src/` (nothing in `Incoming/` has been brought in ye
 | `IChecksumCalculator.Simple16` | `.../IO/Functions` | Radex One word-sum, NMEA XOR, Z-Wave checksums | Add the missing algorithms here, tested against dev-term's byte-exact traces |
 | `SerialPortAttribute`, `Parity`, `StopBits`, `SerialPortFactory`, `UsbHidFactory` | `.../IO/Ports`, `OoBDev.System.IO.Ports`, `.UsbHids` | Serial settings and HID access used by every device | Use them; dev-term's own serial and HID transports are phase 9 comparisons |
 | `OoBDev.System.IO.Pipelines` (`PipelineBuilder`, `StreamDevice`) | Framework | Stream-to-message plumbing, replaces dev-term's `StreamToPipePump` | Use it |
-| `BinaryDataDecoders.*` in `C:epomineinary-data-decoders`: Busylight, NMEA, K8055, Radex One, Zoom H4n (plus Rigol, LanC, EByte, Fencing) | Not in `src/` | The source of truth for BinaryDataDecoders (owner, 2026-10-26); it supersedes the copy in `Incoming/BinaryDecoders` | dev-term is the base for the five overlapping devices; phase 0 lists what to merge and records the rejections |
+| `BinaryDataDecoders.*` in `C:/repo/mine/binary-data-decoders`: Busylight, NMEA, K8055, Radex One, Zoom H4n (plus Rigol, LanC, EByte, Fencing) | Not in `src/` | The source of truth for BinaryDataDecoders (owner, 2026-10-26); it supersedes the copy in `Incoming/BinaryDecoders` | dev-term is the base for the five overlapping devices; phase 0 lists what to merge and records the rejections |
 | `SerialPortDeviceAdapter.TryOpen` catches only `IOException` | `OoBDev.System.IO.Ports` | The same defect as BUG-003 in the source repository: a busy port throws `UnauthorizedAccessException` | Fix with a test in phase 1; check BUG-001, BUG-002 and BUG-004 against `StreamDevice` and the pipeline factory at the same time |
 
 Source of truth. `C:\repo\mine\binary-data-decoders` (HEAD `e590b420`, `dev/dotnet10` merged) replaces the earlier pull-in at `Incoming/BinaryDecoders`, whose projects differ from it (for example Busylight). Its device projects other than the five above are: Rigol (18 lines, a stub, deleted under the migration scope rule), EByte (no source), LanC (304 lines, no tests), the Fencing scoring machines (438 lines, 3 tests) and Apple II (790 lines); these stay with the wider BinaryDataDecoders migration, not this plan. Most of its Nmea source size is generated WMI notes (`Notes/`), not decoding. Its `docs/bug-reports/` holds four open defects in the IO stack found while testing Radex One (BUG-001 to BUG-004); dotex shares the pipeline and serial code, and `TryOpen` has the BUG-003 defect (Table 2). Removing `Incoming/BinaryDecoders` is a separate decision for the owner and is not done here.
@@ -188,7 +188,7 @@ Where this meets the dotex test rules (`.claude/rules/testing.md`: `Unit`, `Simu
 
 | Phase | Work | Exit |
 |------:|------|------|
-| 0 | Compare each device with `mine/binary-data-decoders` (the `Incoming/BinaryDecoders` copy was removed 2026-11-10) for missing parts only (dev-term is the base); rebuild the parity table; record merges and rejections in [incoming-harvest-crosscheck.md](../../migration/README.md#sources-and-best-coverage) | Parity table in `docs/migration/`, merge list and rejections recorded. First pass done 2026-10-28: [device-parity.md](../../migration/README.md#devices) (open checks in its section 4) |
+| 0 | Compare each device with `mine/binary-data-decoders` (the `Incoming/BinaryDecoders` copy was removed 2026-11-10) for missing parts only (dev-term is the base); rebuild the parity table; record merges and rejections in [the migration plan](../../migration/README.md#sources-and-best-coverage) | Parity table in `docs/migration/`, merge list and rejections recorded. First pass done 2026-10-28: [device-parity.md](../../migration/README.md#devices) (open checks in its section 4) |
 | 1 | Feature docs `docs/design/DeviceDecoding/` (requirements, architecture, api-design, testing-strategy); additions to the existing IO model for the gaps in section 4 (no new device contract project unless they do not fit); test helpers per Q2; first end-to-end device as a template | Contracts reviewed, template device green. Docs written as Draft 2026-10-28; template device not started |
 | 2 | ~~Simple fixed-frame devices: DE-5000, Busylight, K8055~~ | ~~Unit tests ported, `.ksy` and device docs moved~~ Cores are in main (2026-10-28); `.ksy` moves with phase 8 |
 | 3 | ~~NMEA, Radex One, Zoom H4n~~ | ~~As above; NMEA merged with the incoming copy~~ Cores are in main; the BinaryDataDecoders copies are superseded by dev-term ([overlap-review-2026-10-29.md](../../migration/README.md#devices)) |
