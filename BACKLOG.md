@@ -4,7 +4,7 @@
 > **Owner questions:** [OPEN-QUESTIONS.md](./OPEN-QUESTIONS.md) · **New to this project?** Read [CLAUDE.md](./CLAUDE.md) first.
 > **Other repositories to harvest from:** [docs/harvest-candidates.md](docs/harvest-candidates.md)
 
-**Last Updated:** 2026-11-24
+**Last Updated:** 2026-11-25
 
 GitHub is no longer the primary repository (local bare repo `origin`), so nothing here waits on GitHub Actions. Keep items to one short line; detail lives in the linked feature doc (rule `work-tracking`).
 
@@ -62,7 +62,10 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 ### Waiting on the owner
 
 - [ ] Example screens, owner answer A 2026-11-21: the address lookup (2026-11-20), data loading and distance (2026-11-23) are built; code generation waits for its library ([missing-screens](docs/design/example-ui/missing-screens.md)).
-- [ ] **Harvest candidates** (D7): [open items await the owner](docs/migration/harvest-d7-comparison.md); candidate map in [harvest-candidates.md](docs/harvest-candidates.md)
+- [ ] **Harvest candidates** (D7, owner answers 2026-11-25): [comparison](docs/migration/harvest-d7-comparison.md), map in [harvest-candidates.md](docs/harvest-candidates.md). AccountingEngine and NeedsReviewed stay read-only references; OsciRenderClient is not taken (the HP-GL WAV sink replaces it). To do:
+    - BehaviorBlackboard (`design-patterns/BehaviorBlackboard`): a worked blackboard example for the patterns docs, linked or ported small.
+    - Compare `C:epooobdevntainers` (34 services) with `containers/testing` and list the services the test stack lacks.
+    - postsql-playground (PgProj desired-state PostgreSQL packages): compare with the built package and refactor log of [DesiredStateDatabase](docs/design/DesiredStateDatabase/plan.md) when the repository is on disk (it was not on 2026-11-10 and is not under `proving-grounds` now).
 - [x] Plugin sandbox: migrated to `OoBDev.System.Sandbox*` (2026-11-20, [plan](docs/design/PluginSandbox/migration-plan.md)); Linux run in the `dotnet/sdk:10.0` container with bubblewrap: 107 passed, 17 skipped (the Windows-only ones); coverage on Windows: core 94%, Windows 93% (Linux project needs the container run, MacOS 26% and deferred); left: macOS.
   - Sandbox follow-ups (owner, 2026-11-10: macOS deferred; built 2026-11-20: rate limit, heartbeat check, manifest limits to the launchers, Survive option, see [changes](docs/changes/2026-11-20.md)):
     - Survive: the Windows pieces and `ISandboxLauncher.Start(surviveCaller)` with `Detach()` are built (macOS refuses it; Linux works through a socket in a granted folder); no host-side watchdog (owner Q26, 2026-11-20: a surviving plugin ends itself when no host reconnects within its window, `Sweep` covers the rest). A hung plugin inside a call is ended by the wall-time limit, so no extra heartbeat (idle instances are probed by `Sweep(timeout)`).

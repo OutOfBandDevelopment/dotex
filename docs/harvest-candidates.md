@@ -16,7 +16,7 @@ All under `C:\repo\mine\proving-grounds` (origin https://github.com/mwwhited/pro
 |---|---|---|
 | `examples/BuildFirstOnce` | `Directory.Build.targets` tasks `DeepClean` and `CleanPaths` | The deep-clean targets for the 112-project solution; the "build a tool first" trick only as a documented technique |
 | `examples/hybridsearch` | Hybrid search spike | The Azure and Neo4j variants as optional later adapters; the rest is covered by `OoBDev.Search` |
-| `examples/OsciRenderClient` | Client for osci-render (TCP port 51622): frame, object and stroke model, plus fractal and curve generators | A small device-client library with a simulator, if an osci-render device is wanted; no equivalent exists |
+| `examples/OsciRenderClient` | Client for osci-render (TCP port 51622): frame, object and stroke model, plus fractal and curve generators | Not taken as a client (owner, 2026-11-25: a one-off demo; the HP-GL and SVG to stereo WAV sink in [the request](features/request/2026-11-10-hpgl-vector-display-sink.md) replaces its purpose). Its Hilbert, Koch and fractal generators may become `VectorScene` sources when that sink is built |
 | `examples/AccountingEngine` | Billing, amortization, clearing and dunning engines behind interfaces (28 files) | A domain reference design; compare before any extraction |
 | `design-patterns/BehaviorBlackboard` | Blackboard pattern sample (8 files) | A worked example for the patterns docs |
 | `examples/OoBDev.MessageBroker`, `examples/Ssb.Modeling`, `examples/SQL` | SQL Server Service Broker tooling | Deferred until a Service Broker feature exists ([design](design/SqlServiceBroker/README.md)) |
