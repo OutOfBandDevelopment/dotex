@@ -9,7 +9,7 @@ using OoBDev.Data.DesiredState;
 namespace OoBDev.DesiredState.Cli;
 
 /// <summary>
-/// <c>desired-state plan|apply</c>. Exit codes: 0 nothing to do or applied, 1 refused or hazards in the plan, 2 error, 3 plan has pending safe changes.
+/// <c>desired-state plan|apply|pack</c>. Exit codes: 0 nothing to do or applied, 1 refused or hazards in the plan, 2 error, 3 plan has pending safe changes.
 /// </summary>
 internal static class DesiredStateCommand
 {
@@ -17,12 +17,13 @@ internal static class DesiredStateCommand
         desired-state plan  --engine postgres|sqlserver|sqlite --scripts <dir> --database <name> [--host h] [--port p] [--user u] [--password-env NAME]
         desired-state apply (same options) [--allow-data-loss true] [--allow-type-change true]
         The password is read from the environment variable named by --password-env (default DESIRED_STATE_PASSWORD), never from the command line.
+        desired-state pack  --source <dir> --name <n> --version <v> --out <file.zip>   (source: schema/, predeploy/, postdeploy/, refactorlog.json)
         For sqlite, --database is the file path. Exit: 0 done or nothing to do, 1 refused or hazards, 2 error, 3 plan has pending changes.
         """;
 
     public static async Task<int> RunAsync(string[] args, DesiredStateProviderFactory factory, Func<string, string?> environment, TextWriter output, TextWriter error, CancellationToken cancellationToken = default)
     {
-        if (args.Length == 0 || args[0] is not ("plan" or "apply"))
+        if (args.Length == 0 || args[0] is not ("plan" or "apply" or "pack"))
         {
             await error.WriteLineAsync(Usage).ConfigureAwait(false);
             return 2;
@@ -31,6 +32,11 @@ internal static class DesiredStateCommand
         try
         {
             var config = new ConfigurationBuilder().AddCommandLine(args[1..]).Build();
+            if (args[0] == "pack")
+            {
+                return await PackAsync(config, output).ConfigureAwait(false);
+            }
+
             var engine = Required(config, "engine");
             var desired = DesiredSchema.FromDirectory(Required(config, "scripts"));
             var database = Required(config, "database");
@@ -63,6 +69,19 @@ internal static class DesiredStateCommand
             await error.WriteLineAsync(ex.Message).ConfigureAwait(false);
             return 2;
         }
+    }
+
+    private static async Task<int> PackAsync(IConfiguration config, TextWriter output)
+    {
+        var package = SchemaPackage.FromDirectory(Required(config, "source"), Required(config, "name"), Required(config, "version"));
+        var path = Required(config, "out");
+        await using (var stream = File.Create(path))
+        {
+            SchemaPackageFormat.Write(package, stream);
+        }
+
+        await output.WriteLineAsync($"Packed {package.Schema.Scripts.Count} schema, {package.PreDeploy.Scripts.Count} predeploy, {package.PostDeploy.Scripts.Count} postdeploy scripts and {package.Refactors.Count} refactors to {path}. Hash {package.Hash}").ConfigureAwait(false);
+        return 0;
     }
 
     private static async Task WritePlanAsync(SchemaPlan plan, TextWriter output)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -112,6 +113,27 @@ public sealed class DesiredStateCommandTests
         var (code, _, _, _) = await RunAsync(["plan", "--engine", "mongo", "--scripts", folder.DirectoryPath, "--database", "x"], []);
 
         Assert.AreEqual(2, code);
+    }
+
+    [TestMethod]
+    [TestCategory("Unit")]
+    public async Task Pack_SourceFolder_WritesAZipThatReadsBack()
+    {
+        using var source = Schema();
+        using var target = new TempDirectoryHandle();
+        Directory.CreateDirectory(Path.Combine(source.DirectoryPath, "schema"));
+        File.Move(Path.Combine(source.DirectoryPath, "001.sql"), Path.Combine(source.DirectoryPath, "schema", "001.sql"));
+        File.WriteAllText(Path.Combine(source.DirectoryPath, "refactorlog.json"), """[{"id":"r1","table":"a","sql":"ALTER TABLE a RENAME COLUMN x TO y;"}]""");
+        var zip = Path.Combine(target.DirectoryPath, "p.zip");
+
+        var (code, output, _, _) = await RunAsync(["pack", "--source", source.DirectoryPath, "--name", "app", "--version", "1.0", "--out", zip], []);
+        TestContext.WriteLine(output);
+        using var stream = File.OpenRead(zip);
+        var package = SchemaPackageFormat.Read(stream);
+
+        Assert.AreEqual(0, code);
+        Assert.AreEqual(1, package.Schema.Scripts.Count);
+        Assert.AreEqual("r1", package.Refactors.Single().Id);
     }
 
     private static TempDirectoryHandle Schema()
