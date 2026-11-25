@@ -40,19 +40,33 @@ public sealed class ProcessDockerCli : IDockerCli
     }
 
     /// <inheritdoc />
+    public async Task<bool?> NoneRunningAsync(string namePrefix, CancellationToken cancellationToken)
+    {
+        var (code, output) = await RunAsync(["ps", "-q", "--filter", "name=" + namePrefix], cancellationToken);
+        return code != 0 ? null : string.IsNullOrWhiteSpace(output);
+    }
+
+    /// <inheritdoc />
+    public async Task<bool> StartWavesAsync(string scriptPath, CancellationToken cancellationToken)
+    {
+        var (code, _) = await RunAsync(["-NoProfile", "-File", scriptPath], cancellationToken, fileName: "pwsh");
+        return code == 0;
+    }
+
+    /// <inheritdoc />
     public async Task StopAsync(string container, TimeSpan grace, CancellationToken cancellationToken) =>
         await RunAsync(["stop", "-t", Math.Max(1, (int)grace.TotalSeconds).ToString(CultureInfo.InvariantCulture), container], cancellationToken);
 
-    private static async Task<(int Code, string Output)> RunAsync(string[] arguments, CancellationToken cancellationToken, bool includeError = false)
+    private static async Task<(int Code, string Output)> RunAsync(string[] arguments, CancellationToken cancellationToken, bool includeError = false, string fileName = "docker")
     {
-        var info = new ProcessStartInfo("docker") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false, CreateNoWindow = true };
+        var info = new ProcessStartInfo(fileName) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false, CreateNoWindow = true };
         foreach (var argument in arguments)
             info.ArgumentList.Add(argument);
 
         Process process;
         try
         {
-            process = Process.Start(info) ?? throw new InvalidOperationException("docker did not start.");
+            process = Process.Start(info) ?? throw new InvalidOperationException(fileName + " did not start.");
         }
         catch (Win32Exception)
         {

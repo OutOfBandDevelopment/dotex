@@ -120,6 +120,8 @@ https://github.com/coverlet-coverage/coverlet/blob/fc7ec26dcaed8fedba880ff13c6f1
 		<Parameter name="CONTAINER_STARTUP_TIMEOUT_SECONDS" value="30" />
 		<Parameter name="CONTAINER_AUTOSTART" value="true" />
 		<Parameter name="CONTAINER_STOP_AFTER_TESTS" value="true" />
+		<Parameter name="CONTAINER_WAVES" value="true" />
+		<Parameter name="CONTAINER_WAVES_TIMEOUT_SECONDS" value="900" />
 
 		<!-- Redis -->
 		<Parameter name="REDIS_CONNECTION_STRING" value="127.0.0.1:6379" />

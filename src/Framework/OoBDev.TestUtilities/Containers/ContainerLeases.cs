@@ -83,6 +83,26 @@ internal sealed class ContainerLeases(string directory)
         }
     }
 
+    /// <summary>
+    /// Forgets that the tests started any container, so none is stopped when the last test process ends. Used after the whole stack
+    /// was started in waves (the stack stays up for the processes still to come) and to drop markers left by a crashed run.
+    /// </summary>
+    public void ClearMarkers()
+    {
+        if (!Directory.Exists(directory))
+            return;
+        foreach (var marker in Directory.GetFiles(directory, Marker, SearchOption.AllDirectories))
+        {
+            try
+            {
+                File.Delete(marker);
+            }
+            catch (IOException)
+            {
+            }
+        }
+    }
+
     private static bool IsLive(string leaseFile)
     {
         if (!int.TryParse(Path.GetFileNameWithoutExtension(leaseFile), out var pid))

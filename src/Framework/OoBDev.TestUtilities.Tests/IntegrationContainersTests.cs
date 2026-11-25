@@ -53,6 +53,19 @@ public class IntegrationContainersTests
 
         public Task<bool> LogContainsAsync(string container, string text, CancellationToken cancellationToken) => Task.FromResult(LogHasMarker);
 
+        public bool? StackDown { get; set; }
+
+        public bool WavesSucceed { get; set; } = true;
+
+        public Task<bool?> NoneRunningAsync(string namePrefix, CancellationToken cancellationToken) => Task.FromResult(StackDown);
+
+        public Task<bool> StartWavesAsync(string scriptPath, CancellationToken cancellationToken)
+        {
+            Calls.Add("waves " + Path.GetFileName(scriptPath));
+            StackDown = false;
+            return Task.FromResult(WavesSucceed);
+        }
+
         public Task StopAsync(string container, TimeSpan grace, CancellationToken cancellationToken)
         {
             Calls.Add("stop " + container);
@@ -72,6 +85,8 @@ public class IntegrationContainersTests
         IntegrationContainers.LeaseDirectory = _leaseDirectory;
         IntegrationContainers.PollInterval = TimeSpan.FromMilliseconds(10);
         IntegrationContainers.Overrides[Timeout] = "1";
+        IntegrationContainers.Overrides["CONTAINER_WAVES"] = "false";
+        IntegrationContainers.ResetWaves();
     }
 
     [TestCleanup]
@@ -114,6 +129,61 @@ public class IntegrationContainersTests
         }
 
         throw new InvalidOperationException("No other process to borrow an id from.");
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public async Task Ensure_StackDown_StartsItInWavesOnceBeforeTheContainerCheckAsync()
+    {
+        // Stage
+        IntegrationContainers.Overrides["CONTAINER_WAVES"] = "true";
+        _docker.StackDown = true;
+        _docker.State = new ContainerState(true, "healthy");
+
+        // Test
+        await IntegrationContainers.EnsureAsync(TestContext, "oobd-test-redis");
+        await IntegrationContainers.EnsureAsync(TestContext, "oobd-test-redis");
+        TestContext.WriteLine(string.Join("; ", _docker.Calls));
+
+        // Assert
+        CollectionAssert.AreEqual(new[] { "waves start-integration-waves.ps1" }, _docker.Calls);
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public async Task Ensure_SomeContainerRunningOrDockerMissing_DoesNotStartWavesAsync()
+    {
+        // Stage
+        IntegrationContainers.Overrides["CONTAINER_WAVES"] = "true";
+        _docker.StackDown = false;
+        _docker.State = new ContainerState(true, "healthy");
+
+        // Test
+        await IntegrationContainers.EnsureAsync(TestContext, "oobd-test-redis");
+        IntegrationContainers.ResetWaves();
+        _docker.StackDown = null;
+        await IntegrationContainers.EnsureAsync(TestContext, "oobd-test-redis");
+
+        // Assert
+        Assert.AreEqual(0, _docker.Calls.Count);
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public async Task Ensure_WavesFail_FallsBackToStartingTheContainerAsync()
+    {
+        // Stage
+        IntegrationContainers.Overrides["CONTAINER_WAVES"] = "true";
+        _docker.StackDown = true;
+        _docker.WavesSucceed = false;
+        _docker.State = new ContainerState(false, string.Empty);
+        _docker.StateAfterStart = new ContainerState(true, "healthy");
+
+        // Test
+        await IntegrationContainers.EnsureAsync(TestContext, "oobd-test-redis");
+
+        // Assert
+        CollectionAssert.AreEqual(new[] { "waves start-integration-waves.ps1", "start oobd-test-redis" }, _docker.Calls);
     }
 
     [TestMethod]
@@ -207,6 +277,26 @@ public class IntegrationContainersTests
 
         // Assert
         CollectionAssert.AreEqual(new[] { "stop oobd-test-redis" }, _docker.Calls);
+    }
+
+    [TestMethod]
+    [TestCategory(TestCategories.Unit)]
+    public async Task Release_StackStartedInWaves_NeverStopsAContainerOnAStaleMarkerAsync()
+    {
+        // Stage: a crashed earlier run left a marker; the waves start then owns the whole stack for the processes still to come
+        IntegrationContainers.Overrides["CONTAINER_WAVES"] = "true";
+        _docker.StackDown = true;
+        _docker.State = new ContainerState(true, "healthy");
+        Directory.CreateDirectory(Path.Combine(_leaseDirectory, "oobd-test-redis"));
+        File.WriteAllText(Path.Combine(_leaseDirectory, "oobd-test-redis", "started"), "1");
+        await IntegrationContainers.EnsureAsync(TestContext, "oobd-test-redis");
+
+        // Test
+        await IntegrationContainers.ReleaseAsync(TestContext, "oobd-test-redis");
+        TestContext.WriteLine(string.Join("; ", _docker.Calls));
+
+        // Assert
+        CollectionAssert.AreEqual(new[] { "waves start-integration-waves.ps1" }, _docker.Calls);
     }
 
     [TestMethod]

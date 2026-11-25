@@ -61,6 +61,8 @@ Integration tests marked `[IntegrationTestMethod("oobd-test-redis")]` check thei
 | `CONTAINER_STARTUP_TIMEOUT_SECONDS` | `5` | Seconds to wait for a container to become healthy |
 | `CONTAINER_AUTOSTART` | `true` | Start containers that are down; `false` makes the tests Inconclusive instead |
 | `CONTAINER_STOP_AFTER_TESTS` | `true` | Stop the containers the tests started when the run ends |
+| `CONTAINER_WAVES` | `true` | When no stack container runs, start the whole stack once in dependency waves (`scripts/ci/start-integration-waves.ps1`; the stack stays up) before the per-container start |
+| `CONTAINER_WAVES_TIMEOUT_SECONDS` | `900` | How long the waves start may take before the harness falls back to starting containers one by one |
 
 ### LiveIntegration Tests (Cloud-Based)
 Tests that require live cloud credentials. Manual execution only.

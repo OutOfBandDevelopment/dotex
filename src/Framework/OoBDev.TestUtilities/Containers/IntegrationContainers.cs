@@ -18,13 +18,20 @@ namespace OoBDev.TestUtilities.Containers;
 /// started (<c>docker start</c>, or <c>docker compose up</c> for one that was never created) and watched until its
 /// health check passes. When that does not happen within the startup timeout, or Docker is not available, the tests
 /// end <c>Inconclusive</c>. Test parameters: <c>CONTAINER_STARTUP_TIMEOUT_SECONDS</c> (default 5),
-/// <c>CONTAINER_AUTOSTART</c> (default true: start what is down) and <c>CONTAINER_STOP_AFTER_TESTS</c> (default true:
-/// stop what the tests started).
+/// <c>CONTAINER_AUTOSTART</c> (default true: start what is down), <c>CONTAINER_STOP_AFTER_TESTS</c> (default true:
+/// stop what the tests started), <c>CONTAINER_WAVES</c> (default true: when no stack container runs, start the whole stack once in
+/// dependency waves, scripts/ci/start-integration-waves.ps1, because starting about 15 containers at once fails tests that pass alone; the stack stays up)
+/// and <c>CONTAINER_WAVES_TIMEOUT_SECONDS</c> (default 900).
 /// </remarks>
 public static class IntegrationContainers
 {
     /// <summary>The default time to wait for a container to become healthy.</summary>
     public const int DefaultStartupSeconds = 5;
+
+    /// <summary>The default time to wait for the whole stack to start in waves.</summary>
+    public const int DefaultWavesSeconds = 900;
+
+    private const string WavesGateName = "oobd-test-stack-waves.lock";
 
     private const string ComposeFileName = "docker-compose.integration-tests.yml";
     private static readonly Lock _gate = new();
@@ -32,6 +39,9 @@ public static class IntegrationContainers
     private static readonly Dictionary<string, DateTimeOffset> _readyUntil = new(StringComparer.Ordinal);
     private static readonly TimeSpan _readyCache = TimeSpan.FromSeconds(30);
     private static bool _exitHookRegistered;
+    private static bool _wavesTried;
+
+    internal static void ResetWaves() => _wavesTried = false;
 
     private static readonly Dictionary<string, string> _readyMarkers = new(StringComparer.Ordinal)
     {
@@ -79,6 +89,7 @@ public static class IntegrationContainers
             : testContext.GetPropertyOrDefault("CONTAINER_STARTUP_TIMEOUT_SECONDS", DefaultStartupSeconds);
         var autostart = Flag(testContext, "CONTAINER_AUTOSTART");
         _stopAfterTests = Flag(testContext, "CONTAINER_STOP_AFTER_TESTS");
+        await StartStackInWavesWhenDownAsync(testContext, autostart);
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(seconds));
 
         foreach (var container in containers)
@@ -228,11 +239,74 @@ public static class IntegrationContainers
         return null;
     }
 
-    private static string? FindComposeFile()
+    private static async Task StartStackInWavesWhenDownAsync(TestContext testContext, bool autostart)
+    {
+        if (!autostart || _wavesTried || !Flag(testContext, "CONTAINER_WAVES"))
+            return;
+
+        _wavesTried = true;
+        var script = FindUp("scripts", "ci", "start-integration-waves.ps1");
+        if (script is null || await Docker.NoneRunningAsync("oobd-test-", CancellationToken.None) is not true)
+            return;
+
+        var seconds = Overrides.TryGetValue("CONTAINER_WAVES_TIMEOUT_SECONDS", out var overridden)
+            ? int.Parse(overridden, global::System.Globalization.CultureInfo.InvariantCulture)
+            : testContext.GetPropertyOrDefault("CONTAINER_WAVES_TIMEOUT_SECONDS", DefaultWavesSeconds);
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(seconds));
+        await using var gate = await TakeGateAsync(timeout.Token);
+        if (gate is null)
+            return;
+
+        try
+        {
+            // Another test process may have started the stack while this one waited for the gate.
+            if (await Docker.NoneRunningAsync("oobd-test-", CancellationToken.None) is not true)
+                return;
+
+            testContext.WriteLine("The integration stack is down: starting it in waves (scripts/ci/start-integration-waves.ps1).");
+            var started = await Docker.StartWavesAsync(script, timeout.Token);
+            if (started)
+                _leases.ClearMarkers();
+
+            testContext.WriteLine(started ? "The stack started in waves; it stays up for the test processes still to come (stop it with integration-down)." :"The waves start failed; starting the needed containers one by one.");
+        }
+        catch (OperationCanceledException)
+        {
+            testContext.WriteLine($"The waves start did not finish within {seconds} s; starting the needed containers one by one.");
+        }
+    }
+
+    /// <summary>An exclusive lock file shared by the test processes of the machine; it has no thread affinity (unlike a mutex) and the system frees it when the process dies. Null when it was not free in time.</summary>
+    private static async Task<FileStream?> TakeGateAsync(CancellationToken cancellationToken)
+    {
+        var path = Path.Combine(Path.GetTempPath(), WavesGateName);
+        try
+        {
+            while (true)
+            {
+                try
+                {
+                    return new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
+                }
+                catch (IOException)
+                {
+                    await Task.Delay(500, cancellationToken);
+                }
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            return null;
+        }
+    }
+
+    private static string? FindComposeFile() => FindUp("containers", "testing", ComposeFileName);
+
+    private static string? FindUp(params string[] parts)
     {
         for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)
         {
-            var candidate = Path.Combine(directory.FullName, "containers", "testing", ComposeFileName);
+            var candidate = Path.Combine([directory.FullName, .. parts]);
             if (File.Exists(candidate))
                 return candidate;
         }

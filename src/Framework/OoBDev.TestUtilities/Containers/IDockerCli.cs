@@ -19,6 +19,12 @@ public interface IDockerCli
     /// <summary>Whether the container log contains the text; false when Docker is not available.</summary>
     Task<bool> LogContainsAsync(string container, string text, CancellationToken cancellationToken);
 
+    /// <summary>Whether no container whose name starts with the prefix is running; null when Docker is not available.</summary>
+    Task<bool?> NoneRunningAsync(string namePrefix, CancellationToken cancellationToken);
+
+    /// <summary>Runs the PowerShell script that starts the stack in dependency waves; false when it failed or PowerShell is missing.</summary>
+    Task<bool> StartWavesAsync(string scriptPath, CancellationToken cancellationToken);
+
     /// <summary>Stops a container.</summary>
     Task StopAsync(string container, TimeSpan grace, CancellationToken cancellationToken);
 }

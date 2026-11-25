@@ -6,6 +6,7 @@
 
 - [Rules](#rules)
 - [Worked example](#worked-example)
+- [Cold start](#cold-start)
 - [Adding a service](#adding-a-service)
 
 ## Rules
@@ -58,6 +59,10 @@ public class MongoRoundTripTests
 ```
 
 Settings can also bind to options through the `TestContext` configuration provider in `OoBDev.TestUtilities` (`Database:Server` or `Database__Server` style keys), see the [runsettings how-to](../../../how-tos/runsettings-variables-and-configuration.md).
+
+## Cold start
+
+When no `oobd-test-*` container runs, the first test process of a run starts the whole stack once through `scripts/ci/start-integration-waves.ps1` (dependency waves, each waited healthy with `docker compose up -d --wait`), under a machine-wide lock file so parallel test processes wait instead of starting it twice. A stack started this way is never stopped by the tests; stop it with `containers/testing/scripts/integration-down.sh`. `CONTAINER_WAVES` (default true) turns this off and `CONTAINER_WAVES_TIMEOUT_SECONDS` (default 900) bounds it; on failure the harness falls back to starting the needed containers one by one. Verified on a cold stack: the whole-solution Integration run passed 49 test assemblies, with none failed. Before it, starting about 15 containers at once starved the host and the harness stopped containers that other test processes still needed.
 
 ## Adding a service
 
