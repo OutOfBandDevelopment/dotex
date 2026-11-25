@@ -15,3 +15,17 @@ The `ITransport` contract and the transports built on it (serial, TCP, HID, USBT
 | [loopback-sample-rate.md](loopback-sample-rate.md) | Loopback transport sample rate |
 
 Test peers (ser2net, Mosquitto, RabbitMQ, loopback device) run in the shared stack: [integration services](../../architecture/testing/integration/services.md#devterm-peers-mosquitto-ser2net-loopback-device).
+
+## Name map (design pages to code, checked 2026-11-25)
+
+**Table 1 — DevTerm-era names and their framework names**
+
+| Page name | Code name |
+|-----------|-----------|
+| `TcpTransport`, `TcpTransportOptions` | `TcpDeviceAdapter`, `TcpEndpointOptions` (`OoBDev.System.IO.Tcp`) |
+| `Rfc2217TransportOptions` | `Rfc2217ClientOptions` |
+| `IBleAdapter`, `IBleAdapterFactory` | `IBleConnection`, `IBleConnectionFactory` (`OoBDev.System.IO.Bluetooth`) |
+| `BleTransport`, `BleTransportOptions` | `BleDeviceAdapter`, `BleDeviceAdapterOptions` |
+| `IUsbtmcDevice`, `IUsbtmcDeviceDiscovery`, `UsbtmcDeviceLocation`, `UsbtmcDeviceQuirks`, `UsbtmcTransportOptions` | `IUsbTmcDevice`, `IUsbTmcDeviceDiscovery`, `UsbTmcDeviceLocation`, `UsbTmcDeviceQuirks`, `UsbTmcDeviceAdapterOptions` (`OoBDev.System.IO.UsbTmc`) |
+| `HidTransportOptions`, `HidReadStream` | `UsbHidEndpointOptions`, `UsbHidReadStream` (`OoBDev.System.IO.UsbHids`) |
+| `SessionHost` | DevTerm Web `SessionHub` |
