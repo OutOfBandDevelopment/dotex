@@ -1,6 +1,6 @@
 # Data loader (ETL)
 
-Status: **file handlers built 2026-11-23 (`TextFileHandler`, `DocumentUploadHandler`, `SourceFileResolver`, 6 unit tests); proposed design, written 2026-11-19 on the assumed answer A of Q18 (library only, no CLI, stands alone until the MasterData design needs it); core built 2026-11-19 (`OoBDev.DataLoader`: pipeline, CSV and JSON readers, in-memory sink, 8 unit tests, `TryAddDataLoader`); the EF Core sink is built 2026-11-19 (`OoBDev.DataLoader.EntityFrameworkCore`, JSON-column table, 3 Simulate tests on SQLite); batching built 2026-11-23 (`IBatchRowSink`, `LoadOptions.BatchSize`, one save per batch in the EF sink).** Request: [data loader](../../features/completed/2026-11-10-data-loader-etl.md). Epic 5 of [SharedFramework](../SharedFramework/README.md); related: [MasterData](../MasterData/README.md).
+Status: **command-line tool `data-loader` built 2026-11-25; file handlers built 2026-11-23 (`TextFileHandler`, `DocumentUploadHandler`, `SourceFileResolver`, 6 unit tests); proposed design, written 2026-11-19 on the assumed answer A of Q18 (library only, no CLI, stands alone until the MasterData design needs it); core built 2026-11-19 (`OoBDev.DataLoader`: pipeline, CSV and JSON readers, in-memory sink, 8 unit tests, `TryAddDataLoader`); the EF Core sink is built 2026-11-19 (`OoBDev.DataLoader.EntityFrameworkCore`, JSON-column table, 3 Simulate tests on SQLite); batching built 2026-11-23 (`IBatchRowSink`, `LoadOptions.BatchSize`, one save per batch in the EF sink).** Request: [data loader](../../features/completed/2026-11-10-data-loader-etl.md). Epic 5 of [SharedFramework](../SharedFramework/README.md); related: [MasterData](../MasterData/README.md).
 
 ## Contents
 
@@ -40,7 +40,7 @@ S --> L : written, replaced, skipped
 
 *Figure 1 — Pipeline*
 
-`OoBDev.DataLoader` (Framework, host-free) holds the pipeline, readers over the existing CSV and JSON utilities, and an in-memory sink. An EF Core sink is a separate project (`OoBDev.DataLoader.EntityFrameworkCore`, EF Core Relational only). No CLI project (assumed answer A of Q18); a host calls `ILoader.LoadAsync`.
+`OoBDev.DataLoader` (Framework, host-free) holds the pipeline, readers over the existing CSV and JSON utilities, and an in-memory sink. An EF Core sink is a separate project (`OoBDev.DataLoader.EntityFrameworkCore`, EF Core Relational only). The `data-loader` tool (`src/Tools/OoBDev.DataLoader.Cli`, built 2026-11-25) is a thin command over the library for deployment loads: dry run into memory, or write to a SQLite file; a host with its own sink or handlers calls `ILoader.LoadAsync`.
 
 ## API sketch
 
