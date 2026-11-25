@@ -13,7 +13,7 @@ using OoBDev.System.IO;
 using OoBDev.TestUtilities;
 using OoBDev.TestUtilities.Containers;
 
-namespace OoBDev.Data.Migrations.Tests;
+namespace OoBDev.Data.Schema.Tests;
 
 /// <summary>
 /// Final-state scripts for PostgreSQL and SQLite (build plan phase A): the committed script equals the model, and sqldef takes an
@@ -179,7 +179,7 @@ public class FinalStateScriptTests
     private static string FindProject()
     {
         var dir = new DirectoryInfo(AppContext.BaseDirectory);
-        while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "OoBDev.Data.Migrations.Tests.csproj")))
+        while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "OoBDev.Data.Schema.Tests.csproj")))
         {
             dir = dir.Parent;
         }

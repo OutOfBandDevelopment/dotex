@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
+using OoBDev.Data.DesiredState;
 using OoBDev.EventSourcing.EntityFrameworkCore;
 using OoBDev.EventSourcing.Postgres;
 using OoBDev.TestUtilities;
@@ -44,11 +45,17 @@ public class PostgresIntegrationTests
             [EventSourcingGlobals.EventStorePath] = PostgresGlobals.ProviderKey,
             [EventSourcingGlobals.EntityStorePath] = PostgresGlobals.ProviderKey,
         }).Build());
+        services.AddDesiredStateDatabase();
         services.TryAddEventSourcing();
         services.TryAddPostgresEventSourcing(target.ConnectionString);
         _provider = services.BuildServiceProvider();
         await using var db = await _provider.GetRequiredService<IDbContextFactory<EventSourcingDbContext>>().CreateDbContextAsync();
-        await db.Database.MigrateAsync();
+        if (!EventStoreFinalStateTests.OnPath("psqldef"))
+        {
+            Assert.Inconclusive("psqldef (sqldef, MIT) is not on PATH.");
+        }
+
+        await _provider.GetRequiredService<EfDesiredStateDeployer>().EnsureAsync(db);
     }
 
     [TestCleanup]

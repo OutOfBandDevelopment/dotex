@@ -21,6 +21,6 @@ public static class ServiceCollectionExtensions
         ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
         return services.TryAddEntityFrameworkEventSourcing(
             PostgresGlobals.ProviderKey,
-            (_, options) => options.UseNpgsql(connectionString, b => b.MigrationsAssembly(typeof(PostgresGlobals).Assembly.GetName().Name)));
+            (_, options) => options.UseNpgsql(connectionString));
     }
 }

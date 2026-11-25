@@ -7,7 +7,7 @@ using OoBDev.TestUtilities;
 using System;
 using System.IO;
 
-namespace OoBDev.Data.Migrations.Tests;
+namespace OoBDev.Data.Schema.Tests;
 
 [TestClass]
 public class SqlServerSchemaTests

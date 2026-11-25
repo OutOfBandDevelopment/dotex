@@ -152,7 +152,7 @@ public class EventStoreFinalStateTests
         return dir?.FullName ?? throw new InvalidOperationException("Test project folder not found.");
     }
 
-    private static bool OnPath(string tool) =>
+    internal static bool OnPath(string tool) =>
         (Environment.GetEnvironmentVariable("PATH") ?? string.Empty).Split(Path.PathSeparator)
             .Any(d => d.Length > 0 && (File.Exists(Path.Combine(d, tool)) || File.Exists(Path.Combine(d, tool + ".exe"))));
 

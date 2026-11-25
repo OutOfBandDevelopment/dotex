@@ -21,6 +21,6 @@ public static class ServiceCollectionExtensions
         ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
         return services.TryAddEntityFrameworkEventSourcing(
             SqliteGlobals.ProviderKey,
-            (_, options) => options.UseSqlite(connectionString, b => b.MigrationsAssembly(typeof(SqliteGlobals).Assembly.GetName().Name)));
+            (_, options) => options.UseSqlite(connectionString));
     }
 }
