@@ -1,7 +1,7 @@
 # Feature Proposals - SharedFramework Modernization
 
-**Last Updated:** 2026-01-22
-**Status:** 📋 Design & Requirements Phase (Epic 1 built; epics 2 to 10 not built, reconciled with `src` on 2026-11-16: DataEnhancement, MasterData and ContractParser have no code either)
+**Last Updated:** 2026-11-25
+**Status:** Reconciled with `src` on 2026-11-25: Epic 1 is built, epics 2 to 10 are built in whole or in part (status per epic below); DataEnhancement, MasterData and ContractParser have no code
 **Purpose:** Comprehensive design documentation for reimplementing SharedFramework capabilities using modern OoBDev patterns
 
 ---
@@ -60,7 +60,7 @@ Each feature proposal follows this structure:
 ---
 
 ### Epic 2: Communications Platform
-**Status:** 📋 Documentation Pending
+**Status:** 🔧 Built in the Framework and adapters (reconciled 2026-11-25): `OoBDev.Communications` with Abstractions, Hosting, EntityFrameworkCore and MessageQueueing, adapters `OoBDev.SendGrid`, `OoBDev.Twilio` and `OoBDev.MailKit`; see [Communications](../Communications/README.md) for what is left
 **Priority:** CRITICAL
 **Capabilities:** Multi-channel communications (email, SMS) with orchestration
 
@@ -75,7 +75,7 @@ Each feature proposal follows this structure:
 ---
 
 ### Epic 3: Spatial Services
-**Status:** 📋 Documentation Pending
+**Status:** ✅ Built (reconciled 2026-11-25): `OoBDev.SpatialServices` (+ Abstractions), `OoBDev.Census.Geocoding` and `OoBDev.Google.Maps`; Bing Maps dropped (retiring service)
 **Priority:** HIGH
 **Capabilities:** Geocoding and location services with multiple providers
 
@@ -90,7 +90,7 @@ Each feature proposal follows this structure:
 ---
 
 ### Epic 4: Distributed Caching
-**Status:** 📋 Documentation Pending
+**Status:** ✅ Built (reconciled 2026-11-25): `OoBDev.Caching` (+ Abstractions) and `OoBDev.Redis.Caching`, with tests; see [SharedCaching](../SharedCaching/README.md)
 **Priority:** HIGH
 **Capabilities:** Distributed caching with attribute-based API
 
@@ -105,7 +105,7 @@ Each feature proposal follows this structure:
 ---
 
 ### Epic 5: Data Loading Pipeline
-**Status:** 📋 Documentation Pending
+**Status:** ✅ Built (reconciled 2026-11-25): `OoBDev.DataLoader` (+ Abstractions, EntityFrameworkCore); the command-line tool is not built, see [DataLoader](../DataLoader/README.md)
 **Priority:** HIGH
 **Capabilities:** ETL pipeline for CSV/JSON to database with CLI tool
 
@@ -119,7 +119,7 @@ Each feature proposal follows this structure:
 ---
 
 ### Epic 6: Document Management
-**Status:** 📋 Documentation Pending
+**Status:** 🔧 Built in part (reconciled 2026-11-25): `OoBDev.Documents` (+ Abstractions, ExternalTools, Guides, Markdown, Hpgl) with packaging, conversion and store; see [DocumentServices](../DocumentServices/README.md)
 **Priority:** HIGH
 **Capabilities:** Enhanced document center with packaging and conversion
 
@@ -132,7 +132,7 @@ Each feature proposal follows this structure:
 ---
 
 ### Epic 7: Identity & Session Management
-**Status:** 📋 Documentation Pending
+**Status:** 🔧 Built in part (reconciled 2026-11-25): `OoBDev.Identity` (+ Abstractions, Jws) and `OoBDev.AspNetCore.AuthGateway`; see [SharedIdentity](../SharedIdentity/README.md)
 **Priority:** HIGH
 **Capabilities:** Enhanced identity with sessions, rights, and claims
 
@@ -145,7 +145,7 @@ Each feature proposal follows this structure:
 ---
 
 ### Epic 8: Complex Events
-**Status:** 📋 Documentation Pending
+**Status:** 🔧 Built in part (reconciled 2026-11-25): `OoBDev.ComplexEvents` (+ Abstractions, DatabaseExtensions, EntityFrameworkCore, Hosting) with in-process dispatcher, store and runner; Azure EventHub provider not built; see [ComplexEvents](../ComplexEvents/README.md)
 **Priority:** MEDIUM
 **Capabilities:** Event sourcing, CQRS, cron-based scheduling
 
@@ -160,7 +160,7 @@ Each feature proposal follows this structure:
 ---
 
 ### Epic 9: Test Data Generation
-**Status:** 📋 Documentation Pending
+**Status:** 🔧 Built (core, reconciled 2026-11-25): `OoBDev.Generations` (+ Abstractions, Extensions); provider hooks and DI registration not built; see [TestDataGeneration](../TestDataGeneration/README.md)
 **Priority:** MEDIUM
 **Capabilities:** Attribute-driven test data generation
 
@@ -173,7 +173,7 @@ Each feature proposal follows this structure:
 ---
 
 ### Epic 10: Text Templating
-**Status:** 📋 Documentation Pending
+**Status:** 🔧 Partly built (reconciled 2026-11-25): Handlebars, XSLT and the EF Core database template source are built; IDataContainer integration is not; see [TextTemplating](../TextTemplating/README.md)
 **Priority:** MEDIUM
 **Capabilities:** Unified templating engine with persistence
 

@@ -1,6 +1,6 @@
 # ContractParser - Service Contract DSL Feature
 
-**Status:** 📋 SPECIFICATION - Requirements Gathering
+**Status:** 📋 Specification only, kept by the owner (2026-11-09); no code in `src` (checked 2026-11-25); tracked in BACKLOG.md
 **Priority:** MEDIUM - Future Implementation Candidate
 **Last Updated:** 2026-01-20
 

@@ -2,7 +2,7 @@
 
 **Date:** 2026-01-20
 **Pattern:** Context-Based (Non-Generic Interface)
-**Status:** ✅ Active Implementation
+**Status:** ✅ Built (reconciled with the code 2026-11-25; inbox, outbox and in-process provider added, see the end of this document)
 
 ---
 
@@ -54,13 +54,13 @@ public interface IMessageSenderProvider
 - **AWS SQS** - `src/ExternalServices/Amazon/OoBDev.Amazon.Sqs/`
   - FIFO queues, message attributes, dead-letter queues
   - Moto (AWS emulator) support for integration testing
-  - Latest package: AWSSDK.SQS 4.0.2.11
+  - Latest package: AWSSDK.SQS 4.0.100.19 (central package versions)
   - Status: ✅ Complete (2026-01-20)
 
 - **Azure Service Bus** - `src/ExternalServices/Microsoft/OoBDev.Microsoft.Azure.ServiceBus/`
   - Topics, sessions, scheduled messages, dead-letter queues
   - Azure Service Bus Emulator support for integration testing
-  - Latest package: Azure.Messaging.ServiceBus 7.20.1
+  - Latest package: Azure.Messaging.ServiceBus 7.21.0
   - Status: ✅ Complete (2026-01-20)
 
 ---
@@ -187,8 +187,17 @@ namespace OoBDev.MessageQueueing.Services
     // Context with configuration and metadata
     public interface IMessageContext
     {
+        string? OriginMessageId { get; }
         string? CorrelationId { get; set; }
-        Dictionary<string, object?> Headers { get; }
+        string? RequestId { get; }
+        string? SentId { get; set; }
+        string? ChannelType { get; }
+        string? MessageType { get; }
+        DateTimeOffset? SentAt { get; }
+        string? SentBy { get; }
+        string? SentFrom { get; }
+        object? this[string key] { get; set; }
+        IDictionary<string, object?> Headers { get; }
         IConfigurationSection Config { get; }  // Queue configuration
     }
 
@@ -687,7 +696,6 @@ The [archive](./archive/) folder contains comprehensive analysis of alternative 
 ## References
 
 ### Documentation
-- [TODO-archive/TODO-migrations-message-queues.md](../../TODO-archive/TODO-migrations-message-queues.md) - Migration tracking
 - [OoBDev.MessageQueueing.Abstractions](../../src/Framework/OoBDev.MessageQueueing.Abstractions/) - Core interfaces
 - [OoBDev.RabbitMQ](../../src/ExternalServices/RabbitMQ/OoBDev.RabbitMQ/) - Reference implementation
 
@@ -695,12 +703,14 @@ The [archive](./archive/) folder contains comprehensive analysis of alternative 
 - **Abstractions:** `src/Framework/OoBDev.MessageQueueing.Abstractions/`
 - **Core:** `src/Framework/OoBDev.MessageQueueing/`
 - **RabbitMQ:** `src/ExternalServices/RabbitMQ/OoBDev.RabbitMQ/`
-- **Incoming SQS:** `src/Incoming/SharedFramework/OoBDev.Amazon.Sqs/`
-- **Incoming Service Bus:** `src/Incoming/SharedFramework/OoBDev.Microsoft.Azure.ServiceBus/`
+- **SQS:** `src/ExternalServices/Amazon/OoBDev.Amazon.Sqs/`
+- **Service Bus:** `src/ExternalServices/Microsoft/OoBDev.Microsoft.Azure.ServiceBus/`
+- **Inbox, outbox, in-process provider:** `src/Framework/OoBDev.MessageQueueing/` ([readme](../../../src/Framework/OoBDev.MessageQueueing/README.MessageQueueing.md))
+- **EF Core inbox and outbox stores:** `src/Framework/OoBDev.MessageQueueing.EntityFrameworkCore/`
+- **Hosted receiver and outbox dispatcher:** `src/Framework/OoBDev.MessageQueueing.Hosting/`
 
 ---
 
-**Last Updated:** 2026-01-20
+**Last Updated:** 2026-11-25 (reconciled with the code)
 **Pattern:** Context-Based (Active)
-**Status:** Production-ready (RabbitMQ), Migrating (SQS, Service Bus)
-**Next Step:** Implement AWS SQS and Azure Service Bus providers
+**Status:** All three providers (RabbitMQ, SQS, Service Bus) are built and tested; the framework also has an in-process provider, an inbox (idempotent handler) and an outbox with EF Core stores and hosted services. The older sections above describe the context pattern; the readmes of the projects listed above are the current API reference.

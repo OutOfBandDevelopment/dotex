@@ -1,7 +1,7 @@
 # Epic 10: Text Templating Extensions (REVISED)
 
 **Priority:** MEDIUM
-**Status:** 📋 Design Phase (Architecture Revised)
+**Status:** Superseded by [README.md](README.md) (revised architecture adopted; Features 1 and 2 built, see its status line, 2026-11-25)
 **Complexity:** LOW (leverage existing framework)
 **Impact:** ~400 LOC (additions to existing template engine)
 
