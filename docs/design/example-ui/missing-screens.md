@@ -38,7 +38,7 @@ These have no row in [the plan](plan.md) or `screens.md`; whether each deserves 
 | Complex events | `OoBDev.ComplexEvents` (schedule store and runner built; the screen is `/messaging/schedule`, built 2026-11-20) | A schedule of due items with a hosted runner; the rule viewer stays open |
 | Spatial and geocoding | `OoBDev.Census.Geocoding`, `OoBDev.SpatialServices` (`GeoMath`) | Address to coordinates built 2026-11-20 as `/data/geocode` (`POST api/Geocode`, right `geocode.use`); distance and bearing built 2026-11-23 as `/data/distance` (`POST api/Distance`, same right) |
 | Data loading | `OoBDev.DataLoader` (built; `/data/load`, 2026-11-23) | Load a CSV or JSON text into a throwaway in-memory table and read the report; the mapping preview waits for `docs/design/MasterData` |
-| Code generation | `OoBDev.Generations` (not built yet) | Generate from a model and show the output |
+| Test data generation | `OoBDev.Generations` (core built 2026-11-19, test-support library; provider hooks and DI registration not built) | Pick a sample type and a seed, show the generated object graph; the same seed gives the same output |
 | Server-driven UI | `OoBDev.UiDefinitions` (+ ViewModels, Wpf) | A page rendered from a `UiDefinition` returned by the API (the framework's own UI contract is not shown anywhere in the SPA) |
 | Token tools | `OoBDev.Identity.Jws` | Built 2026-11-16 as a section of the Toolbox page: sign HS256, read a token, check the signature |
 | Instrument protocols | `OoBDev.Nmea`, `OoBDev.Scpi`, `OoBDev.ZWave` | Deferred with the hardware UI |
