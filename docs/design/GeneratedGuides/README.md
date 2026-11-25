@@ -1,6 +1,6 @@
 # Generated guides
 
-**Status:** Draft · **Date:** 2026-10-30 · **Owner decision:** guides and screenshots maintain themselves from test runs, for every front end and API surface.
+**Status:** Built in part (reconciled 2026-11-25): `OoBDev.Documents.Guides` (API, CLI and XML-doc renderers) and generated user guides with screenshots exist for DevTerm and the example app; the plan lists the rest · **Date:** 2026-10-30 · **Owner decision:** guides and screenshots maintain themselves from test runs, for every front end and API surface.
 
 ## Contents
 

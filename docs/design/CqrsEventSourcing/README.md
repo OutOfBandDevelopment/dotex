@@ -1,6 +1,6 @@
 # CQRS and Event Sourcing Reference Design — Overview
 
-**Status:** Draft · **Date:** 2026-11-11 · **Related:** [extraction table](../../migration/harvest-d7-comparison.md#table-2) · [harvest candidates](../../harvest-candidates.md) · [design document standard](../../patterns-discovery/06-design-document-standard.md)
+**Status:** Built and covered (reconciled 2026-11-25; the CloudEvents HTTP edge `OoBDev.EventSourcing.Web` since 2026-11-16, GDPR erasure steps 3 to 5 open, see BACKLOG) · **Date:** 2026-11-11 · **Related:** [extraction table](../../migration/harvest-d7-comparison.md#table-2) · [harvest candidates](../../harvest-candidates.md) · [design document standard](../../patterns-discovery/06-design-document-standard.md)
 
 A reference design for building command/query separation and event-sourced aggregates on the OoBDev framework. It is a teaching baseline plus an infrastructure target, not a port: nothing is copied from the pattern references, and no library is built until a consumer needs one.
 

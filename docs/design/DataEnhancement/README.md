@@ -1,7 +1,7 @@
 # Epic 11: Data Enhancement Pipeline
 
 **Priority:** HIGH
-**Status:** 📋 Design Phase
+**Status:** 📋 Design phase; no code in `src` (checked 2026-11-25)
 **Complexity:** MEDIUM
 **Impact:** ~400 LOC (reusable across multiple features)
 
