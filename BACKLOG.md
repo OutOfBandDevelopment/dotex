@@ -106,7 +106,7 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
 
 ## 7. Documentation review (owner, 2026-10-28)
 
-- [ ] **Review and clean up all documents**: content and coverage review against the rules `docs-and-diagrams` and `work-tracking` and `docs/patterns-discovery/06-design-document-standard.md`; the DevTerm docs come with the parity work. Designs reconciled with the code 2026-11-25 (status lines on every design README); left: line-by-line API checks of the detail pages (AllMiniLmL6V2 requirements, Transports pages; OpenApiScalar and WorkQueue done 2026-11-25) and the DevTerm and applications docs. Numbering, validator problems and stale generated docs are done (2026-10-29); use the `write-docs` skill and `scripts/docs` validators.
+- [ ] **Review and clean up all documents**: content and coverage review against the rules `docs-and-diagrams` and `work-tracking` and `docs/patterns-discovery/06-design-document-standard.md`; the DevTerm docs come with the parity work. Designs reconciled with the code 2026-11-25 (status lines on every design README); left: line-by-line API checks of the detail pages (Transports pages; OpenApiScalar, WorkQueue and AllMiniLmL6V2 done 2026-11-25) and the DevTerm and applications docs. Numbering, validator problems and stale generated docs are done (2026-10-29); use the `write-docs` skill and `scripts/docs` validators.
 
 ## 8. Future ideas (not tied to DevTerm, nothing required now)
 

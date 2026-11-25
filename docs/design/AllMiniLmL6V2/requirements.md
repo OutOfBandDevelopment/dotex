@@ -50,8 +50,8 @@ Observed in the fork (to be confirmed by tests, see [testing strategy](testing-s
 | REQ-004 | Safe for concurrent use from many threads on one singleton; no shared mutable state other than the thread-safe `InferenceSession` | Must |
 | REQ-005 | Results do not depend on batch composition: an input embedded alone and inside a batch gives the same vector within tolerance | Must |
 | REQ-006 | Expose `IEmbeddingGenerator<string, Embedding<float>>` and an `IEmbeddingProvider` adapter that reports `Length` (384) without blocking on async code | Must |
-| REQ-007 | Register through `TryAdd…Services` and a kebab-case keyed registration constant; selectable through the keyed selection factory. Implemented for `IEmbeddingProvider`; the keyed generator is **Planned** | Must |
-| REQ-008 | Options for model folder, maximum sequence length (default 256 per the model card), maximum concurrent inferences, intra-op threads; validated at startup | Must |
+| REQ-007 | Register through `TryAdd…Services` and a kebab-case keyed registration constant; selectable through the keyed selection factory. Implemented for `IEmbeddingProvider` and the keyed `IEmbeddingGenerator` (`SBertGlobals.AllMiniLmL6V2Key`, verified 2026-11-25) | Must |
+| REQ-008 | Options for model folder, maximum sequence length (default 256 per the model card), maximum concurrent inferences, intra-op threads. Options exist and bind (`Configure` plus `ApplyDefaults`); startup validation is **Planned** (`AddValidatedOptions` is blocked by the Abstractions-only adapter rule, BACKLOG) | Must |
 | REQ-009 | Cancellation honoured before inference starts and between batches | Should |
 | REQ-010 | Batches larger than a configured size are split; padding per batch only to the longest sequence | Should |
 | REQ-011 | Emit `ActivitySource` and `Meter` telemetry named `OoBDev.Onnx.SentenceEmbeddings` (`oobdev.embeddings.duration`, `.batch_size`, `.tokens`; span `embeddings.batch`) | Should |
@@ -74,6 +74,6 @@ Observed in the fork (to be confirmed by tests, see [testing strategy](testing-s
 | 1 | ~~Keep the model as a git submodule, or move to an artifact feed or Hugging Face download?~~ | Decided: Hugging Face download on first use into the hub cache (pinned revision, SHA-256 verified) |
 | 2 | ~~Is `Microsoft.ML.Tokenizers` `BertTokenizer` output identical to the reference?~~ | Decided: no; a first-party tokenizer replaced it and matches the Hugging Face reference on all test items |
 | 3 | Maximum sequence length: the model card says 256 (trained on 128); the fork does not truncate by default | 256, configurable |
-| 4 | Keep the old key `ALLMINILM` as an alias for one release? | Yes, alias, then remove |
+| 4 | Keep the old key `ALLMINILM` as an alias for one release? | Not built: no alias exists in the code (the framework is unreleased, so the key was renamed outright, owner rule 2026-10); the alias row in the testing strategy applies to nothing |
 
 [↑ Index](README.md) · [Architecture →](architecture.md)

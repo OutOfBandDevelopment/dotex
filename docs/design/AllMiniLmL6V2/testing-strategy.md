@@ -90,7 +90,7 @@ Golden vectors are produced once from the fork (a small console or test helper, 
 | REQ-004 | Parallel equality, gate limit | Simulate / Unit |
 | REQ-005 | Batch independence | Simulate |
 | REQ-006 | `Length_Is384_WithoutBlocking`, adapter maps content to vector | Unit |
-| REQ-007 | Registration resolves keyed generator and provider; alias key resolves | Unit |
+| REQ-007 | Registration resolves keyed generator and provider (no alias key, see requirements open question 4) | Unit |
 | REQ-008 | Options validation failures (missing folder, zero batch size) | Unit |
 | REQ-009 | Cancellation tests | Unit |
 | REQ-010 | Batch splitting and padding to longest row only | Unit |
