@@ -11,6 +11,9 @@
 .PARAMETER Wave
     Waves of compose service names; override to change the order.
 
+.PARAMETER OneShot
+    Services that run once and exit (started after the waves with `up -d`, no `--wait`, which would count their exit as a failure).
+
 .PARAMETER DryRun
     Print the commands without running them.
 
@@ -23,8 +26,9 @@ param(
         , @('sql-server', 'pgvector', 'opensearch')
         , @('keycloak', 'ollama', 'sbert', 'docling')
         , @('rabbitmq', 'mongodb', 'neo4j', 'redis', 'postgres', 'qdrant')
-        , @('apache-tika', 'smtp4dev', 'clamav', 'mosquitto', 'azurite', 'moto', 'moto-init', 'servicebus-sql', 'servicebus-emulator', 'eventhubs-emulator', 'otel-dashboard', 'ser2net', 'loopback-device', 'nginx')
+        , @('apache-tika', 'smtp4dev', 'clamav', 'mosquitto', 'azurite', 'moto', 'servicebus-sql', 'servicebus-emulator', 'eventhubs-emulator', 'otel-dashboard', 'ser2net', 'loopback-device', 'nginx')
     ),
+    [string[]] $OneShot = @('moto-init'),
     [switch] $DryRun
 )
 
@@ -51,4 +55,14 @@ foreach ($names in $Wave) {
     if ($DryRun) { continue }
     & docker @step
     if ($LASTEXITCODE -ne 0) { throw "wave $index failed with exit code $LASTEXITCODE" }
+}
+
+$oneShot = @($OneShot | Where-Object { $_ -in $known })
+if ($oneShot) {
+    $step = $base + @('up', '-d') + $oneShot
+    Write-Host ('one-shot: docker ' + ($step -join ' ')) -ForegroundColor Cyan
+    if (-not $DryRun) {
+        & docker @step
+        if ($LASTEXITCODE -ne 0) { throw "one-shot start failed with exit code $LASTEXITCODE" }
+    }
 }
