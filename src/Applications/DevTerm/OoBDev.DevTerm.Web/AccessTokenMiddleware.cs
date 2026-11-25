@@ -8,12 +8,15 @@ namespace OoBDev.DevTerm.Web;
 /// Requires the shared token on every request: <c>Authorization: Bearer</c>, the <c>devterm_auth</c> cookie, or a one-time
 /// <c>?token=</c> that sets the cookie and redirects to the clean URL.
 /// </summary>
-internal sealed class AccessTokenMiddleware(RequestDelegate next, string token, string readOnlyToken)
+internal sealed class AccessTokenMiddleware(RequestDelegate next, string token, string readOnlyToken, SessionJwt? jwt = null)
 {
     internal const string CookieName = "devterm_auth";
 
     /// <summary><see cref="HttpContext.Items"/> key holding <see langword="true"/> when the request authenticated with the read-only token.</summary>
     internal const string ReadOnlyItem = "devterm.readonly";
+
+    /// <summary><see cref="HttpContext.Items"/> key set when the request authenticated with a session JWT, which cannot be exchanged for another.</summary>
+    internal const string ViaJwtItem = "devterm.viajwt";
 
     private bool IsReadOnlyToken(string? presented) =>
         !string.IsNullOrWhiteSpace(readOnlyToken) && AccessPolicy.TokenMatches(readOnlyToken, presented);
@@ -32,6 +35,18 @@ internal sealed class AccessTokenMiddleware(RequestDelegate next, string token, 
         var cookie = request.Cookies[CookieName];
         if (AccessPolicy.TokenMatches(token, bearer) || AccessPolicy.TokenMatches(token, cookie))
         {
+            await next(context).ConfigureAwait(false);
+            return;
+        }
+
+        if (jwt is not null && jwt.TryValidate(bearer, out var jwtReadOnly))
+        {
+            context.Items[ViaJwtItem] = true;
+            if (jwtReadOnly)
+            {
+                context.Items[ReadOnlyItem] = true;
+            }
+
             await next(context).ConfigureAwait(false);
             return;
         }

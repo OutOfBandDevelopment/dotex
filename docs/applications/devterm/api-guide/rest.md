@@ -285,6 +285,14 @@ Responses:
 
 - `200` OK
 
+### POST `/api/token`
+
+Exchange the shared key (Authorization: Bearer) for a short-lived session JWT
+
+Responses:
+
+- `200` OK
+
 ### GET `/asyncapi`
 
 Responses:

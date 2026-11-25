@@ -13,3 +13,7 @@ A host that opens one device session (`AddDevTermFrontEnd` selects the transport
 ## Not done
 
 See the `DevTerm 100% parity` item in `BACKLOG.md`: `BundleDevicePlugins`, the k8055 and busylight panels, merging the local AsyncAPI, OpenAPI and Scalar code with `OoBDev.AsyncApi` and its helpers.
+
+## Session tokens for remote clients
+
+`POST /api/token` with the shared key (or the read-only key) as `Authorization: Bearer` returns a 15-minute JWT (`access_token`, `expires_in`, `expires_at`). Send it as a Bearer on every other route. The token carries the read-only flag of the key it came from, dies with the host process, and cannot be exchanged for another one. See [Remote DevTerm](../../../../docs/design/RemoteDevTerm/README.md).

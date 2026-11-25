@@ -95,7 +95,8 @@ public static class WebHost
         var hub = app.Services.GetRequiredService<SessionHub>();
         var connections = app.Services.GetRequiredService<ConnectionManager>();
 
-        app.UseMiddleware<AccessTokenMiddleware>(token, webOptions.ReadOnlyToken ?? string.Empty);
+        var sessionJwt = new SessionJwt();
+        app.UseMiddleware<AccessTokenMiddleware>(token, webOptions.ReadOnlyToken ?? string.Empty, sessionJwt);
         app.UseWebSockets();
         app.UseAntiforgery();
         app.Map("/ws", (HttpContext context) => WebSocketTunnel.HandleAsync(context, hub));
@@ -146,6 +147,16 @@ public static class WebHost
             await hub.DisconnectAsync().ConfigureAwait(false);
             return Results.Json(new { state = hub.State.ToString() });
         }).WithSummary("Disconnect the host's own session; a send while closed is refused until Connect. 403 read-only");
+        app.MapPost("/api/token", (HttpContext context) =>
+        {
+            if (context.Items.ContainsKey(AccessTokenMiddleware.ViaJwtItem))
+            {
+                return Results.Problem("A session token cannot be exchanged for another; present the shared key.", statusCode: StatusCodes.Status403Forbidden);
+            }
+
+            var (jwt, expires) = sessionJwt.Issue(context.Items.ContainsKey(AccessTokenMiddleware.ReadOnlyItem));
+            return Results.Json(new { access_token = jwt, token_type = "Bearer", expires_in = (int)sessionJwt.Lifetime.TotalSeconds, expires_at = expires });
+        }).WithSummary("Exchange the shared key (Authorization: Bearer) for a short-lived session JWT");
         app.MapGet("/api/status", (HttpContext context) => Results.Json(new { configured = hub.Configured, profile = hub.ProfileName, state = hub.State.ToString(), connection = hub.Description, readOnly = context.Items.ContainsKey(AccessTokenMiddleware.ReadOnlyItem) })).WithSummary("State and description of the shared session");
 
         // Per-session settings the desktop apps keep in menus: the "Send as" format and logging. {id} is "main" or an opened connection's id.
