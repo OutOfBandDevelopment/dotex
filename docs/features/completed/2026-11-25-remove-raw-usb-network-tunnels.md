@@ -1,6 +1,6 @@
 # Feature request: remove the raw USB HID and USBTMC network bridge
 
-- **Status:** triaged
+- **Status:** done (2026-11-25, [change](../../changes/2026-11-25.md#raw-usb-network-bridge-removed))
 - **Requested by:** owner
 - **Date:** 2026-11-25
 - **Area:** `OoBDev.System.IO.Usb.Bridge`, `OoBDev.Ser2NetWin.Cli` (`UsbBridges`), `docs/design/Ser2NetWin/usb-bridge.md`

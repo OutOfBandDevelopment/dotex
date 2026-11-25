@@ -1,7 +1,7 @@
 # USBTMC: DM3058E bulk-IN read fails with "Pipe"
 
 **Status:** open, to be reviewed later (owner, 2026-11-24)
-**Feature:** [USB bridge](../design/Ser2NetWin/usb-bridge.md), USBTMC driver `OoBDev.System.IO.UsbTmc`
+**Feature:** USBTMC driver `OoBDev.System.IO.UsbTmc` (found through the former USB bridge, removed 2026-11-25)
 **Backlog:** the USB passthrough line in [BACKLOG.md](../../BACKLOG.md)
 
 ## Finding

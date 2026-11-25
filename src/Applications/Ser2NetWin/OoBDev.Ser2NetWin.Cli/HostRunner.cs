@@ -1,10 +1,8 @@
+using System.IO;
+using System.Text.Json;
 using OoBDev.System.IO.Ports.Bridge;
-using OoBDev.System.IO.Usb.Bridge;
-using OoBDev.System.IO.UsbHids;
-using OoBDev.System.IO.UsbTmc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace OoBDev.Ser2NetWin.Cli;
 
@@ -13,6 +11,7 @@ public static class HostRunner
 {
     public static async Task<int> RunAsync(string configPath)
     {
+        RejectRemovedUsbBridges(configPath);
         var config = new ConfigStore(configPath).Load();
 
         var builder = Host.CreateApplicationBuilder(new HostApplicationBuilderSettings
@@ -31,20 +30,23 @@ public static class HostRunner
 
         builder.Services.AddHostedService<BridgeHostedService>();
 
-        var usbBridges = UsbBridgeConfig.Load(configPath);
-        if (usbBridges.Count > 0)
-        {
-            builder.Services.AddSingleton<IUsbTmcDeviceFactory, SystemUsbTmcDeviceFactory>();
-            builder.Services.AddSingleton<IUsbHidDeviceFactory, SystemUsbHidDeviceFactory>();
-            builder.Services.AddHostedService(sp => new UsbBridgeHostedService(
-                usbBridges,
-                sp.GetRequiredService<IUsbTmcDeviceFactory>(),
-                sp.GetRequiredService<IUsbHidDeviceFactory>(),
-                sp.GetRequiredService<ILoggerFactory>()));
-        }
-
         using var host = builder.Build();
         await host.RunAsync().ConfigureAwait(false);
         return 0;
+    }
+
+    /// <summary>The unauthenticated USB bridge was removed (owner, 2026-11-25); a config that still carries it must not start silently without it.</summary>
+    public static void RejectRemovedUsbBridges(string configPath)
+    {
+        if (!File.Exists(configPath))
+        {
+            return;
+        }
+
+        using var document = JsonDocument.Parse(File.ReadAllText(configPath), new JsonDocumentOptions { CommentHandling = JsonCommentHandling.Skip, AllowTrailingCommas = true });
+        if (document.RootElement.ValueKind == JsonValueKind.Object && document.RootElement.TryGetProperty("UsbBridges", out _))
+        {
+            throw new InvalidOperationException("The 'UsbBridges' section was removed: the USB bridge had no authentication. Run the remote DevTerm host for USB devices (docs/design/RemoteDevTerm/README.md) and delete the section from the config file.");
+        }
     }
 }

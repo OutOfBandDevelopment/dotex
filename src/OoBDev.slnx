@@ -406,7 +406,6 @@
     <Project Path="Framework/OoBDev.System.IO.Bluetooth.Tests/OoBDev.System.IO.Bluetooth.Tests.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Bluetooth.Windows.Tests/OoBDev.System.IO.Bluetooth.Windows.Tests.csproj" />
     <Project Path="Framework/OoBDev.System.IO.UsbHids.Tests/OoBDev.System.IO.UsbHids.Tests.csproj" />
-    <Project Path="Framework/OoBDev.System.IO.Usb.Bridge.Tests/OoBDev.System.IO.Usb.Bridge.Tests.csproj" />
     <Project Path="Framework/OoBDev.System.IO.UsbTmc.Tests/OoBDev.System.IO.UsbTmc.Tests.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Brokers.Tests/OoBDev.System.IO.Brokers.Tests.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Brokers/OoBDev.System.IO.Brokers.csproj" />
@@ -420,7 +419,6 @@
     <Project Path="Framework/OoBDev.System.IO.Ports.Tests/OoBDev.System.IO.Ports.Tests.csproj" />
     <Project Path="Framework/OoBDev.System.IO.Ports/OoBDev.System.IO.Ports.csproj" />
     <Project Path="Framework/OoBDev.System.IO.UsbHids/OoBDev.System.IO.UsbHids.csproj" />
-    <Project Path="Framework/OoBDev.System.IO.Usb.Bridge/OoBDev.System.IO.Usb.Bridge.csproj" />
     <Project Path="Framework/OoBDev.System.IO.UsbTmc/OoBDev.System.IO.UsbTmc.csproj" />
     <Project Path="Framework/OoBDev.System.Linq/OoBDev.System.Linq.csproj" />
     <Project Path="Framework/OoBDev.System.Tests/OoBDev.System.Tests.csproj" />
