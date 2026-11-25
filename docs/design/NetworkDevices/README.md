@@ -1,4 +1,5 @@
 # Network devices
+**Status:** Partly built: the probes and the connection editor code live in `OoBDev.DevTerm.Core` (`BleDeviceScanner`, `ConnectionEditorViewModel`); the move into a Framework library is still a proposal and the bridge config editors are open requests (reconciled with `src` 2026-11-25)
 
 Finding network devices and configuring serial-to-Ethernet bridges. Moved from the DevTerm design folder on 2026-11-04. Application: [DevTerm](../../applications/devterm/README.md).
 

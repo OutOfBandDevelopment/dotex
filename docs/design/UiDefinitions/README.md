@@ -1,4 +1,5 @@
 # UI definitions and device manifests
+**Status:** Built: `OoBDev.UiDefinitions` with ViewModels and the Wpf, WinForms, Tui, Avalonia and Blazor renderers, each with a test project (reconciled with `src` 2026-11-25)
 
 A framework-agnostic, serializable model for declaring a control panel once so every front end renders it generically, plus the no-code device manifest and the control-module model built on it. Moved from the DevTerm design folder on 2026-11-04; code in `OoBDev.DevTerm.UiDefinitions`, `OoBDev.DevTerm.DeviceManifests` and `OoBDev.Scpi.Panels`. Application: [DevTerm](../../applications/devterm/README.md).
 

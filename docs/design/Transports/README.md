@@ -1,4 +1,5 @@
 # Transports
+**Status:** Built in part: `OoBDev.System.IO.Ports` (+ Bridge) and `OoBDev.System.IO.UsbTmc` exist with tests; the other transports are described in the pages below and checked in DevTerm (reconciled with `src` 2026-11-25)
 
 The `ITransport` contract and the transports built on it (serial, TCP, HID, USBTMC, BLE, RFC 2217, VXI-11, MQTT, AMQP, STOMP, loopback). Moved here from the DevTerm design folder on 2026-11-04 as a reusable capability design; the implementation is in `OoBDev.System.IO.*` and `OoBDev.DevTerm.Transports.*`. Application use: [DevTerm](../../applications/devterm/README.md).
 
