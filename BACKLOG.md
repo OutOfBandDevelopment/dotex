@@ -105,7 +105,6 @@ Scope rule: every BinaryDataDecoders feature is migrated; phases are priority or
   - Epic 10 status (2026-11-05): `OoBDev.Handlebars` already has the provider, ten helpers and a compilation cache; open from the design: the Epic 11 container adapter (the database template source is built, `EfTemplateSource`, covered since 2026-11-19) ([readme](src/ExternalServices/Handlebars/OoBDev.Handlebars/README.Handlebars.md)).
 - [ ] Final-state schemas: phases A to E are built; left are the other stores adopting store instances (Suppressions is built; Q42 decides the shared helper, [instances design](docs/design/DesiredStateDatabase/instances.md)) and bundling the sqldef binary (Q39 C); G is skipped, F needs nothing ([build plan](docs/design/DesiredStateDatabase/plan.md)).
 - [ ] Desired-state database tooling, remaining: per-instance history table and script tokens ([design](docs/design/DesiredStateDatabase/instances.md)); publish-profile files; packages, refactor log, the `pack` verb, gates, ensure scripts and the sqldef runs are built ([design](docs/design/DesiredStateDatabase/README.md), [readme](src/Framework/OoBDev.Data.DesiredState/README.Data.DesiredState.md)).
-- [ ] Bundle or download `sqldef` (`psqldef`, `sqlite3def`, `mssqldef`) so the binary is no longer a manual PATH install (owner, 2026-11-25, Q39 C; the native differ spike is skipped for now): pick the mechanism (tool restore, download on first use with a pinned hash, or a container) in [the plan](docs/design/DesiredStateDatabase/plan.md) first.
 
 
 ## 7. Documentation review (owner, 2026-10-28)

@@ -1,3 +1,4 @@
+using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -20,4 +21,14 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
+    /// <summary>
+    /// Fetches a missing sqldef tool (pinned release, SHA-256 checked, cached per user) instead of requiring it on <c>PATH</c>. Opt-in because it uses the network on first use.
+    /// Call it after <see cref="AddDesiredStateDatabase"/>.
+    /// </summary>
+    public static IServiceCollection AddSqldefDownload(this IServiceCollection services)
+    {
+        services.AddSingleton<SqldefInstaller>(_ => new SqldefInstaller(new HttpClient()));
+        services.AddSingleton<IToolRunner>(sp => new SqldefDownloadingToolRunner(new ProcessToolRunner(), sp.GetRequiredService<SqldefInstaller>()));
+        return services;
+    }
 }

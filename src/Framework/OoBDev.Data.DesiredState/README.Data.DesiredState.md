@@ -12,7 +12,7 @@ Design: [desired-state database tooling](../../../docs/design/DesiredStateDataba
 | `sqlserver` | `SqldefProvider.ForSqlServer` | `mssqldef` (sqldef, MIT); `OoBDev.DacFx` stays the dacpac route |
 | `sqlite` | `SqldefProvider.ForSqlite` | `sqlite3def` (sqldef, MIT) |
 
-The binaries are not bundled: they must be on `PATH` (or pass the path to the `For*` method). `ProcessToolRunner` feeds the scripts on standard input and passes the password through the environment (`PGPASSWORD`, `MSSQL_PWD`), never on the command line.
+The binaries are not in the package: they are found on `PATH` (or pass the path to the `For*` method), or `services.AddSqldefDownload()` fetches a missing tool on first use: `SqldefInstaller` downloads the pinned sqldef release (3.11.30) from GitHub, checks its SHA-256 against a pinned table and extracts it once into `%LOCALAPPDATA%/OoBDev/sqldef/<version>` (a mismatch extracts nothing); a tool already on `PATH` wins. `ProcessToolRunner` feeds the scripts on standard input and passes the password through the environment (`PGPASSWORD`, `MSSQL_PWD`), never on the command line.
 
 ## Safety gates
 
